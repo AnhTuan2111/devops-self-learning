@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 00 — Bản đồ toàn cảnh</title>
+<meta name="description" content="Đường đi đầy đủ của một HTTP request, từ lúc bạn gõ Enter tới lúc code của bạn chạy.">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+</head>
+<body data-lesson="00">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">🧱 DevOps Self-Learning</a>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M0">Module 0</a>
+    <a class="nav" href="README.md">Workbook</a>
+    <button class="theme-btn" type="button">Tối</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page">
+  <p class="eyebrow">Module 0 · Bài 00</p>
+  <h1>Bản đồ toàn cảnh: một request đi từ browser tới code của bạn</h1>
+  <p class="lede">Trước khi học bất kỳ công cụ nào, phải có bản đồ. Bài này không gõ lệnh để
+  cài gì cả — nó chỉ làm một việc: cho bạn thấy toàn bộ con đường mà mọi thứ bạn sẽ học sau này
+  nằm trên đó.</p>
+  <div class="meta">
+    <span class="pill acc">~45 phút</span>
+    <span class="pill">Không cần cài gì</span>
+    <span class="pill">Không có code</span>
+  </div>
+</header>
+
+<h2 id="van-de">1. Vấn đề</h2>
+
+<p>9 giờ tối, sếp nhắn:</p>
+
+<div class="callout warn">
+  <span class="label">Tin nhắn</span>
+  <p><em>"Web không vào được em ơi."</em></p>
+</div>
+
+<p>Bạn có <strong>đúng một câu hỏi</strong> để hỏi lại, và nó quyết định bạn mất 5 phút hay 3 tiếng.</p>
+
+<p>Người chưa có bản đồ sẽ hỏi: <em>"Để em xem lại code."</em> — và thường là sai chỗ, vì code
+không đổi gì từ hôm qua.</p>
+
+<p>Người có bản đồ sẽ hỏi: <em>"Anh thấy màn hình báo gì? Quay mãi không load, hay hiện ra
+chữ 502, hay báo lỗi chứng chỉ?"</em> — vì mỗi câu trả lời chỉ thẳng vào một chặng khác nhau
+trên đường đi.</p>
+
+<p>Cả lộ trình học này tồn tại để bạn trở thành người thứ hai.</p>
+
+<h2 id="url">2. Giải phẫu một URL</h2>
+
+<p>Trước hết, đọc cho đúng thứ bạn gõ vào trình duyệt hằng ngày:</p>
+
+<pre class="diagram"><code>  https://api.example.com:443/users/42?active=true
+  └─┬─┘   └──────┬───────┘ └┬┘└───┬──┘└─────┬────┘
+    │            │          │     │         │
+  scheme       host       port   path     query
+    │            │          │     │         │
+    │            │          │     │         └── tham số, do app đọc
+    │            │          │     └──────────── đường dẫn, do app định tuyến
+    │            │          └────────────────── "cửa" số mấy trên máy đó
+    │            └───────────────────────────── tên máy, phải dịch ra IP
+    └────────────────────────────────────────── giao thức + port mặc định</code></pre>
+
+<p>Ba điều đáng nhớ ngay:</p>
+
+<ul>
+  <li><strong>scheme quyết định port mặc định.</strong> <code>http://</code> mà không ghi port
+  thì ngầm hiểu là <code>:80</code>. <code>https://</code> thì là <code>:443</code>.
+  Đó là lý do bạn không bao giờ phải gõ port khi vào một website bình thường.</li>
+  <li><strong>host không phải địa chỉ.</strong> Nó là một cái <em>tên</em>.
+  Máy tính không biết gửi gói tin tới một cái tên — nó cần một con số. Việc dịch tên ra
+  số là cả một chặng riêng (DNS).</li>
+  <li><strong>path và query là chuyện của app.</strong> Hạ tầng không quan tâm
+  <code>/users/42</code> nghĩa là gì. Nó chỉ chuyển nguyên văn cho ứng dụng.</li>
+</ul>
+
+<h3>Vậy <code>localhost:8080</code> nghĩa là gì?</h3>
+
+<pre class="diagram"><code>  localhost : 8080
+      │         │
+      │         └── gõ vào cửa số 8080
+      └──────────── của chính cái máy đang gõ lệnh này</code></pre>
+
+<p><code>localhost</code> là một cái tên đặc biệt, luôn được dịch thành <code>127.0.0.1</code> —
+địa chỉ quy ước có nghĩa là <em>"chính tôi"</em>. Nó không bao giờ đi ra khỏi máy.</p>
+
+<div class="callout">
+  <span class="label">Hệ quả thực tế</span>
+  <p>Đây là lý do bạn không thể gửi link <code>localhost:8080</code> cho đồng nghiệp xem thử.
+  Với máy của họ, <code>localhost</code> là <em>máy của họ</em>. Họ sẽ gõ cửa số 8080 trên
+  chính laptop của mình, và tất nhiên không có ai ở đó.</p>
+  <p>Và đây cũng chính là gốc rễ của lỗi kinh điển nhất khi bắt đầu dùng Docker, mà ta sẽ
+  gặp lại ở <a href="../09-ip-localhost-0000/">Bài 09</a>.</p>
+</div>
+
+<h2 id="duong-di">3. Đường đi đầy đủ của một request</h2>
+
+<p>Đây là bản đồ. Hãy đọc chậm — mỗi khối trong sơ đồ này là ít nhất một bài học phía sau.</p>
+
+<pre class="diagram"><code>  ┌─────────────────────────────────────────────────────────────┐
+  │  MÁY CỦA NGƯỜI DÙNG                                         │
+  │                                                             │
+  │   ① Trình duyệt tách URL ra: scheme / host / port / path    │
+  │                          │                                  │
+  │   ② DNS: "api.example.com là IP nào?"  ──→ 123.45.67.89     │
+  │                          │                                  │
+  │   ③ TCP: mở kết nối tới 123.45.67.89 cửa 443                │
+  │                          │                                  │
+  │   ④ TLS: bắt tay, kiểm chứng chỉ, bật mã hóa                │
+  │                          │                                  │
+  │   ⑤ HTTP: gửi đi  "GET /users/42"  + các header             │
+  └──────────────────────────┼──────────────────────────────────┘
+                             │
+                    ~~~ INTERNET ~~~
+                             │
+  ┌──────────────────────────┼──────────────────────────────────┐
+  │  SERVER (một máy Linux chạy 24/7)                           │
+  │                          ▼                                  │
+  │   ⑥ FIREWALL   cửa 443 có được mở không?                    │
+  │                          │                                  │
+  │                          ▼                                  │
+  │   ⑦ NGINX      gỡ mã hóa TLS                                │
+  │                nhìn header Host → biết hỏi web nào          │
+  │                nhìn path → biết đẩy đi đâu                  │
+  │                          │                                  │
+  │                          ▼                                  │
+  │   ⑧ SPRING BOOT   :8080   định tuyến, chạy logic            │
+  │                          │                                  │
+  │                          ▼                                  │
+  │   ⑨ POSTGRESQL    :5432   truy vấn dữ liệu                  │
+  │                          │                                  │
+  │                          ▼                                  │
+  │              ĐƯỜNG VỀ: DB → App → Nginx → Internet          │
+  └─────────────────────────────────────────────────────────────┘</code></pre>
+
+<h3>Từng chặng, nói rõ hơn</h3>
+
+<div class="table-scroll">
+<table>
+  <thead>
+    <tr><th>Chặng</th><th>Ai làm</th><th>Việc gì</th><th>Học ở bài</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>① Phân tích URL</td><td>Trình duyệt</td><td>Tách ra host, port, path để biết gửi đi đâu</td><td>Bài này</td></tr>
+    <tr><td>② DNS</td><td>Hệ điều hành + máy chủ DNS</td><td>Dịch tên miền thành địa chỉ IP</td><td><a href="../11-dns/">11</a>, <a href="../27-domain-va-dns-that/">27</a></td></tr>
+    <tr><td>③ TCP</td><td>Kernel hai máy</td><td>Bắt tay 3 bước, tạo một "ống" tin cậy</td><td><a href="../10-port-va-socket/">10</a></td></tr>
+    <tr><td>④ TLS</td><td>Trình duyệt ↔ Nginx</td><td>Kiểm chứng chỉ, thỏa thuận khóa, mã hóa</td><td><a href="../12-http-https-curl/">12</a>, <a href="../28-https-lets-encrypt/">28</a></td></tr>
+    <tr><td>⑤ HTTP</td><td>Trình duyệt</td><td>Gửi method + path + header + body</td><td><a href="../12-http-https-curl/">12</a></td></tr>
+    <tr><td>⑥ Firewall</td><td>Server</td><td>Cho qua hay chặn, tùy port</td><td><a href="../13-ssh-va-firewall/">13</a>, <a href="../25-vps-va-hardening/">25</a></td></tr>
+    <tr><td>⑦ Nginx</td><td>Reverse proxy</td><td>Gỡ TLS, chọn web, đẩy vào app nội bộ</td><td><a href="../21-reverse-proxy-co-ban/">21</a>–<a href="../24-nginx-trong-compose/">24</a></td></tr>
+    <tr><td>⑧ Spring Boot</td><td>Ứng dụng của bạn</td><td>Định tuyến, chạy nghiệp vụ</td><td><a href="../17-dockerize-spring-boot/">17</a></td></tr>
+    <tr><td>⑨ PostgreSQL</td><td>Database</td><td>Đọc/ghi dữ liệu bền vững</td><td><a href="../18-volume-va-du-lieu/">18</a></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="label">Nhận xét quan trọng</span>
+  <p>Chú ý cột cuối: <strong>chỉ có chặng ⑧ là code bạn viết.</strong> Tám chặng còn lại là
+  hạ tầng. Khi "web không vào được", xác suất lỗi nằm ở tám chặng kia lớn hơn nhiều
+  so với ở code — nhất là khi code không hề thay đổi từ hôm qua.</p>
+  <p>Đó là toàn bộ lý do nghề DevOps tồn tại.</p>
+</div>
+
+<h2 id="trieu-chung">4. Bảng tra: triệu chứng nào ⟶ chặng nào</h2>
+
+<p>Đây là phần đáng in ra dán lên bàn. Mỗi lỗi bạn từng thấy đều chỉ thẳng vào một chặng.</p>
+
+<div class="table-scroll">
+<table>
+  <thead>
+    <tr><th>Bạn thấy gì</th><th>Hỏng ở chặng</th><th>Nghi ngờ đầu tiên</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>DNS_PROBE_FINISHED_NXDOMAIN</code><br>"không tìm thấy máy chủ"</td>
+      <td>② DNS</td>
+      <td>Domain chưa trỏ, gõ sai tên, hoặc domain hết hạn</td>
+    </tr>
+    <tr>
+      <td>Quay mãi rồi <strong>timeout</strong></td>
+      <td>③ TCP / ⑥ Firewall</td>
+      <td>Server tắt, sai IP, hoặc firewall nuốt gói tin không trả lời</td>
+    </tr>
+    <tr>
+      <td><code>Connection refused</code></td>
+      <td>③ TCP</td>
+      <td>Tới được máy rồi, nhưng <em>không có ai đang nghe</em> ở port đó. Nginx chưa chạy?</td>
+    </tr>
+    <tr>
+      <td><code>ERR_CERT_DATE_INVALID</code><br>cảnh báo "không an toàn"</td>
+      <td>④ TLS</td>
+      <td>Chứng chỉ hết hạn, hoặc cấp cho tên miền khác</td>
+    </tr>
+    <tr>
+      <td><strong>502</strong> Bad Gateway</td>
+      <td>⑦ → ⑧</td>
+      <td>Nginx sống, nhưng gọi vào app thì không ai trả lời. <strong>App chết.</strong></td>
+    </tr>
+    <tr>
+      <td><strong>504</strong> Gateway Timeout</td>
+      <td>⑦ → ⑧</td>
+      <td>App còn sống nhưng trả lời quá chậm, Nginx hết kiên nhẫn</td>
+    </tr>
+    <tr>
+      <td><strong>500</strong> Internal Server Error</td>
+      <td>⑧</td>
+      <td>App nhận được request và <em>tự nó</em> ném exception. Giờ mới nên đọc code.</td>
+    </tr>
+    <tr>
+      <td><strong>404</strong> Not Found</td>
+      <td>⑦ hoặc ⑧</td>
+      <td>Sai path. Nginx định tuyến nhầm, hoặc app không có route đó</td>
+    </tr>
+    <tr>
+      <td>App báo <code>connection pool exhausted</code></td>
+      <td>⑨</td>
+      <td>Database chết, quá tải, hoặc app không trả kết nối về pool</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout ok">
+  <span class="label">Cách dùng bảng này</span>
+  <p><strong>502 và 500 là cặp dễ nhầm nhất, và cũng hữu ích nhất.</strong></p>
+  <p><strong>502</strong> = Nginx gõ cửa app, không ai mở → vấn đề ở <em>hạ tầng</em>:
+  container chết, sai port, app crash lúc khởi động.</p>
+  <p><strong>500</strong> = app mở cửa, nhận việc, rồi ngã → vấn đề ở <em>code</em>.</p>
+  <p>Phân biệt được hai cái này là bạn đã tiết kiệm được hàng giờ tìm nhầm chỗ.</p>
+</div>
+
+<h2 id="vi-sao-nginx">5. Đã có Spring Boot rồi, cần Nginx làm gì?</h2>
+
+<p>Câu hỏi rất đúng. Spring Boot tự nó đã chạy được một web server (Tomcat nhúng),
+tự listen port, tự trả HTTP. Về lý thuyết bạn có thể cho nó listen thẳng port 443
+và bỏ hẳn Nginx.</p>
+
+<p>Không ai làm thế trong production. Sáu lý do, xếp theo mức độ thuyết phục:</p>
+
+<h3>① Port 80 và 443 cần quyền root</h3>
+<p>Trên Linux, mọi port dưới 1024 chỉ process chạy bằng <code>root</code> mới chiếm được.
+Nếu Spring Boot listen 443, nó phải chạy bằng root. Mà một lỗ hổng trong app chạy bằng root
+nghĩa là kẻ tấn công chiếm nguyên cái máy, không chỉ cái app.</p>
+<p>Nginx giải quyết bằng một thiết kế thông minh: tiến trình chính khởi động bằng root
+<em>chỉ để</em> chiếm port, rồi lập tức hạ quyền cho các tiến trình con xử lý request.</p>
+
+<h3>② Chứng chỉ TLS không phải việc của app</h3>
+<p>Chứng chỉ cần được cấp, gia hạn 90 ngày một lần, nạp lại mà không làm đứt dịch vụ.
+Nhồi toàn bộ việc đó vào Spring Boot nghĩa là mỗi lần gia hạn chứng chỉ phải restart app.
+Tách ra Nginx thì app không cần biết HTTPS tồn tại.</p>
+
+<h3>③ Một IP, nhiều ứng dụng</h3>
+<p>Bạn chỉ có một địa chỉ IP, và chỉ một process chiếm được port 443. Nhưng bạn muốn chạy
+ba thứ trên cùng VPS đó:</p>
+<pre class="diagram"><code>     api.example.com  ─┐
+     app.example.com  ─┼──→  NGINX :443  ─┬──→  Spring Boot  :8080
+   admin.example.com  ─┘                  ├──→  React build  (file tĩnh)
+                                          └──→  Trang admin  :9000</code></pre>
+<p>Nginx đọc header <code>Host</code> trong request để biết người dùng đang hỏi web nào,
+rồi đẩy đúng chỗ. Không có Nginx thì bạn cần ba IP, hoặc bắt người dùng gõ port.</p>
+
+<h3>④ File tĩnh</h3>
+<p>Trả về một file ảnh là việc Nginx làm cực rẻ. Cùng việc đó, JVM phải đánh thức một thread,
+đi qua bao nhiêu tầng framework. Để Nginx trả file tĩnh giúp app rảnh tay lo phần nghiệp vụ.</p>
+
+<h3>⑤ Lớp chắn</h3>
+<p>Giới hạn số request mỗi giây, chặn body quá lớn, chặn user-agent rác — chặn ở Nginx
+nghĩa là request xấu <em>không bao giờ chạm tới</em> app. Chặn ở trong app thì app vẫn phải
+tốn tài nguyên tiếp nhận rồi mới từ chối.</p>
+
+<h3>⑥ Deploy không đứt kết nối</h3>
+<p>Khi Nginx đứng ở giữa, bạn có thể khởi động phiên bản app mới, đợi nó sẵn sàng, rồi mới
+chuyển luồng sang. Người dùng không thấy gì cả. Không có lớp trung gian thì mỗi lần deploy
+là một lần website chết vài giây. Ta sẽ làm đúng việc này ở
+<a href="../35-zero-downtime-va-rollback/">Bài 35</a>.</p>
+
+<div class="callout">
+  <span class="label">Mẫu tư duy</span>
+  <p>Mỗi tầng trong hệ thống tồn tại vì nó <strong>gỡ một trách nhiệm ra khỏi tầng khác</strong>.
+  Khi gặp một công cụ mới trong lộ trình này, hãy luôn hỏi: <em>"Nó đang gánh hộ ai việc gì?"</em>
+  Trả lời được câu đó là bạn hiểu công cụ, chứ không phải thuộc lệnh của nó.</p>
+</div>
+
+<h2 id="lab">6. Lab — tự nhìn thấy từng chặng</h2>
+
+<p>Ba bài, làm trong <strong>Git Bash</strong> hoặc <strong>terminal Ubuntu (WSL)</strong>.
+Chưa cần cài gì thêm.</p>
+
+<h3>Lab 1 — Nhìn chặng ② (DNS) bằng mắt</h3>
+
+<pre><code>nslookup github.com</code></pre>
+
+<p>Bạn sẽ thấy một hoặc vài địa chỉ IP. Đó chính là kết quả của chặng ②:
+một cái tên vừa được dịch thành con số.</p>
+
+<p>Giờ thử tên không tồn tại:</p>
+
+<pre><code>nslookup khong-ton-tai-dau-nhe-12345.com</code></pre>
+
+<p>Lỗi bạn nhận được (<code>NXDOMAIN</code>) chính là thứ nằm sau màn hình
+"không tìm thấy máy chủ" của trình duyệt.</p>
+
+<h3>Lab 2 — Nhìn chặng ③ ④ ⑤ cùng lúc</h3>
+
+<pre><code>curl -v https://example.com</code></pre>
+
+<p>Đọc kỹ output. Bạn sẽ thấy đủ ba chặng nối nhau — hãy tự tìm từng dòng:</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Dòng bạn thấy</th><th>Là chặng nào</th></tr></thead>
+  <tbody>
+    <tr><td><code>Trying 93.184.…:443</code></td><td>③ TCP đang mở kết nối tới IP, cửa 443</td></tr>
+    <tr><td><code>Connected to example.com</code></td><td>③ TCP xong, ống đã thông</td></tr>
+    <tr><td><code>SSL connection using TLS…</code></td><td>④ TLS bắt tay xong, đã mã hóa</td></tr>
+    <tr><td><code>subject: CN=…</code></td><td>④ Chứng chỉ của ai, cấp cho tên miền nào</td></tr>
+    <tr><td><code>&gt; GET / HTTP/1.1</code></td><td>⑤ Request đi ra (dấu <code>&gt;</code> = gửi đi)</td></tr>
+    <tr><td><code>&lt; HTTP/1.1 200 OK</code></td><td>Đường về (dấu <code>&lt;</code> = nhận vào)</td></tr>
+    <tr><td><code>&lt; server: …</code></td><td>Server tự khai nó chạy bằng phần mềm gì</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Thử tiếp, chỉ lấy phần header trả về cho gọn:</p>
+
+<pre><code>curl -I https://github.com</code></pre>
+
+<h3>Lab 3 — Tự gây ra "Connection refused"</h3>
+
+<p>Đây là bài quan trọng nhất trong ba bài, vì nó cho bạn <em>cảm giác</em> về chặng ③.</p>
+
+<pre><code>curl http://localhost:9999</code></pre>
+
+<p>Gần như chắc chắn bạn nhận được <code>Connection refused</code>.</p>
+
+<p>Hãy tự trả lời trước khi đọc tiếp: <strong>vì sao là "refused" chứ không phải "timeout"?</strong></p>
+
+<div class="callout ok">
+  <span class="label">Đáp án</span>
+  <p>Vì gói tin của bạn <strong>đã tới đích</strong>. Máy đích tồn tại (nó chính là máy bạn),
+  kernel nhận được gói tin, nhìn vào port 9999, thấy không có process nào đăng ký nghe ở đó,
+  và <em>chủ động trả lời</em> rằng: không có ai ở đây cả.</p>
+  <p>Ngược lại, <strong>timeout</strong> nghĩa là bạn gửi đi và <em>không nhận được gì hết</em> —
+  gói tin rơi vào im lặng. Thường là do firewall nuốt nó, hoặc máy đích không tồn tại.</p>
+  <p><strong>Một lời từ chối rõ ràng khác hẳn với sự im lặng.</strong> Ghi nhớ khác biệt này:
+  nó sẽ giúp bạn khoanh vùng sự cố rất nhanh ở <a href="../39-su-co-va-runbook/">Bài 39</a>.</p>
+</div>
+
+<h3>Bài tập cuối: vẽ lại</h3>
+
+<p>Đóng trang này lại. Lấy giấy hoặc mở một file trống, và tự vẽ lại toàn bộ đường đi
+từ ① đến ⑨ bằng trí nhớ. Vẽ xong mở lại đối chiếu.</p>
+
+<p>Chỗ nào bạn quên chính là chỗ cần đọc lại.</p>
+
+<h2 id="tu-kiem-tra">7. Tự kiểm tra</h2>
+
+<p>Bấm vào từng dòng để đánh dấu khi bạn tự tin trả lời được mà không cần nhìn lại.</p>
+
+<ul class="check">
+  <li>Giải thích được <code>localhost:8080</code>, tách rõ từng phần, và nói được vì sao
+  không gửi link đó cho người khác được</li>
+  <li>Phân biệt được domain, IP và port — cái nào là tên, cái nào là địa chỉ, cái nào là cửa</li>
+  <li>Nói được ít nhất ba lý do cần Nginx dù Spring Boot đã tự chạy được web server</li>
+  <li>Phân biệt 502 và 500, và nói được cái nào thì mới nên mở code ra đọc</li>
+  <li>Giải thích được vì sao "Connection refused" khác "Timeout"</li>
+  <li>Vẽ lại được toàn bộ sơ đồ ① → ⑨ không cần nhìn tài liệu</li>
+</ul>
+
+<h2 id="ket">8. Kết lại</h2>
+
+<p>Bạn vừa có bản đồ. Từ giờ, mỗi công cụ trong lộ trình sẽ được gắn vào một vị trí
+cụ thể trên bản đồ đó, chứ không trôi nổi như một cái tên rời rạc:</p>
+
+<pre class="diagram"><code>  Linux      → cái máy ở chặng ⑥⑦⑧⑨ chạy trên nền gì
+  Networking → chặng ② ③
+  Docker     → cách đóng gói chặng ⑧ và ⑨ cho gọn
+  Nginx      → chặng ⑦
+  VPS        → cái hộp chứa toàn bộ nửa dưới sơ đồ
+  HTTPS      → chặng ④
+  CI/CD      → cách thay mới chặng ⑧ mà không phải làm tay
+  Monitoring → cách biết chặng nào đang hỏng, trước khi sếp nhắn tin</code></pre>
+
+<div class="callout">
+  <span class="label">Bài tiếp theo</span>
+  <p><a href="../01-may-tinh-va-he-dieu-hanh/">Bài 01 — Máy tính, Hệ điều hành, Process:
+  "server" thật ra là cái gì</a>. Ta sẽ đi xuống một tầng, vào bên trong cái hộp ở nửa dưới
+  sơ đồ, và thấy rằng mọi thứ bạn deploy cuối cùng chỉ là một process đang chạy.</p>
+</div>
+
+<div class="prevnext">
+  <a href="../../">
+    <span class="dir">← Quay lại</span>
+    <span class="t">Mục lục</span>
+  </a>
+  <a class="next" href="../01-may-tinh-va-he-dieu-hanh/">
+    <span class="dir">Bài tiếp →</span>
+    <span class="t">01 · Máy tính, HĐH, Process</span>
+  </a>
+</div>
+
+<footer class="page">
+  <p>Bài 00 · Module 0 — Nền tảng · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js"></script>
+</body>
+</html>

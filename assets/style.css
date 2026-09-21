@@ -1,0 +1,257 @@
+/* ============================================================
+   DevOps Self-Learning — stylesheet dùng chung
+   Dùng cho index.html và mọi trang lessons/NN-*/index.html
+   ============================================================ */
+
+:root {
+  --bg:        #fbfaf8;
+  --bg-soft:   #f3f1ed;
+  --surface:   #ffffff;
+  --border:    #e3ded6;
+  --text:      #1f1d1a;
+  --text-soft: #57534e;
+  --text-mute: #8a837a;
+  --accent:    #b5502a;
+  --accent-bg: #fbeee7;
+  --ok:        #2f7d4f;
+  --ok-bg:     #e8f4ec;
+  --warn:      #9a6b00;
+  --warn-bg:   #fdf3dc;
+  --code-bg:   #f5f2ec;
+  --shadow:    0 1px 2px rgba(31,29,26,.05), 0 8px 24px -12px rgba(31,29,26,.12);
+  --radius:    10px;
+  --mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, "Segoe UI", Inter, "Noto Sans", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #171614;
+    --bg-soft:   #201e1b;
+    --surface:   #211f1c;
+    --border:    #35322d;
+    --text:      #eceae6;
+    --text-soft: #b6b0a7;
+    --text-mute: #868077;
+    --accent:    #e8a07c;
+    --accent-bg: #2e2019;
+    --ok:        #7cc79b;
+    --ok-bg:     #1c2a22;
+    --warn:      #e0b455;
+    --warn-bg:   #2b2418;
+    --code-bg:   #1b1917;
+    --shadow:    0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#171614; --bg-soft:#201e1b; --surface:#211f1c; --border:#35322d;
+  --text:#eceae6; --text-soft:#b6b0a7; --text-mute:#868077;
+  --accent:#e8a07c; --accent-bg:#2e2019; --ok:#7cc79b; --ok-bg:#1c2a22;
+  --warn:#e0b455; --warn-bg:#2b2418; --code-bg:#1b1917;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+}
+
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+.wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+/* ---------- Thanh điều hướng ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: 1080px; margin: 0 auto; padding: 10px 16px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.topbar a.home {
+  font-weight: 650; text-decoration: none; color: var(--text);
+  font-size: 15px; letter-spacing: -.01em;
+}
+.topbar .spacer { flex: 1 1 auto; }
+.topbar a.nav {
+  text-decoration: none; color: var(--text-soft); font-size: 14px;
+  padding: 4px 10px; border-radius: 999px; border: 1px solid transparent;
+}
+.topbar a.nav:hover { color: var(--text); border-color: var(--border); background: var(--surface); }
+.theme-btn {
+  cursor: pointer; background: var(--surface); color: var(--text-soft);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 4px 12px; font-size: 13px; font-family: inherit;
+}
+.theme-btn:hover { color: var(--text); }
+
+/* ---------- Header trang ---------- */
+header.page { padding: 44px 0 24px; }
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent); margin: 0 0 10px;
+}
+h1 { font-size: clamp(26px, 5vw, 38px); line-height: 1.22; margin: 0 0 12px; letter-spacing: -.02em; }
+.lede { font-size: 17px; color: var(--text-soft); margin: 0; max-width: 62ch; }
+
+h2 {
+  font-size: clamp(20px, 3.4vw, 25px); margin: 44px 0 12px;
+  letter-spacing: -.015em; scroll-margin-top: 70px;
+}
+h3 { font-size: 17px; margin: 26px 0 8px; letter-spacing: -.01em; }
+p { margin: 0 0 14px; }
+a { color: var(--accent); }
+
+/* ---------- Meta pills ---------- */
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+.pill {
+  font-size: 12.5px; font-family: var(--mono);
+  background: var(--bg-soft); border: 1px solid var(--border);
+  color: var(--text-soft); padding: 3px 10px; border-radius: 999px;
+}
+.pill.ok   { background: var(--ok-bg);   color: var(--ok);   border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+.pill.warn { background: var(--warn-bg); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+.pill.acc  { background: var(--accent-bg); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+
+/* ---------- Khối nội dung ---------- */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px; margin: 18px 0;
+  box-shadow: var(--shadow);
+}
+.callout {
+  border-left: 3px solid var(--accent); background: var(--accent-bg);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 18px; margin: 20px 0;
+}
+.callout .label {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 6px;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout.warn { border-left-color: var(--warn); background: var(--warn-bg); }
+.callout.warn .label { color: var(--warn); }
+.callout.ok { border-left-color: var(--ok); background: var(--ok-bg); }
+.callout.ok .label { color: var(--ok); }
+
+/* ---------- Code ---------- */
+code {
+  font-family: var(--mono); font-size: .88em;
+  background: var(--code-bg); border: 1px solid var(--border);
+  padding: 1px 5px; border-radius: 4px;
+}
+pre {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px;
+  overflow-x: auto; margin: 14px 0; line-height: 1.55;
+}
+pre code { background: none; border: none; padding: 0; font-size: 13.5px; }
+pre.diagram {
+  line-height: 1.35; font-size: 13px;
+  color: var(--text-soft); background: var(--bg-soft);
+}
+
+/* ---------- Bảng ---------- */
+.table-scroll { overflow-x: auto; margin: 16px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 460px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-mute); font-weight: 600; }
+tbody tr:hover { background: var(--bg-soft); }
+
+/* ---------- Danh sách ---------- */
+ul, ol { padding-left: 22px; margin: 0 0 14px; }
+li { margin: 5px 0; }
+ul.check { list-style: none; padding-left: 0; }
+ul.check li {
+  position: relative; padding-left: 28px; margin: 8px 0;
+}
+ul.check li::before {
+  content: "☐"; position: absolute; left: 4px; top: 0;
+  color: var(--text-mute); font-size: 16px;
+}
+ul.check li.done::before { content: "☑"; color: var(--ok); }
+
+/* ---------- Mục lục: module + lesson ---------- */
+.module { margin: 38px 0 0; }
+.module-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.module-id {
+  font-family: var(--mono); font-size: 12px; color: var(--accent);
+  background: var(--accent-bg); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  padding: 2px 8px; border-radius: 999px;
+}
+.module-why { color: var(--text-soft); font-size: 14.5px; margin: 6px 0 14px; max-width: 70ch; }
+
+.lesson-list { display: grid; gap: 8px; }
+.lesson {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 11px 14px;
+  text-decoration: none; color: inherit;
+  transition: border-color .12s ease, transform .12s ease;
+}
+.lesson:hover { border-color: var(--accent); transform: translateX(2px); }
+.lesson .num {
+  font-family: var(--mono); font-size: 13px; color: var(--text-mute);
+  min-width: 2ch;
+}
+.lesson .title { font-size: 15px; font-weight: 500; line-height: 1.4; }
+.lesson .sub { font-size: 13px; color: var(--text-mute); margin-top: 2px; }
+.lesson .status {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .05em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--text-mute); white-space: nowrap;
+}
+.lesson .status.done  { background: var(--ok-bg);   color: var(--ok);   border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+.lesson .status.doing { background: var(--warn-bg); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+
+/* ---------- Thanh tiến độ ---------- */
+.progress-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
+.progress-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.progress-top strong { font-size: 15px; }
+.progress-top span { font-family: var(--mono); font-size: 13px; color: var(--text-mute); }
+.bar { height: 8px; background: var(--bg-soft); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+.bar > i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .4s ease; }
+
+/* ---------- Điều hướng trước/sau ---------- */
+.prevnext { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 48px 0 0; }
+.prevnext a {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 12px 14px; text-decoration: none; color: inherit; background: var(--surface);
+}
+.prevnext a:hover { border-color: var(--accent); }
+.prevnext .dir { font-family: var(--mono); font-size: 11.5px; color: var(--text-mute); text-transform: uppercase; letter-spacing: .06em; }
+.prevnext .t { font-size: 14px; margin-top: 3px; display: block; }
+.prevnext .next { text-align: right; }
+
+/* ---------- Footer ---------- */
+footer.page {
+  margin-top: 60px; padding: 24px 0 48px;
+  border-top: 1px solid var(--border);
+  color: var(--text-mute); font-size: 13.5px;
+}
+
+hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+@media (max-width: 560px) {
+  body { font-size: 15.5px; }
+  .lesson { grid-template-columns: auto 1fr; }
+  .lesson .status { grid-column: 2; justify-self: start; margin-top: 4px; }
+  .prevnext { grid-template-columns: 1fr; }
+  .prevnext .next { text-align: left; }
+}
+
+@media print {
+  .topbar, .prevnext, .theme-btn { display: none; }
+  body { background: #fff; color: #000; }
+}
