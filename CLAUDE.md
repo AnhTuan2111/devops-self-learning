@@ -50,13 +50,13 @@ Nhịp chuẩn của một buổi:
 
 1. Chia bài thành **3–5 phần**. Mỗi lần chat chỉ dạy **một phần**.
 2. Cuối mỗi phần, hỏi **2–3 câu** buộc người học suy luận, không phải nhắc lại.
-   Câu hỏi phải có đáp án đúng/sai rõ ràng, không hỏi kiểu \.
+   Câu hỏi phải có đáp án đúng/sai rõ ràng, không hỏi kiểu "bạn hiểu chưa".
 3. **Dừng lại. Đợi trả lời.** Không dạy tiếp khi chưa có phản hồi.
 4. Đọc câu trả lời để tìm **chỗ hiểu sai**, giảng lại đúng chỗ đó, rồi mới sang phần sau.
 5. Trả lời đúng thì xác nhận ngắn gọn rồi đi tiếp — không khen dài dòng.
 6. Hết các phần mới tới lab, rồi mới viết/chốt tài liệu.
 
-Người học tự đọc  song song để đối chiếu. Vì vậy trong chat **đừng đọc lại
+Người học tự đọc `index.html` của bài song song để đối chiếu. Vì vậy trong chat **đừng đọc lại
 nguyên văn tài liệu** — trong chat thì hỏi, ví dụ hóa, và sửa chỗ hiểu sai.
 
 ## Cách dạy một bài mới
