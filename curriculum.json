@@ -1,0 +1,679 @@
+{
+  "meta": {
+    "title": "DevOps Self-Learning",
+    "subtitle": "Từ 0 → tự quản lý server → deploy production → CI/CD",
+    "owner": "AnhTuan2111",
+    "started": "2026-09-21",
+    "stack": "Spring Boot + PostgreSQL + Docker + Nginx + GitHub Actions",
+    "env": "Windows 11 + WSL2 Ubuntu + Docker Desktop",
+    "principle": "Problem → Concept → Tool. Không học lệnh, học hệ thống."
+  },
+  "modules": [
+    {
+      "id": "M0",
+      "title": "Nền tảng — Server và Internet thực sự là gì",
+      "why": "Nếu bỏ qua tầng này, Docker và Nginx sẽ chỉ là một đống lệnh học thuộc. Đây là tầng quyết định bạn có debug được production hay không.",
+      "lessons": [
+        {
+          "id": "00",
+          "slug": "ban-do-toan-canh",
+          "title": "Bản đồ toàn cảnh: một request đi từ browser tới code của bạn",
+          "goal": "Vẽ lại được bằng trí nhớ toàn bộ đường đi của một HTTP request, và gọi tên được mọi thành phần trên đường đi đó.",
+          "concepts": ["Client - Server", "DNS", "IP & Port", "Reverse proxy", "Application server", "Database", "Vì sao cần từng tầng một"],
+          "lab": "Dùng trình duyệt + lệnh curl/ping/nslookup quan sát một request thật đi ra Internet. Tự vẽ lại sơ đồ.",
+          "checklist": [
+            "Giải thích được localhost:8080 nghĩa là gì, từng phần một",
+            "Phân biệt được domain, IP, port",
+            "Nói được vì sao cần Nginx khi đã có Spring Boot",
+            "Vẽ lại sơ đồ request không cần nhìn tài liệu"
+          ],
+          "est": 45
+        },
+        {
+          "id": "01",
+          "slug": "may-tinh-va-he-dieu-hanh",
+          "title": "Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì",
+          "goal": "Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy.",
+          "concepts": ["CPU / RAM / Disk", "Kernel & user space", "Process, PID, thread", "File descriptor", "Filesystem", "Vì sao app chết thì website sập"],
+          "lab": "Quan sát process của chính Spring Boot / Node trên máy mình. Tìm PID, xem RAM, kill nó, xem điều gì xảy ra.",
+          "checklist": [
+            "Chỉ ra được process nào đang giữ một port",
+            "Giải thích được OOM (hết RAM) sẽ làm gì với app",
+            "Phân biệt process và service"
+          ],
+          "est": 45
+        },
+        {
+          "id": "02",
+          "slug": "dung-phong-lab",
+          "title": "Dựng phòng lab: WSL2 Ubuntu + Docker Desktop",
+          "goal": "Có một môi trường Linux thật trên chính máy Windows để thực hành cả lộ trình mà không tốn tiền VPS.",
+          "concepts": ["WSL2 là gì", "Ubuntu filesystem vs Windows filesystem", "Terminal, shell, bash", "Docker Desktop + WSL backend", "Cách không làm hỏng máy"],
+          "lab": "Khởi động Ubuntu, tạo user, cập nhật hệ thống, kiểm tra docker chạy được trong WSL, tạo thư mục lab.",
+          "checklist": [
+            "Mở được terminal Ubuntu và biết mình đang đứng ở đâu",
+            "Chạy được `docker run hello-world` từ trong WSL",
+            "Biết đường dẫn qua lại giữa Windows và WSL"
+          ],
+          "est": 45
+        }
+      ]
+    },
+    {
+      "id": "M1",
+      "title": "Linux — Điều khiển một server",
+      "why": "Mọi server production đều là Linux. Đây là ngôn ngữ chung của toàn bộ nghề DevOps.",
+      "lessons": [
+        {
+          "id": "03",
+          "slug": "filesystem-va-dieu-huong",
+          "title": "Filesystem và điều hướng: bản đồ của một máy Linux",
+          "goal": "Đi lại trong một server lạ mà không bị lạc, và biết cái mình cần nằm ở thư mục nào.",
+          "concepts": ["Cây thư mục gốc /", "/etc /var /usr /home /opt /tmp /proc", "Đường dẫn tuyệt đối vs tương đối", "pwd ls cd tree", "Hidden file"],
+          "lab": "Đi một vòng qua từng thư mục hệ thống và trả lời: thư mục này chứa gì, vì sao nó tồn tại.",
+          "checklist": [
+            "Biết config của Nginx sẽ nằm ở đâu trước khi cài Nginx",
+            "Biết log hệ thống nằm ở đâu",
+            "Dùng được đường dẫn tương đối thành thạo"
+          ],
+          "est": 40
+        },
+        {
+          "id": "04",
+          "slug": "doc-va-thao-tac-file",
+          "title": "Đọc và thao tác file: bộ công cụ điều tra",
+          "goal": "Tìm được một dòng log trong 2 triệu dòng, và chỉnh sửa file config trên server không có giao diện.",
+          "concepts": ["cat less head tail", "grep và regex cơ bản", "find", "cp mv rm mkdir touch", "nano / vim tối thiểu", "Redirect > >> và pipe |", "stdin/stdout/stderr"],
+          "lab": "Sinh một file log giả 100k dòng, dùng grep/tail/pipe để tìm ra lỗi trong đó.",
+          "checklist": [
+            "Theo dõi log realtime bằng tail -f",
+            "Lọc log bằng grep + pipe nhiều tầng",
+            "Sửa và lưu một file bằng nano hoặc vim"
+          ],
+          "est": 50
+        },
+        {
+          "id": "05",
+          "slug": "user-group-permission",
+          "title": "User, group, permission: vì sao 'Permission denied'",
+          "goal": "Không bao giờ phải sudo bừa nữa. Hiểu vì sao container production không được chạy bằng root.",
+          "concepts": ["root vs user thường", "rwx và số 755/644", "chmod chown chgrp", "sudo và /etc/sudoers", "umask", "Nguyên tắc least privilege"],
+          "lab": "Tạo user deploy, phân quyền thư mục app, cố tình gây lỗi Permission denied rồi tự sửa.",
+          "checklist": [
+            "Đọc được output của ls -l không cần tra cứu",
+            "Giải thích được vì sao chmod 777 là nguy hiểm",
+            "Tạo được user riêng cho ứng dụng"
+          ],
+          "est": 50
+        },
+        {
+          "id": "06",
+          "slug": "process-va-signal",
+          "title": "Process và signal: app của bạn sống và chết thế nào",
+          "goal": "Biết app còn sống không, nó ăn bao nhiêu RAM, và vì sao Ctrl+C đôi khi không tắt được nó.",
+          "concepts": ["ps top htop", "PID, PPID, PID 1", "Signal: SIGTERM SIGKILL SIGINT", "Foreground / background, &, nohup", "Zombie & orphan process", "Graceful shutdown"],
+          "lab": "Chạy Spring Boot, tìm PID, gửi SIGTERM vs SIGKILL và quan sát khác biệt trong log.",
+          "checklist": [
+            "Tìm được process ăn nhiều CPU nhất",
+            "Giải thích khác biệt kill vs kill -9",
+            "Hiểu vì sao PID 1 trong container quan trọng"
+          ],
+          "est": 50
+        },
+        {
+          "id": "07",
+          "slug": "systemd-va-service",
+          "title": "systemd: biến app thành service tự khởi động lại",
+          "goal": "Tự viết một service để Spring Boot tự chạy khi server khởi động và tự sống lại khi crash.",
+          "concepts": ["systemd là gì", "systemctl start/stop/status/enable", "Unit file .service", "Restart policy", "journalctl", "Vì sao Docker sau này thay thế phần lớn việc này"],
+          "lab": "Đóng gói một jar Spring Boot thành systemd service, reboot WSL, kiểm tra nó tự chạy.",
+          "checklist": [
+            "Viết được một unit file từ đầu",
+            "Đọc log service bằng journalctl",
+            "Cho service tự restart khi bị kill"
+          ],
+          "est": 55
+        },
+        {
+          "id": "08",
+          "slug": "package-env-shell-script",
+          "title": "Package, biến môi trường và shell script đầu tiên",
+          "goal": "Cài phần mềm lên server đúng cách, và tự động hóa một việc lặp lại bằng script.",
+          "concepts": ["apt update/install/remove", "PATH và cách shell tìm lệnh", "export, env, .bashrc vs .profile", "Shell script: shebang, biến, if, for", "set -e và xử lý lỗi", "cron"],
+          "lab": "Viết script backup.sh nén một thư mục, gắn timestamp vào tên file, và hẹn giờ chạy bằng cron.",
+          "checklist": [
+            "Giải thích được command not found bằng PATH",
+            "Viết script có xử lý lỗi, không im lặng thất bại",
+            "Đặt được một cron job và xác minh nó chạy"
+          ],
+          "est": 55
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Networking — Làm sao dữ liệu tới được máy bạn",
+      "why": "Phần lớn sự cố production là lỗi mạng hoặc cấu hình mạng. Đây là tầng phân biệt người sửa được lỗi và người đoán mò.",
+      "lessons": [
+        {
+          "id": "09",
+          "slug": "ip-localhost-0000",
+          "title": "IP, localhost và cái bẫy 127.0.0.1 vs 0.0.0.0",
+          "goal": "Hiểu lỗi kinh điển nhất khi Dockerize: app chạy ngon ở local nhưng container không ai gọi được.",
+          "concepts": ["IPv4, subnet mask, CIDR", "Private IP vs Public IP", "loopback 127.0.0.1", "0.0.0.0 nghĩa là gì", "NAT", "ip addr, ip route"],
+          "lab": "Cho một app bind vào 127.0.0.1 rồi vào 0.0.0.0, thử gọi từ ngoài container và quan sát khác biệt.",
+          "checklist": [
+            "Giải thích chính xác 0.0.0.0 khác 127.0.0.1 ở đâu",
+            "Biết máy mình có IP nào trong mạng LAN",
+            "Hiểu vì sao Docker container không thấy localhost của host"
+          ],
+          "est": 50
+        },
+        {
+          "id": "10",
+          "slug": "port-va-socket",
+          "title": "Port và socket: 'Address already in use'",
+          "goal": "Biết chính xác ai đang giữ port nào, và hiểu một kết nối TCP hình thành ra sao.",
+          "concepts": ["Port, well-known port", "TCP vs UDP", "3-way handshake", "Socket = IP + port", "ss / netstat / lsof", "Port mapping"],
+          "lab": "Gây lỗi 'port already in use' có chủ đích, dùng ss/lsof truy ra thủ phạm và xử lý.",
+          "checklist": [
+            "Liệt kê mọi port đang listen trên máy",
+            "Truy từ port ra PID ra tên process",
+            "Giải thích vì sao port < 1024 cần quyền root"
+          ],
+          "est": 45
+        },
+        {
+          "id": "11",
+          "slug": "dns",
+          "title": "DNS: từ tên miền tới IP",
+          "goal": "Tự trỏ được một domain thật về server của mình, và debug được khi 'domain không vào được'.",
+          "concepts": ["Resolver, root, TLD, authoritative", "A, AAAA, CNAME, TXT, MX", "TTL và vì sao đổi DNS phải chờ", "dig / nslookup", "/etc/hosts", "DNS cache"],
+          "lab": "Dùng dig truy vết một domain thật từng tầng. Giả lập domain bằng /etc/hosts.",
+          "checklist": [
+            "Đọc được output của dig",
+            "Phân biệt A record và CNAME, biết khi nào dùng cái nào",
+            "Giả lập được domain nội bộ bằng /etc/hosts"
+          ],
+          "est": 45
+        },
+        {
+          "id": "12",
+          "slug": "http-https-curl",
+          "title": "HTTP/HTTPS và curl như một công cụ điều tra",
+          "goal": "Debug API bằng dòng lệnh, đọc được header, hiểu status code nói gì về tầng nào đang hỏng.",
+          "concepts": ["Request line, header, body", "Method, status code theo nhóm", "Header quan trọng: Host, Content-Type, Authorization, X-Forwarded-For", "Keep-alive", "TLS handshake ở mức khái niệm", "curl -v -I -X -H -d"],
+          "lab": "Gọi API Spring Boot bằng curl, xem verbose, phân biệt lỗi 502/504 do Nginx và 500 do app.",
+          "checklist": [
+            "Gọi được POST có JSON body bằng curl",
+            "Đọc được toàn bộ header trong curl -v",
+            "Nói được 502 khác 504 ở đâu và lỗi nằm ở tầng nào"
+          ],
+          "est": 50
+        },
+        {
+          "id": "13",
+          "slug": "ssh-va-firewall",
+          "title": "SSH và firewall: cánh cửa duy nhất vào server",
+          "goal": "Vào server an toàn bằng key thay vì mật khẩu, và chỉ mở đúng những cổng cần mở.",
+          "concepts": ["SSH là gì, public/private key", "ssh-keygen, authorized_keys", "~/.ssh/config", "scp và rsync", "ufw / iptables cơ bản", "Vì sao tắt đăng nhập bằng password"],
+          "lab": "Tạo SSH key, cấu hình đăng nhập không mật khẩu vào WSL, bật ufw và tự chặn/mở port.",
+          "checklist": [
+            "SSH vào máy khác không cần gõ mật khẩu",
+            "Copy file hai chiều bằng scp/rsync",
+            "Cấu hình ufw chỉ mở 22/80/443"
+          ],
+          "est": 55
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Docker — Đóng gói ứng dụng",
+      "why": "Docker giải quyết đúng một vấn đề: 'máy tôi chạy được mà'. Học nó sau khi đã hiểu Linux thì nó rất tự nhiên.",
+      "lessons": [
+        {
+          "id": "14",
+          "slug": "vi-sao-co-docker",
+          "title": "Vì sao có Docker: container KHÔNG phải máy ảo",
+          "goal": "Hiểu container thật ra chỉ là một process Linux bị cô lập, không phải một máy tính thu nhỏ.",
+          "concepts": ["Vấn đề trước Docker", "VM vs Container", "namespace (pid, net, mnt, user)", "cgroup", "Union filesystem / layer", "Docker Engine, daemon, client"],
+          "lab": "Chạy một container rồi dùng ps trên host để tìm chính process đó. Chứng minh nó chỉ là process.",
+          "checklist": [
+            "Giải thích container khác VM bằng ngôn ngữ của mình",
+            "Chỉ ra process của container trên host",
+            "Nói được Docker giải quyết vấn đề gì, và KHÔNG giải quyết vấn đề gì"
+          ],
+          "est": 50
+        },
+        {
+          "id": "15",
+          "slug": "image-va-container",
+          "title": "Image và Container: vòng đời đầy đủ",
+          "goal": "Thành thạo thao tác hằng ngày với container mà không cần tra lệnh.",
+          "concepts": ["Image vs Container (class vs object)", "run, ps, logs, exec, stop, start, rm, rmi", "Tag và registry", "Docker Hub", "-d, -it, --rm, --name", "Restart policy"],
+          "lab": "Chạy PostgreSQL bằng container, exec vào trong, tạo bảng, thoát ra, xóa container, quan sát mất dữ liệu.",
+          "checklist": [
+            "Vào được shell bên trong container đang chạy",
+            "Đọc log container để tìm lỗi khởi động",
+            "Dọn sạch container/image không dùng"
+          ],
+          "est": 50
+        },
+        {
+          "id": "16",
+          "slug": "dockerfile-va-layer",
+          "title": "Dockerfile và layer cache: vì sao build lại chậm",
+          "goal": "Viết Dockerfile đúng thứ tự để build nhanh, và hiểu mỗi dòng tạo ra cái gì.",
+          "concepts": ["FROM WORKDIR COPY RUN CMD ENTRYPOINT ENV EXPOSE", "Layer và cache invalidation", "COPY vs ADD", "CMD vs ENTRYPOINT", ".dockerignore", "Thứ tự lệnh quyết định tốc độ build"],
+          "lab": "Build một image, sửa 1 dòng code, build lại. Đảo thứ tự lệnh và đo lại thời gian build.",
+          "checklist": [
+            "Giải thích vì sao COPY file dependency trước code",
+            "Phân biệt CMD và ENTRYPOINT bằng ví dụ",
+            "Viết .dockerignore hợp lý"
+          ],
+          "est": 55
+        },
+        {
+          "id": "17",
+          "slug": "dockerize-spring-boot",
+          "title": "Dockerize Spring Boot đúng chuẩn production",
+          "goal": "Biến project Spring Boot của bạn thành một image nhỏ, an toàn, chạy non-root.",
+          "concepts": ["Multi-stage build", "Maven/Gradle cache trong Docker", "JRE slim vs JDK", "USER non-root", "JVM trong container: memory limit", "HEALTHCHECK"],
+          "lab": "Viết Dockerfile multi-stage cho project Spring Boot của bạn, so sánh dung lượng image trước/sau.",
+          "checklist": [
+            "Image cuối nhỏ hơn đáng kể so với bản build ngây thơ",
+            "Container chạy bằng user không phải root",
+            "App nhận được biến môi trường từ ngoài"
+          ],
+          "est": 60
+        },
+        {
+          "id": "18",
+          "slug": "volume-va-du-lieu",
+          "title": "Volume và bind mount: vì sao database mất dữ liệu",
+          "goal": "Không bao giờ mất dữ liệu production vì xóa nhầm container.",
+          "concepts": ["Container filesystem là tạm thời", "Named volume vs bind mount vs tmpfs", "docker volume ls/inspect/rm", "Quyền file giữa host và container", "Backup volume"],
+          "lab": "Gắn volume cho PostgreSQL, xóa container, tạo lại, chứng minh dữ liệu vẫn còn. Rồi backup volume ra file.",
+          "checklist": [
+            "Phân biệt rõ named volume và bind mount, biết khi nào dùng cái nào",
+            "Backup và restore được dữ liệu một volume",
+            "Xử lý được lỗi permission khi bind mount"
+          ],
+          "est": 55
+        },
+        {
+          "id": "19",
+          "slug": "docker-network",
+          "title": "Docker network: container gọi nhau bằng tên",
+          "goal": "Hiểu vì sao trong Compose bạn viết jdbc:postgresql://db:5432 thay vì localhost.",
+          "concepts": ["bridge, host, none", "User-defined network và DNS nội bộ", "Port publishing -p host:container", "host.docker.internal", "Container isolation"],
+          "lab": "Tạo network riêng, cho 2 container ping nhau bằng tên, rồi tháo network ra và quan sát nó hỏng thế nào.",
+          "checklist": [
+            "Giải thích vì sao đổi localhost thành tên service",
+            "Biết port nào thực sự lộ ra ngoài",
+            "Cô lập được database không cho truy cập từ ngoài"
+          ],
+          "est": 50
+        },
+        {
+          "id": "20",
+          "slug": "docker-compose",
+          "title": "Docker Compose: cả hệ thống trong một file",
+          "goal": "Một lệnh duy nhất dựng lên toàn bộ Spring Boot + PostgreSQL, tái lập được ở bất kỳ máy nào.",
+          "concepts": ["compose.yaml: services, volumes, networks", "depends_on và healthcheck", "env_file và .env", "profiles", "up -d, down, logs -f, ps, exec", "Biến môi trường và secret"],
+          "lab": "Viết compose.yaml cho project của bạn. Mục tiêu: xóa sạch mọi thứ rồi `docker compose up -d` là hệ thống sống lại.",
+          "checklist": [
+            "App đợi DB sẵn sàng rồi mới khởi động (healthcheck)",
+            "Không có mật khẩu nào hard-code trong compose.yaml",
+            "Người khác clone repo về chạy được ngay"
+          ],
+          "est": 70
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "Nginx — Đưa ứng dụng ra Internet",
+      "why": "Spring Boot không nên nói chuyện trực tiếp với Internet. Nginx là lớp cửa: TLS, static file, rate limit, load balancing.",
+      "lessons": [
+        {
+          "id": "21",
+          "slug": "reverse-proxy-co-ban",
+          "title": "Reverse proxy: Nginx đứng trước ứng dụng để làm gì",
+          "goal": "Cấu hình được Nginx nhận request từ ngoài và chuyển vào Spring Boot.",
+          "concepts": ["Forward proxy vs Reverse proxy", "nginx.conf, sites-available/enabled", "server block, listen, server_name", "location matching", "proxy_pass", "nginx -t, reload vs restart"],
+          "lab": "Cài Nginx, viết một server block trỏ về Spring Boot :8080, truy cập qua port 80.",
+          "checklist": [
+            "Sửa config và reload không làm gián đoạn dịch vụ",
+            "Hiểu thứ tự ưu tiên của location",
+            "Đọc được error.log khi cấu hình sai"
+          ],
+          "est": 55
+        },
+        {
+          "id": "22",
+          "slug": "static-file-va-spa",
+          "title": "Phục vụ static file và ứng dụng SPA",
+          "goal": "Cho Nginx trả frontend build sẵn, còn /api thì đẩy về backend.",
+          "concepts": ["root vs alias", "index, try_files", "Vấn đề F5 mất route trong SPA", "Cache-Control cho asset", "gzip / brotli", "Tách /api và /"],
+          "lab": "Serve một bản build React/Vue tĩnh, cấu hình try_files, và route /api về Spring Boot.",
+          "checklist": [
+            "Refresh trang con của SPA không bị 404",
+            "Asset có cache header hợp lý",
+            "Phân biệt được root và alias"
+          ],
+          "est": 50
+        },
+        {
+          "id": "23",
+          "slug": "nginx-header-log-timeout",
+          "title": "Header, log, timeout, rate limit: Nginx trong thực chiến",
+          "goal": "Cấu hình những thứ mà thiếu nó production sẽ có bug rất khó tìm.",
+          "concepts": ["X-Forwarded-For / Proto và IP thật của client", "client_max_body_size (lỗi upload 413)", "proxy_read_timeout (lỗi 504)", "access_log / error_log format", "limit_req rate limiting", "Security header cơ bản"],
+          "lab": "Gây lỗi 413 khi upload file lớn và 504 khi API chậm, rồi sửa bằng config.",
+          "checklist": [
+            "Spring Boot log ra đúng IP client chứ không phải IP Nginx",
+            "Upload file lớn không bị 413",
+            "Biết chỉnh timeout ở đúng chỗ"
+          ],
+          "est": 55
+        },
+        {
+          "id": "24",
+          "slug": "nginx-trong-compose",
+          "title": "Nginx trong Docker Compose: ráp toàn bộ hệ thống",
+          "goal": "Toàn bộ stack Nginx + Spring Boot + PostgreSQL chạy bằng một lệnh, database không lộ ra Internet.",
+          "concepts": ["Nginx container và mount config", "Chỉ publish 80/443, giấu 8080 và 5432", "Network phân tầng", "Reload Nginx trong container", "Cấu trúc thư mục project chuẩn"],
+          "lab": "Thêm service nginx vào compose.yaml, bỏ toàn bộ ports của app và db, chỉ còn Nginx lộ ra ngoài.",
+          "checklist": [
+            "Từ host không truy cập trực tiếp được :8080 và :5432",
+            "Vẫn vào được app qua :80",
+            "Vẽ lại được sơ đồ network của compose"
+          ],
+          "est": 60
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "title": "Production — VPS thật, domain thật, HTTPS thật",
+      "why": "Đây là milestone quan trọng nhất. Chạy được ở local không phải là deploy. Tầng này biến bạn thành người quản lý hạ tầng.",
+      "lessons": [
+        {
+          "id": "25",
+          "slug": "vps-va-hardening",
+          "title": "Chọn VPS và hardening ngày đầu tiên",
+          "goal": "Có một server thật trên Internet và khóa nó lại trước khi kẻ khác tìm thấy.",
+          "concepts": ["Chọn nhà cung cấp và cấu hình", "Tạo user sudo, tắt root login", "SSH key only, đổi port SSH", "ufw", "fail2ban", "unattended-upgrades", "Timezone, hostname, swap"],
+          "lab": "Dựng một VPS Ubuntu, chạy toàn bộ checklist hardening, xem log để thấy bot đã quét bạn trong vòng vài phút.",
+          "checklist": [
+            "Không đăng nhập được bằng password nữa",
+            "ufw chỉ cho 22/80/443",
+            "Tự tin rằng mất laptop vẫn không mất server"
+          ],
+          "est": 70
+        },
+        {
+          "id": "26",
+          "slug": "deploy-thu-cong-lan-dau",
+          "title": "Deploy thủ công lần đầu: cảm nhận nỗi đau",
+          "goal": "Tự tay deploy một lần, để hiểu CI/CD sau này đang tự động hóa CÁI GÌ.",
+          "concepts": ["Đưa code/image lên server", "Cấu trúc thư mục deploy", "Chạy compose trên production", "Log ở đâu, debug thế nào", "Ghi lại từng bước để sau này script hóa"],
+          "lab": "Deploy stack lên VPS bằng tay, truy cập bằng IP. Ghi lại CHÍNH XÁC từng lệnh đã gõ.",
+          "checklist": [
+            "Truy cập được ứng dụng qua IP public",
+            "Có một file runbook liệt kê mọi bước",
+            "Chỉ ra được ít nhất 3 bước dễ sai nếu làm thủ công"
+          ],
+          "est": 70
+        },
+        {
+          "id": "27",
+          "slug": "domain-va-dns-that",
+          "title": "Domain và DNS thật",
+          "goal": "Gõ tên miền của bạn vào trình duyệt và thấy ứng dụng của bạn hiện lên.",
+          "concepts": ["Mua/dùng domain", "A record trỏ về IP VPS", "Subdomain cho api/staging", "TTL khi chuyển server", "Kiểm chứng bằng dig từ nhiều nơi", "Cloudflare proxy: lợi và hại"],
+          "lab": "Trỏ domain về VPS, cấu hình server_name trong Nginx, xác minh bằng dig và curl.",
+          "checklist": [
+            "domain và www đều vào được",
+            "Có subdomain riêng cho API",
+            "Giải thích được vì sao đôi khi phải chờ DNS"
+          ],
+          "est": 50
+        },
+        {
+          "id": "28",
+          "slug": "https-lets-encrypt",
+          "title": "HTTPS với Let's Encrypt và tự động gia hạn",
+          "goal": "Ổ khóa xanh trên trình duyệt, và chứng chỉ tự gia hạn mà bạn không phải nhớ.",
+          "concepts": ["TLS, certificate, CA", "ACME challenge (HTTP-01, DNS-01)", "Certbot", "Redirect 80 → 443", "HSTS", "Auto-renew và cách kiểm tra nó thật sự chạy", "Certbot với Nginx trong Docker"],
+          "lab": "Cấp chứng chỉ cho domain, ép HTTPS, chạy thử renew --dry-run.",
+          "checklist": [
+            "https:// hoạt động, http:// tự chuyển sang https",
+            "Kiểm chứng được auto-renew hoạt động",
+            "Biết chứng chỉ hết hạn ngày nào và ai sẽ báo bạn"
+          ],
+          "est": 65
+        },
+        {
+          "id": "29",
+          "slug": "secret-va-backup",
+          "title": "Quản lý secret và backup: thứ bạn chỉ tiếc khi đã muộn",
+          "goal": "Không commit mật khẩu lên GitHub, và có thể khôi phục database sau khi mất sạch.",
+          "concepts": ["12-factor config", ".env và .gitignore", "Xử lý khi lỡ commit secret", "pg_dump / pg_restore", "Backup tự động bằng cron", "Lưu backup ra ngoài server", "Restore drill"],
+          "lab": "Viết script backup DB tự động hằng ngày, rồi XÓA database và khôi phục lại từ backup.",
+          "checklist": [
+            "Không có secret nào trong git history",
+            "Backup chạy tự động và có retention",
+            "Đã thực sự restore thành công ít nhất một lần"
+          ],
+          "est": 65
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "title": "CI/CD — Tự động hóa toàn bộ",
+      "why": "CI/CD không phải một công cụ, nó là quy trình. Bạn chỉ tự động hóa tốt cái bạn đã làm thủ công thành thạo.",
+      "lessons": [
+        {
+          "id": "30",
+          "slug": "ci-cd-la-quy-trinh",
+          "title": "CI/CD là quy trình, không phải tool",
+          "goal": "Vẽ được pipeline mình cần TRƯỚC khi viết dòng YAML nào.",
+          "concepts": ["CI vs CD vs Continuous Deployment", "Build → Test → Package → Deploy", "Artifact và registry", "Environment: dev/staging/prod", "Trunk-based vs Git flow", "Vì sao pipeline chậm thì vô dụng"],
+          "lab": "Chuyển runbook thủ công ở bài 26 thành sơ đồ pipeline từng bước.",
+          "checklist": [
+            "Có sơ đồ pipeline cụ thể cho project của mình",
+            "Phân biệt rõ CI và CD",
+            "Biết bước nào bắt buộc phải có người duyệt"
+          ],
+          "est": 45
+        },
+        {
+          "id": "31",
+          "slug": "github-actions-co-ban",
+          "title": "GitHub Actions cơ bản — và deploy chính website học tập này",
+          "goal": "Pipeline đầu tiên trong đời: mỗi lần push, trang tài liệu học tập của bạn tự động lên mạng.",
+          "concepts": ["workflow, job, step, action", "runner", "on: push / pull_request / workflow_dispatch", "Ma trận (matrix)", "Đọc log của một run", "GitHub Pages deploy action"],
+          "lab": "Viết workflow tự động deploy thư mục này lên GitHub Pages mỗi khi push lên main.",
+          "checklist": [
+            "Push code → vài phút sau trang web tự cập nhật",
+            "Đọc và hiểu được toàn bộ file YAML mình viết",
+            "Debug được khi workflow đỏ"
+          ],
+          "est": 60
+        },
+        {
+          "id": "32",
+          "slug": "ci-cho-spring-boot",
+          "title": "CI cho Spring Boot: build, test, cache",
+          "goal": "Không bao giờ merge một commit làm hỏng build hoặc gãy test.",
+          "concepts": ["setup-java action", "Cache Maven/Gradle", "Chạy test tự động", "Service container cho integration test", "Branch protection, required check", "Test report và coverage"],
+          "lab": "Workflow chạy `mvn verify` trên mọi pull request, có cache, có PostgreSQL service container.",
+          "checklist": [
+            "PR đỏ thì không merge được",
+            "Build lần 2 nhanh hơn hẳn nhờ cache",
+            "Integration test chạy với DB thật trong CI"
+          ],
+          "est": 65
+        },
+        {
+          "id": "33",
+          "slug": "build-va-push-image",
+          "title": "Build và push Docker image lên registry",
+          "goal": "Mỗi commit trên main sinh ra một image có phiên bản rõ ràng, sẵn sàng deploy.",
+          "concepts": ["GHCR vs Docker Hub", "docker/build-push-action", "Buildx và cache layer trên CI", "Chiến lược tag: latest, sha, semver", "Đăng nhập registry bằng token", "Quét lỗ hổng image"],
+          "lab": "Workflow build image Spring Boot và push lên GitHub Container Registry với tag theo commit SHA.",
+          "checklist": [
+            "Pull được image đó về máy và chạy",
+            "Mỗi image truy ngược được về đúng commit",
+            "Build trên CI có dùng cache"
+          ],
+          "est": 65
+        },
+        {
+          "id": "34",
+          "slug": "cd-deploy-len-vps",
+          "title": "CD: tự động deploy lên VPS",
+          "goal": "git push → production tự cập nhật. Không SSH thủ công nữa.",
+          "concepts": ["GitHub Secrets và Environments", "Deploy key / SSH từ Actions", "Script deploy idempotent", "docker compose pull && up -d", "Environment protection rule", "Vì sao KHÔNG build trên server production"],
+          "lab": "Workflow SSH vào VPS, pull image mới, restart stack. Deploy thật một thay đổi nhỏ.",
+          "checklist": [
+            "Đẩy một commit và thấy production đổi mà không đụng terminal",
+            "Secret không lộ trong log",
+            "Deploy hỏng thì workflow phải đỏ, không im lặng"
+          ],
+          "est": 75
+        },
+        {
+          "id": "35",
+          "slug": "zero-downtime-va-rollback",
+          "title": "Zero-downtime và rollback: khi deploy hỏng lúc 5 giờ chiều",
+          "goal": "Deploy mà người dùng không thấy lỗi, và quay về bản cũ trong dưới 1 phút.",
+          "concepts": ["Downtime khi restart container", "Health check và readiness", "Rolling update thủ công với Nginx", "Blue-green cơ bản", "Rollback bằng image tag", "Database migration và backward compatibility"],
+          "lab": "Đo downtime hiện tại bằng vòng lặp curl, rồi cải tiến để giảm về gần 0. Thực hành rollback.",
+          "checklist": [
+            "Đo được downtime bằng số cụ thể",
+            "Rollback về bản trước trong 1 lệnh",
+            "Hiểu vì sao migration DB là phần nguy hiểm nhất"
+          ],
+          "est": 75
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "title": "Monitoring & Vận hành — Biết server còn sống",
+      "why": "Deploy được chưa phải là xong. Câu hỏi thật: nếu server chết lúc 3 giờ sáng thì bạn biết bằng cách nào?",
+      "lessons": [
+        {
+          "id": "36",
+          "slug": "log-tap-trung",
+          "title": "Log: từ docker logs tới log tập trung",
+          "goal": "Tìm được nguyên nhân một lỗi xảy ra 3 ngày trước, kể cả khi container đã bị thay.",
+          "concepts": ["Log level và structured logging (JSON)", "docker logs và log driver", "Log rotation, đầy ổ cứng vì log", "Correlation ID xuyên request", "Loki + Promtail hoặc giải pháp nhẹ", "Cái gì KHÔNG được log (PII, token)"],
+          "lab": "Bật structured log cho Spring Boot, cấu hình log rotation, truy một request qua nhiều tầng bằng correlation ID.",
+          "checklist": [
+            "Log không bao giờ làm đầy ổ cứng",
+            "Truy được một request từ Nginx xuống app",
+            "Không có mật khẩu/token nào trong log"
+          ],
+          "est": 65
+        },
+        {
+          "id": "37",
+          "slug": "metrics-prometheus-grafana",
+          "title": "Metrics với Prometheus, Grafana và Spring Actuator",
+          "goal": "Có một dashboard trả lời được: hệ thống đang khỏe hay yếu, và yếu ở đâu.",
+          "concepts": ["Metric vs Log vs Trace", "Spring Boot Actuator + Micrometer", "Prometheus scrape model", "node_exporter, cAdvisor", "Grafana dashboard", "4 golden signals: latency, traffic, errors, saturation"],
+          "lab": "Dựng Prometheus + Grafana bằng compose, vẽ dashboard cho RAM, CPU, request rate, latency p95.",
+          "checklist": [
+            "Nhìn dashboard biết ngay hệ thống có bất thường không",
+            "Hiểu ý nghĩa p95 latency",
+            "Biết ngưỡng nào là nguy hiểm với hệ thống của mình"
+          ],
+          "est": 75
+        },
+        {
+          "id": "38",
+          "slug": "alert-va-uptime",
+          "title": "Alert: được báo trước khi người dùng phàn nàn",
+          "goal": "Server chết lúc 3h sáng thì điện thoại bạn kêu, chứ không phải sếp gọi lúc 8h.",
+          "concepts": ["Uptime monitoring từ bên ngoài", "Alertmanager và routing", "Ngưỡng cảnh báo hợp lý", "Alert fatigue: vì sao cảnh báo quá nhiều là vô dụng", "On-call và runbook", "Healthcheck endpoint đúng cách"],
+          "lab": "Cấu hình alert khi service chết hoặc lỗi 5xx vượt ngưỡng. Cố tình làm sập service để kiểm chứng.",
+          "checklist": [
+            "Tự tay làm sập app và nhận được cảnh báo",
+            "Mỗi cảnh báo đều có hành động cụ thể phải làm",
+            "Không có cảnh báo nào bị bỏ qua vì quá ồn"
+          ],
+          "est": 65
+        },
+        {
+          "id": "39",
+          "slug": "su-co-va-runbook",
+          "title": "Xử lý sự cố: quy trình khi mọi thứ đang cháy",
+          "goal": "Có một quy trình debug theo tầng thay vì hoảng loạn thử mọi thứ.",
+          "concepts": ["Debug theo tầng: DNS → Nginx → App → DB", "Lệnh chẩn đoán nhanh: df -h, free -h, docker stats, journalctl", "Đầy disk, hết RAM, cạn connection pool", "Postmortem không đổ lỗi", "Runbook cho từng loại sự cố"],
+          "lab": "Tự gây 3 sự cố (đầy disk, DB chết, app treo) và viết runbook xử lý cho từng loại.",
+          "checklist": [
+            "Có checklist chẩn đoán theo thứ tự cố định",
+            "Khoanh vùng được lỗi nằm ở tầng nào trong 5 phút",
+            "Có runbook viết sẵn cho ít nhất 3 sự cố"
+          ],
+          "est": 70
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "title": "Mở rộng — Khi hệ thống lớn lên",
+      "why": "Chỉ học tầng này SAU khi đã làm chủ mọi tầng trên. Học Kubernetes trước khi hiểu Linux là con đường ngắn nhất tới việc bỏ cuộc.",
+      "lessons": [
+        {
+          "id": "40",
+          "slug": "infrastructure-as-code",
+          "title": "Infrastructure as Code: Ansible và Terraform nhập môn",
+          "goal": "Dựng lại toàn bộ server từ số 0 bằng code, không cần nhớ mình đã gõ gì.",
+          "concepts": ["Vì sao 'server thú cưng' là vấn đề", "Idempotency", "Ansible playbook cho hardening + cài Docker", "Terraform quản lý tài nguyên cloud", "State file", "IaC cũng cần review như code"],
+          "lab": "Viết Ansible playbook làm lại toàn bộ bài 25 (hardening) một cách tự động.",
+          "checklist": [
+            "Xóa VPS và dựng lại bằng 1 lệnh",
+            "Chạy playbook 2 lần cho kết quả giống nhau",
+            "Hiểu khác biệt Ansible và Terraform"
+          ],
+          "est": 80
+        },
+        {
+          "id": "41",
+          "slug": "kubernetes-nhap-mon",
+          "title": "Kubernetes nhập môn: khi nào bạn THỰC SỰ cần nó",
+          "goal": "Hiểu K8s giải quyết vấn đề gì, và trung thực trả lời được: dự án của mình có cần nó không.",
+          "concepts": ["Pod, Deployment, Service, Ingress", "ConfigMap, Secret", "Vì sao Compose không đủ khi scale", "k3s / kind để học local", "Chi phí vận hành thật của K8s", "Khi nào Compose + 1 VPS là lựa chọn đúng"],
+          "lab": "Dựng k3s local, deploy chính app Spring Boot lên đó, so sánh trải nghiệm với Compose.",
+          "checklist": [
+            "Deploy được app lên cluster local",
+            "Giải thích Pod khác Container ở đâu",
+            "Trả lời trung thực: dự án hiện tại có cần K8s không, vì sao"
+          ],
+          "est": 90
+        },
+        {
+          "id": "42",
+          "slug": "tong-ket",
+          "title": "Tổng kết: tự vẽ lại toàn bộ hệ thống",
+          "goal": "Chứng minh bạn đã hiểu, bằng cách giải thích được từng mũi tên trong kiến trúc của chính mình.",
+          "concepts": ["Vẽ lại kiến trúc end-to-end", "Tự audit bảo mật", "Tự audit chi phí", "Điểm yếu còn lại của hệ thống", "Lộ trình học tiếp"],
+          "lab": "Vẽ sơ đồ kiến trúc đầy đủ và tự thuyết trình 15 phút về nó, không nhìn tài liệu.",
+          "checklist": [
+            "Giải thích được mọi thành phần và vì sao nó tồn tại",
+            "Chỉ ra được 3 điểm yếu của hệ thống hiện tại",
+            "Có kế hoạch học tiếp cụ thể"
+          ],
+          "est": 60
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+# Secret — KHÔNG BAO GIỜ commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa*
+secrets/
+
+# Build
+target/
+build/
+dist/
+node_modules/
+*.jar
+*.war
+
+# Backup và dump
+*.sql
+*.dump
+*.tar.gz
+backups/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Log
+*.log
+logs/
