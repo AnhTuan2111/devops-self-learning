@@ -1,0 +1,85 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 29 — Quản lý secret và backup: thứ bạn chỉ tiếc khi đã muộn</title>
+<meta name="description" content="Không commit mật khẩu lên GitHub, và có thể khôi phục database sau khi mất sạch.">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📘</text></svg>">
+</head>
+<body data-lesson="29">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">🧱 DevOps Self-Learning</a>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M5">M5</a>
+    <button class="theme-btn" type="button">Tối</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page">
+  <p class="eyebrow">Module M5 · Bài 29</p>
+  <h1>Quản lý secret và backup: thứ bạn chỉ tiếc khi đã muộn</h1>
+  <p class="lede">Không commit mật khẩu lên GitHub, và có thể khôi phục database sau khi mất sạch.</p>
+  <div class="meta">
+    <span class="pill ">Chưa học</span>
+    <span class="pill">~65 phút</span>
+    <span class="pill">Production — VPS thật, domain thật, HTTPS thật</span>
+  </div>
+</header>
+
+<div class="callout">
+  <span class="label">Chưa học</span>
+  <p>Trang này mới chỉ là khung bài. Nội dung đầy đủ — giải thích, sơ đồ, bảng tra và phần mổ băng lab — sẽ được viết vào đúng buổi học bài này.</p>
+</div>
+
+<h2 id="muc-tieu">Mục tiêu</h2>
+<p>Không commit mật khẩu lên GitHub, và có thể khôi phục database sau khi mất sạch.</p>
+
+<h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+<ul>
+  <li>12-factor config</li>
+  <li>.env và .gitignore</li>
+  <li>Xử lý khi lỡ commit secret</li>
+  <li>pg_dump / pg_restore</li>
+  <li>Backup tự động bằng cron</li>
+  <li>Lưu backup ra ngoài server</li>
+  <li>Restore drill</li>
+</ul>
+
+<h2 id="lab">Bài lab</h2>
+<p>Viết script backup DB tự động hằng ngày, rồi XÓA database và khôi phục lại từ backup.</p>
+
+<h2 id="tu-kiem-tra">Tự kiểm tra</h2>
+<p>Học xong phải tự làm được, không nhìn tài liệu. Bấm vào từng dòng để đánh dấu.</p>
+<ul class="check">
+  <li>Không có secret nào trong git history</li>
+  <li>Backup chạy tự động và có retention</li>
+  <li>Đã thực sự restore thành công ít nhất một lần</li>
+</ul>
+
+<div class="prevnext">
+  <a href="../28-https-lets-encrypt/">
+    <span class="dir">← Bài trước</span>
+    <span class="t">28 · HTTPS với Let's Encrypt và tự động gia hạn</span>
+  </a>
+  <a class="next" href="../30-ci-cd-la-quy-trinh/">
+    <span class="dir">Bài tiếp →</span>
+    <span class="t">30 · CI/CD là quy trình, không phải tool</span>
+  </a>
+</div>
+
+<footer class="page">
+  <p>Bài 29 · Module M5 — Production — VPS thật, domain thật, HTTPS thật · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js"></script>
+</body>
+</html>
