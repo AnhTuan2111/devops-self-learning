@@ -315,13 +315,128 @@ writeFileSync(join(ROOT, 'README.md'), readme, 'utf8');
 /* Thư mục từng bài (không ghi đè file đã có)                          */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Mỗi thư mục bài PHẢI có index.html, nếu không GitHub Pages sẽ tự render
+ * README.md bằng Jekyll — ra một trang HTML trần, không có CSS của ta.
+ *
+ * File sinh tự động mang dấu SENTINEL ở dòng 2. Chạy lại script thì file có
+ * dấu đó sẽ được ghi đè (để cập nhật theo curriculum.json), còn file viết tay
+ * (như bài 00) thì KHÔNG bao giờ bị đụng tới.
+ */
+const SENTINEL = '<!-- devops-selflearning:generated-stub -->';
+
+function stubHtml(l, prev, next) {
+  const st = statusOf(l.id);
+  const link = (x, dir, cls) =>
+    x
+      ? `  <a${cls} href="../${x.id}-${x.slug}/">
+    <span class="dir">${dir}</span>
+    <span class="t">${x.id} · ${esc(x.title.split(':')[0])}</span>
+  </a>`
+      : `  <a${cls} href="../../">
+    <span class="dir">${dir}</span>
+    <span class="t">Mục lục</span>
+  </a>`;
+
+  return `<!doctype html>
+${SENTINEL}
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài ${l.id} — ${esc(l.title)}</title>
+<meta name="description" content="${esc(l.goal)}">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📘</text></svg>">
+</head>
+<body data-lesson="${l.id}">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">🧱 DevOps Self-Learning</a>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#${l.moduleId}">${l.moduleId}</a>
+    <button class="theme-btn" type="button">Tối</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page">
+  <p class="eyebrow">Module ${l.moduleId} · Bài ${l.id}</p>
+  <h1>${esc(l.title)}</h1>
+  <p class="lede">${esc(l.goal)}</p>
+  <div class="meta">
+    <span class="pill ${st === 'done' ? 'ok' : st === 'doing' ? 'warn' : ''}">${STATUS_LABEL[st]}</span>
+    <span class="pill">~${l.est} phút</span>
+    <span class="pill">${esc(l.moduleTitle)}</span>
+  </div>
+</header>
+
+<div class="callout${st === 'done' ? ' ok' : ''}">
+  <span class="label">${st === 'done' ? 'Đã học' : 'Chưa học'}</span>
+  <p>${
+    st === 'done'
+      ? 'Bài này đã học xong nhưng chưa viết lại thành tài liệu đầy đủ.'
+      : 'Trang này mới chỉ là khung bài. Nội dung đầy đủ — giải thích, sơ đồ, bảng tra và phần mổ băng lab — sẽ được viết vào đúng buổi học bài này.'
+  }</p>
+</div>
+
+<h2 id="muc-tieu">Mục tiêu</h2>
+<p>${esc(l.goal)}</p>
+
+<h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+<ul>
+${l.concepts.map((c) => `  <li>${esc(c)}</li>`).join('\n')}
+</ul>
+
+<h2 id="lab">Bài lab</h2>
+<p>${esc(l.lab)}</p>
+
+<h2 id="tu-kiem-tra">Tự kiểm tra</h2>
+<p>Học xong phải tự làm được, không nhìn tài liệu. Bấm vào từng dòng để đánh dấu.</p>
+<ul class="check">
+${l.checklist.map((c) => `  <li>${esc(c)}</li>`).join('\n')}
+</ul>
+
+<div class="prevnext">
+${link(prev, '← Bài trước', '')}
+${link(next, 'Bài tiếp →', ' class="next"')}
+</div>
+
+<footer class="page">
+  <p>Bài ${l.id} · Module ${l.moduleId} — ${esc(l.moduleTitle)} · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js"></script>
+</body>
+</html>
+`;
+}
+
+// .nojekyll: chặn GitHub Pages chạy Jekyll. Không có file này, Jekyll sẽ render
+// README.md thành HTML trần và trỏ CSS vào assets/css/style.css của theme —
+// đè lên thư mục assets/ của chính ta.
+writeFileSync(join(ROOT, '.nojekyll'), '');
+
 let created = 0;
-for (const l of allLessons) {
+let stubs = 0;
+for (const [i, l] of allLessons.entries()) {
   const dir = join(ROOT, dirOf(l));
   mkdirSync(join(dir, 'lab'), { recursive: true });
 
   const gitkeep = join(dir, 'lab', '.gitkeep');
   if (!existsSync(gitkeep)) writeFileSync(gitkeep, '');
+
+  const htmlPath = join(dir, 'index.html');
+  const handWritten =
+    existsSync(htmlPath) && !readFileSync(htmlPath, 'utf8').includes(SENTINEL);
+  if (!handWritten) {
+    writeFileSync(htmlPath, stubHtml(l, allLessons[i - 1], allLessons[i + 1]), 'utf8');
+    stubs++;
+  }
 
   const readmePath = join(dir, 'README.md');
   if (!existsSync(readmePath)) {
@@ -367,5 +482,9 @@ cùng với \`index.html\` ghi lại những gì đã thực sự làm và nhữ
   }
 }
 
-console.log(`✔ index.html + README.md đã cập nhật`);
-console.log(`✔ ${allLessons.length} bài · ${doneCount} xong (${pct}%) · ${created} thư mục bài mới được tạo`);
+console.log(`✔ index.html + README.md + .nojekyll đã cập nhật`);
+console.log(
+  `✔ ${allLessons.length} bài · ${doneCount} xong (${pct}%) · ` +
+    `${created} README mới · ${stubs} trang HTML sinh tự động ` +
+    `(${allLessons.length - stubs} viết tay, không đụng tới)`
+);
