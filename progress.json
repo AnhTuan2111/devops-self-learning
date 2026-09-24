@@ -1,5 +1,10 @@
 {
   "lessons": {
-    "00": { "status": "doing", "date": "2026-09-21", "note": "" }
+    "00": {
+      "status": "done",
+      "date": "2026-09-24",
+      "note": "Hoc theo doi thoai thay-tro. Sua duoc 9 cho hieu sai. Con treo: so sanh refused tren WSL Ubuntu (Bai 02)."
+    },
+    "01": { "status": "todo", "date": null, "note": "" }
   }
 }

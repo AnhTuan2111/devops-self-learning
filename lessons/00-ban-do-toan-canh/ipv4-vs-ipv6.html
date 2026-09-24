@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phụ lục — IPv4, IPv6 và NAT</title>
+<meta name="description" content="Vì sao địa chỉ IP cạn kiệt, NAT đã cứu Internet thế nào, và vì sao bạn phải thuê VPS thay vì chạy server ở nhà.">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+</head>
+<body data-lesson="00-ipv6">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">🧱 DevOps Self-Learning</a>
+    <span class="spacer"></span>
+    <a class="nav" href="index.html">← Bài giảng 00</a>
+    <a class="nav" href="phan-tich-output.html">Mổ băng output</a>
+    <button class="theme-btn" type="button">Tối</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page">
+  <p class="eyebrow">Bài 00 · Phụ lục</p>
+  <h1>IPv4, IPv6 và NAT — vì sao chúng tồn tại</h1>
+  <p class="lede">Câu hỏi nảy ra giữa buổi lab, khi thấy <code>curl</code> thử IPv6 trước rồi
+  mới quay sang IPv4. Trả lời nó đòi hỏi quay về năm 1981 — và nó giải thích luôn vì sao bạn
+  <em>phải</em> thuê VPS thay vì chạy server ở nhà.</p>
+</header>
+
+<h2 id="1981">1981 — bối cảnh sinh ra IPv4</h2>
+
+<p>IPv4 được chuẩn hóa năm <strong>1981</strong>. Internet khi đó là <strong>ARPANET</strong>:
+vài trăm máy tính của các trường đại học Mỹ và Bộ Quốc phòng.</p>
+
+<p>Một máy tính thời đó to bằng cái tủ, giá bằng một căn nhà. Khái niệm "mỗi người một chiếc
+máy tính" còn là khoa học viễn tưởng.</p>
+
+<p>Người thiết kế chọn <strong>32 bit</strong> cho địa chỉ:</p>
+
+<pre class="diagram"><code>  2³² = 4.294.967.296  ≈  4,3 tỷ địa chỉ</code></pre>
+
+<p>Năm 1981, dân số thế giới khoảng 4,5 tỷ và gần như <strong>không ai</strong> sở hữu máy tính.
+4,3 tỷ địa chỉ nghe như vô hạn.</p>
+
+<div class="callout">
+  <span class="label">Đừng vội chê</span>
+  <p>Đây không phải sự thiếu tầm nhìn. Đây là một quyết định <strong>hợp lý với thông tin có
+  vào lúc đó</strong>. Không ai hình dung nổi rằng 40 năm sau, một cái bóng đèn cũng cần địa chỉ IP.</p>
+  <p>Bài học chung: <em>mọi quyết định kiến trúc đều mang theo giả định về tương lai, và giả
+  định nào rồi cũng hết hạn.</em></p>
+</div>
+
+<h2 id="class">Cách chia ban đầu làm nó cạn nhanh hơn nhiều</h2>
+
+<p>Ban đầu người ta chia theo <strong>lớp</strong> (class), cấp phát theo khối cực lớn:</p>
+
+<pre class="diagram"><code>  Class A  →  16.777.216 địa chỉ  cho MỘT tổ chức
+  Class B  →      65.536 địa chỉ
+  Class C  →         256 địa chỉ</code></pre>
+
+<p>MIT, Ford, Apple, IBM, Bộ Quốc phòng Mỹ — mỗi nơi được <strong>nguyên một Class A</strong>.
+Hàng trăm triệu địa chỉ bị khóa trong tay vài chục tổ chức, phần lớn không bao giờ dùng hết.</p>
+
+<h2 id="bao-dong">Đầu thập niên 1990 — báo động</h2>
+
+<p>Web ra đời năm 1991. Internet bùng nổ thương mại. Đến <strong>1992</strong>, IETF nhận ra sẽ
+cạn địa chỉ và bắt đầu thiết kế thế hệ kế tiếp. Năm <strong>1998</strong>, IPv6 được chuẩn hóa.</p>
+
+<p><strong>Nhưng IPv6 không được dùng.</strong> Vì trong lúc chờ nó, người ta đã vá tạm — và
+miếng vá quá hiệu quả.</p>
+
+<h2 id="va">Hai miếng vá đã trì hoãn khủng hoảng thêm 20 năm</h2>
+
+<h3>Miếng vá ① — CIDR (1993)</h3>
+
+<p>Bỏ hệ thống class cứng nhắc, cho phép chia khối linh hoạt tùy nhu cầu. Đây chính là nguồn
+gốc ký hiệu bạn sẽ gặp suốt đời:</p>
+
+<pre class="diagram"><code>  192.168.1.0/24    ← 24 bit đầu cố định, 8 bit cuối tự do → 256 địa chỉ
+  10.0.0.0/8        ← 8 bit đầu cố định → 16,7 triệu địa chỉ</code></pre>
+
+<h3>Miếng vá ② — NAT (~1994), miếng vá thay đổi tất cả</h3>
+
+<p><strong>NAT</strong> cho phép <strong>cả một mạng dùng chung MỘT địa chỉ public.</strong></p>
+
+<pre class="diagram"><code>    ┌──── NHÀ / VĂN PHÒNG CỦA BẠN ─────┐
+    │                                  │
+    │  laptop      192.168.10.38       │  ← PRIVATE
+    │  điện thoại  192.168.10.51       │     không ra Internet được
+    │  TV          192.168.10.77       │
+    │                  │               │
+    └──────────────────┼───────────────┘
+                       │
+                  ROUTER (NAT)
+                       │
+               14.161.xx.xx   ← PUBLIC, MỘT địa chỉ duy nhất
+                       │           cả nhà dùng chung
+                  ~ INTERNET ~</code></pre>
+
+<p>Router ghi một cuốn sổ:</p>
+
+<pre class="diagram"><code>  192.168.10.38 : 55289   ⟷   14.161.xx.xx : 61204   →  104.20.23.154:443
+  192.168.10.51 : 49802   ⟷   14.161.xx.xx : 61205   →  104.20.23.154:443</code></pre>
+
+<p>Gói tin về tới <code>14.161.xx.xx:61204</code>, router tra sổ và biết trả cho laptop, không
+phải điện thoại.</p>
+
+<div class="callout ok">
+  <span class="label">Nối về output của bài lab</span>
+  <p>Nhớ dòng <code>from 192.168.10.38 port 55289</code> trong <code>curl -v</code>?</p>
+  <p><strong>Cái ephemeral port đó chính là thứ NAT dùng để phân biệt các máy trong nhà bạn.</strong>
+  Không có nó, router không biết trả gói tin cho ai.</p>
+  <p>Một chi tiết tưởng như vụn vặt hóa ra là trụ cột của cả cơ chế đã cứu Internet.</p>
+</div>
+
+<p>NAT hiệu quả tới mức nó <strong>đẩy lùi khủng hoảng IPv4 thêm hai thập kỷ</strong>.</p>
+
+<h2 id="gia-cua-nat">Cái giá của NAT — và vì sao bạn phải thuê VPS</h2>
+
+<p>NAT phá vỡ nguyên tắc gốc của Internet: <strong>mọi máy đều có thể gọi thẳng mọi máy</strong>.</p>
+
+<pre class="diagram"><code>  Máy bạn GỌI RA Internet    →  ✅ được, NAT ghi sổ và trả lời về
+  Internet GỌI VÀO máy bạn   →  ❌ không được. Router không biết
+                                  gói tin này dành cho máy nào trong nhà.</code></pre>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Hiện tượng bạn gặp hằng ngày</th><th>Nguyên nhân gốc</th></tr></thead>
+  <tbody>
+    <tr><td>Muốn chạy server tại nhà cho người ngoài truy cập → phải <strong>port forwarding</strong></td><td>NAT chặn chiều vào</td></tr>
+    <tr><td>Gọi video, chơi game P2P, VoIP cần STUN/TURN làm trung gian</td><td>Hai máy sau NAT không gọi thẳng nhau được</td></tr>
+    <tr><td><strong>Bạn phải thuê VPS để deploy</strong></td><td>Máy bạn không có địa chỉ mà thế giới gọi tới được</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout warn">
+  <span class="label">Một quan sát đáng suy nghĩ</span>
+  <p>Bạn phải thuê VPS <strong>không phải vì máy bạn yếu</strong> — laptop của bạn thừa mạnh để
+  chạy Spring Boot và PostgreSQL. Mà vì máy bạn <strong>không có địa chỉ mà thế giới gọi tới
+  được</strong>.</p>
+  <p>NAT đã biến người dùng Internet từ <strong>"người tham gia bình đẳng"</strong> thành
+  <strong>"khách hàng chỉ biết tiêu thụ"</strong>. Đó là một thay đổi kiến trúc sâu sắc, và hầu
+  hết mọi người không biết nó đã xảy ra.</p>
+</div>
+
+<h2 id="ipv6">IPv6 — khác gì</h2>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th></th><th>IPv4</th><th>IPv6</th></tr></thead>
+  <tbody>
+    <tr><td>Độ dài</td><td>32 bit</td><td><strong>128 bit</strong></td></tr>
+    <tr><td>Số địa chỉ</td><td>4,3 tỷ</td><td>3,4 × 10³⁸</td></tr>
+    <tr><td>Cách viết</td><td>thập phân, 4 nhóm</td><td><strong>thập lục phân, 8 nhóm</strong></td></tr>
+    <tr><td>Ví dụ</td><td><code>192.168.1.1</code></td><td><code>2606:4700:10::ac42:93f3</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout ok">
+  <span class="label">128 bit lớn tới mức nào</span>
+  <p>Chia đều cho 8 tỷ người trên Trái Đất, <strong>mỗi người</strong> nhận được một lượng địa
+  chỉ bằng khoảng <strong>10 tỷ tỷ lần toàn bộ không gian IPv4 hiện nay</strong>.</p>
+  <p>Đây không phải "nhiều gấp 4 lần". Mỗi bit thêm vào là <strong>gấp đôi</strong>.
+  Thêm 96 bit là gấp đôi 96 lần.</p>
+</div>
+
+<h3>Đọc một địa chỉ IPv6</h3>
+
+<pre class="diagram"><code>  Đầy đủ:    2606:4700:0010:0000:0000:0000:ac42:93f3
+  Rút gọn:   2606:4700:10::ac42:93f3
+                          ↑
+                "::" thay cho một chuỗi nhóm toàn số 0
+                (chỉ được dùng MỘT lần trong một địa chỉ)</code></pre>
+
+<p>Hai quy tắc: bỏ số 0 ở đầu mỗi nhóm, và dùng <code>::</code> thay cho chuỗi nhóm toàn 0.</p>
+
+<p>Giờ bạn đọc được hai địa chỉ đã gặp trong lab:</p>
+
+<pre class="diagram"><code>  fe80::10   =  fe80:0000:0000:0000:0000:0000:0000:0010
+                ← router WiFi, link-local
+
+  ::1        =  0000:0000:0000:0000:0000:0000:0000:0001
+                ← LOOPBACK IPv6. Chính là 127.0.0.1 của thế giới IPv6.</code></pre>
+
+<div class="callout">
+  <span class="label">Và đây là thủ phạm của 2,2 giây</span>
+  <p>Trên Windows hiện đại, <code>localhost</code> phân giải ra <strong>hai</strong> địa chỉ:
+  <code>::1</code> trước, rồi <code>127.0.0.1</code>.</p>
+  <p>Nên <code>curl localhost:9999</code> phải thử lần lượt cả hai, bị từ chối cả hai, cộng
+  thêm độ trễ Happy Eyeballs → hết hơn 2 giây.</p>
+  <p>Đây cũng là nguồn gốc của lỗi kinh điển <code>ECONNREFUSED ::1</code> mà rất nhiều người
+  gặp khi app Node.js hoặc Java kết nối tới database ở <code>localhost</code>.</p>
+</div>
+
+<h2 id="vi-sao-cham">Vì sao sau gần 30 năm IPv6 vẫn chưa thắng</h2>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Lý do</th><th>Giải thích</th></tr></thead>
+  <tbody>
+    <tr><td><strong>① Không tương thích ngược</strong></td><td>Máy chỉ có IPv6 <em>không nói chuyện được</em> với máy chỉ có IPv4. Không có cách nâng cấp dần — phải chạy song song cả hai (<strong>dual-stack</strong>) → tốn gấp đôi công vận hành, không được lợi gì ngay.</td></tr>
+    <tr><td><strong>② NAT "đủ dùng"</strong></td><td>Không có khủng hoảng nào thực sự nổ ra. Không ai chịu trả tiền cho một vấn đề chưa đau.</td></tr>
+    <tr><td><strong>③ Con gà và quả trứng</strong></td><td>Nhà mạng không triển khai vì chưa có nội dung. Nội dung không lên IPv6 vì chưa có người dùng.</td></tr>
+    <tr><td><strong>④ Nhưng nó đang thắng dần</strong></td><td>Động lực đến từ <strong>di động</strong> — mạng 4G/5G phần lớn triển khai IPv6 trước.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Google công bố thống kê công khai tỉ lệ người dùng truy cập Google qua IPv6, con số đã vượt
+mốc 40% từ vài năm trước — tự kiểm chứng tại:<br>
+<a href="https://www.google.com/intl/en/ipv6/statistics.html">google.com/intl/en/ipv6/statistics.html</a></p>
+
+<h2 id="bang-chung">Output của chính bạn kể lại toàn bộ câu chuyện</h2>
+
+<pre><code>* IPv6: 2606:4700:10::ac42:93f3      ← example.com CÓ IPv6.  Sẵn sàng rồi.
+* IPv4: 104.20.23.154                ← và vẫn giữ IPv4.      (dual-stack)
+
+*   Trying [2606:4700:10::ac42:93f3]:443...   ← curl thử IPv6 trước
+*   Trying 104.20.23.154:443...               ← rồi thử IPv4
+* Established connection ... 104.20.23.154    ← IPv4 THẮNG</code></pre>
+
+<p>Và bằng chứng vì sao IPv4 thắng nằm ở dòng đầu tiên của bài lab:</p>
+
+<pre><code>Server:  wifi.cmcc
+Address: fe80::10          ← router chỉ có địa chỉ LINK-LOCAL
+                              Không có IPv6 công cộng.</code></pre>
+
+<div class="callout ok">
+  <span class="label">Kết luận</span>
+  <p><strong>Nội dung đã sẵn sàng cho IPv6. Nhà mạng thì chưa.</strong></p>
+  <p>Đó chính là "vấn đề con gà quả trứng" ở mục ③, và bạn vừa đo được nó trên terminal của
+  chính mình.</p>
+</div>
+
+<h2 id="anh-huong">Sáu chỗ điều này sẽ đụng vào bạn trong lộ trình</h2>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Chỗ vấp</th><th>Bài</th></tr></thead>
+  <tbody>
+    <tr><td>App bind <code>0.0.0.0</code> (mọi IPv4) hay <code>::</code> (mọi IPv6) — chọn sai là không ai gọi được</td><td><a href="../09-ip-localhost-0000/">09</a></td></tr>
+    <tr><td><code>localhost</code> phân giải <code>::1</code> trước → lỗi <code>ECONNREFUSED ::1</code> khi app kết nối DB</td><td><a href="../09-ip-localhost-0000/">09</a>, <a href="../19-docker-network/">19</a></td></tr>
+    <tr><td>DNS: bản ghi <strong><code>A</code></strong> cho IPv4, <strong><code>AAAA</code></strong> cho IPv6</td><td><a href="../11-dns/">11</a>, <a href="../27-domain-va-dns-that/">27</a></td></tr>
+    <tr><td>Nginx phải khai báo cả <code>listen 80;</code> <strong>và</strong> <code>listen [::]:80;</code></td><td><a href="../21-reverse-proxy-co-ban/">21</a></td></tr>
+    <tr><td><strong>Firewall: chặn kỹ IPv4 mà để ngỏ IPv6 → lỗ hổng bảo mật thật</strong></td><td><a href="../13-ssh-va-firewall/">13</a>, <a href="../25-vps-va-hardening/">25</a></td></tr>
+    <tr><td>Docker mặc định chỉ bật IPv4</td><td><a href="../19-docker-network/">19</a></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout warn">
+  <span class="label">Dòng nguy hiểm nhất</span>
+  <p>Rất nhiều người chặn cẩn thận bằng <code>iptables</code> rồi <strong>để ngỏ hoàn toàn
+  <code>ip6tables</code></strong> — và server vẫn phơi ra Internet qua IPv6 mà họ không biết.</p>
+  <p>Ta sẽ kiểm tra đúng chỗ này khi hardening VPS ở <a href="../25-vps-va-hardening/">Bài 25</a>.</p>
+</div>
+
+<div class="prevnext">
+  <a href="phan-tich-output.html">
+    <span class="dir">← Quay lại</span>
+    <span class="t">Mổ băng output</span>
+  </a>
+  <a class="next" href="../01-may-tinh-va-he-dieu-hanh/">
+    <span class="dir">Bài tiếp →</span>
+    <span class="t">01 · Máy tính, HĐH, Process</span>
+  </a>
+</div>
+
+<footer class="page">
+  <p>Bài 00 · Phụ lục · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js"></script>
+</body>
+</html>

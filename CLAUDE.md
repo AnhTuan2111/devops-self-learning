@@ -93,8 +93,41 @@ Khi người học nói "dạy bài tiếp theo" / "học bài NN":
 
 ## Trạng thái hiện tại
 
-- Đã dạy: **Bài 00**
-- Đang tới: Bài 01 — Máy tính, Hệ điều hành, Process
+- **Bài 00: XONG** (21–24/09/2026). Có 3 trang: `index.html` (bài giảng),
+  `phan-tich-output.html` (mổ băng output thật), `ipv4-vs-ipv6.html` (phụ lục).
+  Dùng bộ ba trang này làm **khuôn mẫu** cho các bài sau.
+- Đang tới: **Bài 01** — Máy tính, Hệ điều hành, Process
+
+### Khái niệm đã dạy ở Bài 00 — phải tái sử dụng, không định nghĩa lại
+
+Người học đã nắm và đã dùng được những thứ sau. Các bài sau **nối vào** chúng:
+
+- **Mô hình tòa nhà**: IP = cửa ngõ · port = phòng · process listen = người ngồi trong phòng,
+  tự chọn tiếp khách từ cửa nào · firewall = bảo vệ ở cửa ngõ
+- **Nginx = lễ tân**: nhận việc, đi vào trong hỏi giúp, bê kết quả ra. Khách không vào trong.
+- **Bản đồ 9 chặng** ①–⑨, và "chỉ chặng ⑧ là code bạn viết"
+- **Bảng triệu chứng có cột "ai viết ra"** — 502 do Nginx viết, 500 do Spring Boot viết
+- 3 nguyên tắc: *mã HTTP là một câu trả lời* · *triệu chứng chứng minh chặng trước đã chạy tốt* ·
+  *sửa một tầng thì triệu chứng đổi*
+- **refused vs timeout**: refused có điểm kết thúc của riêng nó; timeout dài bằng con số ta chọn
+- **Chứng chỉ = căn cước, CA = Bộ Công an**; cert công khai / private key bí mật
+- **DNS là gốc rễ của lòng tin** — nắm DNS là xin được cert hợp lệ
+- **Hệ thống hỏng mà không ai đụng vào** — thời gian tự nó là nguyên nhân sự cố
+- `"container đang chạy"` ≠ `"app sẵn sàng"`
+
+### Môi trường — đã thay đổi so với lúc khởi tạo
+
+- **WSL Ubuntu đã bị gỡ.** `wsl -l -v` chỉ còn distro `docker-desktop` (không có bash).
+  Cài lại ở **Bài 02** — đó đúng là nội dung của bài đó, không phải sự cố.
+- **Docker Desktop chưa chạy** (daemon không kết nối được). Bật ở Bài 02.
+- Người học đang dùng **Git Bash** cho mọi lab. Git for Windows biên dịch `curl` dựa trên
+  **schannel**, nên `curl -v` KHÔNG in thông tin chứng chỉ → dùng `openssl s_client` thay thế.
+- IP LAN thay đổi giữa các buổi (DHCP) — đừng ghi cứng địa chỉ vào tài liệu.
+
+### Nợ kỹ thuật của bài học
+
+- **Bài 02**: chạy `time curl -4 -o /dev/null http://127.0.0.1:9999` trong WSL Ubuntu và
+  so với **2,155s** đo được trên Windows. Đây là thí nghiệm đối chứng đã hứa với người học.
 - GitHub Pages: phục vụ từ nhánh `main`, thư mục gốc.
   Ở **Bài 31** sẽ thay bằng workflow GitHub Actions thật — đó là bài lab CI/CD đầu tiên,
   nên **đừng tạo sẵn** `.github/workflows/` trước bài đó.
