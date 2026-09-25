@@ -69,7 +69,7 @@ node scripts/generate.mjs
 | | # | Bài | Mục tiêu | Ước lượng | Đã học |
 |---|---|---|---|---|---|
 | ✅ | `00` | [Bản đồ toàn cảnh: một request đi từ browser tới code của bạn](lessons/00-ban-do-toan-canh/) | Vẽ lại được bằng trí nhớ toàn bộ đường đi của một HTTP request, và gọi tên được mọi thành phần trên đường đi đó. | 45' | 2026-09-24 |
-| ⬜ | `01` | [Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì](lessons/01-may-tinh-va-he-dieu-hanh/) | Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy. | 45' | — |
+| 🔸 | `01` | [Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì](lessons/01-may-tinh-va-he-dieu-hanh/) | Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy. | 45' | 2026-09-25 |
 | ⬜ | `02` | [Dựng phòng lab: WSL2 Ubuntu + Docker Desktop](lessons/02-dung-phong-lab/) | Có một môi trường Linux thật trên chính máy Windows để thực hành cả lộ trình mà không tốn tiền VPS. | 45' | — |
 
 ### M1 · Linux — Điều khiển một server

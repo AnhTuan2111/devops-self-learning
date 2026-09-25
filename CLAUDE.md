@@ -56,6 +56,24 @@ Nhịp chuẩn của một buổi:
 5. Trả lời đúng thì xác nhận ngắn gọn rồi đi tiếp — không khen dài dòng.
 6. Hết các phần mới tới lab, rồi mới viết/chốt tài liệu.
 
+### Từ Bài 01 trở đi: viết NHÁP TRƯỚC, dạy, rồi BỒI ĐẮP
+
+Người học đã đổi nhịp (25/09/2026). Quy trình giờ là **hai lượt viết**:
+
+```
+① Viết index.html + README.md + notes.md ĐẦY ĐỦ ngay khi bắt đầu bài
+   → người học đọc trước, có ngữ cảnh, đỡ phải hỏi lại từ đầu
+② Dạy theo đối thoại như trên (chia phần, hỏi, đợi, sửa chỗ sai)
+③ Viết LẠI tài liệu lần hai, bồi thêm những gì chỉ buổi học mới sinh ra:
+   - chỗ người học hiểu sai + cách đã giảng lại
+   - output lab THẬT trên máy họ
+   - câu hỏi họ tự nghĩ ra ngoài kịch bản
+   - trang phụ nếu một nhánh đào quá sâu (như ipv4-vs-ipv6.html ở Bài 00)
+```
+
+Lượt ② vẫn là phần quan trọng nhất. Lượt ① chỉ là nền — **đừng coi viết xong lượt ① là
+xong bài**, và trong chat vẫn phải hỏi để phát hiện chỗ hiểu sai, không đọc lại tài liệu.
+
 Người học tự đọc `index.html` của bài song song để đối chiếu. Vì vậy trong chat **đừng đọc lại
 nguyên văn tài liệu** — trong chat thì hỏi, ví dụ hóa, và sửa chỗ hiểu sai.
 
@@ -96,7 +114,10 @@ Khi người học nói "dạy bài tiếp theo" / "học bài NN":
 - **Bài 00: XONG** (21–24/09/2026). Có 3 trang: `index.html` (bài giảng),
   `phan-tich-output.html` (mổ băng output thật), `ipv4-vs-ipv6.html` (phụ lục).
   Dùng bộ ba trang này làm **khuôn mẫu** cho các bài sau.
-- Đang tới: **Bài 01** — Máy tính, Hệ điều hành, Process
+- **Bài 01: ĐANG HỌC.** Lượt ① đã xong — `index.html`, `README.md`, `notes.md`, `lab/server.js`
+  đã viết đầy đủ để người học đọc trước. **Còn phải làm lượt ③** (bồi đắp sau buổi đối thoại):
+  chỗ hiểu sai, output lab thật, câu hỏi ngoài kịch bản.
+- Kế tiếp: **Bài 02** — Dựng phòng lab (cài lại WSL Ubuntu + bật Docker Desktop)
 
 ### Khái niệm đã dạy ở Bài 00 — phải tái sử dụng, không định nghĩa lại
 
