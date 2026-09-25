@@ -1,13 +1,12 @@
 <!doctype html>
-<!-- devops-selflearning:generated-stub -->
 <html lang="vi">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bài 01 — Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì</title>
-<meta name="description" content="Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy.">
+<title>Bài 01 — Máy tính, Hệ điều hành, Process</title>
+<meta name="description" content="Server chỉ là một máy tính chạy 24/7. Mọi thứ bạn deploy, cuối cùng, chỉ là một process đang chạy — và bài này mổ xẻ nó.">
 <link rel="stylesheet" href="../../assets/style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📘</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
 </head>
 <body data-lesson="01">
 
@@ -15,7 +14,8 @@
   <div class="topbar-inner">
     <a class="home" href="../../">🧱 DevOps Self-Learning</a>
     <span class="spacer"></span>
-    <a class="nav" href="../../#M0">M0</a>
+    <a class="nav" href="../00-ban-do-toan-canh/">← Bài 00</a>
+    <a class="nav" href="#lab">Lab</a>
     <button class="theme-btn" type="button">Tối</button>
   </div>
 </nav>
@@ -24,43 +24,606 @@
 
 <header class="page">
   <p class="eyebrow">Module M0 · Bài 01</p>
-  <h1>Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì</h1>
-  <p class="lede">Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy.</p>
+  <h1>Máy tính, Hệ điều hành, Process: "server" thật ra là cái gì</h1>
+  <p class="lede">Bài 00 cho bạn bản đồ nhìn từ trên xuống. Bài này đi xuống một tầng — vào
+  <em>bên trong</em> cái hộp ở nửa dưới sơ đồ — và cho thấy mọi thứ bạn deploy, từ Nginx tới
+  Spring Boot tới PostgreSQL, cuối cùng chỉ là <strong>một process đang chạy</strong>.</p>
   <div class="meta">
-    <span class="pill ">Chưa học</span>
-    <span class="pill">~45 phút</span>
-    <span class="pill">Nền tảng — Server và Internet thực sự là gì</span>
+    <span class="pill acc">~45 phút</span>
+    <span class="pill">Không cần WSL</span>
+    <span class="pill">Lab chạy bằng Node + Git Bash</span>
   </div>
 </header>
 
 <div class="callout">
-  <span class="label">Chưa học</span>
-  <p>Trang này mới chỉ là khung bài. Nội dung đầy đủ — giải thích, sơ đồ, bảng tra và phần mổ băng lab — sẽ được viết vào đúng buổi học bài này.</p>
+  <span class="label">Bài này trả lời ba câu</span>
+  <ul style="margin:8px 0 0">
+    <li>Thuê VPS thì <strong>con số nào</strong> trong bảng cấu hình sẽ hết trước?</li>
+    <li>Vì sao <strong>hết RAM thì app CHẾT</strong>, còn hết CPU thì app chỉ <strong>CHẬM</strong>?</li>
+    <li>Vì sao <strong>app chết thì website sập</strong> — chuỗi nhân quả đầy đủ, từ vật lý tới
+    con số 502 người dùng nhìn thấy?</li>
+  </ul>
 </div>
 
-<h2 id="muc-tieu">Mục tiêu</h2>
-<p>Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy.</p>
+<h2 id="van-de">1. Vấn đề</h2>
 
-<h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+<p>Bạn sắp thuê VPS. Bảng giá:</p>
+
+<pre class="diagram"><code>  2 vCPU  ·  2 GB RAM  ·  40 GB SSD   →   5 USD / tháng
+  4 vCPU  ·  8 GB RAM  ·  80 GB SSD   →  24 USD / tháng</code></pre>
+
+<p>Stack của bạn: Spring Boot + PostgreSQL. <strong>Chọn cái nào?</strong> Và quan trọng hơn:
+<strong>con số nào sẽ hết trước?</strong></p>
+
+<p>Phần lớn dev không trả lời được, nên chọn theo cảm tính — hoặc chọn rẻ rồi ba tuần sau ngồi
+debug một sự cố mà họ không biết tên.</p>
+
+<h2 id="server-la-gi">2. "Server" thật ra là gì</h2>
+
+<p>Không có gì huyền bí. <strong>Server là một máy tính bình thường</strong>, khác laptop của bạn
+đúng ba điểm:</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th></th><th>Laptop của bạn</th><th>Server</th></tr></thead>
+  <tbody>
+    <tr><td>Thời gian chạy</td><td>bật khi làm việc</td><td><strong>24/7, không bao giờ tắt</strong></td></tr>
+    <tr><td>Màn hình, bàn phím</td><td>có</td><td><strong>không có gì cả</strong> (headless)</td></tr>
+    <tr><td>Người ngồi trước nó</td><td>bạn</td><td><strong>không ai</strong></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout warn">
+  <span class="label">Điểm thứ ba là lý do cả nghề DevOps tồn tại</span>
+  <p><strong>Không có ai ngồi trước server.</strong></p>
+  <p>Không ai bấm <strong>OK</strong> khi có hộp thoại.<br>
+  Không ai <strong>khởi động lại</strong> khi nó treo.<br>
+  Không ai <strong>nhìn thấy</strong> khi nó báo lỗi.</p>
+  <p>Mọi kỹ thuật bạn sắp học — systemd, healthcheck, restart policy, monitoring, alert — đều
+  sinh ra để thay thế <strong>một con người không có mặt ở đó</strong>.</p>
+</div>
+
+<h2 id="bon-tai-nguyen">3. Bên trong cái hộp: bốn thứ, và chỉ bốn thứ</h2>
+
+<pre class="diagram"><code>  ┌──────────────────────────────────────────────┐
+  │                                              │
+  │   CPU        RAM        DISK      NETWORK    │
+  │  "người"   "mặt bàn"   "cái tủ"   "cái ống"  │
+  │                                              │
+  └──────────────────────────────────────────────┘</code></pre>
+
+<h3>Phép ẩn dụ dùng suốt bài</h3>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th></th><th>Là gì</th><th>Tính chất</th><th>Tắt điện</th></tr></thead>
+  <tbody>
+    <tr><td>🗄️ <strong>DISK</strong></td><td>cái tủ hồ sơ trong kho</td><td>To, rẻ, <strong>chậm</strong></td><td>✅ còn nguyên</td></tr>
+    <tr><td>🪑 <strong>RAM</strong></td><td>mặt bàn làm việc</td><td>Nhỏ, đắt, <strong>nhanh</strong></td><td>❌ <strong>sạch trơn</strong></td></tr>
+    <tr><td>👤 <strong>CPU</strong></td><td>chính người làm việc</td><td>Chỉ làm được với thứ <strong>đang trên bàn</strong></td><td>—</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Muốn dùng file nào, phải <strong>bê từ tủ lên bàn trước</strong>.</p>
+
+<p>Đó chính là lý do khởi động Spring Boot mất 30 giây — nó đang bê hàng nghìn class từ tủ lên
+bàn, khởi tạo bean, mở connection pool. Và đó cũng là lý do
+<strong>mặt bàn hết chỗ thì mọi thứ dừng lại</strong>.</p>
+
+<h3>Bốn tài nguyên cạn kiệt theo bốn kiểu rất khác nhau</h3>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Tài nguyên</th><th>Hết thì chuyện gì xảy ra</th><th>Mức độ</th></tr></thead>
+  <tbody>
+    <tr><td><strong>CPU</strong></td><td>Công việc <strong>xếp hàng chờ</strong>. Không ai chết, chỉ chậm dần.</td><td>😐 Chậm</td></tr>
+    <tr><td><strong>RAM</strong></td><td>Kernel <strong>GIẾT một process</strong> để lấy lại chỗ</td><td>💀 <strong>Chết</strong></td></tr>
+    <tr><td><strong>DISK</strong></td><td>Không ghi được gì nữa. Log tắt, DB không commit được.</td><td>🤯 Lỗi rất lạ</td></tr>
+    <tr><td><strong>NETWORK</strong></td><td>Gói tin bị vứt bỏ</td><td>⏳ Timeout</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout ok">
+  <span class="label">Câu phải thuộc</span>
+  <p><strong>Hết CPU thì app CHẬM. Hết RAM thì app CHẾT.</strong></p>
+  <p>Đây không phải chuyện nặng nhẹ. Đây là <strong>hai loại sự cố hoàn toàn khác nhau</strong>,
+  và bạn đã biết cách phân biệt chúng từ Bài 00.</p>
+</div>
+
+<h3>Nối thẳng về bản đồ 9 chặng</h3>
+
+<pre class="diagram"><code>  Hết CPU  →  app còn sống nhưng trả lời quá chậm
+                       ↓
+              Nginx đợi hết kiên nhẫn
+                       ↓
+                   504  Gateway Timeout
+
+
+  Hết RAM  →  app BỊ GIẾT, phòng 8080 trống trơn
+                       ↓
+              Nginx gõ cửa, không ai mở
+                       ↓
+                   502  Bad Gateway</code></pre>
+
+<div class="callout">
+  <span class="label">Ghim lại</span>
+  <p>Bài 00 dạy bạn <strong>triệu chứng</strong>. Bài này dạy <strong>nguyên nhân vật lý</strong>
+  nằm dưới nó.</p>
+  <p><strong>502 và 504 không phải hai mã lỗi cần học thuộc. Chúng là hai loại tài nguyên đã cạn.</strong></p>
+</div>
+
+<h2 id="process">4. Process — thứ duy nhất thực sự tồn tại</h2>
+
+<h3>File <code>.jar</code> nằm trên đĩa là một thứ CHẾT</h3>
+
+<p>Nó chỉ là một file nén chứa bytecode. Nó không làm gì cả, không chiếm port nào, không trả lời
+ai. Bạn có thể copy nó, xóa nó, gửi email cho người khác.</p>
+
+<p>Cho tới khi bạn gõ:</p>
+
+<pre><code>java -jar app.jar</code></pre>
+
+<p>Lúc đó kernel mới <strong>sinh ra một process</strong>: cấp cho nó một vùng RAM riêng,
+một số định danh, một bảng sổ sách riêng.</p>
+
+<pre class="diagram"><code>   app.jar trên đĩa          →          process đang chạy
+   ────────────────                     ─────────────────
+   một file, nằm im                     PID 4123
+   không chiếm gì                       chiếm 800 MB RAM
+   không ai gọi được                    đang giữ phòng 8080
+   copy được, xóa được                  kill được — và chết là hết</code></pre>
+
+<div class="callout ok">
+  <span class="label">Nối về mô hình tòa nhà ở Bài 00</span>
+  <p>Ở Bài 00 ta nói: <em>"port là số phòng, và phải có NGƯỜI ngồi trong phòng đó thì gõ cửa
+  mới có ai mở."</em></p>
+  <p><strong>Cái "người ngồi trong phòng 8080" — chính là process này.</strong> Giờ ta biết
+  tên của người đó: nó có một con số gọi là PID.</p>
+</div>
+
+<h3>PID và cây process</h3>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Khái niệm</th><th>Là gì</th></tr></thead>
+  <tbody>
+    <tr><td><strong>PID</strong></td><td>Số định danh của process. Kernel cấp khi sinh, thu lại khi chết. <strong>Không cố định</strong> — restart app là có PID mới.</td></tr>
+    <tr><td><strong>PPID</strong></td><td>PID của process <em>cha</em>. Mọi process đều được sinh ra bởi một process khác.</td></tr>
+    <tr><td><strong>PID 1</strong></td><td>Gốc của cây. Process đầu tiên kernel tạo khi máy khởi động. Trên Linux thường là <code>systemd</code>.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre class="diagram"><code>  PID 1  systemd
+    ├── PID 892   sshd
+    │     └── PID 3301  bash          ← terminal bạn đang gõ
+    │           └── PID 4123  java -jar app.jar
+    ├── PID 901   nginx (master)
+    │     ├── PID 902  nginx (worker)  ← chạy bằng user thường
+    │     └── PID 903  nginx (worker)
+    └── PID 1024  postgres</code></pre>
+
+<p>Để ý <code>nginx</code>: <strong>một master, nhiều worker</strong>. Đó chính là cơ chế
+"khởi động bằng root chỉ để chiếm port, rồi hạ quyền ngay" mà ta đã nói ở lý do ⑤ trong
+Bài 00. Giờ bạn nhìn thấy nó trong cây process.</p>
+
+<h3>Mỗi process sở hữu những gì</h3>
+
+<pre class="diagram"><code>  PID 4123   java -jar app.jar
+  │
+  ├── vùng RAM riêng          ← không đọc được RAM của process khác
+  ├── bảng file descriptor    ← danh sách file/socket đang mở
+  ├── thư mục làm việc (cwd)  ← đường dẫn tương đối tính từ đây
+  ├── biến môi trường riêng   ← SPRING_DATASOURCE_PASSWORD sống ở đây
+  └── user chạy nó            ← quyết định nó được đọc/ghi file nào</code></pre>
+
+<div class="callout">
+  <span class="label">Hai hệ quả dùng được ngay</span>
+  <p><strong>① Biến môi trường là thuộc tính của PROCESS, không phải của máy.</strong><br>
+  Đó là lý do <code>export</code> trong một terminal không ảnh hưởng terminal khác. Và là lý do
+  <code>docker run -e</code> hoạt động: Docker đang nhét biến vào riêng process đó.</p>
+  <p><strong>② User chạy process quyết định nó phá được gì.</strong><br>
+  App chạy bằng <code>root</code> mà có lỗ hổng = mất cả máy. App chạy bằng user riêng = mất
+  đúng phần của user đó. → <a href="../05-user-group-permission/">Bài 05</a>,
+  <a href="../17-dockerize-spring-boot/">Bài 17</a>.</p>
+</div>
+
+<h3>Process và Thread — đừng nhầm</h3>
+
+<pre class="diagram"><code>  PROCESS  =  một CĂN PHÒNG riêng, có mặt bàn riêng.
+              Không nhìn thấy mặt bàn của phòng khác.
+
+  THREAD   =  nhiều NGƯỜI cùng làm việc TRONG MỘT PHÒNG,
+              dùng chung một mặt bàn.</code></pre>
+
+<p>Spring Boot của bạn là <strong>MỘT process</strong> với <strong>hàng trăm thread</strong> —
+mô hình truyền thống là mỗi HTTP request được giao cho một thread.</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Hệ quả</th><th>Vì sao</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Giết process là giết TẤT CẢ thread</strong></td><td>Không có chuyện "giết một request". Đập phòng thì mọi người trong phòng cùng ra.</td></tr>
+    <tr><td><strong>Một thread làm tràn RAM thì CẢ process chết</strong></td><td>Thread dùng chung mặt bàn. Một người bày bừa hết bàn thì cả phòng đứng.</td></tr>
+    <tr><td>Thread rẻ hơn process rất nhiều</td><td>Mở thêm người vào phòng có sẵn, rẻ hơn xây phòng mới</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="kernel">5. Kernel và user space</h2>
+
+<h3>Vì sao Spring Boot không tự ghi thẳng vào ổ cứng?</h3>
+
+<p>Tưởng tượng nếu mọi app đều được chạm thẳng vào phần cứng:</p>
+
 <ul>
-  <li>CPU / RAM / Disk</li>
-  <li>Kernel &amp; user space</li>
-  <li>Process, PID, thread</li>
-  <li>File descriptor</li>
-  <li>Filesystem</li>
-  <li>Vì sao app chết thì website sập</li>
+  <li>Một app lỗi ghi đè lên vùng RAM của app khác</li>
+  <li>Hai app cùng ghi vào một chỗ trên đĩa, hỏng cả hai</li>
+  <li>Một app độc đọc được mật khẩu đang nằm trong RAM của app khác</li>
 </ul>
 
-<h2 id="lab">Bài lab</h2>
-<p>Quan sát process của chính Spring Boot / Node trên máy mình. Tìm PID, xem RAM, kill nó, xem điều gì xảy ra.</p>
+<p>Nên phải có một lớp trung gian <strong>độc quyền</strong> phần cứng. Lớp đó là
+<strong>kernel</strong>.</p>
 
-<h2 id="tu-kiem-tra">Tự kiểm tra</h2>
-<p>Học xong phải tự làm được, không nhìn tài liệu. Bấm vào từng dòng để đánh dấu.</p>
+<pre class="diagram"><code>  ┌──────────────── USER SPACE ─────────────────┐
+  │                                             │
+  │  Spring Boot   Nginx   PostgreSQL   bash    │  ← KHÔNG được
+  │                                             │     chạm phần cứng
+  └───────────────────────┬─────────────────────┘
+                          │
+                     syscall          ← cách DUY NHẤT để xin việc
+                          │
+  ┌───────────────────────▼─────────────────────┐
+  │                   KERNEL                     │  ← độc quyền phần cứng
+  └───────────────────────┬─────────────────────┘
+                          ▼
+                CPU   RAM   DISK   NETWORK</code></pre>
+
+<h3>syscall — app không tự làm, nó XIN kernel làm hộ</h3>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Nhóm</th><th>syscall</th><th>App đang xin gì</th></tr></thead>
+  <tbody>
+    <tr><td>File</td><td><code>open</code> <code>read</code> <code>write</code> <code>close</code></td><td>"Mở hộ tôi file này"</td></tr>
+    <tr><td>Mạng</td><td><code>socket</code> <code>bind</code> <code>listen</code> <code>accept</code></td><td>"Giữ hộ tôi phòng 8080"</td></tr>
+    <tr><td>Process</td><td><code>fork</code> <code>execve</code> <code>kill</code></td><td>"Tạo hộ tôi một process mới"</td></tr>
+    <tr><td>Bộ nhớ</td><td><code>mmap</code> <code>brk</code></td><td>"Cho tôi xin thêm chỗ trên bàn"</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout ok">
+  <span class="label">Kernel là NGƯỜI QUẢN LÝ TÒA NHÀ, giữ sổ phòng</span>
+  <p>Khi Spring Boot "listen ở port 8080", thực tế nó gọi <code>bind()</code> rồi
+  <code>listen()</code> — tức là <strong>xin kernel giữ phòng 8080 hộ nó</strong>.
+  Kernel ghi vào sổ: <em>"phòng 8080 → PID 4123"</em>.</p>
+  <p>Ba thứ ở Bài 00 giờ có lời giải thích đầy đủ:</p>
+  <pre class="diagram" style="margin:10px 0 0"><code>  Address already in use   →  kernel xem sổ, phòng 8080 đã có tên người khác
+  kill process → refused   →  process chết, kernel XÓA TÊN khỏi sổ ngay lập tức
+  port &lt;1024 cần root      →  kernel kiểm tra quyền TRƯỚC khi cho ghi sổ</code></pre>
+</div>
+
+<h3>File descriptor — và vì sao <code>2&gt;/dev/null</code> hoạt động</h3>
+
+<p>Triết lý Unix: <strong>mọi thứ đều là file</strong>. File thật, socket mạng, pipe, terminal —
+kernel đều trả về cùng một thứ: <strong>một con số</strong> gọi là file descriptor (fd).</p>
+
+<p>Mỗi process có bảng fd riêng, đánh số từ 0. Và ba số đầu <strong>luôn luôn</strong> giống nhau
+ở mọi process:</p>
+
+<pre class="diagram"><code>  fd 0  →  stdin    (đầu vào)
+  fd 1  →  stdout   (đầu ra bình thường)
+  fd 2  →  stderr   (đầu ra lỗi)</code></pre>
+
+<div class="callout">
+  <span class="label">Bạn đã gõ cái này ở Bài 00 mà chưa biết nó nghĩa gì</span>
+  <pre style="margin:10px 0"><code>openssl s_client -connect example.com:443 2&gt;/dev/null</code></pre>
+  <p>Con số <code>2</code> đó chính là <strong>fd số 2 — stderr</strong>. Câu lệnh nghĩa là:
+  <em>"chuyển đầu ra lỗi của process này vào hố đen."</em></p>
+  <p>Đó là lý do output sạch sẽ, chỉ còn phần chứng chỉ. Bạn không tắt lỗi — bạn
+  <strong>đổi hướng fd số 2</strong>.</p>
+</div>
+
+<h3>Và vì sao <code>Too many open files</code> làm sập server</h3>
+
+<p><strong>Mỗi kết nối TCP cũng là một fd.</strong> 1000 người đang kết nối = 1000 fd đang mở.</p>
+
+<p>Kernel giới hạn số fd mỗi process được giữ (<code>ulimit -n</code>, mặc định thường 1024).
+Vượt giới hạn:</p>
+
+<pre class="diagram"><code>  Too many open files
+         ↓
+  Process VẪN SỐNG, nhưng không nhận thêm kết nối mới được nữa
+         ↓
+  Người dùng: "lúc vào được, lúc không"
+         ↓
+  Log ứng dụng: gần như không có gì rõ ràng</code></pre>
+
+<div class="callout warn">
+  <span class="label">Sự cố rất khó tìm nếu không biết khái niệm này</span>
+  <p>Nguyên nhân phổ biến nhất là <strong>rò rỉ</strong>: mở file hoặc connection mà không đóng.
+  Trong Java, đó chính là lý do phải dùng <code>try-with-resources</code>:</p>
+  <pre style="margin:10px 0"><code>// ❌ rò rỉ fd nếu có exception
+InputStream in = new FileInputStream(f);
+doSomething(in);
+in.close();
+
+// ✅ kernel luôn được trả lại fd
+try (InputStream in = new FileInputStream(f)) {
+    doSomething(in);
+}</code></pre>
+  <p>Một dòng code Java tưởng như chuyện style, hóa ra là chuyện <strong>tài nguyên kernel</strong>.</p>
+</div>
+
+<h2 id="chet">6. Khi process chết</h2>
+
+<h3>Năm cách chết, và chỉ ba cách kịp dọn dẹp</h3>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Cách chết</th><th>Ai quyết định</th><th>Kịp dọn dẹp?</th></tr></thead>
+  <tbody>
+    <tr><td>Tự kết thúc bình thường</td><td>chính app</td><td>✅</td></tr>
+    <tr><td>Exception không bắt được</td><td>chính app</td><td>✅ shutdown hook vẫn chạy</td></tr>
+    <tr><td><code>SIGTERM</code> — <code>kill &lt;pid&gt;</code></td><td>người / hệ thống</td><td>✅ <strong>app được báo trước</strong></td></tr>
+    <tr><td><code>SIGKILL</code> — <code>kill -9</code></td><td>kernel, ép buộc</td><td>❌ <strong>chết ngay lập tức</strong></td></tr>
+    <tr><td><strong>OOM killer</strong></td><td>kernel</td><td>❌ như SIGKILL</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>SIGTERM và SIGKILL — khác biệt rất thật</h3>
+
+<pre class="diagram"><code>  SIGTERM   "Anh thu xếp rồi đi."
+            → Spring Boot chạy @PreDestroy
+            → đóng connection pool, trả connection về DB
+            → flush log ra đĩa
+            → rồi mới thoát
+
+  SIGKILL   "Ra ngay."
+            → không chạy một dòng nào
+            → connection treo lại ở phía database
+            → transaction dở dang
+            → dòng log cuối cùng mất</code></pre>
+
+<div class="callout">
+  <span class="label">Đây là lý do <code>docker stop</code> hành xử như nó hành xử</span>
+  <p><code>docker stop</code> gửi <strong>SIGTERM</strong>, rồi <strong>đợi 10 giây</strong>.
+  Nếu process vẫn chưa chết, nó mới gửi <strong>SIGKILL</strong>.</p>
+  <p>Mười giây đó là khoảng ân hạn để app kịp dọn dẹp. Nếu app của bạn cần lâu hơn, bạn sẽ mất
+  dữ liệu mỗi lần deploy mà không biết. → <a href="../06-process-va-signal/">Bài 06</a>,
+  <a href="../35-zero-downtime-va-rollback/">Bài 35</a>.</p>
+</div>
+
+<h3>OOM Killer — kẻ sát nhân trong kernel</h3>
+
+<p>Khi RAM cạn, kernel <strong>không có lựa chọn "từ chối lịch sự"</strong>. Nó phải lấy lại chỗ
+từ đâu đó. Nên nó chấm điểm từng process và <strong>giết kẻ điểm cao nhất</strong>.</p>
+
+<p>Điểm số (<code>oom_score</code>) chủ yếu dựa trên: <strong>ai đang ăn nhiều RAM nhất</strong>.</p>
+
+<div class="callout warn">
+  <span class="label">Và trên một server Spring Boot, ai ăn RAM nhiều nhất?</span>
+  <p><strong>Chính là JVM.</strong></p>
+  <p>Nên khi server hết RAM, thủ phạm bị giết gần như luôn luôn là <strong>chính app của bạn</strong> —
+  kể cả khi nguyên nhân gây hết RAM là một process khác.</p>
+</div>
+
+<h3>Dấu hiệu nhận biết OOM — và vì sao nó khó tìm</h3>
+
+<pre class="diagram"><code>  Triệu chứng đặc trưng:
+
+    app BIẾN MẤT đột ngột
+    log ứng dụng KHÔNG CÓ GÌ CẢ  ← không một dòng lỗi, không stack trace
+    không ai deploy, không ai đụng vào</code></pre>
+
+<p>Vì sao log trống? Vì app bị <strong>SIGKILL</strong> — nó không kịp viết dòng nào.</p>
+
+<div class="callout ok">
+  <span class="label">Nhớ nguyên tắc ở Bài 00: sự vắng mặt của log cũng là bằng chứng</span>
+  <p>Nhưng vẫn có dấu vết, chỉ là <strong>ở chỗ khác</strong>. Kernel tự ghi lại việc nó đã giết ai:</p>
+  <pre style="margin:10px 0"><code>dmesg | grep -i "killed process"
+journalctl -k | grep -i oom</code></pre>
+  <p>Đó là nơi <em>duy nhất</em> ghi lại. Không biết chỗ này thì bạn sẽ tìm mãi trong log ứng
+  dụng — nơi chắc chắn không có gì.</p>
+</div>
+
+<h2 id="tai-sao-sap">7. Vì sao "app chết thì website sập" — chuỗi đầy đủ</h2>
+
+<p>Giờ ghép tất cả lại. Đây là câu trả lời hoàn chỉnh, từ vật lý tới con số người dùng nhìn thấy:</p>
+
+<pre class="diagram"><code>  ① RAM cạn
+        ↓
+  ② Kernel chấm điểm, chọn JVM (ăn RAM nhiều nhất)
+        ↓
+  ③ SIGKILL — process 4123 biến mất tức thì, không kịp log
+        ↓
+  ④ Kernel XÓA TÊN khỏi sổ phòng:  8080 → (trống)
+        ↓
+  ⑤ Nginx nhận request, gõ cửa 127.0.0.1:8080
+        ↓
+  ⑥ Kernel trả lời Nginx:  "không có ai ở đây"   ← Connection refused
+        ↓
+  ⑦ Nginx dịch sang ngôn ngữ HTTP cho người dùng:
+                                              502 Bad Gateway</code></pre>
+
+<div class="callout ok">
+  <span class="label">Bảy bước, và bạn đã biết từng bước một</span>
+  <p>Bước ⑥ chính là <code>Connection refused</code> mà bạn đã <strong>tự tay đo được
+  2076 ms</strong> ở Bài 00 — chỉ khác là lần này nó xảy ra <em>bên trong</em> server, và Nginx
+  là người hứng nó.</p>
+  <p>Đây là ý nghĩa của câu <em>"triệu chứng khoanh vùng chứ không chỉ đích"</em>: người dùng
+  thấy <strong>502</strong>, nhưng nguyên nhân thật nằm ở <strong>bước ①</strong> — sáu bước
+  phía trước.</p>
+</div>
+
+<h2 id="service">8. Process và Service — khác nhau ở một người</h2>
+
+<div class="table-scroll">
+<table>
+  <thead><tr><th></th><th>Process</th><th>Service</th></tr></thead>
+  <tbody>
+    <tr><td>Là gì</td><td>một chương trình đang chạy</td><td>một process + <strong>một người trông coi</strong></td></tr>
+    <tr><td>Chết thì sao</td><td><strong>hết. Không ai dựng dậy.</strong></td><td>tự được khởi động lại</td></tr>
+    <tr><td>Máy khởi động lại</td><td>không tự chạy</td><td>tự chạy</td></tr>
+    <tr><td>Ai trông</td><td>—</td><td><code>systemd</code>, hoặc Docker</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="label">Và ta quay về đúng câu mở đầu bài</span>
+  <p><strong>Không có ai ngồi trước server.</strong> Nên phải có một <em>process khác</em> làm
+  thay việc của con người: nhìn thấy app chết, và dựng nó dậy.</p>
+  <pre class="diagram" style="margin:10px 0 0"><code>  systemd  Restart=always        →  Bài 07
+  Docker   restart: unless-stopped →  Bài 15, 20</code></pre>
+  <p>Hai công cụ khác nhau, <strong>cùng một ý tưởng</strong>: thay thế người trực.</p>
+</div>
+
+<h2 id="lab">9. Lab</h2>
+
+<p>Chạy trong <strong>Git Bash</strong> (và một cửa sổ <strong>PowerShell</strong> cho vài lệnh
+Windows). Không cần WSL, không cần Docker.</p>
+
+<h3>Lab 1 — Sinh ra một process và nhìn nó tồn tại</h3>
+
+<p>Dùng Node làm một web server một dòng. Lưu file này thành <code>lab/server.js</code>:</p>
+
+<pre><code>const http = require('http');
+
+const server = http.createServer((req, res) => res.end('con song\n'));
+
+server.listen(8080, () => {
+  console.log('PID = ' + process.pid + '  |  dang giu phong 8080');
+});
+
+// Đăng ký "lời trăng trối" — chỉ chạy khi được báo trước (Ctrl+C)
+process.on('SIGINT', () => {
+  console.log('\n[SIGINT] duoc bao truoc, dang don dep...');
+  setTimeout(() => {
+    console.log('[SIGINT] da dong xong, thoat tu te.');
+    process.exit(0);
+  }, 1500);
+});</code></pre>
+
+<pre><code>node lab/server.js</code></pre>
+
+<p>Nó in ra PID. <strong>Ghi lại con số đó.</strong></p>
+
+<h3>Lab 2 — Xác nhận "người trong phòng 8080" chính là process này</h3>
+
+<p>Mở <strong>cửa sổ thứ hai</strong>:</p>
+
+<pre><code># 1. Phòng có người không?
+curl http://localhost:8080
+
+# 2. Ai đang giữ phòng 8080?  (Git Bash hoặc PowerShell)
+netstat -ano | grep 8080
+
+# 3. Con số cuối mỗi dòng là PID. Nó là ai?
+tasklist //FI "PID eq &lt;PID_ban_vua_thay&gt;"</code></pre>
+
+<p>Bạn vừa đi ngược từ <strong>port → PID → tên chương trình</strong>. Đây chính là bước đầu tiên
+khi debug <code>Address already in use</code> ngoài đời thật.</p>
+
+<h3>Lab 3 — Chứng minh process ăn RAM, còn file <code>.js</code> thì không</h3>
+
+<pre><code># File trên đĩa: vài trăm byte
+ls -l lab/server.js
+
+# Process trong RAM: vài chục MB
+tasklist //FI "PID eq &lt;PID&gt;" //FO LIST</code></pre>
+
+<p>So hai con số. <strong>Cùng một chương trình, khác nhau ở chỗ một cái đang sống.</strong></p>
+
+<h3>Lab 4 — Giết process, và xem phòng trống ngay lập tức</h3>
+
+<p>Ở cửa sổ chạy server, bấm <strong><code>Ctrl + C</code></strong>. Quan sát dòng
+<code>[SIGINT] duoc bao truoc, dang don dep...</code> — app <strong>được báo trước</strong>
+và kịp nói lời cuối.</p>
+
+<p>Rồi ở cửa sổ kia:</p>
+
+<pre><code>time curl -4 http://localhost:8080
+netstat -ano | grep 8080</code></pre>
+
+<p><code>Connection refused</code>, và phòng 8080 <strong>biến mất khỏi sổ</strong>.</p>
+
+<div class="callout ok">
+  <span class="label">Bạn vừa tự tay dựng lại bước ④ ⑤ ⑥ của chuỗi ở mục 7</span>
+  <p>Process chết → kernel xóa tên khỏi sổ phòng → gõ cửa thì bị từ chối. Trên production, Nginx
+  sẽ là người hứng cái <code>refused</code> đó và dịch nó thành <strong>502</strong>.</p>
+</div>
+
+<h3>Lab 5 — SIGTERM và SIGKILL: khác biệt nhìn thấy được</h3>
+
+<p>Chạy lại <code>node lab/server.js</code>. Lần này, ở cửa sổ khác, <strong>giết ép</strong>:</p>
+
+<pre><code># PowerShell hoặc Git Bash — /F nghĩa là ÉP BUỘC
+taskkill //F //PID &lt;PID&gt;</code></pre>
+
+<div class="callout warn">
+  <span class="label">So sánh hai lần</span>
+  <pre class="diagram" style="margin:0"><code>  Ctrl+C       →  "[SIGINT] duoc bao truoc, dang don dep..."   ← CÓ lời trăng trối
+  taskkill /F  →  cửa sổ tắt phụt, KHÔNG in gì cả              ← KHÔNG kịp nói gì</code></pre>
+  <p style="margin-top:10px">Đây chính xác là khác biệt giữa <strong>SIGTERM</strong> và
+  <strong>SIGKILL</strong> trên Linux — và là lý do OOM killer để lại log trống trơn.</p>
+</div>
+
+<h3>Lab 6 — Chứng minh biến môi trường thuộc về process</h3>
+
+<pre><code># Cửa sổ 1
+export BI_MAT="xin chao"
+echo $BI_MAT        # → xin chao
+
+# Mở CỬA SỔ 2, gõ lại
+echo $BI_MAT        # → (trống)</code></pre>
+
+<p>Cùng một máy, cùng một user, nhưng biến chỉ tồn tại trong <strong>process shell</strong> nơi
+bạn đặt nó. Đây là nền tảng của toàn bộ cách quản lý cấu hình sau này.
+→ <a href="../29-secret-va-backup/">Bài 29</a>.</p>
+
+<h2 id="tu-kiem-tra">10. Tự kiểm tra</h2>
+
+<p>Bấm vào từng dòng để đánh dấu khi tự tin trả lời được mà không nhìn lại.</p>
+
 <ul class="check">
-  <li>Chỉ ra được process nào đang giữ một port</li>
-  <li>Giải thích được OOM (hết RAM) sẽ làm gì với app</li>
-  <li>Phân biệt process và service</li>
+  <li>Nói được ba điểm khác nhau giữa server và laptop, và vì sao điểm thứ ba quan trọng nhất</li>
+  <li>Giải thích được vì sao hết CPU thì app chậm, còn hết RAM thì app chết</li>
+  <li>Nối được: hết CPU → 504, hết RAM → 502, và giải thích được vì sao</li>
+  <li>Phân biệt được file <code>.jar</code> trên đĩa và process đang chạy</li>
+  <li><strong>Chỉ ra được process nào đang giữ một port</strong>, đi từ port → PID → tên chương trình</li>
+  <li>Giải thích được vì sao <code>Address already in use</code> xảy ra, dùng khái niệm "sổ phòng của kernel"</li>
+  <li>Phân biệt process và thread, và nói được vì sao giết process là giết mọi thread</li>
+  <li>Giải thích được con số <code>2</code> trong <code>2&gt;/dev/null</code> là gì</li>
+  <li><strong>Giải thích được OOM sẽ làm gì với app</strong>, và vì sao log ứng dụng trống trơn</li>
+  <li>Biết tìm dấu vết OOM ở đâu khi log app không có gì</li>
+  <li><strong>Phân biệt process và service</strong>, và nói được vì sao server cần service</li>
+  <li>Kể lại được đủ 7 bước từ "RAM cạn" tới "người dùng thấy 502"</li>
 </ul>
+
+<h2 id="ket">11. Kết lại</h2>
+
+<pre class="diagram"><code>  Bài 00 cho bạn BẢN ĐỒ    — request đi qua những đâu
+  Bài 01 cho bạn VẬT CHẤT  — mỗi chặng đó thật ra là cái gì
+
+     Nginx        →  một process, giữ phòng 443
+     Spring Boot  →  một process, giữ phòng 8080
+     PostgreSQL   →  một process, giữ phòng 5432
+
+  Cả ba đều: ăn RAM · bị kernel quản · có PID · giết được · chết được</code></pre>
+
+<div class="callout">
+  <span class="label">Bài tiếp theo</span>
+  <p><a href="../02-dung-phong-lab/">Bài 02 — Dựng phòng lab: WSL2 Ubuntu + Docker Desktop</a>.</p>
+  <p>Ta sẽ cài lại Ubuntu (đã bị gỡ), và <strong>trả món nợ từ Bài 00</strong>: chạy lại
+  <code>time curl -4 http://127.0.0.1:9999</code> trên Linux để so với <strong>2,155 giây</strong>
+  đo được trên Windows. Cùng một máy, cùng một lệnh, khác kernel.</p>
+</div>
 
 <div class="prevnext">
   <a href="../00-ban-do-toan-canh/">
@@ -74,7 +637,7 @@
 </div>
 
 <footer class="page">
-  <p>Bài 01 · Module M0 — Nền tảng — Server và Internet thực sự là gì · DevOps Self-Learning</p>
+  <p>Bài 01 · Module M0 — Nền tảng · DevOps Self-Learning</p>
 </footer>
 
 </div>

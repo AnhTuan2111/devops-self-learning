@@ -5,6 +5,10 @@
       "date": "2026-09-24",
       "note": "Hoc theo doi thoai thay-tro. Sua duoc 9 cho hieu sai. Con treo: so sanh refused tren WSL Ubuntu (Bai 02)."
     },
-    "01": { "status": "todo", "date": null, "note": "" }
+    "01": {
+      "status": "doing",
+      "date": "2026-09-25",
+      "note": "Tai lieu viet truoc de doc, se boi dap them sau buoi doi thoai."
+    }
   }
 }
