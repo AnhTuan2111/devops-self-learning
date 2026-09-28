@@ -1,5 +1,7 @@
 # Bài 39 — Xử lý sự cố: quy trình khi mọi thứ đang cháy
 
+<img src="../../assets/readme/glyph/39.svg" width="132" align="right" alt="Ấn ký của Bài 39">
+
 > **Module M7** · Monitoring & Vận hành — Biết server còn sống
 > Ước lượng: ~70 phút · Trạng thái: `todo`
 

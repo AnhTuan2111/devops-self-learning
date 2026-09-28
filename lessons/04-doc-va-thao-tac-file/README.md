@@ -1,5 +1,7 @@
 # Bài 04 — Đọc và thao tác file: bộ công cụ điều tra
 
+<img src="../../assets/readme/glyph/04.svg" width="132" align="right" alt="Ấn ký của Bài 04">
+
 > **Module M1** · Linux — Điều khiển một server
 > Ước lượng: ~50 phút · Trạng thái: `todo`
 

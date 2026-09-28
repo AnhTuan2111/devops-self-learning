@@ -1,5 +1,7 @@
 # Bài 42 — Tổng kết: tự vẽ lại toàn bộ hệ thống
 
+<img src="../../assets/readme/glyph/42.svg" width="132" align="right" alt="Ấn ký của Bài 42">
+
 > **Module M8** · Mở rộng — Khi hệ thống lớn lên
 > Ước lượng: ~60 phút · Trạng thái: `todo`
 

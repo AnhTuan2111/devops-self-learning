@@ -1,5 +1,7 @@
 # Bài 18 — Volume và bind mount: vì sao database mất dữ liệu
 
+<img src="../../assets/readme/glyph/18.svg" width="132" align="right" alt="Ấn ký của Bài 18">
+
 > **Module M3** · Docker — Đóng gói ứng dụng
 > Ước lượng: ~55 phút · Trạng thái: `todo`
 

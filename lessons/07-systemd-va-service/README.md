@@ -1,5 +1,7 @@
 # Bài 07 — systemd: biến app thành service tự khởi động lại
 
+<img src="../../assets/readme/glyph/07.svg" width="132" align="right" alt="Ấn ký của Bài 07">
+
 > **Module M1** · Linux — Điều khiển một server
 > Ước lượng: ~55 phút · Trạng thái: `todo`
 

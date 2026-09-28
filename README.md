@@ -1,11 +1,8 @@
-<div align="center">
+<a href="https://anhtuan2111.github.io/devops-self-learning/"><img src="assets/readme/banner.svg" width="100%" alt="DevOps từ số 0 — nhật ký tự học, đã xong 1/43 bài"></a>
 
-<a href="https://anhtuan2111.github.io/devops-self-learning/"><img src="https://raw.githubusercontent.com/AnhTuan2111/AnhTuan2111/main/profile/project-devops-self-learning.svg" width="49%" alt="DevOps self-learning: lộ trình 43 bài từ Linux tới CI/CD, học công khai"></a>
-<a href="https://anhtuan2111.github.io/devops-self-learning/"><img src="https://raw.githubusercontent.com/AnhTuan2111/AnhTuan2111/main/profile/learning.svg" width="100%" alt="DevOps từ số 0: tiến độ từng module và từng bài"></a>
+<img src="assets/readme/roadmap.svg" width="100%" alt="Bức tranh lộ trình: mỗi hàng một module, mỗi ô một bài; ô đã học được tô màu">
 
 **[Đọc bản web đầy đủ, có tab và sơ đồ](https://anhtuan2111.github.io/devops-self-learning/)**
-
-</div>
 
 # DevOps Self-Learning
 
@@ -59,7 +56,7 @@ devops-self-learning/
 ├── index.html             ← trang chủ bản web (sinh tự động)
 ├── curriculum.json        ← nguồn sự thật: toàn bộ lộ trình
 ├── progress.json          ← trạng thái từng bài
-├── assets/                ← hệ thiết kế dùng chung: style.css, app.js (tab, sáng/tối)
+├── assets/                ← hệ thiết kế Bauhaus: style.css, app.js, font, ảnh README
 ├── scripts/generate.mjs   ← sinh README.md + index.html từ 2 tệp JSON trên
 └── lessons/
     └── NN-ten-bai/
@@ -249,6 +246,8 @@ còn mơ hồ:
 }
 ```
 
-Rồi chạy `node scripts/generate.mjs` để cập nhật README, trang chủ và khung các bài. Card tiến độ
-ở đầu tệp này do workflow của repo profile [AnhTuan2111](https://github.com/AnhTuan2111/AnhTuan2111)
-vẽ lại mỗi sáng từ chính hai tệp JSON đó.
+Rồi chạy `node scripts/generate.mjs` để cập nhật README, trang chủ và khung các bài. Hai ảnh ở
+đầu tệp này — tiêu đề và bức tranh lộ trình — cũng do script đó vẽ lại từ `progress.json`, bằng
+đúng bộ sinh hình của bản web: học xong một bài thì ô của bài đó trong tranh được tô màu. Ảnh nằm
+trong `assets/readme/`, nhúng sẵn font League Spartan (giấy phép OFL) vì GitHub không tải web font
+cho ảnh SVG.

@@ -1,5 +1,7 @@
 # Bài 00 — Bản đồ toàn cảnh: một request đi từ browser tới code của bạn
 
+<img src="../../assets/readme/glyph/00.svg" width="132" align="right" alt="Ấn ký của Bài 00">
+
 > **Module M0** · Nền tảng — Server và Internet thực sự là gì
 > Học ngày **21–24/09/2026** · đối thoại thầy–trò · 4 phần + 5 lab
 

@@ -1,5 +1,7 @@
 # Bài 02 — Dựng phòng lab: WSL2 Ubuntu + Docker Desktop
 
+<img src="../../assets/readme/glyph/02.svg" width="132" align="right" alt="Ấn ký của Bài 02">
+
 > **Module M0** · Nền tảng — Server và Internet thực sự là gì
 > Ước lượng: ~45 phút · Trạng thái: `todo`
 

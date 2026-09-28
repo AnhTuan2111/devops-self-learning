@@ -1,5 +1,7 @@
 # Bài 20 — Docker Compose: cả hệ thống trong một file
 
+<img src="../../assets/readme/glyph/20.svg" width="132" align="right" alt="Ấn ký của Bài 20">
+
 > **Module M3** · Docker — Đóng gói ứng dụng
 > Ước lượng: ~70 phút · Trạng thái: `todo`
 

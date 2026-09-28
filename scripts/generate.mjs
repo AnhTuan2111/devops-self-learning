@@ -11,13 +11,16 @@
  *
  * Nguyên tắc: file này chỉ ĐỌC curriculum.json và progress.json.
  * Muốn sửa nội dung lộ trình thì sửa curriculum.json rồi chạy lại script.
- * Giao diện theo hệ "Sổ thép" trong assets/style.css — đọc bảng luật ở đầu file đó.
+ *   assets/readme/        — ảnh SVG cho README (xem scripts/readme-art.mjs)
+ *
+ * Giao diện theo hệ "Bauhaus" trong assets/style.css — đọc bảng luật ở đầu file đó.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import { makeArt } from './readme-art.mjs';
 
 // Bộ sinh hình Bauhaus sống trong assets/app.js (trình duyệt dùng nó để vẽ ấn ký đầu trang bài).
 // Nạp chung một file để ô ở trang chủ và ấn ký ở trang bài không bao giờ lệch nhau.
@@ -55,6 +58,8 @@ const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const pad2 = (n) => String(n).padStart(2, '0');
 const shortTitle = (m) => m.title.split(' — ')[0];
+// Ấn ký của bài ở đầu README của bài (ảnh do readme-art.mjs vẽ)
+const glyphImg = (id) => `<img src="../../assets/readme/glyph/${id}.svg" width="132" align="right" alt="Ấn ký của Bài ${id}">`;
 const viDate = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
 
 const head = ({ title, desc, base }) => `<!doctype html>
@@ -344,7 +349,17 @@ writeFileSync(join(ROOT, 'index.html'), indexHtml, 'utf8');
 /* README.md                                                           */
 /* ------------------------------------------------------------------ */
 
-const PROFILE_RAW = 'https://raw.githubusercontent.com/AnhTuan2111/AnhTuan2111/main/profile';
+// Ảnh Bauhaus cho README (GitHub không cho CSS): tiêu đề, bức tranh lộ trình, ấn ký từng bài.
+// Vẽ bằng chính bộ sinh hình của bản web, nên README và trang web luôn khớp nhau.
+const artCount = makeArt(ROOT, Bauhaus).write({
+  stats: { done: doneCount, total: allLessons.length, hours: totalHours, modules: curriculum.modules.length },
+  rows: moduleStats.map((s) => ({
+    name: shortTitle(s.m).toLocaleLowerCase('vi'),
+    done: s.done,
+    lessons: s.m.lessons.map((l) => ({ id: l.id, status: statusOf(l.id) })),
+  })),
+  lessonIds: allLessons.map((l) => l.id),
+});
 
 const readmeModules = curriculum.modules
   .map((m) => {
@@ -365,14 +380,11 @@ ${rows}`;
   })
   .join('\n\n');
 
-const readme = `<div align="center">
+const readme = `<a href="${SITE}"><img src="assets/readme/banner.svg" width="100%" alt="DevOps từ số 0 — nhật ký tự học, đã xong ${doneCount}/${allLessons.length} bài"></a>
 
-<a href="${SITE}"><img src="${PROFILE_RAW}/project-devops-self-learning.svg" width="49%" alt="DevOps self-learning: lộ trình 43 bài từ Linux tới CI/CD, học công khai"></a>
-<a href="${SITE}"><img src="${PROFILE_RAW}/learning.svg" width="100%" alt="DevOps từ số 0: tiến độ từng module và từng bài"></a>
+<img src="assets/readme/roadmap.svg" width="100%" alt="Bức tranh lộ trình: mỗi hàng một module, mỗi ô một bài; ô đã học được tô màu">
 
 **[Đọc bản web đầy đủ, có tab và sơ đồ](${SITE})**
-
-</div>
 
 # ${meta.title}
 
@@ -426,7 +438,7 @@ devops-self-learning/
 ├── index.html             ← trang chủ bản web (sinh tự động)
 ├── curriculum.json        ← nguồn sự thật: toàn bộ lộ trình
 ├── progress.json          ← trạng thái từng bài
-├── assets/                ← hệ thiết kế dùng chung: style.css, app.js (tab, sáng/tối)
+├── assets/                ← hệ thiết kế Bauhaus: style.css, app.js, font, ảnh README
 ├── scripts/generate.mjs   ← sinh README.md + index.html từ 2 tệp JSON trên
 └── lessons/
     └── NN-ten-bai/
@@ -512,9 +524,11 @@ còn mơ hồ:
 }
 \`\`\`
 
-Rồi chạy \`node scripts/generate.mjs\` để cập nhật README, trang chủ và khung các bài. Card tiến độ
-ở đầu tệp này do workflow của repo profile [AnhTuan2111](https://github.com/AnhTuan2111/AnhTuan2111)
-vẽ lại mỗi sáng từ chính hai tệp JSON đó.
+Rồi chạy \`node scripts/generate.mjs\` để cập nhật README, trang chủ và khung các bài. Hai ảnh ở
+đầu tệp này — tiêu đề và bức tranh lộ trình — cũng do script đó vẽ lại từ \`progress.json\`, bằng
+đúng bộ sinh hình của bản web: học xong một bài thì ô của bài đó trong tranh được tô màu. Ảnh nằm
+trong \`assets/readme/\`, nhúng sẵn font League Spartan (giấy phép OFL) vì GitHub không tải web font
+cho ảnh SVG.
 `;
 
 writeFileSync(join(ROOT, 'README.md'), readme, 'utf8');
@@ -662,6 +676,8 @@ for (const [i, l] of allLessons.entries()) {
   if (!existsSync(readmePath)) {
     const body = `# Bài ${l.id} — ${l.title}
 
+${glyphImg(l.id)}
+
 > **Module ${l.moduleId}** · ${l.moduleTitle}
 > Ước lượng: ~${l.est} phút · Trạng thái: \`${statusOf(l.id)}\`
 
@@ -702,7 +718,7 @@ cùng với \`index.html\` ghi lại những gì đã thực sự làm và nhữ
   }
 }
 
-console.log(`OK  index.html + README.md + .nojekyll đã cập nhật`);
+console.log(`OK  index.html + README.md + .nojekyll + ${artCount} ảnh README (assets/readme/) đã cập nhật`);
 console.log(
   `OK  ${allLessons.length} bài · ${doneCount} xong (${pct}%) · ` +
     `${created} README mới · ${stubs} trang HTML sinh tự động ` +

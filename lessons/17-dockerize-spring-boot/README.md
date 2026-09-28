@@ -1,5 +1,7 @@
 # Bài 17 — Dockerize Spring Boot đúng chuẩn production
 
+<img src="../../assets/readme/glyph/17.svg" width="132" align="right" alt="Ấn ký của Bài 17">
+
 > **Module M3** · Docker — Đóng gói ứng dụng
 > Ước lượng: ~60 phút · Trạng thái: `todo`
 

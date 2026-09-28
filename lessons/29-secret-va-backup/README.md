@@ -1,5 +1,7 @@
 # Bài 29 — Quản lý secret và backup: thứ bạn chỉ tiếc khi đã muộn
 
+<img src="../../assets/readme/glyph/29.svg" width="132" align="right" alt="Ấn ký của Bài 29">
+
 > **Module M5** · Production — VPS thật, domain thật, HTTPS thật
 > Ước lượng: ~65 phút · Trạng thái: `todo`
 

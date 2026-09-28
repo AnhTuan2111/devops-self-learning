@@ -1,5 +1,7 @@
 # Bài 26 — Deploy thủ công lần đầu: cảm nhận nỗi đau
 
+<img src="../../assets/readme/glyph/26.svg" width="132" align="right" alt="Ấn ký của Bài 26">
+
 > **Module M5** · Production — VPS thật, domain thật, HTTPS thật
 > Ước lượng: ~70 phút · Trạng thái: `todo`
 

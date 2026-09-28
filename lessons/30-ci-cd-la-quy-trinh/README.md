@@ -1,5 +1,7 @@
 # Bài 30 — CI/CD là quy trình, không phải tool
 
+<img src="../../assets/readme/glyph/30.svg" width="132" align="right" alt="Ấn ký của Bài 30">
+
 > **Module M6** · CI/CD — Tự động hóa toàn bộ
 > Ước lượng: ~45 phút · Trạng thái: `todo`
 

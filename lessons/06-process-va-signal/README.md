@@ -1,5 +1,7 @@
 # Bài 06 — Process và signal: app của bạn sống và chết thế nào
 
+<img src="../../assets/readme/glyph/06.svg" width="132" align="right" alt="Ấn ký của Bài 06">
+
 > **Module M1** · Linux — Điều khiển một server
 > Ước lượng: ~50 phút · Trạng thái: `todo`
 

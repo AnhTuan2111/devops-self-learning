@@ -1,5 +1,7 @@
 # Bài 16 — Dockerfile và layer cache: vì sao build lại chậm
 
+<img src="../../assets/readme/glyph/16.svg" width="132" align="right" alt="Ấn ký của Bài 16">
+
 > **Module M3** · Docker — Đóng gói ứng dụng
 > Ước lượng: ~55 phút · Trạng thái: `todo`
 

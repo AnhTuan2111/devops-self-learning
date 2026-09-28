@@ -1,5 +1,7 @@
 # Bài 19 — Docker network: container gọi nhau bằng tên
 
+<img src="../../assets/readme/glyph/19.svg" width="132" align="right" alt="Ấn ký của Bài 19">
+
 > **Module M3** · Docker — Đóng gói ứng dụng
 > Ước lượng: ~50 phút · Trạng thái: `todo`
 

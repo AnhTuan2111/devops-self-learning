@@ -1,5 +1,7 @@
 # Bài 31 — GitHub Actions cơ bản — và deploy chính website học tập này
 
+<img src="../../assets/readme/glyph/31.svg" width="132" align="right" alt="Ấn ký của Bài 31">
+
 > **Module M6** · CI/CD — Tự động hóa toàn bộ
 > Ước lượng: ~60 phút · Trạng thái: `todo`
 

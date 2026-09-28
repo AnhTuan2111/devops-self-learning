@@ -1,5 +1,7 @@
 # Bài 13 — SSH và firewall: cánh cửa duy nhất vào server
 
+<img src="../../assets/readme/glyph/13.svg" width="132" align="right" alt="Ấn ký của Bài 13">
+
 > **Module M2** · Networking — Làm sao dữ liệu tới được máy bạn
 > Ước lượng: ~55 phút · Trạng thái: `todo`
 

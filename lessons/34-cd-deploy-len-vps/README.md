@@ -1,5 +1,7 @@
 # Bài 34 — CD: tự động deploy lên VPS
 
+<img src="../../assets/readme/glyph/34.svg" width="132" align="right" alt="Ấn ký của Bài 34">
+
 > **Module M6** · CI/CD — Tự động hóa toàn bộ
 > Ước lượng: ~75 phút · Trạng thái: `todo`
 

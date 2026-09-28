@@ -1,5 +1,7 @@
 # Bài 22 — Phục vụ static file và ứng dụng SPA
 
+<img src="../../assets/readme/glyph/22.svg" width="132" align="right" alt="Ấn ký của Bài 22">
+
 > **Module M4** · Nginx — Đưa ứng dụng ra Internet
 > Ước lượng: ~50 phút · Trạng thái: `todo`
 

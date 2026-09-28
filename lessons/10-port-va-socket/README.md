@@ -1,5 +1,7 @@
 # Bài 10 — Port và socket: 'Address already in use'
 
+<img src="../../assets/readme/glyph/10.svg" width="132" align="right" alt="Ấn ký của Bài 10">
+
 > **Module M2** · Networking — Làm sao dữ liệu tới được máy bạn
 > Ước lượng: ~45 phút · Trạng thái: `todo`
 

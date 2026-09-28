@@ -1,5 +1,7 @@
 # Bài 15 — Image và Container: vòng đời đầy đủ
 
+<img src="../../assets/readme/glyph/15.svg" width="132" align="right" alt="Ấn ký của Bài 15">
+
 > **Module M3** · Docker — Đóng gói ứng dụng
 > Ước lượng: ~50 phút · Trạng thái: `todo`
 

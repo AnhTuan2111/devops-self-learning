@@ -1,5 +1,7 @@
 # Bài 27 — Domain và DNS thật
 
+<img src="../../assets/readme/glyph/27.svg" width="132" align="right" alt="Ấn ký của Bài 27">
+
 > **Module M5** · Production — VPS thật, domain thật, HTTPS thật
 > Ước lượng: ~50 phút · Trạng thái: `todo`
 

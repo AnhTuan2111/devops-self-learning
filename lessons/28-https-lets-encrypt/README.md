@@ -1,5 +1,7 @@
 # Bài 28 — HTTPS với Let's Encrypt và tự động gia hạn
 
+<img src="../../assets/readme/glyph/28.svg" width="132" align="right" alt="Ấn ký của Bài 28">
+
 > **Module M5** · Production — VPS thật, domain thật, HTTPS thật
 > Ước lượng: ~65 phút · Trạng thái: `todo`
 

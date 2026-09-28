@@ -1,5 +1,7 @@
 # Bài 09 — IP, localhost và cái bẫy 127.0.0.1 vs 0.0.0.0
 
+<img src="../../assets/readme/glyph/09.svg" width="132" align="right" alt="Ấn ký của Bài 09">
+
 > **Module M2** · Networking — Làm sao dữ liệu tới được máy bạn
 > Ước lượng: ~50 phút · Trạng thái: `todo`
 

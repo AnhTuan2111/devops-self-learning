@@ -266,9 +266,14 @@ trang — chỉ cần viết `prevnext`, và **đừng** thêm link topbar trỏ
 - Kế tiếp: **Bài 02** — Dựng phòng lab (cài lại WSL Ubuntu + bật Docker Desktop)
 - **28/09/2026: đổi giọng văn sang học thuật + chia tab mọi trang; giao diện qua hai lượt** —
   neo-brutalism "Sổ thép" rồi chốt **Bauhaus** (một kiểu duy nhất). Bài 00 (3 trang), Bài 01,
-  trang chủ và 41 trang khung đều đã theo hệ mới. README gốc nhúng card `learning.svg` do repo
-  profile `AnhTuan2111` vẽ (card đó vẫn kiểu neo-brutalism của profile) — **đừng tự vẽ card tiến
-  độ thứ hai**.
+  trang chủ và 41 trang khung đều đã theo hệ mới.
+- **README cũng theo Bauhaus** (người học yêu cầu "sửa cả readme cho khớp"): không nhúng card
+  neo-brutalism của repo profile nữa. `scripts/readme-art.mjs` (gọi từ `generate.mjs`) vẽ vào
+  `assets/readme/`: `banner.svg` (tiêu đề + ba hình số liệu), `roadmap.svg` (bức tranh lộ trình tự
+  tô màu theo `progress.json`) và `glyph/NN.svg` (ấn ký từng bài, gắn dưới H1 của README bài).
+  Ảnh SVG qua `<img>` không tải được web font, nên font League Spartan được **nhúng base64** từ
+  `assets/fonts/` (giấy phép OFL, file `OFL-LeagueSpartan.txt` đi kèm). Card trên trang profile
+  GitHub vẫn là việc của repo `AnhTuan2111`, không đụng tới.
 
 ### Khái niệm đã dạy ở Bài 00 — phải tái sử dụng, không định nghĩa lại
 

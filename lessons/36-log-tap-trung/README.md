@@ -1,5 +1,7 @@
 # Bài 36 — Log: từ docker logs tới log tập trung
 
+<img src="../../assets/readme/glyph/36.svg" width="132" align="right" alt="Ấn ký của Bài 36">
+
 > **Module M7** · Monitoring & Vận hành — Biết server còn sống
 > Ước lượng: ~65 phút · Trạng thái: `todo`
 

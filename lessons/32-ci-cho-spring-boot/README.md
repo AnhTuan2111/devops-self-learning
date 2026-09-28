@@ -1,5 +1,7 @@
 # Bài 32 — CI cho Spring Boot: build, test, cache
 
+<img src="../../assets/readme/glyph/32.svg" width="132" align="right" alt="Ấn ký của Bài 32">
+
 > **Module M6** · CI/CD — Tự động hóa toàn bộ
 > Ước lượng: ~65 phút · Trạng thái: `todo`
 

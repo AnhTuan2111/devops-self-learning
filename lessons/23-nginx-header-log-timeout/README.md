@@ -1,5 +1,7 @@
 # Bài 23 — Header, log, timeout, rate limit: Nginx trong thực chiến
 
+<img src="../../assets/readme/glyph/23.svg" width="132" align="right" alt="Ấn ký của Bài 23">
+
 > **Module M4** · Nginx — Đưa ứng dụng ra Internet
 > Ước lượng: ~55 phút · Trạng thái: `todo`
 

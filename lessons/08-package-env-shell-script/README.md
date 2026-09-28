@@ -1,5 +1,7 @@
 # Bài 08 — Package, biến môi trường và shell script đầu tiên
 
+<img src="../../assets/readme/glyph/08.svg" width="132" align="right" alt="Ấn ký của Bài 08">
+
 > **Module M1** · Linux — Điều khiển một server
 > Ước lượng: ~55 phút · Trạng thái: `todo`
 

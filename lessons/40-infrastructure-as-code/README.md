@@ -1,5 +1,7 @@
 # Bài 40 — Infrastructure as Code: Ansible và Terraform nhập môn
 
+<img src="../../assets/readme/glyph/40.svg" width="132" align="right" alt="Ấn ký của Bài 40">
+
 > **Module M8** · Mở rộng — Khi hệ thống lớn lên
 > Ước lượng: ~80 phút · Trạng thái: `todo`
 

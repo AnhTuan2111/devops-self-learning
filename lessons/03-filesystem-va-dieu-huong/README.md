@@ -1,5 +1,7 @@
 # Bài 03 — Filesystem và điều hướng: bản đồ của một máy Linux
 
+<img src="../../assets/readme/glyph/03.svg" width="132" align="right" alt="Ấn ký của Bài 03">
+
 > **Module M1** · Linux — Điều khiển một server
 > Ước lượng: ~40 phút · Trạng thái: `todo`
 

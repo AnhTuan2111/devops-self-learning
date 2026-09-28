@@ -1,5 +1,7 @@
 # Bài 24 — Nginx trong Docker Compose: ráp toàn bộ hệ thống
 
+<img src="../../assets/readme/glyph/24.svg" width="132" align="right" alt="Ấn ký của Bài 24">
+
 > **Module M4** · Nginx — Đưa ứng dụng ra Internet
 > Ước lượng: ~60 phút · Trạng thái: `todo`
 

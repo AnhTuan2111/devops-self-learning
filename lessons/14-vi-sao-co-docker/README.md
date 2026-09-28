@@ -1,5 +1,7 @@
 # Bài 14 — Vì sao có Docker: container KHÔNG phải máy ảo
 
+<img src="../../assets/readme/glyph/14.svg" width="132" align="right" alt="Ấn ký của Bài 14">
+
 > **Module M3** · Docker — Đóng gói ứng dụng
 > Ước lượng: ~50 phút · Trạng thái: `todo`
 

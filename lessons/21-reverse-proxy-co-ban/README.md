@@ -1,5 +1,7 @@
 # Bài 21 — Reverse proxy: Nginx đứng trước ứng dụng để làm gì
 
+<img src="../../assets/readme/glyph/21.svg" width="132" align="right" alt="Ấn ký của Bài 21">
+
 > **Module M4** · Nginx — Đưa ứng dụng ra Internet
 > Ước lượng: ~55 phút · Trạng thái: `todo`
 

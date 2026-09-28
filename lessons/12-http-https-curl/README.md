@@ -1,5 +1,7 @@
 # Bài 12 — HTTP/HTTPS và curl như một công cụ điều tra
 
+<img src="../../assets/readme/glyph/12.svg" width="132" align="right" alt="Ấn ký của Bài 12">
+
 > **Module M2** · Networking — Làm sao dữ liệu tới được máy bạn
 > Ước lượng: ~50 phút · Trạng thái: `todo`
 

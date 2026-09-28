@@ -1,5 +1,7 @@
 # Bài 01 — Máy tính, Hệ điều hành, Process: "server" thật ra là cái gì
 
+<img src="../../assets/readme/glyph/01.svg" width="132" align="right" alt="Ấn ký của Bài 01">
+
 > **Module M0** · Nền tảng · ~45 phút · không cần WSL, không cần Docker
 
 **Bài giảng đầy đủ:** [`index.html`](index.html) —

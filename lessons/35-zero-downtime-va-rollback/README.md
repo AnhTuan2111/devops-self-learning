@@ -1,5 +1,7 @@
 # Bài 35 — Zero-downtime và rollback: khi deploy hỏng lúc 5 giờ chiều
 
+<img src="../../assets/readme/glyph/35.svg" width="132" align="right" alt="Ấn ký của Bài 35">
+
 > **Module M6** · CI/CD — Tự động hóa toàn bộ
 > Ước lượng: ~75 phút · Trạng thái: `todo`
 
