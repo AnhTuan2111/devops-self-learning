@@ -10,7 +10,7 @@ Vẽ được pipeline mình cần TRƯỚC khi viết dòng YAML nào.
 ## Khái niệm sẽ gặp
 
 - CI vs CD vs Continuous Deployment
-- Build → Test → Package → Deploy
+- Build, Test, Package, Deploy
 - Artifact và registry
 - Environment: dev/staging/prod
 - Trunk-based vs Git flow

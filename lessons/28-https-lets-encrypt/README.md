@@ -12,7 +12,7 @@
 - TLS, certificate, CA
 - ACME challenge (HTTP-01, DNS-01)
 - Certbot
-- Redirect 80 → 443
+- Redirect 80 sang 443
 - HSTS
 - Auto-renew và cách kiểm tra nó thật sự chạy
 - Certbot với Nginx trong Docker

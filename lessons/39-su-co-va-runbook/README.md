@@ -9,7 +9,7 @@ Có một quy trình debug theo tầng thay vì hoảng loạn thử mọi thứ
 
 ## Khái niệm sẽ gặp
 
-- Debug theo tầng: DNS → Nginx → App → DB
+- Debug theo tầng: DNS, Nginx, App, DB
 - Lệnh chẩn đoán nhanh: df -h, free -h, docker stats, journalctl
 - Đầy disk, hết RAM, cạn connection pool
 - Postmortem không đổ lỗi

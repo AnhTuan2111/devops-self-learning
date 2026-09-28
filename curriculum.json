@@ -1,12 +1,12 @@
 {
   "meta": {
     "title": "DevOps Self-Learning",
-    "subtitle": "Từ 0 → tự quản lý server → deploy production → CI/CD",
+    "subtitle": "Từ số 0, tới tự quản lý server, deploy production và CI/CD",
     "owner": "AnhTuan2111",
     "started": "2026-09-21",
     "stack": "Spring Boot + PostgreSQL + Docker + Nginx + GitHub Actions",
     "env": "Windows 11 + WSL2 Ubuntu + Docker Desktop",
-    "principle": "Problem → Concept → Tool. Không học lệnh, học hệ thống."
+    "principle": "Problem, rồi Concept, rồi Tool. Không học lệnh, học hệ thống."
   },
   "modules": [
     {
@@ -447,7 +447,7 @@
           "slug": "https-lets-encrypt",
           "title": "HTTPS với Let's Encrypt và tự động gia hạn",
           "goal": "Ổ khóa xanh trên trình duyệt, và chứng chỉ tự gia hạn mà bạn không phải nhớ.",
-          "concepts": ["TLS, certificate, CA", "ACME challenge (HTTP-01, DNS-01)", "Certbot", "Redirect 80 → 443", "HSTS", "Auto-renew và cách kiểm tra nó thật sự chạy", "Certbot với Nginx trong Docker"],
+          "concepts": ["TLS, certificate, CA", "ACME challenge (HTTP-01, DNS-01)", "Certbot", "Redirect 80 sang 443", "HSTS", "Auto-renew và cách kiểm tra nó thật sự chạy", "Certbot với Nginx trong Docker"],
           "lab": "Cấp chứng chỉ cho domain, ép HTTPS, chạy thử renew --dry-run.",
           "checklist": [
             "https:// hoạt động, http:// tự chuyển sang https",
@@ -482,7 +482,7 @@
           "slug": "ci-cd-la-quy-trinh",
           "title": "CI/CD là quy trình, không phải tool",
           "goal": "Vẽ được pipeline mình cần TRƯỚC khi viết dòng YAML nào.",
-          "concepts": ["CI vs CD vs Continuous Deployment", "Build → Test → Package → Deploy", "Artifact và registry", "Environment: dev/staging/prod", "Trunk-based vs Git flow", "Vì sao pipeline chậm thì vô dụng"],
+          "concepts": ["CI vs CD vs Continuous Deployment", "Build, Test, Package, Deploy", "Artifact và registry", "Environment: dev/staging/prod", "Trunk-based vs Git flow", "Vì sao pipeline chậm thì vô dụng"],
           "lab": "Chuyển runbook thủ công ở bài 26 thành sơ đồ pipeline từng bước.",
           "checklist": [
             "Có sơ đồ pipeline cụ thể cho project của mình",
@@ -499,7 +499,7 @@
           "concepts": ["workflow, job, step, action", "runner", "on: push / pull_request / workflow_dispatch", "Ma trận (matrix)", "Đọc log của một run", "GitHub Pages deploy action"],
           "lab": "Viết workflow tự động deploy thư mục này lên GitHub Pages mỗi khi push lên main.",
           "checklist": [
-            "Push code → vài phút sau trang web tự cập nhật",
+            "Push code, vài phút sau trang web tự cập nhật",
             "Đọc và hiểu được toàn bộ file YAML mình viết",
             "Debug được khi workflow đỏ"
           ],
@@ -537,7 +537,7 @@
           "id": "34",
           "slug": "cd-deploy-len-vps",
           "title": "CD: tự động deploy lên VPS",
-          "goal": "git push → production tự cập nhật. Không SSH thủ công nữa.",
+          "goal": "git push là production tự cập nhật. Không SSH thủ công nữa.",
           "concepts": ["GitHub Secrets và Environments", "Deploy key / SSH từ Actions", "Script deploy idempotent", "docker compose pull && up -d", "Environment protection rule", "Vì sao KHÔNG build trên server production"],
           "lab": "Workflow SSH vào VPS, pull image mới, restart stack. Deploy thật một thay đổi nhỏ.",
           "checklist": [
@@ -615,7 +615,7 @@
           "slug": "su-co-va-runbook",
           "title": "Xử lý sự cố: quy trình khi mọi thứ đang cháy",
           "goal": "Có một quy trình debug theo tầng thay vì hoảng loạn thử mọi thứ.",
-          "concepts": ["Debug theo tầng: DNS → Nginx → App → DB", "Lệnh chẩn đoán nhanh: df -h, free -h, docker stats, journalctl", "Đầy disk, hết RAM, cạn connection pool", "Postmortem không đổ lỗi", "Runbook cho từng loại sự cố"],
+          "concepts": ["Debug theo tầng: DNS, Nginx, App, DB", "Lệnh chẩn đoán nhanh: df -h, free -h, docker stats, journalctl", "Đầy disk, hết RAM, cạn connection pool", "Postmortem không đổ lỗi", "Runbook cho từng loại sự cố"],
           "lab": "Tự gây 3 sự cố (đầy disk, DB chết, app treo) và viết runbook xử lý cho từng loại.",
           "checklist": [
             "Có checklist chẩn đoán theo thứ tự cố định",

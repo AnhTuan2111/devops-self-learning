@@ -5,7 +5,7 @@
 
 ## Mục tiêu
 
-git push → production tự cập nhật. Không SSH thủ công nữa.
+git push là production tự cập nhật. Không SSH thủ công nữa.
 
 ## Khái niệm sẽ gặp
 

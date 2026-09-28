@@ -24,7 +24,7 @@ Viết workflow tự động deploy thư mục này lên GitHub Pages mỗi khi 
 
 Học xong phải tự làm được, không nhìn tài liệu:
 
-- [ ] Push code → vài phút sau trang web tự cập nhật
+- [ ] Push code, vài phút sau trang web tự cập nhật
 - [ ] Đọc và hiểu được toàn bộ file YAML mình viết
 - [ ] Debug được khi workflow đỏ
 

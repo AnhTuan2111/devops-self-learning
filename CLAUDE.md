@@ -84,14 +84,14 @@ Khi người học nói "dạy bài tiếp theo" / "học bài NN":
 1. **Đọc `curriculum.json`** lấy mục tiêu, khái niệm, lab, checklist của bài đó.
 2. **Dạy ngay trong chat trước** — giải thích, hỏi lại, để người học phản hồi.
    Không im lặng đi viết file rồi bảo "xong rồi, đọc đi".
-3. **Viết `index.html`** theo đúng cấu trúc bài 00 (dùng nó làm mẫu):
-   - `1. Vấn đề` — một tình huống có thật, cụ thể, đau
-   - `2..N` — khái niệm, giải thích **vì sao** trước **cái gì**
-   - Sơ đồ ASCII trong `<pre class="diagram">`
+3. **Viết `index.html`** theo đúng cấu trúc bài 00 (dùng nó làm mẫu), **chia tab** theo
+   § Hệ thiết kế bên dưới:
+   - Tab đầu `Vấn đề` — một tình huống có thật, cụ thể, đau
+   - Các tab giữa — khái niệm, giải thích **vì sao** trước **cái gì**, theo § Giọng văn
+   - Sơ đồ ASCII trong `<figure class="fig"><pre class="diagram">` có `<figcaption>` đánh số
    - Ít nhất một **bảng tra triệu chứng → nguyên nhân** nếu bài có liên quan sự cố
-   - `Lab` — lệnh chạy được trên WSL/Git Bash, có bước "tự gây lỗi rồi tự sửa"
-   - `Tự kiểm tra` — `<ul class="check">`, bấm được để đánh dấu
-   - `Kết lại` + link bài tiếp
+   - Tab `Lab` — lệnh chạy được trên WSL/Git Bash, có bước "tự gây lỗi rồi tự sửa"
+   - Tab cuối — `Tự kiểm tra` (`<ul class="check">`), `Kết lại`, `Nguồn đọc thêm` (`<ol class="refs">`)
 4. **Viết `README.md`** bản workbook rút gọn.
 5. **Tạo `notes.md`** có sẵn chỗ trống cho người học điền output lab thật.
 6. **Cập nhật `progress.json`** → chạy `node scripts/generate.mjs`.
@@ -109,6 +109,152 @@ Khi người học nói "dạy bài tiếp theo" / "học bài NN":
   thì nói ra.
 - Chỉ dẫn link tài liệu **chính thức** hoặc nguồn chắc chắn tồn tại. Không bịa URL khóa học.
 
+## Giọng văn — học thuật, nhưng dễ hiểu (đổi 28/09/2026)
+
+Người học yêu cầu: **học thuật càng nhiều càng tốt, dễ hiểu càng tốt, thà viết một đoạn
+dài còn hơn ngắn gọn.** Áp dụng cho `index.html` và các trang phụ; `README.md` giữ khung
+vở bài tập nhưng mỗi bước vẫn phải có câu giải thích *vì sao*.
+
+1. **Mỗi khái niệm đi đủ năm nhịp:** (a) *đặt vấn đề* — vì sao khái niệm phải tồn tại;
+   (b) *định nghĩa chính xác* — tên chuẩn tiếng Anh + tiếng Việt, và nguồn chuẩn nếu có
+   (RFC, POSIX, man page, tài liệu chính thức); (c) *cơ chế* — chuỗi nhân quả từng bước,
+   chuyện gì xảy ra ở tầng nào; (d) *ví dụ* — một ẩn dụ đời thường (mô hình tòa nhà…) **và**
+   một ví dụ kỹ thuật thật (lệnh, output); (e) *hệ quả, giới hạn, ngoại lệ*, rồi nối về bản
+   đồ 9 chặng.
+2. **Viết thành đoạn văn liền mạch** với từ nối lập luận: *bởi vì, do đó, hệ quả là, nói cách
+   khác, ngược lại, điều này dẫn tới*. Không dùng gạch đầu dòng cụt để thay cho lập luận;
+   gạch đầu dòng chỉ dành cho thứ rời rạc thật (bước lab, checklist, danh sách lệnh).
+3. **Dài nhưng không rối:** câu có thể dài, nhưng mỗi câu một ý chính. Định nghĩa thuật ngữ
+   ngay lần đầu xuất hiện, không dùng thuật ngữ trước khi định nghĩa. Sau mỗi ý trừu tượng
+   là một ví dụ cụ thể.
+4. **Hình thức học thuật:** hình và bảng đánh số (*Hình 1*, *Bảng 2*) kèm chú thích; thuật
+   ngữ quan trọng gom vào `<dl class="terms">`; cuối trang có *Nguồn đọc thêm* chỉ gồm nguồn
+   chính thức (rfc-editor.org, man7.org, docs chính thức).
+5. **Trung thực về độ chắc chắn:** phân biệt *luôn luôn* với *thường thì*. Năm, con số lịch
+   sử, số hiệu RFC chỉ viết khi chắc chắn — không chắc thì bỏ, đừng bịa cho có vẻ học thuật.
+6. Vẫn xưng **"bạn"**. Vẫn giữ các ẩn dụ đã dạy ở Bài 00 — học thuật không có nghĩa là bỏ ví dụ.
+
+Trong **chat** vẫn giữ nhịp đối thoại (chia phần, hỏi, đợi) — nhưng phần giảng trước câu hỏi
+cũng theo năm nhịp trên, không giảng cụt.
+
+## Hệ thiết kế "Bauhaus" (đổi 28/09/2026 — thay cho neo-brutalism "Sổ thép")
+
+Người học yêu cầu **một kiểu duy nhất**: không chế độ tối, không bảng màu thay thế, không nút
+đổi giao diện. Toàn bộ nằm trong `assets/style.css` (đầu file có bảng luật) và `assets/app.js`
+(tab, ô số bài ở đầu trang, checklist, nút chép lệnh).
+
+**Luật, và nguồn của từng luật** (đã kiểm chứng trên trang thật, xem § Nguồn thiết kế):
+
+1. **Phẳng.** Không bóng đổ, không gradient, không bo góc cho khối chữ nhật. Cấu trúc do
+   **thanh kẻ đen dày** và **kích thước** tạo ra. Bóng offset cứng và viền dày quanh mọi thứ là
+   dấu hiệu của *neo-brutalism* — đừng để chúng quay lại.
+2. **Đỏ · vàng · lam + đen + giấy ngà.** Màu bão hoà chỉ chiếm **diện tích nhỏ** (thanh kẻ, ô
+   nhãn, hình học) — "tương phản diện tích" của Itten. Không đặt chữ vàng trên nền sáng: vàng
+   luôn là **nền** dưới chữ đen.
+3. **Hình học mang chức năng.** Vốn hình: tròn, vuông, tam giác, nửa tròn, phần tư tròn, vòng
+   khuyên, vòm, thoi, sọc, lá — ghép thành lưới ô vuông. Chúng đánh số tab, định danh module,
+   định danh bài, mang số liệu — không bao giờ để trang trí suông:
+   - **Ấn ký của bài**: lưới 4×4 ở đầu trang, `Bauhaus.glyph(số bài)` trong `app.js` sinh
+     **cố định** từ số bài (cùng số → cùng hình ở mọi máy). Trang phụ của một bài dùng chung ấn ký.
+   - **Bức tranh lộ trình** ở trang chủ: 43 ô, mỗi ô là mảnh đầu tiên của ấn ký bài đó
+     (`Bauhaus.tile`). Chưa học = chỉ còn nét; học xong = tô màu; đang học = khung đen.
+   - **Hình của module** cố định: `.shp.s-0` … `s-8` = tròn lam · vuông đỏ · tam giác vàng ·
+     phần tư đen · vòm lam · vòng khuyên đỏ · thoi vàng · bán nguyệt đen · vuông rỗng lam.
+     Tab và đầu tab xoay vòng 6 hình đầu.
+   - `scripts/generate.mjs` **require chính `assets/app.js`** để lấy bộ sinh hình, nên phần
+     đầu `app.js` phải giữ thuần (không chạm DOM trước dòng `module.exports`).
+4. **Chữ thường** cho chữ hiển thị (h1, h2, tab, nhãn, chip) theo Herbert Bayer (1925); **thân
+   bài viết hoa/thường bình thường** vì dễ đọc hơn. Code trong tiêu đề giữ nguyên hoa/thường.
+5. **Bất đối xứng:** máy tính có cột tab dọc hẹp bên trái + cột đọc rộng bên phải; căn trái,
+   không trục giữa.
+6. **Chữ:** League Spartan (hiển thị, sans hình học) · Be Vietnam Pro (thân, grotesk trung tính
+   vẽ cho tiếng Việt) · JetBrains Mono (code). Cả ba có subset vietnamese. Futura/Kabel **không
+   phải** chữ của Bauhaus (chỉ lấy cảm hứng); **không dùng** font "ITC Bauhaus".
+7. **Dễ đọc thắng thẩm mỹ** (Moholy-Nagy, 1923): lựa chọn nào làm khó đọc thì bỏ.
+8. **Cấm dùng ký tự bàn phím làm icon** (người học yêu cầu 28/09/2026): không mũi tên ký tự,
+   không chấm/vuông/tam giác ký tự, không dấu tick ký tự, không emoji, không số khoanh tròn
+   trong chữ hiển thị (kể cả `data-note`, `data-tab`). Dùng icon **vẽ** có sẵn trong `style.css`:
+   - mũi tên, tick, chéo: `<i class="ic ic-r"></i>` · `ic-l` · `ic-yes` · `ic-no`
+     (trong câu thì thêm `role="img" aria-label="sang"`; trang trí thì `aria-hidden="true"`)
+   - trạng thái: `<i class="stt stt-done"></i>` · `stt-doing` · `stt-todo`
+   - số chặng của bản đồ 9 chặng: `<span class="stg">8</span>`
+   - nút trước/sau: chữ trong `.dir` **không** kèm mũi tên — CSS tự vẽ; dấu tick của checklist
+     cũng do CSS vẽ.
+   Trong README (Markdown) thì **viết thành chữ** ("chặng 8", "7 tới 8", "dẫn tới").
+   Ngoại lệ duy nhất: **nét vẽ bên trong sơ đồ ASCII** (`<pre class="diagram">`, khối ```) và
+   **output thật** dán nguyên văn. Emoji thì cấm cả trong sơ đồ.
+
+**Hình + màu = nghĩa** (theo bảng tương ứng của Kandinsky ở Weimar: vàng–tam giác, đỏ–vuông,
+lam–tròn — một *quy ước* của trường, không phải cảm nhận phổ quát, nên luôn kèm chữ). Khối chú
+thích dùng **thanh kẻ dày ở lề trái** như Moholy-Nagy đánh dấu đoạn cần chú ý:
+
+| Class | Hình + màu | Dùng cho |
+|---|---|---|
+| `.callout.story` | chấm tròn đỏ lớn, không thanh kẻ | tình huống, câu chuyện mở bài |
+| `.callout.define` | vuông đỏ | định nghĩa |
+| `.callout` | tròn lam | nối với kiến thức cũ, mẹo |
+| `.callout.deep` | vòng rỗng, thanh mảnh đen, chữ nhỏ | đào sâu học thuật: lịch sử, chuẩn, RFC |
+| `.callout.ok` | khối đen, thanh vàng | ghim lại, nguyên tắc — mảng lớn tạo nhịp |
+| `.callout.warn` | tam giác vàng | vấn đề, cảnh báo, thói quen phải bỏ |
+
+Chip giữ tên lớp cũ nhưng nghĩa mới: `lime` = xong (lam) · `yellow` = đang học (vàng) ·
+`pink`/`orange` = nhấn (đỏ) · `ink`/`violet` = đen. Trạng thái luôn kèm hình vẽ `.stt-*`:
+tròn đặc = xong · tam giác = đang học · vòng rỗng = chưa học.
+
+**Khung một trang bài** (chép nguyên, chỉ đổi nội dung):
+
+```html
+<head>
+  …meta charset/viewport, <title>Bài NN — …</title>, <meta name="description">…
+  <link rel="stylesheet" href="../../assets/style.css">
+  <link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="NN">
+<nav class="topbar"><div class="topbar-inner">
+  <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-NN</span>
+  <span class="spacer"></span> <a class="nav" href="…">…</a>
+</div></nav>
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Module X · Bài NN · ngày</p>
+    <h1>Phần đầu tiêu đề: <span class="hl">phần được tô vàng</span></h1>
+    <p class="lede">…</p>
+    <div class="meta"><span class="chip yellow"><i class="stt stt-doing" aria-hidden="true"></i>Đang học</span>
+      <a class="chip" href="…"><i class="ic ic-r" aria-hidden="true"></i> …</a></div>
+  </header>
+  <main class="tabs" data-tabs="Các phần của Bài NN">
+    <section class="tab" id="van-de" data-tab="Vấn đề" data-note="ghi chú ngắn">…</section>
+    <section class="tab" id="…" data-tab="…">…</section>
+  </main>
+  <nav class="prevnext"><a href="…">…</a><a class="next" href="…">…</a></nav>
+  <footer class="page">…</footer>
+</div>
+<script src="../../assets/app.js"></script>
+```
+
+**Luật tab:** 4–7 tab một trang; mỗi tab một mạch ý trọn vẹn; nhãn tab ≤ 3 chữ; `id` của
+section và của mọi tiêu đề bên trong phải **duy nhất** trong trang (link `#id` tự mở đúng tab).
+JS tự vẽ thanh tab, đầu tab (ô số + tên) và nút "tab trước / tab tiếp" — **đừng viết tay**.
+Không có JS thì mọi tab hiện nối tiếp nhau, trang vẫn đọc được.
+
+Số bài của ấn ký lấy từ `body[data-lesson]` (chữ số đầu) — nhớ đặt đúng.
+
+**Nút trang trước / trang sau ở góc phải topbar** do `app.js` dựng từ `<nav class="prevnext">` cuối
+trang — chỉ cần viết `prevnext`, và **đừng** thêm link topbar trỏ trùng tới hai trang đó.
+
+**Không viết `style="…"` inline** — cần thì thêm class vào `style.css`.
+
+### Nguồn thiết kế (đã tải được, dùng khi cần trích)
+
+- Hai bài người học đưa: beeart.vn (xu hướng web Bauhaus) · linearity.io/blog/bauhaus-design
+- Kandinsky và cuộc khảo sát màu–hình ở Weimar: bauhauskooperation.de/wissen/das-bauhaus/lehre/unterricht/unterricht-wassily-kandinsky
+- Xưởng in & quảng cáo, cải cách chữ: bauhauskooperation.de/wissen/das-bauhaus/lehre/werkstaetten/druck-und-reklame
+- Itten, Kandinsky, Albers về màu: getty.edu/research/exhibitions_events/exhibitions/bauhaus/new_artist/form_color/color/
+- Bauhaus thật sự dùng chữ gì; Universal, Futura, ITC Bauhaus: letterformarchive.org/news/bauhaus-typefaces-part-one/ và …-part-two/
+- Moholy-Nagy, typophoto, "tempo", thanh kẻ lề trái: exhibitions.letterformarchive.org/bauhaus/walkthroughs/typophoto-in-moholy-nagy-s-painting-photography-film
+- Mốc thời gian của trường: tate.org.uk/art/art-terms/b/bauhaus
+- Vì sao neo-brutalism khác Bauhaus: nngroup.com/articles/neobrutalism/
+
 ## Trạng thái hiện tại
 
 - **Bài 00: XONG** (21–24/09/2026). Có 3 trang: `index.html` (bài giảng),
@@ -118,6 +264,11 @@ Khi người học nói "dạy bài tiếp theo" / "học bài NN":
   đã viết đầy đủ để người học đọc trước. **Còn phải làm lượt ③** (bồi đắp sau buổi đối thoại):
   chỗ hiểu sai, output lab thật, câu hỏi ngoài kịch bản.
 - Kế tiếp: **Bài 02** — Dựng phòng lab (cài lại WSL Ubuntu + bật Docker Desktop)
+- **28/09/2026: đổi giọng văn sang học thuật + chia tab mọi trang; giao diện qua hai lượt** —
+  neo-brutalism "Sổ thép" rồi chốt **Bauhaus** (một kiểu duy nhất). Bài 00 (3 trang), Bài 01,
+  trang chủ và 41 trang khung đều đã theo hệ mới. README gốc nhúng card `learning.svg` do repo
+  profile `AnhTuan2111` vẽ (card đó vẫn kiểu neo-brutalism của profile) — **đừng tự vẽ card tiến
+  độ thứ hai**.
 
 ### Khái niệm đã dạy ở Bài 00 — phải tái sử dụng, không định nghĩa lại
 
