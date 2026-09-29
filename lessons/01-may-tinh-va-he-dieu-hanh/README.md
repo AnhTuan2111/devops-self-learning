@@ -63,15 +63,33 @@ một công cụ mới, hãy thử hỏi: nó đang làm thay việc gì mà m�
 
 ## Bốn tài nguyên
 
-Mọi con số trong bảng cấu hình VPS quy về bốn loại tài nguyên. Ẩn dụ văn phòng dưới đây giúp
-nhớ quan hệ giữa ba loại đầu: CPU chỉ làm được việc với thứ đang nằm trên bàn (RAM), còn tủ
-hồ sơ (disk) thì to nhưng phải mất công lấy ra.
+Mọi con số trong bảng cấu hình VPS quy về bốn loại tài nguyên, định nghĩa như sau.
+
+| Tài nguyên | Là gì | Đơn vị đo | Bền vững |
+|---|---|---|---|
+| **CPU** | Đơn vị thực thi lệnh; mỗi *core* tại một thời điểm chạy một luồng lệnh. "vCPU" là core ảo được chia cho máy ảo. | số core | — |
+| **RAM** | Nơi chứa dữ liệu và mã lệnh **đang được dùng**; nhanh hơn đĩa nhiều bậc độ lớn | GB | **volatile** — mất điện là mất sạch |
+| **Disk** | Nơi lưu dữ liệu bền vững: file chương trình, database, log | GB | **persistent** — tắt máy vẫn còn |
+| **Network** | Card mạng và đường truyền nối máy với bên ngoài | Mbps | — |
+
+### Ẩn dụ hỗ trợ ghi nhớ: người, mặt bàn, cái tủ
+
+Bốn định nghĩa trên chính xác nhưng khô, và điều quan trọng không phải từng loại riêng lẻ mà là
+**quan hệ** giữa chúng. Phép so sánh dưới đây **không phải định nghĩa**:
 
 ```
 DISK  = cái tủ hồ sơ   to, rẻ, CHẬM     · tắt điện vẫn còn
 RAM   = mặt bàn        nhỏ, đắt, NHANH  · tắt điện SẠCH TRƠN
 CPU   = người làm việc · chỉ làm được với thứ ĐANG TRÊN BÀN
 ```
+
+Quy luật rút ra: **muốn dùng file nào, phải bê nó từ tủ lên bàn trước** — đó chính là 30 giây
+JVM đọc hàng nghìn file class từ đĩa lên RAM lúc khởi động.
+
+> **Giới hạn của ẩn dụ.** "Một người, một cái bàn" gợi ý mỗi lúc chỉ có một việc chạy; thực tế
+> CPU nhiều core chạy song song thật, và kernel còn luân phiên hàng trăm process trên cùng một
+> core (*context switching*). Ẩn dụ cũng bỏ qua **cache** (L1/L2/L3) nằm giữa CPU và RAM —
+> nói cho đúng thì "mặt bàn" là cache, còn RAM đã là cái giá sách kê cạnh bàn.
 
 Điều đáng học nhất không phải là định nghĩa từng loại, mà là **mỗi loại khi cạn thì gây ra
 triệu chứng khác nhau**. Đây chính là bảng tra dùng khi một server bắt đầu có vấn đề:
@@ -159,9 +177,12 @@ KERNEL       độc quyền phần cứng
              CPU   RAM   DISK   NETWORK
 ```
 
-Mở rộng mô hình tòa nhà của Bài 00: **kernel là người quản lý tòa nhà, giữ sổ phòng.** Khi app
-gọi `listen(8080)`, thực chất nó xin kernel ghi vào sổ dòng *"phòng 8080: PID 4123"*. Chỉ từ
-một hình ảnh đó, ta giải thích được cả ba hiện tượng đã gặp ở Bài 00:
+Khi app gọi `listen(8080)`, thực chất nó **xin kernel ghi tên mình vào bảng ánh xạ port sang
+process**. Từ lúc đó, mọi gói tin gửi tới port 8080 đều được kernel chuyển cho đúng process ấy.
+
+*Ẩn dụ hỗ trợ ghi nhớ:* mở rộng tòa nhà của Bài 00, **kernel là người quản lý tòa nhà, giữ sổ
+phòng** — và `listen(8080)` là xin ghi vào sổ dòng *"phòng 8080: PID 4123"*. Chỉ từ hình ảnh đó,
+ta giải thích được cả ba hiện tượng đã gặp ở Bài 00:
 
 ```
 Address already in use  →  kernel xem sổ, phòng đã có tên người khác

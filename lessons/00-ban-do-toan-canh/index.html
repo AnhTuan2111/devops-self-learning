@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00 — Bản đồ toàn cảnh</title>
-<meta name="description" content="Đường đi đầy đủ của một HTTP request, từ lúc gõ Enter tới lúc code của bạn chạy: cấu trúc URL, mô hình tòa nhà, bản đồ 9 chặng, bảng tra triệu chứng có cột “ai viết ra”, bản chất của chứng chỉ TLS và những sự cố do thời gian tự gây ra.">
+<meta name="description" content="Đường đi đầy đủ của một HTTP request, từ lúc gõ Enter tới lúc code của bạn chạy: cấu trúc URL, bốn khái niệm nền, bản đồ 9 chặng, bảng tra triệu chứng có cột “ai viết ra”, bản chất của chứng chỉ TLS và những sự cố do thời gian tự gây ra.">
 <link rel="stylesheet" href="../../assets/style.css">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
@@ -149,27 +149,17 @@ chỉ ứng dụng — tức code bạn viết — mới gán ý nghĩa cho nó.
 </section>
 
 <!-- =====================================================================
-     TAB 2 — MÔ HÌNH TÒA NHÀ
+     TAB 2 — BỐN KHÁI NIỆM NỀN
      ===================================================================== -->
-<section class="tab" id="tab-toa-nha" data-tab="Mô hình tòa nhà" data-note="Bộ khái niệm dùng suốt lộ trình">
+<section class="tab" id="tab-toa-nha" data-tab="Bốn khái niệm" data-note="Địa chỉ IP, port, listen, firewall">
 
-<h2 id="toa-nha">3. Mô hình tòa nhà — bốn khái niệm, đừng gộp chúng</h2>
+<h2 id="toa-nha">3. Bốn khái niệm nền: địa chỉ IP, port, listen, firewall</h2>
 
-<p>Đây là mô hình quan trọng nhất của cả bài, và cũng là bộ từ vựng mà mọi bài sau sẽ dùng lại. Nó ra
-đời để giải quyết một nhầm lẫn rất phổ biến: người mới thường gộp "địa chỉ IP", "port", "chương trình
-đang chạy" và "firewall" thành một khối mơ hồ gọi là "server", rồi khi có lỗi thì không biết khối nào
-hỏng. Mô hình tòa nhà tách bốn khái niệm đó ra thành bốn vai rõ ràng, mỗi vai có một cách hỏng riêng và
-một triệu chứng riêng.</p>
-
-<figure class="fig">
-<pre class="diagram"><code>  IP address          =  địa chỉ của MỘT CỬA NGÕ vào tòa nhà
-  port                =  số PHÒNG bên trong tòa nhà
-  process đang listen =  có NGƯỜI ngồi trong phòng đó — và người đó
-                         tự chọn sẽ tiếp khách đến từ cửa ngõ NÀO
-  firewall            =  BẢO VỆ đứng ở cửa ngõ, lọc ai được vào</code></pre>
-<figcaption><b>Hình 2</b> Bốn vai của mô hình tòa nhà. Mỗi vai hỏng theo một kiểu khác nhau, nên
-tách được vai là tách được nguyên nhân.</figcaption>
-</figure>
+<p>Đây là bộ từ vựng mà mọi bài sau sẽ dùng lại, và nó ra đời để giải quyết một nhầm lẫn rất phổ biến:
+người mới thường gộp "địa chỉ IP", "port", "chương trình đang chạy" và "firewall" thành một khối mơ hồ
+gọi chung là "server", rồi khi có lỗi thì không biết khối nào hỏng. Bốn thứ đó là bốn tầng khác nhau
+của ngăn xếp mạng, chúng hỏng theo bốn kiểu khác nhau và cho ra bốn triệu chứng khác nhau. Vì vậy việc
+đầu tiên phải làm là định nghĩa từng thứ cho chính xác.</p>
 
 <dl class="terms">
   <dt>IP address <small>địa chỉ IP</small></dt>
@@ -189,6 +179,38 @@ tách được vai là tách được nguyên nhân.</figcaption>
   <dd>Bộ lọc gói tin theo luật (nguồn, đích, port, giao thức), quyết định gói nào được đi qua cửa ngõ.
   Nó hoạt động <em>trước</em> khi gói tin tới được process.</dd>
 </dl>
+
+<p>Bốn định nghĩa trên đã đủ chính xác để tra cứu, nhưng chúng trừu tượng và rất dễ trôi khỏi trí nhớ
+sau vài ngày. Điều thực sự cần giữ lại không phải câu chữ của định nghĩa mà là <em>sự tách bạch</em>
+giữa bốn vai: địa chỉ trả lời câu hỏi <em>tới máy nào</em>, port trả lời <em>chương trình nào trong
+máy đó</em>, listen trả lời <em>có ai nhận việc không</em>, và firewall trả lời <em>gói tin có được
+phép đi qua không</em>. Để giữ được sự tách bạch ấy, ta dựng một phép so sánh.</p>
+
+<h3 id="an-du-toa-nha">Ẩn dụ hỗ trợ ghi nhớ: một tòa nhà</h3>
+
+<p>Phép so sánh dưới đây <strong>không phải định nghĩa</strong> — nó là công cụ ghi nhớ, và ta sẽ còn
+dùng lại nó ở nhiều bài sau. Hãy hình dung server là một tòa nhà văn phòng.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  IP address          =  địa chỉ của MỘT CỬA NGÕ vào tòa nhà
+  port                =  số PHÒNG bên trong tòa nhà
+  process đang listen =  có NGƯỜI ngồi trong phòng đó — và người đó
+                         tự chọn sẽ tiếp khách đến từ cửa ngõ NÀO
+  firewall            =  BẢO VỆ đứng ở cửa ngõ, lọc ai được vào</code></pre>
+<figcaption><b>Hình 2</b> Ẩn dụ tòa nhà, đặt cạnh bốn định nghĩa ở trên. Mỗi vai hỏng theo một kiểu
+khác nhau, nên tách được vai là tách được nguyên nhân.</figcaption>
+</figure>
+
+<div class="callout warn">
+  <span class="label">Giới hạn của ẩn dụ này</span>
+  <p>Chữ "phòng" gợi ý rằng port là một không gian vật lý có sẵn trong máy. Thực tế
+  <strong>không có cái phòng nào cả</strong>: port chỉ là một con số 16 bit nằm trong phần đầu của gói
+  tin, và hệ điều hành dùng con số đó để tra một bảng xem nên giao gói cho process nào. Không có process
+  nào đăng ký thì con số đó đơn giản là không có trong bảng.</p>
+  <p>Tương tự, "cửa ngõ" gợi ý một lối đi vật lý, nhưng một máy có thể tạo ra hàng chục giao diện mạng
+  ảo bằng phần mềm, không cần thêm sợi dây nào. <strong>Khi ẩn dụ và định nghĩa mâu thuẫn, định nghĩa
+  thắng.</strong></p>
+</div>
 
 <h3 id="nhieu-ip">Một máy có NHIỀU địa chỉ IP, không phải một</h3>
 
@@ -326,7 +348,7 @@ cho ra <code>refused</code>. Nó cũng là lỗi kinh điển nhất khi bắt �
 
 <h2 id="duong-di">4. Từ mạng LAN lên Internet: bốn thứ mọc thêm</h2>
 
-<p>Mô hình tòa nhà ở tab trước mô tả một tình huống trong mạng LAN, nơi hai máy ngồi cạnh nhau. Giờ hãy
+<p>Bốn khái niệm ở tab trước mô tả một tình huống trong mạng LAN, nơi hai máy ngồi cạnh nhau. Giờ hãy
 đưa nó lên Internet thật: ứng dụng nằm trên một VPS — một máy Linux thuê trong trung tâm dữ liệu, chạy
 24/7 — còn người dùng ngồi ở nhà và gõ <code>https://api.tuan.dev/users/42</code>. Khoảng cách xa hơn
 và môi trường thù địch hơn khiến bốn thành phần mới buộc phải xuất hiện, và mỗi thành phần tồn tại để
@@ -402,7 +424,7 @@ gửi ở dạng rõ trong bước bắt tay TLS để máy chủ biết phải 
 
 <h3 id="bug-feature">Cùng một cấu hình, bối cảnh khác nhau biến bug thành feature</h3>
 
-<p>Hãy nhìn kỹ hai dòng "cửa HÔNG" trong Hình 5. Ở tab <em>Mô hình tòa nhà</em>, việc ứng dụng chỉ listen
+<p>Hãy nhìn kỹ hai dòng "cửa HÔNG" trong Hình 5. Ở tab <em>Bốn khái niệm</em>, việc ứng dụng chỉ listen
 ở <code>127.0.0.1</code> là <strong>lỗi</strong>, bởi vì nó khiến đồng nghiệp không vào được. Trên
 production, đúng cấu hình đó lại trở thành một <strong>tính năng bảo mật</strong>: chỉ Nginx — đứng cùng
 trong máy — được phép gọi vào ứng dụng, còn không ai từ Internet có thể chạm trực tiếp vào port 8080, kể
@@ -513,11 +535,25 @@ trên bản đồ, và dẫn tới hai hành động chẩn đoán đối lập 
 gian; với 500, code chính là nơi cần tìm.</figcaption>
 </figure>
 
-<p>Hãy trở lại mô hình lễ tân: Nginx là lễ tân nhận yêu cầu của khách, đi vào trong hỏi giúp, rồi bê kết
-quả ra. Khi lễ tân trả lời "502", điều đó có nghĩa là lễ tân đã đi vào trong gõ cửa phòng 8080 nhưng
-không ai mở, hoặc người bên trong trả lời những thứ vô nghĩa — nên lễ tân tự viết một mẩu giấy xin lỗi
-đưa cho khách. Khi lễ tân mang ra "500", điều đó có nghĩa là người trong phòng đã nhận yêu cầu, bắt tay
-vào làm, rồi gặp sự cố và tự viết giấy báo lỗi; lễ tân chỉ bê mẩu giấy ấy ra nguyên vẹn.</p>
+<h3 id="an-du-le-tan">Ẩn dụ hỗ trợ ghi nhớ: Nginx là lễ tân</h3>
+
+<p>Cơ chế vừa mô tả có thể gói lại thành một phép so sánh dễ nhớ hơn câu chữ của định nghĩa. Hãy coi
+Nginx là <strong>lễ tân</strong> của tòa nhà: nó nhận yêu cầu của khách ở quầy, tự đi vào trong hỏi giúp,
+rồi bê kết quả ra. Khách không bao giờ được đi vào trong.</p>
+
+<p>Với cách nhìn đó, hai mã lỗi trở nên hiển nhiên. Khi lễ tân trả lời <strong>502</strong>, nghĩa là lễ
+tân đã đi vào trong gõ cửa phòng 8080 nhưng không ai mở, hoặc người bên trong trả lời những thứ vô nghĩa
+— nên lễ tân <em>tự viết</em> một mẩu giấy xin lỗi đưa cho khách. Khi lễ tân mang ra <strong>500</strong>,
+nghĩa là người trong phòng đã nhận yêu cầu, bắt tay vào làm, rồi gặp sự cố và <em>tự viết</em> giấy báo
+lỗi; lễ tân chỉ bê mẩu giấy ấy ra nguyên vẹn, không đọc, không sửa.</p>
+
+<div class="callout warn">
+  <span class="label">Giới hạn của ẩn dụ này</span>
+  <p>Một lễ tân thật phục vụ lần lượt từng khách. Nginx thì xử lý <strong>hàng nghìn kết nối cùng lúc
+  trên một tiến trình</strong> nhờ mô hình hướng sự kiện (event-driven): nó không "đứng chờ" ứng dụng trả
+  lời mà đăng ký theo dõi rồi quay sang phục vụ khách khác. Ẩn dụ giúp nhớ <em>ai viết ra trang lỗi</em>;
+  nó không mô tả đúng cách Nginx chịu tải.</p>
+</div>
 
 <div class="callout">
   <span class="label">Mẹo thực chiến</span>
@@ -637,7 +673,7 @@ hoặc máy không tồn tại, còn refused <em>thường</em> chỉ về một
 <!-- =====================================================================
      TAB 5 — CHỨNG CHỈ & DNS
      ===================================================================== -->
-<section class="tab" id="tab-chung-chi" data-tab="Chứng chỉ &amp; DNS" data-note="Căn cước, Bộ Công an, gốc rễ lòng tin">
+<section class="tab" id="tab-chung-chi" data-tab="Chứng chỉ &amp; DNS" data-note="X.509, CA, gốc rễ của lòng tin">
 
 <h2 id="chung-chi">7. Chứng chỉ TLS thật ra là gì</h2>
 
@@ -652,23 +688,10 @@ thể phát biểu thành một câu hỏi rất đời thường.</p>
   <strong>Nhưng ai cũng nói được câu đó.</strong> Lấy gì để tin?</p>
 </div>
 
-<p>Trong đời thật, xã hội giải quyết đúng vấn đề này bằng giấy tờ tùy thân. Bạn không tin một người lạ
-chỉ vì họ tự giới thiệu tên; bạn tin vì họ trình ra một tấm căn cước do một cơ quan mà cả hai cùng tin
-tưởng cấp. TLS sao chép nguyên vẹn cấu trúc lòng tin ấy lên Internet, như Bảng 5 đối chiếu.</p>
-
-<div class="table-scroll">
-<table>
-  <caption><b>Bảng 5</b> Đối chiếu cấu trúc lòng tin của giấy tờ tùy thân ngoài đời với cơ sở hạ tầng khóa
-  công khai của TLS.</caption>
-  <thead><tr><th>Đời thật</th><th>TLS</th></tr></thead>
-  <tbody>
-    <tr><td>Thẻ căn cước</td><td><strong>Certificate</strong> — chứng chỉ</td></tr>
-    <tr><td>Bộ Công an cấp</td><td><strong>CA</strong> — Certificate Authority (Let's Encrypt, DigiCert…)</td></tr>
-    <tr><td>Con dấu khó làm giả</td><td>Chữ ký số của CA</td></tr>
-    <tr><td>Bạn tin Bộ Công an</td><td>Trình duyệt và hệ điều hành có <strong>sẵn danh sách CA đáng tin</strong> (root store), cài sẵn trong máy</td></tr>
-  </tbody>
-</table>
-</div>
+<p>Lời giải mà web đang dùng có tên là <strong>hạ tầng khóa công khai</strong> (public key infrastructure,
+viết tắt PKI). Ý tưởng cốt lõi là chuyển vấn đề "làm sao tin một người lạ" thành vấn đề "làm sao tin một
+bên thứ ba mà cả hai cùng tin", rồi để bên thứ ba ấy đứng ra bảo lãnh. PKI dựng trên bốn thành phần sau,
+và cần nắm cả bốn trước khi nói tiếp.</p>
 
 <dl class="terms">
   <dt>Certificate <small>chứng chỉ</small></dt>
@@ -690,6 +713,38 @@ Việc thứ nhất là <strong>danh tính</strong>: chứng minh máy đang nó
 thiết lập mã hóa. Thứ tự này không tùy tiện, bởi vì không có việc thứ nhất thì việc thứ hai trở nên vô
 nghĩa — một đường dây được mã hóa cực kỳ chắc chắn nhưng nối tới <em>kẻ xấu</em> thì cũng chẳng bảo vệ
 được gì. Mã hóa chỉ có giá trị khi bạn chắc chắn mình đang mã hóa cho đúng người.</p>
+
+<h3 id="an-du-can-cuoc">Ẩn dụ hỗ trợ ghi nhớ: giấy tờ tùy thân</h3>
+
+<p>Cấu trúc lòng tin vừa mô tả không phải phát minh của ngành máy tính — xã hội đã dùng nó từ lâu, dưới
+dạng giấy tờ tùy thân. Bạn không tin một người lạ chỉ vì họ tự giới thiệu tên; bạn tin vì họ trình ra một
+tấm căn cước do một cơ quan mà cả hai cùng tin tưởng cấp. Bảng 5 đối chiếu từng thành phần của PKI với
+thành phần tương ứng ngoài đời, để bốn định nghĩa ở trên có chỗ bám.</p>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 5</b> Đối chiếu cấu trúc lòng tin của giấy tờ tùy thân ngoài đời với hạ tầng khóa
+  công khai của TLS. Đây là phép so sánh để ghi nhớ, không phải định nghĩa.</caption>
+  <thead><tr><th>Đời thật</th><th>TLS</th></tr></thead>
+  <tbody>
+    <tr><td>Thẻ căn cước</td><td><strong>Certificate</strong> — chứng chỉ</td></tr>
+    <tr><td>Bộ Công an cấp</td><td><strong>CA</strong> — Certificate Authority (Let's Encrypt, DigiCert…)</td></tr>
+    <tr><td>Con dấu khó làm giả</td><td>Chữ ký số của CA</td></tr>
+    <tr><td>Bạn tin Bộ Công an</td><td>Trình duyệt và hệ điều hành có <strong>sẵn danh sách CA đáng tin</strong> (root store), cài sẵn trong máy</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout warn">
+  <span class="label">Giới hạn của ẩn dụ này</span>
+  <p>Căn cước ngoài đời chứng minh <em>bạn là ai</em>: có tên, ngày sinh, quê quán. Chứng chỉ phổ biến
+  nhất trên web lại <strong>không chứng minh điều đó</strong> — loại DV (Domain Validated) chỉ ghi được
+  mỗi tên miền, và CA cấp nó sau khi kiểm tra rằng người xin <em>đang kiểm soát tên miền</em>, chứ không
+  kiểm tra người đó là ai. Hệ quả của khác biệt này rất lớn, và ta sẽ thấy nó ở mục <em>DNS là gốc rễ
+  của lòng tin</em> ngay bên dưới.</p>
+  <p>Khác biệt thứ hai: căn cước bị mất thì báo công an và thu hồi được. Chứng chỉ thì cơ chế thu hồi
+  hoạt động rất kém trong thực tế, nên ngành chọn cách khác — rút ngắn thời hạn.</p>
+</div>
 
 <div class="callout">
   <span class="label">Phân biệt hai thứ hay bị gọi nhầm</span>

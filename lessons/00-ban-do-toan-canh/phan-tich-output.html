@@ -78,7 +78,7 @@ cho biết <em>ai đã trả lời</em>, khối sau cho biết <em>câu trả l�
 chỉ nhìn khối sau; người vận hành nhìn khối đầu trước, bởi vì một câu trả lời sai thường bắt
 nguồn từ việc hỏi nhầm người.</p>
 
-<h3 id="dns-server"><code>Server: wifi.cmcc</code> — người tra từ điển hộ</h3>
+<h3 id="dns-server"><code>Server: wifi.cmcc</code> — DNS resolver đang phục vụ bạn</h3>
 
 <p><strong>Đây không phải GitHub.</strong> Đây là cái router WiFi trong phòng, và
 <code>wifi.cmcc</code> là tên nội bộ nó tự đặt cho mình. Khi máy bạn cần biết
@@ -547,7 +547,7 @@ việc dùng lại kết nối tiết kiệm được hàng chục lượt bắt
 <!-- ================================================================== -->
 <section class="tab" id="t-chung-chi" data-tab="Chứng chỉ" data-note="Lab 3 · chặng 4">
 
-<h2 id="openssl"><span class="stg">4</span> Đọc tấm "căn cước" của một website thật</h2>
+<h2 id="openssl"><span class="stg">4</span> Đọc chứng chỉ X.509 của một website thật</h2>
 
 <p>Vì bản <code>curl</code> dùng schannel không in thông tin chứng chỉ, ta phải dùng một công cụ khác
 để xem nó. <code>openssl s_client</code> là một client TLS tối giản: nó tự thực hiện bắt tay với

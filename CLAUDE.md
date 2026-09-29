@@ -115,12 +115,34 @@ Người học yêu cầu: **học thuật càng nhiều càng tốt, dễ hiể
 dài còn hơn ngắn gọn.** Áp dụng cho `index.html` và các trang phụ; `README.md` giữ khung
 vở bài tập nhưng mỗi bước vẫn phải có câu giải thích *vì sao*.
 
-1. **Mỗi khái niệm đi đủ năm nhịp:** (a) *đặt vấn đề* — vì sao khái niệm phải tồn tại;
-   (b) *định nghĩa chính xác* — tên chuẩn tiếng Anh + tiếng Việt, và nguồn chuẩn nếu có
-   (RFC, POSIX, man page, tài liệu chính thức); (c) *cơ chế* — chuỗi nhân quả từng bước,
-   chuyện gì xảy ra ở tầng nào; (d) *ví dụ* — một ẩn dụ đời thường (mô hình tòa nhà…) **và**
-   một ví dụ kỹ thuật thật (lệnh, output); (e) *hệ quả, giới hạn, ngoại lệ*, rồi nối về bản
-   đồ 9 chặng.
+1. **Mỗi khái niệm đi đủ năm nhịp, ĐÚNG THỨ TỰ NÀY:** (a) *đặt vấn đề* — vì sao khái niệm
+   phải tồn tại; (b) *định nghĩa chính thức* — tên chuẩn tiếng Anh + tiếng Việt, phát biểu
+   bằng thuật ngữ kỹ thuật, kèm nguồn chuẩn nếu có (RFC, POSIX, man page, tài liệu chính
+   thức); (c) *cơ chế* — chuỗi nhân quả từng bước, chuyện gì xảy ra ở tầng nào; (d) *ví dụ* —
+   trước hết một ví dụ **kỹ thuật thật** (lệnh, output), **sau đó** mới tới ẩn dụ đời thường;
+   (e) *hệ quả, giới hạn, ngoại lệ*, rồi nối về bản đồ 9 chặng.
+
+### Luật ẩn dụ (người học yêu cầu 29/09/2026)
+
+> **Định nghĩa chính thức đi trước. Ẩn dụ đi sau, và phải được gọi đúng tên là ẩn dụ.**
+
+Người học phản ánh: các trang cũ "bụp một phát ẩn dụ luôn" — mở mục bằng *mô hình tòa nhà*,
+*cái tủ hồ sơ*, *tấm căn cước*, rồi mới hạ định nghĩa xuống dưới. Từ nay làm ngược lại.
+
+- **Cấm mở một mục bằng ẩn dụ.** Đoạn đầu và tiêu đề `h2`/`h3` phải dùng **thuật ngữ thật**
+  (*"Bốn khái niệm nền: địa chỉ IP, port, listen, firewall"*), không dùng tên ẩn dụ
+  (*"Mô hình tòa nhà"*). Nhãn tab cũng vậy.
+- **Thứ tự bắt buộc trong một mục:** vấn đề → `<dl class="terms">` định nghĩa →
+  cơ chế → ví dụ kỹ thuật thật → **rồi mới** ẩn dụ.
+- **Ẩn dụ phải nằm trong khối riêng, có nhãn tự khai báo** — `<h3>` bắt đầu bằng
+  *"Ẩn dụ hỗ trợ ghi nhớ: …"*, hoặc `<div class="callout">` có `<span class="label">Ẩn dụ …</span>`.
+  Người đọc phải biết ngay mình đang đọc một phép so sánh, không phải một sự thật kỹ thuật.
+- **Mỗi ẩn dụ phải kèm giới hạn của nó** — một câu nói rõ chỗ nào nó *không* còn đúng
+  (ví dụ: "phòng" gợi ý port là không gian vật lý, thực tế nó chỉ là một con số 16 bit trong
+  header). Khi ẩn dụ và định nghĩa mâu thuẫn, **định nghĩa thắng**.
+- **Không bỏ ẩn dụ.** Chúng vẫn là công cụ ghi nhớ tốt và người học đã thuộc chúng; chỉ đổi
+  vị trí và gắn nhãn. Các ẩn dụ đã dùng (tòa nhà, lễ tân, căn cước, tủ hồ sơ/mặt bàn) giữ
+  nguyên nội dung.
 2. **Viết thành đoạn văn liền mạch** với từ nối lập luận: *bởi vì, do đó, hệ quả là, nói cách
    khác, ngược lại, điều này dẫn tới*. Không dùng gạch đầu dòng cụt để thay cho lập luận;
    gạch đầu dòng chỉ dành cho thứ rời rạc thật (bước lab, checklist, danh sách lệnh).

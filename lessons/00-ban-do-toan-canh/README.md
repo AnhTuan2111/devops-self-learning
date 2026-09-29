@@ -9,7 +9,7 @@
 
 | Trang | Nội dung |
 |---|---|
-| **[index.html](index.html)** | Bài giảng chính — mô hình tòa nhà, 9 chặng, bảng triệu chứng, chứng chỉ TLS |
+| **[index.html](index.html)** | Bài giảng chính — bốn khái niệm nền, 9 chặng, bảng triệu chứng, chứng chỉ TLS |
 | **[phan-tich-output.html](phan-tich-output.html)** | Mổ băng output thật từng dòng — `nslookup`, `curl -v`, `openssl` |
 | **[ipv4-vs-ipv6.html](ipv4-vs-ipv6.html)** | Phụ lục — vì sao IP cạn kiệt, NAT, và vì sao *phải* thuê VPS |
 
@@ -45,11 +45,17 @@ cố ý ngắn một câu; phiên bản đầy đủ nằm trong bài giảng.
 
 ---
 
-## Mô hình tòa nhà — bộ khái niệm dùng suốt lộ trình
+## Bốn khái niệm nền: địa chỉ IP, port, listen, firewall
 
-Bốn khái niệm dưới đây rất dễ bị gộp làm một trong đầu người mới, và phần lớn nhầm lẫn về
-mạng đều bắt nguồn từ việc gộp đó. Mô hình tòa nhà tách chúng ra thành bốn vai rõ ràng, để
-khi một thứ hỏng ta biết đang nói về vai nào.
+Bốn khái niệm này rất dễ bị gộp làm một trong đầu người mới, và phần lớn nhầm lẫn về mạng đều
+bắt nguồn từ việc gộp đó. Chúng nằm ở bốn tầng khác nhau của ngăn xếp mạng, hỏng theo bốn kiểu
+khác nhau và cho ra bốn triệu chứng khác nhau — định nghĩa chính xác của từng cái nằm ở bảng
+thuật ngữ phía trên.
+
+### Ẩn dụ hỗ trợ ghi nhớ: một tòa nhà
+
+Bốn định nghĩa kia chính xác nhưng trừu tượng. Phép so sánh dưới đây **không phải định nghĩa**,
+nó chỉ giúp giữ bốn vai tách bạch trong trí nhớ:
 
 ```
 IP address          =  địa chỉ của MỘT CỬA NGÕ vào tòa nhà
@@ -59,7 +65,12 @@ process đang listen =  có NGƯỜI ngồi trong phòng đó — và người �
 firewall            =  BẢO VỆ đứng ở cửa ngõ, lọc ai được vào
 ```
 
-Hệ quả quan trọng nhất của mô hình là câu sau, cần thuộc lòng:
+> **Giới hạn của ẩn dụ.** Chữ "phòng" gợi ý port là một không gian vật lý có sẵn. Thực tế không
+> có cái phòng nào cả: port chỉ là một con số 16 bit trong phần đầu gói tin, và hệ điều hành
+> dùng con số đó tra một bảng xem nên giao gói cho process nào. Khi ẩn dụ và định nghĩa mâu
+> thuẫn, **định nghĩa thắng**.
+
+Hệ quả quan trọng nhất là câu sau, cần thuộc lòng:
 
 > **Một địa chỉ IP không định danh một MÁY. Nó định danh một CỬA NGÕ MẠNG của máy đó.**
 
@@ -196,9 +207,22 @@ timeout  →  curl dừng vì TA bảo dừng.  Thời lượng là con số B�
 ## Chứng chỉ TLS
 
 Chứng chỉ không liên quan gì tới việc gán tên miền với IP — **đó là việc của DNS**. Chứng chỉ
-giải quyết một bài toán khác: khi một máy nói "tôi là api.tuan.dev", lấy gì để tin nó? Câu trả
-lời là một tấm căn cước do một bên thứ ba đáng tin ký bảo lãnh, giống hệt cách xã hội tin
-thẻ căn cước vì tin cơ quan cấp nó.
+giải quyết một bài toán khác: khi một máy nói "tôi là api.tuan.dev", lấy gì để tin nó?
+
+Lời giải mà web đang dùng tên là **hạ tầng khóa công khai** (public key infrastructure, PKI).
+Nó chuyển bài toán "làm sao tin một người lạ" thành "làm sao tin một bên thứ ba mà cả hai cùng
+tin", rồi để bên thứ ba đó đứng ra bảo lãnh. Bốn thành phần:
+
+| Thuật ngữ | Là gì |
+|---|---|
+| **Certificate** | Tài liệu điện tử định dạng X.509, ghi "khóa công khai này thuộc về tên miền này", có thời hạn, được CA ký |
+| **CA** — Certificate Authority | Tổ chức được trình duyệt tin, có quyền ký chứng chỉ sau khi kiểm tra người xin đang kiểm soát tên miền |
+| **Public key** | Nửa công khai của cặp khóa, nằm ngay trong chứng chỉ |
+| **Private key** | Nửa bí mật, chỉ nằm trên máy chủ — thứ duy nhất chứng minh mình là chủ chứng chỉ |
+
+### Ẩn dụ hỗ trợ ghi nhớ: giấy tờ tùy thân
+
+Cấu trúc lòng tin này không phải phát minh của ngành máy tính; xã hội đã dùng nó từ lâu:
 
 | Đời thật | TLS |
 |---|---|
@@ -206,6 +230,11 @@ thẻ căn cước vì tin cơ quan cấp nó.
 | Bộ Công an cấp | **CA** (Let's Encrypt, DigiCert…) |
 | Con dấu khó làm giả | Chữ ký số của CA |
 | Bạn tin Bộ Công an | Trình duyệt có sẵn danh sách CA đáng tin |
+
+> **Giới hạn của ẩn dụ.** Căn cước ngoài đời chứng minh *bạn là ai*. Chứng chỉ phổ biến nhất
+> trên web (loại **DV** — Domain Validated) chỉ ghi được mỗi tên miền, và CA cấp nó sau khi
+> kiểm tra người xin *đang kiểm soát tên miền*, chứ không kiểm tra người đó là ai. Khác biệt
+> này chính là lý do mục "DNS là gốc rễ của lòng tin" bên dưới đáng sợ đến thế.
 
 Cần tách bạch hai thứ hay bị gọi nhầm. Chứng chỉ là **công khai** — bấm vào ổ khóa trên trình
 duyệt là xem được chứng chỉ của bất kỳ website nào. Thứ bí mật, và là thứ bị đánh cắp trong

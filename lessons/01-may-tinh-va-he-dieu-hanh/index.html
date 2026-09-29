@@ -132,14 +132,19 @@ là ba con số trong bảng giá ở Hình 1 — cộng thêm băng thông mạ
 một dòng nhỏ hơn bên dưới.</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  ┌──────────────────────────────────────────────┐
-  │                                              │
-  │   CPU        RAM        DISK      NETWORK    │
-  │  "người"   "mặt bàn"   "cái tủ"   "cái ống"  │
-  │                                              │
-  └──────────────────────────────────────────────┘</code></pre>
-  <figcaption><b>Hình 2</b> Bốn tài nguyên mà mọi máy tính cung cấp cho phần mềm, kèm ẩn dụ sẽ
-  dùng suốt bài.</figcaption>
+<pre class="diagram"><code>  ┌────────────────────────────────────────────────────────────┐
+  │                                                            │
+  │     CPU             RAM            DISK         NETWORK    │
+  │  thực thi      dữ liệu ĐANG     lưu trữ       truyền dữ    │
+  │    lệnh            dùng         BỀN VỮNG      liệu ra/vào  │
+  │                                                            │
+  │  đo bằng        đo bằng GB      đo bằng GB    đo bằng      │
+  │  số core        volatile        persistent    Mbps         │
+  │                 (mất điện       (mất điện                  │
+  │                  là mất)         vẫn còn)                  │
+  └────────────────────────────────────────────────────────────┘</code></pre>
+  <figcaption><b>Hình 2</b> Bốn tài nguyên mà mọi máy tính cung cấp cho phần mềm, kèm đơn vị đo và
+  tính bền vững của từng loại.</figcaption>
 </figure>
 
 <dl class="terms">
@@ -157,7 +162,7 @@ một dòng nhỏ hơn bên dưới.</p>
   mỗi giây) và giới hạn bởi bộ đệm của card mạng lẫn của kernel.</dd>
 </dl>
 
-<h3 id="an-du">Phép ẩn dụ dùng suốt bài: người, mặt bàn, cái tủ</h3>
+<h3 id="an-du">Ẩn dụ hỗ trợ ghi nhớ: người, mặt bàn, cái tủ</h3>
 
 <p>Bốn định nghĩa ở trên chính xác nhưng khô, và điều quan trọng không phải là từng tài nguyên riêng
 lẻ mà là <em>quan hệ</em> giữa chúng. Để thấy quan hệ đó, hãy hình dung một văn phòng. Ổ đĩa là
@@ -186,6 +191,18 @@ vẫn thường ngồi chờ: JVM đang đọc hàng nghìn file class từ ổ 
 các connection tới database và giữ chúng trong connection pool. Và cũng từ ẩn dụ này, ta thấy ngay
 điều gì sẽ xảy ra khi <strong>mặt bàn hết chỗ</strong>: người làm việc không còn chỗ để đặt thứ mình
 cần, và công việc không thể tiếp tục theo cách bình thường được nữa.</p>
+
+<div class="callout warn">
+  <span class="label">Giới hạn của ẩn dụ này</span>
+  <p>Hình ảnh "một người, một cái bàn" gợi ý rằng mỗi lúc chỉ có một việc đang chạy. Thực tế một CPU
+  nhiều core chạy <strong>song song thật sự</strong>, và ngay trên một core, kernel còn <em>luân phiên</em>
+  hàng trăm process với nhau nhanh tới mức bạn tưởng chúng chạy cùng lúc — cơ chế đó tên là
+  <em>context switching</em>.</p>
+  <p>Ẩn dụ cũng bỏ qua một tầng quan trọng: giữa CPU và RAM còn có <strong>cache</strong> (L1, L2, L3),
+  nhanh hơn RAM nhiều bậc. Nói cho đúng thì "mặt bàn" là cache, còn RAM đã là một cái giá sách kê cạnh
+  bàn rồi. Với mục đích của bài này — hiểu vì sao hết RAM thì app chết — mức chi tiết đó chưa cần thiết,
+  nhưng đừng mang ẩn dụ này đi tối ưu hiệu năng cấp thấp.</p>
+</div>
 
 <h3 id="can-kiet">Bốn tài nguyên cạn kiệt theo bốn kiểu rất khác nhau</h3>
 
@@ -279,7 +296,7 @@ Prometheus và Grafana.</p>
 </section>
 
 <!-- ================================================================== -->
-<section class="tab" id="process" data-tab="Process" data-note="người ngồi trong phòng 8080">
+<section class="tab" id="process" data-tab="Process" data-note="từ file trên đĩa tới thứ đang chạy">
 
 <h2 id="jar-chet">File <code>.jar</code> nằm trên đĩa là một thứ chết</h2>
 
@@ -468,7 +485,7 @@ mặt bộ nhớ; đó là cái giá của việc chúng chia sẻ bộ nhớ đ
 </section>
 
 <!-- ================================================================== -->
-<section class="tab" id="kernel" data-tab="Kernel" data-note="người quản lý tòa nhà">
+<section class="tab" id="kernel" data-tab="Kernel" data-note="syscall và độc quyền phần cứng">
 
 <h2 id="vi-sao-kernel">Vì sao Spring Boot không tự ghi thẳng vào ổ cứng?</h2>
 
@@ -536,9 +553,9 @@ qua bao nhiêu lớp, đích đến cuối cùng luôn là một lời xin gửi
 là hiểu được những lỗi mà không framework nào che giấu nổi.</p>
 
 <div class="callout ok">
-  <span class="label">Kernel là NGƯỜI QUẢN LÝ TÒA NHÀ, giữ sổ phòng</span>
-  <p>Trong mô hình tòa nhà của Bài 00, kernel đóng vai người quản lý tòa nhà, và một trong những
-  cuốn sổ quan trọng nhất người đó giữ là sổ phòng. Khi Spring Boot "listen ở port 8080", thực tế nó
+  <span class="label">Ẩn dụ hỗ trợ ghi nhớ: kernel giữ sổ phòng</span>
+  <p>Cơ chế vừa mô tả gói lại được thành một hình ảnh. Trong ẩn dụ tòa nhà của Bài 00, kernel đóng
+  vai người quản lý tòa nhà, và một trong những cuốn sổ quan trọng nhất người đó giữ là sổ phòng. Khi Spring Boot "listen ở port 8080", thực tế nó
   gọi <code>bind()</code> rồi <code>listen()</code> — tức là <strong>xin kernel giữ phòng 8080 hộ
   nó</strong>. Kernel ghi vào sổ: <em>"phòng 8080 <i class="ic ic-r" role="img" aria-label="sang"></i> PID 4123"</em>. Từ lúc đó, mọi gói tin gửi tới
   phòng 8080 đều được kernel chuyển cho đúng process ấy.</p>
