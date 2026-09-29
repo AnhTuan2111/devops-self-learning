@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 01 — Máy tính, Hệ điều hành, Process</title>
 <meta name="description" content="Server chỉ là một máy tính chạy 24/7 mà không có ai ngồi trước. Mọi thứ bạn deploy, cuối cùng, chỉ là một process đang chạy dưới quyền quản lý của kernel — bài này mổ xẻ process từ lúc sinh ra tới lúc chết đi.">
-<link rel="stylesheet" href="../../assets/style.css?v=e4228462">
+<link rel="stylesheet" href="../../assets/style.css?v=28e8e2c0">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01">
@@ -75,7 +75,7 @@ tương tác với nhau ra sao khi một trong số chúng hết.</p>
 
 <figure class="fig photo side">
   <img src="img/tu-may-chu-nersc.webp" width="720" height="960" loading="lazy" alt="Một tủ máy chủ đứng trong trung tâm dữ liệu, xếp chồng nhiều máy chủ mỏng, mỗi máy cắm dây mạng ở phía trước.">
-  <figcaption><b>Ảnh 1</b> Một tủ máy chủ ở trung tâm dữ liệu NERSC (Mỹ). Mỗi ngăn mỏng là một máy tính đầy đủ — có CPU, RAM, ổ đĩa, card mạng — chỉ thiếu màn hình và bàn phím, vì không ai ngồi trước nó. Chiếc VPS bạn thuê sau này là một lát cắt ảo của một máy như thế. <span class="credit">Ảnh: Derrick Coetzee from Berkeley, CA, USA, <a href="https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg">Wikimedia Commons</a>, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>; đã chuyển hai tông mực/giấy, cắt khung dọc.</span></figcaption>
+  <figcaption><b>Ảnh 1</b> Một tủ máy chủ ở trung tâm dữ liệu NERSC (Mỹ). Mỗi ngăn mỏng là một máy tính đầy đủ — có CPU, RAM, ổ đĩa, card mạng — chỉ thiếu màn hình và bàn phím, vì không ai ngồi trước nó. Chiếc VPS bạn thuê sau này là một lát cắt ảo của một máy như thế.</figcaption>
 </figure>
 
 
@@ -157,8 +157,7 @@ một dòng nhỏ hơn bên dưới.</p>
     <figure><img src="img/o-cung-nvme.webp" width="800" height="600" loading="lazy" alt="Một ổ SSD NVMe dạng thanh M.2, dán nhãn WD_BLACK SN850X."><div class="lbl"><span class="shp s-2">3</span>disk <small>lưu bền vững</small></div></figure>
     <figure><img src="img/card-mang-pci.webp" width="800" height="600" loading="lazy" alt="Một card mạng Ethernet cắm khe PCI, có một cổng RJ45 để cắm cáp mạng."><div class="lbl"><span class="shp s-3">4</span>network <small>dữ liệu ra/vào</small></div></figure>
   </div>
-  <figcaption><b>Ảnh 2</b> Bốn tài nguyên của Hình 2, nhìn bằng mắt thường: con chip CPU (AMD Ryzen 9 9950X), một thanh RAM DDR4, một ổ SSD NVMe (WD SN850X) và một card mạng Ethernet. Mọi máy chủ, kể cả VPS, đều chỉ là tổ hợp của bốn loại linh kiện này — khác nhau ở số lượng và tốc độ.
-  <span class="credit">Ảnh: 4300streetcar, <a href="https://commons.wikimedia.org/wiki/File:AMD_Ryzen_9_9950X.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>; đã chuyển hai tông mực/giấy.</span> <span class="credit">Ảnh: PantheraLeo1359531, <a href="https://commons.wikimedia.org/wiki/File:16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>; đã chuyển hai tông mực/giấy.</span> <span class="credit">Ảnh: 4300streetcar, <a href="https://commons.wikimedia.org/wiki/File:Western_Digital_SN850X_NVME_solid_state_drive_8TB_front_side.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>; đã chuyển hai tông mực/giấy, đẩy nền xám về màu giấy.</span> <span class="credit">Ảnh: afrank99, <a href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>; đã chuyển hai tông mực/giấy.</span></figcaption>
+  <figcaption><b>Ảnh 2</b> Bốn tài nguyên của Hình 2, nhìn bằng mắt thường: con chip CPU (AMD Ryzen 9 9950X), một thanh RAM DDR4, một ổ SSD NVMe (WD SN850X) và một card mạng Ethernet. Mọi máy chủ, kể cả VPS, đều chỉ là tổ hợp của bốn loại linh kiện này — khác nhau ở số lượng và tốc độ.</figcaption>
 </figure>
 
 
@@ -247,6 +246,8 @@ sang chương trình khác, nhanh tới mức từ bên ngoài ta thấy chúng 
 việc, không có việc nào bị huỷ; hàng đợi chỉ dài ra, và mỗi việc phải chờ lâu hơn tới lượt mình. Trong
 ẩn dụ văn phòng, đó là một người phải làm quá nhiều hồ sơ: việc gì cũng xong, chỉ là xong muộn.</p>
 
+
+<blockquote class="pull"><p>RAM là một tài nguyên chiếm giữ: một byte đã được cấp cho chương trình này thì không thể đồng thời được dùng bởi chương trình khác.</p></blockquote>
 <p>Ngược lại, RAM là một tài nguyên <em>chiếm giữ</em>: một byte đã được cấp cho chương trình này thì
 không thể đồng thời được dùng bởi chương trình khác. Khi mặt bàn hết chỗ, chờ đợi không giải quyết
 được gì, vì không ai tự nguyện dọn đồ của mình xuống. Kernel buộc phải chọn một chương trình và
@@ -362,7 +363,7 @@ có thể chết.</p>
 
 <figure class="fig photo side narrow">
   <img src="img/thompson-ritchie.webp" width="620" height="402" loading="lazy" alt="Ảnh đen trắng hai người đàn ông để râu: Ken Thompson bên trái, Dennis Ritchie bên phải.">
-  <figcaption><b>Ảnh 3</b> Ken Thompson (trái) và Dennis Ritchie — hai người tạo ra Unix ở Bell Labs từ năm 1969. Cách một process mới ra đời mà đoạn bên cạnh mô tả — process cha gọi <code>fork()</code> rồi process con gọi <code>exec()</code> — được Unix đưa vào dùng rộng rãi, và Linux kế thừa gần như nguyên vẹn. <span class="credit">Ảnh: không rõ tác giả, <a href="https://commons.wikimedia.org/wiki/File:Ken_Thompson_and_Dennis_Ritchie--1973.jpg">Wikimedia Commons</a>, public domain; đã chuyển hai tông mực/giấy, phóng to hai lần vì ảnh gốc rất nhỏ.</span></figcaption>
+  <figcaption><b>Ảnh 3</b> Ken Thompson (trái) và Dennis Ritchie — hai người tạo ra Unix ở Bell Labs từ năm 1969. Cách một process mới ra đời mà đoạn bên cạnh mô tả — process cha gọi <code>fork()</code> rồi process con gọi <code>exec()</code> — được Unix đưa vào dùng rộng rãi, và Linux kế thừa gần như nguyên vẹn.</figcaption>
 </figure>
 
 
@@ -727,7 +728,7 @@ tới cái chết của một process, và điểm mấu chốt là phân biệt
 
 <figure class="fig photo shot">
   <img src="img/man-signal7.webp" width="798" height="629" loading="lazy" alt="Bảng tín hiệu chuẩn trong man page signal(7), ba dòng SIGINT, SIGKILL và SIGTERM được khoanh màu.">
-  <figcaption><b>Ảnh 4</b> Bảng tín hiệu chuẩn trong man page <code>signal(7)</code>. Cả ba dòng khoanh đều có hành động mặc định <code>Term</code> — kết thúc process — nhưng chỉ SIGKILL là không bắt được và không bỏ qua được, nên app không có cơ hội dọn dẹp. Cột <em>Standard</em> ghi <code>P1990</code> nghĩa là tín hiệu đã có từ chuẩn POSIX.1-1990. <span class="credit">Chụp màn hình <a href="https://man7.org/linux/man-pages/man7/signal.7.html">man7.org</a> ngày 30/09/2026; khung và nhãn do người viết thêm vào.</span></figcaption>
+  <figcaption><b>Ảnh 4</b> Bảng tín hiệu chuẩn trong man page <code>signal(7)</code>. Cả ba dòng khoanh đều có hành động mặc định <code>Term</code> — kết thúc process — nhưng chỉ SIGKILL là không bắt được và không bỏ qua được, nên app không có cơ hội dọn dẹp. Cột <em>Standard</em> ghi <code>P1990</code> nghĩa là tín hiệu đã có từ chuẩn POSIX.1-1990.</figcaption>
 </figure>
 
 
@@ -879,7 +880,7 @@ không có cơ chế nào khiến nó tự khởi động khi máy bật lên. �
 
 <figure class="fig photo shot">
   <img src="img/systemd-restart.webp" width="1067" height="452" loading="lazy" alt="Bảng 1 trong man page systemd.service: hàng là các kiểu process chết, cột là các giá trị Restart=, dấu X cho biết systemd có khởi động lại hay không.">
-  <figcaption><b>Ảnh 5</b> Bảng 1 trong man page <code>systemd.service(5)</code>: với từng kiểu chết (hàng) và từng giá trị <code>Restart=</code> (cột), dấu X cho biết systemd có dựng process dậy lại hay không. Dòng khoanh đỏ là trường hợp của <code>kill -9</code> — một tín hiệu "không sạch"; dòng khoanh lam là OOM killer. Cả hai đều được <code>Restart=on-failure</code> khởi động lại — đó chính là "người canh" biến một process thành một service. <span class="credit">Chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a> ngày 30/09/2026; khung và nhãn do người viết thêm vào.</span></figcaption>
+  <figcaption><b>Ảnh 5</b> Bảng 1 trong man page <code>systemd.service(5)</code>: với từng kiểu chết (hàng) và từng giá trị <code>Restart=</code> (cột), dấu X cho biết systemd có dựng process dậy lại hay không. Dòng khoanh đỏ là trường hợp của <code>kill -9</code> — một tín hiệu "không sạch"; dòng khoanh lam là OOM killer. Cả hai đều được <code>Restart=on-failure</code> khởi động lại — đó chính là "người canh" biến một process thành một service.</figcaption>
 </figure>
 
 
@@ -1155,6 +1156,20 @@ gọi được tên.</p>
   — tuỳ chọn <code>Restart=</code>, sẽ dùng ở Bài 07.</li>
 </ol>
 
+
+
+<h2 id="nguon-anh">Nguồn ảnh</h2>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang. Ảnh chụp màn hình do người viết tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<ol class="photo-credits">
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg">Tủ máy chủ ở trung tâm dữ liệu NERSC</a> — Derrick Coetzee, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:AMD_Ryzen_9_9950X.jpg">CPU AMD Ryzen 9 9950X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png">Thanh RAM DDR4</a> — PantheraLeo1359531, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Western_Digital_SN850X_NVME_solid_state_drive_8TB_front_side.jpg">Ổ SSD NVMe WD SN850X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg">Card mạng Ethernet PCI</a> — afrank99, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Ken_Thompson_and_Dennis_Ritchie--1973.jpg">Ken Thompson và Dennis Ritchie</a> — không rõ tác giả, Wikimedia Commons, public domain.</li>
+  <li><b>Ảnh 4</b>Bảng tín hiệu chuẩn, signal(7) — chụp màn hình <a href="https://man7.org/linux/man-pages/man7/signal.7.html">man7.org</a>, 30/09/2026.</li>
+  <li><b>Ảnh 5</b>Bảng 1, systemd.service(5) — chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a>, 30/09/2026.</li>
+</ol>
 </section>
 
 </main>
@@ -1177,6 +1192,6 @@ gọi được tên.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=e4228462"></script>
+<script src="../../assets/app.js?v=28e8e2c0"></script>
 </body>
 </html>

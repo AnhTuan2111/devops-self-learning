@@ -18,3 +18,5 @@ chia sẻ lại theo cùng giấy phép đó.
 | `img/rfc791-header.webp` | tự chụp | — | — | chụp màn hình rfc-editor.org (RFC 791, 1981); khung và nhãn đánh dấu thêm vào |
 | `img/iana-ipv4.webp` | tự chụp | — | — | chụp màn hình iana.org 30/09/2026; ẩn các khối 015/8–123/8 và hai cột WHOIS/RDAP; khung đánh dấu thêm vào |
 | `img/router-gia-dinh.webp` | [File:Linksys-Wireless-G-Router.jpg](https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg) | Evan-Amos | [Public domain]() | chuyển hai tông mực/giấy (xám, kéo tương phản), đặt vào khung đệm màu giấy |
+| `img/rfc3986-uri.webp` | tự chụp | — | — | chụp màn hình rfc-editor.org (RFC 3986, 2005) ngày 30/09/2026, mật độ điểm ảnh 2×, đệm lề phải |
+| `img/nginx-welcome.webp` | tự chụp | — | — | chụp màn hình trình duyệt, Nginx 1.30.5 chạy thật trên máy người viết, 30/09/2026 |

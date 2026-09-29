@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — IPv4, IPv6 và NAT</title>
 <meta name="description" content="Vì sao địa chỉ IPv4 cạn kiệt, CIDR và NAT đã trì hoãn khủng hoảng thế nào, cái giá của NAT khiến bạn phải thuê VPS, và vì sao IPv6 sau gần 30 năm vẫn chưa thắng.">
-<link rel="stylesheet" href="../../assets/style.css?v=e4228462">
+<link rel="stylesheet" href="../../assets/style.css?v=28e8e2c0">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00-ipv6">
@@ -41,7 +41,7 @@
 
 <figure class="fig photo side">
   <img src="img/imp-arpanet.webp" width="1000" height="700" loading="lazy" alt="Mặt trước một tủ máy màu xám với hai hàng công tắc và đèn, tấm biển ghi Interface Message Processor.">
-  <figcaption><b>Ảnh 1</b> Interface Message Processor (IMP) của hãng BBN — thiết bị chuyển gói của ARPANET, tiền thân của router ngày nay — trưng bày ở Computer History Museum. ARPANET chạy từ năm 1969; IPv4 được đặc tả năm 1981 trong RFC 791, và ARPANET chuyển hẳn sang TCP/IP vào ngày 1/1/1983. <span class="credit">Ảnh: Carlo Nardone from Roma, Italy, <a href="https://commons.wikimedia.org/wiki/File:Interface_Message_Processor_-_BBN_Arpanet_Router_-_Computer_History_Museum_(2007-11-10_23.06.56_by_Carlo_Nardone).jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>; đã chuyển hai tông mực/giấy, cắt khung.</span></figcaption>
+  <figcaption><b>Ảnh 1</b> Interface Message Processor (IMP) của hãng BBN — thiết bị chuyển gói của ARPANET, tiền thân của router ngày nay — trưng bày ở Computer History Museum. ARPANET chạy từ năm 1969; IPv4 được đặc tả năm 1981 trong RFC 791, và ARPANET chuyển hẳn sang TCP/IP vào ngày 1/1/1983.</figcaption>
 </figure>
 
 
@@ -69,7 +69,7 @@ giản:</p>
 
 <figure class="fig photo shot">
   <img src="img/rfc791-header.webp" width="670" height="283" loading="lazy" alt="Sơ đồ header IPv4 trong RFC 791 vẽ bằng ký tự, hai hàng Source Address và Destination Address được khoanh đỏ và lam.">
-  <figcaption><b>Ảnh 2</b> Khuôn header IPv4 nguyên bản trong RFC 791 (tháng 9/1981). Mỗi hàng của sơ đồ rộng đúng 32 bit; hai trường khoanh màu — địa chỉ nguồn và địa chỉ đích — mỗi trường chiếm trọn một hàng, nên một địa chỉ IPv4 không thể dài hơn 32 bit. Con số 2³² tính ở trên bị khoá cứng từ chính dòng này. <span class="credit">Chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc791.html">rfc-editor.org</a> ngày 30/09/2026; khung và nhãn do người viết thêm vào.</span></figcaption>
+  <figcaption><b>Ảnh 2</b> Khuôn header IPv4 nguyên bản trong RFC 791 (tháng 9/1981). Mỗi hàng của sơ đồ rộng đúng 32 bit; hai trường khoanh màu — địa chỉ nguồn và địa chỉ đích — mỗi trường chiếm trọn một hàng, nên một địa chỉ IPv4 không thể dài hơn 32 bit. Con số 2³² tính ở trên bị khoá cứng từ chính dòng này.</figcaption>
 </figure>
 
 
@@ -96,7 +96,7 @@ lớp — một tổ chức chỉ có thể nhận nguyên một khối lớp A,
 
 <figure class="fig photo shot">
   <img src="img/iana-ipv4.webp" width="652" height="529" loading="lazy" alt="Bảng sổ đăng ký IPv4 của IANA, mỗi dòng một khối /8; hai dòng 010/8 Private Use và 127/8 Loopback được khoanh màu.">
-  <figcaption><b>Ảnh 3</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA. Mỗi dòng là một khối /8 — khoảng 16,7 triệu địa chỉ. Cột <em>Designation</em> cho thấy những khối trọn gói từng thuộc về một tổ chức duy nhất như DoD Intel Information Systems hay AT&amp;T Bell Laboratories: dấu vết còn lại của cách chia theo class. Hai dòng khoanh là hai dải bài học đã gặp: <code>10.0.0.0/8</code> dành cho mạng riêng (RFC 1918) và <code>127.0.0.0/8</code> cho loopback. <span class="credit">Chụp màn hình <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org</a> ngày 30/09/2026; người viết đã ẩn các khối 015/8 tới 123/8 và hai cột WHOIS/RDAP cho gọn, rồi thêm khung đánh dấu.</span></figcaption>
+  <figcaption><b>Ảnh 3</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA. Mỗi dòng là một khối /8 — khoảng 16,7 triệu địa chỉ. Cột <em>Designation</em> cho thấy những khối trọn gói từng thuộc về một tổ chức duy nhất như DoD Intel Information Systems hay AT&amp;T Bell Laboratories: dấu vết còn lại của cách chia theo class. Hai dòng khoanh là hai dải bài học đã gặp: <code>10.0.0.0/8</code> dành cho mạng riêng (RFC 1918) và <code>127.0.0.0/8</code> cho loopback.</figcaption>
 </figure>
 
 
@@ -245,7 +245,7 @@ cuối cùng của mình.</p>
 
 <figure class="fig photo side">
   <img src="img/router-gia-dinh.webp" width="800" height="600" loading="lazy" alt="Một router không dây gia đình màu đen xanh có hai ăng-ten dựng đứng.">
-  <figcaption><b>Ảnh 4</b> Router gia đình — ở đây là Linksys WRT54G, một mẫu rất phổ biến những năm 2000 — là nơi NAT diễn ra: mọi máy trong nhà dùng địa chỉ riêng kiểu <code>192.168.x.x</code>, còn router đứng ra đại diện bằng một địa chỉ duy nhất phía nhà mạng. <span class="credit">Ảnh: Evan-Amos, <a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Wikimedia Commons</a>, public domain; đã chuyển hai tông mực/giấy.</span></figcaption>
+  <figcaption><b>Ảnh 4</b> Router gia đình — ở đây là Linksys WRT54G, một mẫu rất phổ biến những năm 2000 — là nơi NAT diễn ra: mọi máy trong nhà dùng địa chỉ riêng kiểu <code>192.168.x.x</code>, còn router đứng ra đại diện bằng một địa chỉ duy nhất phía nhà mạng.</figcaption>
 </figure>
 
 
@@ -597,6 +597,15 @@ không phải một lỗi bí ẩn.</p>
   Transactions on Computer Systems, 1984.</li>
 </ol>
 
+
+<h2 id="nguon-anh">Nguồn ảnh</h2>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang. Ảnh chụp màn hình do người viết tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<ol class="photo-credits">
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Interface_Message_Processor_-_BBN_Arpanet_Router_-_Computer_History_Museum_(2007-11-10_23.06.56_by_Carlo_Nardone).jpg">Interface Message Processor của ARPANET</a> — Carlo Nardone, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
+  <li><b>Ảnh 2</b>Khuôn header IPv4, RFC 791 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc791.html">rfc-editor.org</a>, 30/09/2026.</li>
+  <li><b>Ảnh 3</b>Sổ đăng ký không gian địa chỉ IPv4 — chụp màn hình <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org</a>, 30/09/2026; đã ẩn các khối 015/8 tới 123/8 và hai cột WHOIS, RDAP.</li>
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Router gia đình Linksys WRT54G</a> — Evan-Amos, Wikimedia Commons, public domain.</li>
+</ol>
 </section>
 
 </main>
@@ -618,6 +627,6 @@ không phải một lỗi bí ẩn.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=e4228462"></script>
+<script src="../../assets/app.js?v=28e8e2c0"></script>
 </body>
 </html>

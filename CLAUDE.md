@@ -301,11 +301,22 @@ trang bài giảng chính tối thiểu **4 khối ảnh**, mỗi trang phụ t�
    sai đời, sai loại — như card mạng ISA không có cổng RJ45); rồi chụp lại trang sau khi đặt
    ảnh, ở **máy tính và điện thoại**, để kiểm bố cục và độ đọc được của chữ trong ảnh.
 4. **Chú thích** đánh số riêng **"Ảnh N"** (sơ đồ vẫn là "Hình N"), nói ảnh chứng minh điều gì
-   cho bài — không chỉ tả ảnh; mọi khẳng định trong chú thích phải kiểm được. Bắt buộc dòng
-   nguồn `<span class="credit">` (tác giả, link Commons, giấy phép, đã chỉnh gì), `alt` tiếng
-   Việt, `width`/`height`, `loading="lazy"`.
+   cho bài — không chỉ tả ảnh; mọi khẳng định trong chú thích phải kiểm được. **Không** đặt dòng
+   nguồn dưới ảnh (người học yêu cầu 30/09/2026 — nó làm rối trang). Nguồn gom vào mục
+   **"Nguồn ảnh"** (`<h2 id="nguon-anh">` + `<ol class="photo-credits">`) ở **cuối tab cuối
+   cùng** của trang, mỗi dòng "Ảnh N — tên ảnh (link) — tác giả, Wikimedia Commons, giấy phép
+   (link)", kèm đúng **một câu chung** nói ảnh đã chuyển đen trắng / cắt khung (CC BY-SA bắt
+   buộc nói rõ có chỉnh sửa). Ảnh vẫn cần `alt` tiếng Việt, `width`/`height`, `loading="lazy"`.
 5. Ảnh nằm ở `lessons/NN-slug/img/*.webp`, kèm **`img/NGUON.md`** liệt kê nguồn, tác giả, giấy
-   phép và mọi bước đã chỉnh (CC BY-SA bắt buộc ghi rõ phần chỉnh sửa).
+   phép và mọi bước đã chỉnh (bản đầy đủ cho repo; mục "Nguồn ảnh" trên trang là bản gọn).
+
+**Nhịp đọc kiểu sách / tạp chí** — đo được, kiểm sau mỗi bài:
+- Cột chữ ~70 ký tự/dòng (`max-width: 35em` cho `p`, danh sách, khối chú thích); hình, bảng, sơ
+  đồ vẫn dùng hết cột — cột chữ hẹp hơn cột hình như lưới tạp chí.
+- Không để mảng chữ liền nào quá ~250 chữ mà không có một điểm nghỉ mắt: hình, bảng, khối chú
+  thích, hoặc **trích dẫn nổi bật** `<blockquote class="pull"><p>…</p></blockquote>` — câu trích
+  phải là **nguyên văn** từ đoạn quanh nó, không bao giờ thêm ý mới.
+- Tab nào cũng nên có ít nhất một yếu tố thị giác (ảnh hoặc sơ đồ), không chỉ chữ và bảng.
 
 Markup: `<figure class="fig photo">` (ảnh rộng) · thêm `side` (lệch phải, chữ chảy quanh, chỉ ở
 màn rộng; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền) · `small` · dải nhiều ảnh:

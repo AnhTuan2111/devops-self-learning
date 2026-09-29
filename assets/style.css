@@ -570,6 +570,36 @@ figure.photo.small img { width: auto; max-width: min(100%, 360px); }
 .credit { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: var(--ink-3); }
 .credit a { color: inherit; font-weight: 500; }
 
+/* Nguồn ảnh: gom ở CUỐI mỗi bài như phần "nguồn hình ảnh" của sách, không chen dưới từng ảnh */
+ol.photo-credits { list-style: none; padding: 0; margin: 12px 0 24px; max-width: 42em; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+ol.photo-credits li { margin: 0; padding: 7px 0; border-bottom: 1px solid var(--line); }
+ol.photo-credits li b { font-family: var(--f-display); font-weight: 700; text-transform: lowercase; color: var(--ink); margin-right: 6px; }
+.photo-credits-note { font-size: 14px; color: var(--ink-3); max-width: 42em; }
+
+/* =========================================================================
+   NHỊP ĐỌC KIỂU SÁCH / TẠP CHÍ
+   ========================================================================= */
+
+/* Độ dài dòng ~70 ký tự — chuẩn dàn trang sách (45–75). Hình, bảng, sơ đồ vẫn dùng hết cột,
+   nên cột chữ hẹp hơn cột hình: lưới quen thuộc của tạp chí. */
+section.tab > p, section.tab > ul, section.tab > ol, section.tab > h3, section.tab > dl.terms,
+section.tab > .callout, section.tab > .check-meter, .panel-intro { max-width: 35em; }
+
+/* Trích dẫn nổi bật: một câu then chốt lấy NGUYÊN VĂN từ đoạn quanh nó, để mắt có điểm dừng
+   trong mảng chữ dài. Không bao giờ chứa ý mới. */
+blockquote.pull {
+  margin: 34px 0 36px; padding: 16px 0 14px; max-width: 30em;
+  border-top: var(--rule-l) solid var(--ink); border-bottom: var(--rule-s) solid var(--ink);
+}
+blockquote.pull p {
+  margin: 0; font-family: var(--f-display); font-weight: 700;
+  font-size: clamp(20px, 2.5vw, 25px); line-height: 1.32; color: var(--ink);
+}
+blockquote.pull p::before {
+  content: ""; display: inline-block; width: .5em; height: .5em; margin-right: .45em;
+  background: var(--red); vertical-align: .06em;
+}
+
 /* Dải nhiều ảnh cùng hàng: 2 cột ở điện thoại, n cột ở màn rộng */
 .photo-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .photo-row.n3 { grid-template-columns: minmax(0, 1fr); }

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00 — Bản đồ toàn cảnh</title>
 <meta name="description" content="Đường đi đầy đủ của một HTTP request, từ lúc gõ Enter tới lúc code của bạn chạy: cấu trúc URL, bốn khái niệm nền, bản đồ 9 chặng, bảng tra triệu chứng có cột “ai viết ra”, bản chất của chứng chỉ TLS và những sự cố do thời gian tự gây ra.">
-<link rel="stylesheet" href="../../assets/style.css?v=e4228462">
+<link rel="stylesheet" href="../../assets/style.css?v=28e8e2c0">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00">
@@ -98,6 +98,11 @@ phân công này là bước đầu tiên để biết một lỗi thuộc về 
   Boot, đây là thứ <code>@RequestParam</code> đọc ra.</dd>
 </dl>
 
+
+<figure class="fig photo shot">
+  <img src="img/rfc3986-uri.webp" width="477" height="137" loading="lazy" alt="Sơ đồ chữ trong RFC 3986 tách địa chỉ foo://example.com:8042/over/there?name=ferret#nose thành scheme, authority, path, query và fragment.">
+  <figcaption><b>Ảnh 1</b> Ví dụ tách thành phần URI trong chính văn bản chuẩn RFC 3986 (tháng 1/2005). Cách chia của chuẩn chi tiết hơn năm phần ở trên một chút: host và port được gộp chung thành <em>authority</em>, và sau query còn có <em>fragment</em> — phần sau dấu <code>#</code>, thứ trình duyệt không bao giờ gửi lên máy chủ.</figcaption>
+</figure>
 <p>Trong năm phần ấy, có ba quan sát quan trọng cần ghi nhớ, vì mỗi quan sát sẽ quay lại nhiều lần trong
 lộ trình.</p>
 
@@ -109,6 +114,8 @@ thành số, và bước dịch ấy là cả một hệ thống phân tán toà
 DNS trở thành một chặng có thể hỏng độc lập với mọi thứ khác: tên miền quên gia hạn, bản ghi trỏ sai,
 nhà cung cấp DNS gặp sự cố — tất cả đều khiến web "không vào được" dù máy chủ và code hoàn toàn khỏe
 mạnh.</p>
+<blockquote class="pull"><p>Mạng máy tính chỉ biết chuyển gói tin tới các địa chỉ dạng số; nó không hiểu chữ.</p></blockquote>
+
 
 <p>Quan sát thứ hai: <strong><code>scheme</code> quyết định port mặc định.</strong> Khi URL không ghi
 port, trình duyệt ngầm hiểu <code>http://</code> đi kèm <code>:80</code> và <code>https://</code> đi kèm
@@ -216,7 +223,7 @@ khác nhau, nên tách được vai là tách được nguyên nhân.</figcaptio
 
 <figure class="fig photo side">
   <img src="img/card-mang-hai-cong.webp" width="900" height="620" loading="lazy" alt="Một card mạng máy chủ có tản nhiệt lớn và hai cổng RJ45 ở mặt gắn vỏ máy.">
-  <figcaption><b>Ảnh 1</b> Card mạng máy chủ Intel X540-T2 với hai cổng RJ45. Hệ điều hành thấy đây là hai network interface riêng biệt, và mỗi interface có thể mang một địa chỉ IP riêng — đúng điều đoạn bên cạnh khẳng định: địa chỉ IP gắn với một cửa ngõ mạng, không gắn với cả cái máy. <span class="credit">Ảnh: Dmitry Nosachev, <a href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>; đã chuyển hai tông mực/giấy.</span></figcaption>
+  <figcaption><b>Ảnh 2</b> Card mạng máy chủ Intel X540-T2 với hai cổng RJ45. Hệ điều hành thấy đây là hai network interface riêng biệt, và mỗi interface có thể mang một địa chỉ IP riêng — đúng điều đoạn bên cạnh khẳng định: địa chỉ IP gắn với một cửa ngõ mạng, không gắn với cả cái máy.</figcaption>
 </figure>
 
 
@@ -411,7 +418,7 @@ này.</figcaption>
 
 <figure class="fig photo">
   <img src="img/cap-quang-bien.webp" width="1200" height="803" loading="lazy" alt="Bốn mẫu cáp quang biển cắt ngang đặt cạnh nhau, có nhãn chú thích từng lớp: lõi sợi quang, dây đồng cấp điện, lớp giáp thép.">
-  <figcaption><b>Ảnh 2</b> Dòng "~~~ INTERNET ~~~" trong hình trên có hình hài vật lý thật: phần lớn lưu lượng Internet giữa các châu lục đi qua cáp quang biển. Đây là mẫu cắt ngang bốn loại vỏ cáp — sợi quang nằm ở lõi, bọc bởi dây đồng cấp điện cho các bộ khuếch đại dọc tuyến, rồi tới các lớp giáp thép dày dần cho những đoạn gần bờ, nơi cáp dễ bị neo tàu kéo đứt. <span class="credit">Ảnh: Lonnie Hagadorn, <a href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>; đã chuyển hai tông mực/giấy.</span></figcaption>
+  <figcaption><b>Ảnh 3</b> Dòng "~~~ INTERNET ~~~" trong hình trên có hình hài vật lý thật: phần lớn lưu lượng Internet giữa các châu lục đi qua cáp quang biển. Đây là mẫu cắt ngang bốn loại vỏ cáp — sợi quang nằm ở lõi, bọc bởi dây đồng cấp điện cho các bộ khuếch đại dọc tuyến, rồi tới các lớp giáp thép dày dần cho những đoạn gần bờ, nơi cáp dễ bị neo tàu kéo đứt.</figcaption>
 </figure>
 
 
@@ -583,7 +590,7 @@ lỗi; lễ tân chỉ bê mẩu giấy ấy ra nguyên vẹn, không đọc, kh
     <figure><img src="img/nginx-502.webp" width="680" height="208" loading="lazy" alt="Trang lỗi trắng, tiêu đề 502 Bad Gateway, bên dưới là dòng nginx/1.30.5."><div class="lbl">502 <small>không ai listen phía sau</small></div></figure>
     <figure><img src="img/nginx-504.webp" width="680" height="208" loading="lazy" alt="Trang lỗi trắng, tiêu đề 504 Gateway Time-out, bên dưới là dòng nginx/1.30.5."><div class="lbl">504 <small>app không trả lời kịp</small></div></figure>
   </div>
-  <figcaption><b>Ảnh 3</b> Ba trang lỗi do chính Nginx viết, chụp từ Nginx 1.30.5 chạy thật trên máy người viết ngày 30/09/2026: xin một file không tồn tại (404); proxy tới một port không có ai listen (502); proxy tới một server nhận kết nối nhưng không bao giờ trả lời, với <code>proxy_read_timeout 2s</code> (504). Cả ba cùng một khuôn và cùng chữ ký <code>nginx/1.30.5</code> ở cuối — đó là cách nhận ra người viết. Hai chi tiết chỉ lộ ra khi chạy thật: Nginx viết "Gateway Time-out" có gạch nối, khác cụm "Gateway Timeout" trong RFC 9110; và trang 502 mất 2,03 giây mới hiện, vì trên Windows một lần kết nối bị từ chối tốn khoảng 2 giây — đúng hiện tượng đã đo ở Lab 4 (xem <a href="phan-tich-output.html#t-refused">trang mổ băng output</a>). <span class="credit">Chụp màn hình trình duyệt; phần mềm: nginx 1.30.5 bản chính thức cho Windows.</span></figcaption>
+  <figcaption><b>Ảnh 4</b> Ba trang lỗi do chính Nginx viết, chụp từ Nginx 1.30.5 chạy thật trên máy người viết ngày 30/09/2026: xin một file không tồn tại (404); proxy tới một port không có ai listen (502); proxy tới một server nhận kết nối nhưng không bao giờ trả lời, với <code>proxy_read_timeout 2s</code> (504). Cả ba cùng một khuôn và cùng chữ ký <code>nginx/1.30.5</code> ở cuối — đó là cách nhận ra người viết. Hai chi tiết chỉ lộ ra khi chạy thật: Nginx viết "Gateway Time-out" có gạch nối, khác cụm "Gateway Timeout" trong RFC 9110; và trang 502 mất 2,03 giây mới hiện, vì trên Windows một lần kết nối bị từ chối tốn khoảng 2 giây — đúng hiện tượng đã đo ở Lab 4 (xem <a href="phan-tich-output.html#t-refused">trang mổ băng output</a>).</figcaption>
 </figure>
 
 
@@ -998,6 +1005,11 @@ có điều kiện — ở <a href="../35-zero-downtime-va-rollback/">Bài 35</a
 <p>Spring Boot có sẵn Tomcat nhúng bên trong, tự nghe HTTP được, thậm chí tự cấu hình HTTPS được. Vậy tại
 sao gần như mọi hệ thống production đều đặt thêm Nginx đứng trước? Câu trả lời không nằm ở một lý do đơn
 lẻ mà ở việc Nginx gánh hộ ứng dụng tám trách nhiệm khác nhau, như Bảng 7 liệt kê.</p>
+<figure class="fig photo shot">
+  <img src="img/nginx-welcome.webp" width="640" height="300" loading="lazy" alt="Trang trắng với tiêu đề lớn Welcome to nginx! và vài dòng hướng dẫn, kết thúc bằng Thank you for using nginx.">
+  <figcaption><b>Ảnh 5</b> Trang chào mặc định của Nginx, chụp từ Nginx 1.30.5 chạy thật trên máy người viết. Đây là thứ bạn sẽ thấy ngay sau lần cài Nginx đầu tiên ở Module 4: Nginx đã nhận request và tự trả về một file HTML tĩnh có sẵn, chưa chuyển gì tới ứng dụng nào phía sau — đúng vai trò "lễ tân tự trả lời được những câu đơn giản".</figcaption>
+</figure>
+
 
 <div class="table-scroll">
 <table>
@@ -1170,6 +1182,20 @@ không cần đọc hết ngay; hãy dùng chúng như tài liệu tra cứu khi
   <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">developer.mozilla.org/en-US/docs/Web/HTTP/Status</a></li>
 </ol>
 
+
+
+
+<h2 id="nguon-anh">Nguồn ảnh</h2>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang. Ảnh chụp màn hình do người viết tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<ol class="photo-credits">
+  <li><b>Ảnh 1</b>Ví dụ thành phần URI, RFC 3986 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc3986.html">rfc-editor.org</a>, 30/09/2026.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg">Card mạng Intel X540-T2</a> — Dmitry Nosachev, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg">Mẫu cáp quang biển</a> — Lonnie Hagadorn, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 4</b>Trang lỗi 404 của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy người viết, 30/09/2026.</li>
+  <li><b>Ảnh 4</b>Trang lỗi 502 của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy người viết, 30/09/2026.</li>
+  <li><b>Ảnh 4</b>Trang lỗi 504 của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy người viết, 30/09/2026.</li>
+  <li><b>Ảnh 5</b>Trang chào mặc định của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy người viết, 30/09/2026.</li>
+</ol>
 </section>
 
 </main>
@@ -1191,6 +1217,6 @@ không cần đọc hết ngay; hãy dùng chúng như tài liệu tra cứu khi
 
 </div>
 
-<script src="../../assets/app.js?v=e4228462"></script>
+<script src="../../assets/app.js?v=28e8e2c0"></script>
 </body>
 </html>
