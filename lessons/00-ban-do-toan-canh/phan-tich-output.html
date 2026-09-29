@@ -509,6 +509,12 @@ giao thức, mã trạng thái <code>200</code> và cụm lý do <code>OK</code>
 tốt. Nhưng các dòng header phía sau còn kể nhiều hơn thế: chúng cho thấy <strong>chặng <span class="stg">7</span> ngoài đời
 thật</strong> trông như thế nào.</p>
 
+<figure class="fig photo shot small">
+  <img src="img/example-com.webp" width="600" height="290" loading="lazy" alt="Trang example.com mở trong trình duyệt: một biểu tượng cuốn sách nhỏ và một đoạn chữ giải thích tên miền này dành cho ví dụ trong tài liệu.">
+  <figcaption><b>Ảnh 1</b> Phần body mà <code>curl -v</code> nhận về, khi được trình duyệt dựng thành trang. curl chỉ in HTML thô ra màn hình; trình duyệt thì đọc HTML, tải thêm CSS rồi mới vẽ. Chính nội dung trang cũng nhắc lại điều bài học đã nói: tên miền này chỉ dành cho ví dụ trong tài liệu. <span class="credit">Chụp màn hình trình duyệt ngày 30/09/2026, cắt gọn.</span></figcaption>
+</figure>
+
+
 <div class="table-scroll">
 <table>
   <caption><b>Bảng 2</b> Đọc các header trả lời của <code>example.com</code>.</caption>
@@ -618,6 +624,12 @@ notAfter=Oct 27 22:17:21 2026 GMT</code></pre>
 </div>
 
 <h3 id="ba-dieu">Ba điều tấm chứng chỉ này tiết lộ</h3>
+
+<figure class="fig photo shot">
+  <img src="img/crtsh-example-com.webp" width="1035" height="385" loading="lazy" alt="Bảng kết quả tra crt.sh cho example.com, cột Issuer Name; một dòng có issuer Cloudflare TLS Issuing ECC CA 3 được khoanh đỏ.">
+  <figcaption><b>Ảnh 2</b> Sổ công khai Certificate Transparency cho example.com, tra trên crt.sh ngày 30/09/2026 (hiện 10 dòng đầu). Dòng khoanh có issuer <code>C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3</code> và thời hạn 29/07 tới 27/10/2026 — trùng khít với <code>notBefore</code> và <code>notAfter</code> trong output openssl ở trên. Cùng ngày có nhiều dòng gần giống nhau, vì example.com dùng cả chứng chỉ khoá ECC lẫn RSA, và mỗi chứng chỉ thường được ghi vào sổ hai lần (tiền chứng chỉ và chứng chỉ chính thức). Dòng trên cùng cho thấy một chứng chỉ mới do Sectigo cấp từ 24/09 — trang có thể sẽ sớm chuyển sang nó. <span class="credit">Chụp màn hình <a href="https://crt.sh/?q=example.com">crt.sh</a> ngày 30/09/2026; người viết ẩn các dòng sau dòng thứ 10 và thêm khung đánh dấu.</span></figcaption>
+</figure>
+
 
 <p><strong><span class="stg">1</span> Vòng đời đúng 90 ngày.</strong> Từ 29/07 tới 27/10 là đúng 90 ngày. Con số này không
 phải ngẫu nhiên: 90 ngày là thời hạn mà Let's Encrypt phổ biến từ những năm 2010, và nhiều CA khác

@@ -554,6 +554,47 @@ figure.fig figcaption b, table caption b {
 }
 
 /* =========================================================================
+   ẢNH MINH HOẠ — đánh số riêng "Ảnh N" (sơ đồ là "Hình N").
+   Ảnh chụp thật đã hậu kỳ hai tông mực/giấy (nhiếp ảnh đen trắng kiểu Bauhaus);
+   ảnh chụp màn hình giữ màu. Mỗi ảnh BẮT BUỘC có dòng nguồn .credit.
+   Không bóng, không bo góc: một thanh kẻ đen phía trên là đủ để tách ảnh khỏi chữ.
+   ========================================================================= */
+
+figure.photo { margin: 28px 0 30px; }
+figure.photo img {
+  display: block; width: 100%; height: auto; max-width: 100%;
+  border-top: var(--rule-m) solid var(--ink); background: var(--paper);
+}
+figure.photo.shot img { border: var(--rule-s) solid var(--ink); border-top-width: var(--rule-m); }
+figure.photo.small img { width: auto; max-width: min(100%, 360px); }
+.credit { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: var(--ink-3); }
+.credit a { color: inherit; font-weight: 500; }
+
+/* Dải nhiều ảnh cùng hàng: 2 cột ở điện thoại, n cột ở màn rộng */
+.photo-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.photo-row.n3 { grid-template-columns: minmax(0, 1fr); }
+.photo-row figure { margin: 0; }
+.photo-row img { display: block; width: 100%; height: auto; border-top: var(--rule-m) solid var(--ink); background: var(--paper); }
+.photo-row.shots img { border: var(--rule-s) solid var(--ink); border-top-width: var(--rule-m); }
+.photo-row .lbl {
+  display: flex; align-items: center; gap: 8px; margin-top: 8px;
+  font-family: var(--f-display); font-weight: 700; font-size: 16px; line-height: 1.2; text-transform: lowercase;
+}
+.photo-row .lbl .shp { width: 22px; height: 22px; font-size: 11px; }
+.photo-row .lbl small { font-family: var(--f-sans); font-weight: 400; font-size: 13px; text-transform: none; color: var(--ink-3); }
+
+@media (min-width: 48rem) {
+  .photo-row.n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .photo-row.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+/* Ảnh bên lề: chỉ ở màn rộng mới lệch phải cho chữ chảy quanh — bố cục bất đối xứng */
+@media (min-width: 64rem) {
+  figure.photo.side { float: right; width: 40%; margin: 6px 0 22px 30px; }
+  figure.photo.side.narrow { width: 32%; }
+  section.tab h2, section.tab .table-scroll, section.tab figure.fig, section.tab dl.terms, section.tab .callout { clear: right; }
+}
+
+/* =========================================================================
    Bảng — đầu bảng đen, lòng bảng kẻ mảnh, không khung ngoài
    ========================================================================= */
 

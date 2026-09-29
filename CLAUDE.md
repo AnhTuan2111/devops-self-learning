@@ -275,6 +275,33 @@ trang — chỉ cần viết `prevnext`, và **đừng** thêm link topbar trỏ
 
 **Không viết `style="…"` inline** — cần thì thêm class vào `style.css`.
 
+### Ảnh minh hoạ (người học yêu cầu 30/09/2026)
+
+**Mỗi bài phải có nhiều ảnh minh hoạ hoặc ảnh tham chiếu**, không chỉ chữ và sơ đồ ASCII:
+trang bài giảng chính tối thiểu **4 khối ảnh**, mỗi trang phụ tối thiểu **2**. Quy trình bắt buộc:
+
+1. **Nguồn** — chỉ hai loại: (a) Wikimedia Commons, giấy phép CC0 / public domain / CC BY /
+   CC BY-SA (`node scripts/anh/commons.mjs tim "…"` rồi `lay "File:…"` — lưu kèm giấy phép);
+   (b) **tự chụp màn hình** từ trang công khai (RFC, man7.org, IANA, crt.sh…) hoặc từ **phần
+   mềm chạy thật trên máy** (như trang lỗi Nginx ở Bài 00 — chạy Nginx thật để lấy 404/502/504).
+   Không dùng ảnh không rõ giấy phép. Trang chặn bot (403) thì **không vượt**, tìm bản khác.
+2. **Tùy biến theo phong cách bài** (`python scripts/anh/hau-ky.py`): ảnh chụp thật chuyển hai
+   tông mực/giấy; ảnh chụp màn hình giữ màu (`--giu-mau`) và được đánh dấu bằng khung
+   đỏ/lam/vàng + nhãn tiếng Việt chữ thường (`scripts/anh/danh-dau.js`, chạy qua Playwright).
+3. **Kiểm tận mắt hai lần**: xem ảnh gốc để chắc nó đúng là thứ chú thích nói (loại ngay ảnh
+   sai đời, sai loại — như card mạng ISA không có cổng RJ45); rồi chụp lại trang sau khi đặt
+   ảnh, ở **máy tính và điện thoại**, để kiểm bố cục và độ đọc được của chữ trong ảnh.
+4. **Chú thích** đánh số riêng **"Ảnh N"** (sơ đồ vẫn là "Hình N"), nói ảnh chứng minh điều gì
+   cho bài — không chỉ tả ảnh; mọi khẳng định trong chú thích phải kiểm được. Bắt buộc dòng
+   nguồn `<span class="credit">` (tác giả, link Commons, giấy phép, đã chỉnh gì), `alt` tiếng
+   Việt, `width`/`height`, `loading="lazy"`.
+5. Ảnh nằm ở `lessons/NN-slug/img/*.webp`, kèm **`img/NGUON.md`** liệt kê nguồn, tác giả, giấy
+   phép và mọi bước đã chỉnh (CC BY-SA bắt buộc ghi rõ phần chỉnh sửa).
+
+Markup: `<figure class="fig photo">` (ảnh rộng) · thêm `side` (lệch phải, chữ chảy quanh, chỉ ở
+màn rộng; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền) · `small` · dải nhiều ảnh:
+`<div class="photo-row n3|n4 [shots]">` với mỗi ô `<figure>` + `<div class="lbl">`.
+
 ### Nguồn thiết kế (đã tải được, dùng khi cần trích)
 
 - Hai bài người học đưa: beeart.vn (xu hướng web Bauhaus) · linearity.io/blog/bauhaus-design

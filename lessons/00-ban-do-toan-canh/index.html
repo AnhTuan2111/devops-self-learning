@@ -214,6 +214,12 @@ khác nhau, nên tách được vai là tách được nguyên nhân.</figcaptio
 
 <h3 id="nhieu-ip">Một máy có NHIỀU địa chỉ IP, không phải một</h3>
 
+<figure class="fig photo side">
+  <img src="img/card-mang-hai-cong.webp" width="900" height="620" loading="lazy" alt="Một card mạng máy chủ có tản nhiệt lớn và hai cổng RJ45 ở mặt gắn vỏ máy.">
+  <figcaption><b>Ảnh 1</b> Card mạng máy chủ Intel X540-T2 với hai cổng RJ45. Hệ điều hành thấy đây là hai network interface riêng biệt, và mỗi interface có thể mang một địa chỉ IP riêng — đúng điều đoạn bên cạnh khẳng định: địa chỉ IP gắn với một cửa ngõ mạng, không gắn với cả cái máy. <span class="credit">Ảnh: Dmitry Nosachev, <a href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>; đã chuyển hai tông mực/giấy.</span></figcaption>
+</figure>
+
+
 <p>Điều đầu tiên mô hình này phá vỡ là niềm tin ngầm rằng "mỗi máy có một địa chỉ IP". Trên thực tế, địa
 chỉ IP không được gán cho cái máy mà được gán cho từng <em>giao diện mạng</em> của nó — card WiFi, card
 Ethernet, card ảo của VPN, card ảo của Docker, và một card đặc biệt không có phần cứng nào đứng sau là
@@ -403,6 +409,12 @@ chặng <span class="stg">6</span>–<span class="stg">9</span> chạy trên VPS
 này.</figcaption>
 </figure>
 
+<figure class="fig photo">
+  <img src="img/cap-quang-bien.webp" width="1200" height="803" loading="lazy" alt="Bốn mẫu cáp quang biển cắt ngang đặt cạnh nhau, có nhãn chú thích từng lớp: lõi sợi quang, dây đồng cấp điện, lớp giáp thép.">
+  <figcaption><b>Ảnh 2</b> Dòng "~~~ INTERNET ~~~" trong hình trên có hình hài vật lý thật: phần lớn lưu lượng Internet giữa các châu lục đi qua cáp quang biển. Đây là mẫu cắt ngang bốn loại vỏ cáp — sợi quang nằm ở lõi, bọc bởi dây đồng cấp điện cho các bộ khuếch đại dọc tuyến, rồi tới các lớp giáp thép dày dần cho những đoạn gần bờ, nơi cáp dễ bị neo tàu kéo đứt. <span class="credit">Ảnh: Lonnie Hagadorn, <a href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>; đã chuyển hai tông mực/giấy.</span></figcaption>
+</figure>
+
+
 <p>Có một chi tiết tinh tế trong thứ tự <span class="stg">3</span> <i class="ic ic-r" role="img" aria-label="sang"></i> <span class="stg">4</span> <i class="ic ic-r" role="img" aria-label="sang"></i> <span class="stg">5</span> đáng dừng lại. Kết nối TCP ở chặng <span class="stg">3</span> phải được thiết
 lập xong trước, bởi vì TLS ở chặng <span class="stg">4</span> là một cuộc hội thoại chạy <em>bên trên</em> kết nối đó; và chỉ khi
 TLS đã bật mã hóa, trình duyệt mới gửi dòng <code>GET /users/42</code> ở chặng <span class="stg">5</span>. Hệ quả là path và
@@ -564,6 +576,16 @@ lỗi; lễ tân chỉ bê mẩu giấy ấy ra nguyên vẹn, không đọc, kh
 </div>
 
 <h3 id="404-tac-gia">Phân biệt tác giả của 404 ngay bằng mắt</h3>
+
+<figure class="fig photo">
+  <div class="photo-row shots n3">
+    <figure><img src="img/nginx-404.webp" width="680" height="208" loading="lazy" alt="Trang lỗi trắng, tiêu đề 404 Not Found, bên dưới gạch ngang là dòng nginx/1.30.5."><div class="lbl">404 <small>không có file đó</small></div></figure>
+    <figure><img src="img/nginx-502.webp" width="680" height="208" loading="lazy" alt="Trang lỗi trắng, tiêu đề 502 Bad Gateway, bên dưới là dòng nginx/1.30.5."><div class="lbl">502 <small>không ai listen phía sau</small></div></figure>
+    <figure><img src="img/nginx-504.webp" width="680" height="208" loading="lazy" alt="Trang lỗi trắng, tiêu đề 504 Gateway Time-out, bên dưới là dòng nginx/1.30.5."><div class="lbl">504 <small>app không trả lời kịp</small></div></figure>
+  </div>
+  <figcaption><b>Ảnh 3</b> Ba trang lỗi do chính Nginx viết, chụp từ Nginx 1.30.5 chạy thật trên máy người viết ngày 30/09/2026: xin một file không tồn tại (404); proxy tới một port không có ai listen (502); proxy tới một server nhận kết nối nhưng không bao giờ trả lời, với <code>proxy_read_timeout 2s</code> (504). Cả ba cùng một khuôn và cùng chữ ký <code>nginx/1.30.5</code> ở cuối — đó là cách nhận ra người viết. Hai chi tiết chỉ lộ ra khi chạy thật: Nginx viết "Gateway Time-out" có gạch nối, khác cụm "Gateway Timeout" trong RFC 9110; và trang 502 mất 2,03 giây mới hiện, vì trên Windows một lần kết nối bị từ chối tốn khoảng 2 giây — đúng hiện tượng đã đo ở Lab 4 (xem <a href="phan-tich-output.html#t-refused">trang mổ băng output</a>). <span class="credit">Chụp màn hình trình duyệt; phần mềm: nginx 1.30.5 bản chính thức cho Windows.</span></figcaption>
+</figure>
+
 
 <p>404 là trường hợp mơ hồ nhất trong bảng, vì cả Nginx lẫn Spring Boot đều có thể viết ra nó. May mắn
 là mỗi tác giả để lại một "chữ ký" dễ nhận ra, như trong Hình 7: Nginx viết một trang HTML đơn giản và

@@ -39,6 +39,12 @@
 
 <h2 id="1981">1981 — bối cảnh sinh ra IPv4</h2>
 
+<figure class="fig photo side">
+  <img src="img/imp-arpanet.webp" width="1000" height="700" loading="lazy" alt="Mặt trước một tủ máy màu xám với hai hàng công tắc và đèn, tấm biển ghi Interface Message Processor.">
+  <figcaption><b>Ảnh 1</b> Interface Message Processor (IMP) của hãng BBN — thiết bị chuyển gói của ARPANET, tiền thân của router ngày nay — trưng bày ở Computer History Museum. ARPANET chạy từ năm 1969; IPv4 được đặc tả năm 1981 trong RFC 791, và ARPANET chuyển hẳn sang TCP/IP vào ngày 1/1/1983. <span class="credit">Ảnh: Carlo Nardone from Roma, Italy, <a href="https://commons.wikimedia.org/wiki/File:Interface_Message_Processor_-_BBN_Arpanet_Router_-_Computer_History_Museum_(2007-11-10_23.06.56_by_Carlo_Nardone).jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>; đã chuyển hai tông mực/giấy, cắt khung.</span></figcaption>
+</figure>
+
+
 <p>IPv4 được chuẩn hóa vào tháng 9 năm <strong>1981</strong>, trong tài liệu RFC 791. Để hiểu những
 lựa chọn thiết kế của nó, cần hình dung Internet lúc đó trông như thế nào: nó chưa phải "Internet"
 theo nghĩa ngày nay mà là <strong>ARPANET</strong>, một mạng nghiên cứu nối vài trăm máy tính của các
@@ -61,6 +67,12 @@ giản:</p>
 <figcaption><b>Hình 1</b> Không gian địa chỉ IPv4, và một địa chỉ viết ở dạng thập phân lẫn nhị phân.</figcaption>
 </figure>
 
+<figure class="fig photo shot">
+  <img src="img/rfc791-header.webp" width="670" height="283" loading="lazy" alt="Sơ đồ header IPv4 trong RFC 791 vẽ bằng ký tự, hai hàng Source Address và Destination Address được khoanh đỏ và lam.">
+  <figcaption><b>Ảnh 2</b> Khuôn header IPv4 nguyên bản trong RFC 791 (tháng 9/1981). Mỗi hàng của sơ đồ rộng đúng 32 bit; hai trường khoanh màu — địa chỉ nguồn và địa chỉ đích — mỗi trường chiếm trọn một hàng, nên một địa chỉ IPv4 không thể dài hơn 32 bit. Con số 2³² tính ở trên bị khoá cứng từ chính dòng này. <span class="credit">Chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc791.html">rfc-editor.org</a> ngày 30/09/2026; khung và nhãn do người viết thêm vào.</span></figcaption>
+</figure>
+
+
 <p>Năm 1981, dân số thế giới vào khoảng 4,5 tỷ người, và gần như <strong>không ai</strong> trong số
 đó sở hữu máy tính. Với những con số ấy, 4,3 tỷ địa chỉ nghe như vô hạn — một không gian mà mạng
 nghiên cứu vài trăm máy không bao giờ lấp đầy nổi.</p>
@@ -81,6 +93,12 @@ nghiên cứu vài trăm máy không bao giờ lấp đầy nổi.</p>
 được chia theo <strong>lớp</strong> (classful addressing): vài bit đầu tiên của địa chỉ quyết định nó
 thuộc lớp nào, và lớp quyết định luôn kích thước khối được cấp. Không có kích thước nào nằm giữa các
 lớp — một tổ chức chỉ có thể nhận nguyên một khối lớp A, B hoặc C.</p>
+
+<figure class="fig photo shot">
+  <img src="img/iana-ipv4.webp" width="652" height="529" loading="lazy" alt="Bảng sổ đăng ký IPv4 của IANA, mỗi dòng một khối /8; hai dòng 010/8 Private Use và 127/8 Loopback được khoanh màu.">
+  <figcaption><b>Ảnh 3</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA. Mỗi dòng là một khối /8 — khoảng 16,7 triệu địa chỉ. Cột <em>Designation</em> cho thấy những khối trọn gói từng thuộc về một tổ chức duy nhất như DoD Intel Information Systems hay AT&amp;T Bell Laboratories: dấu vết còn lại của cách chia theo class. Hai dòng khoanh là hai dải bài học đã gặp: <code>10.0.0.0/8</code> dành cho mạng riêng (RFC 1918) và <code>127.0.0.0/8</code> cho loopback. <span class="credit">Chụp màn hình <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org</a> ngày 30/09/2026; người viết đã ẩn các khối 015/8 tới 123/8 và hai cột WHOIS/RDAP cho gọn, rồi thêm khung đánh dấu.</span></figcaption>
+</figure>
+
 
 <div class="table-scroll">
 <table>
@@ -224,6 +242,12 @@ cuối cùng của mình.</p>
 <section class="tab" id="t-gia-nat" data-tab="Giá của NAT" data-note="vì sao phải thuê VPS">
 
 <h2 id="gia-cua-nat">Cái giá của NAT — và vì sao bạn phải thuê VPS</h2>
+
+<figure class="fig photo side">
+  <img src="img/router-gia-dinh.webp" width="800" height="600" loading="lazy" alt="Một router không dây gia đình màu đen xanh có hai ăng-ten dựng đứng.">
+  <figcaption><b>Ảnh 4</b> Router gia đình — ở đây là Linksys WRT54G, một mẫu rất phổ biến những năm 2000 — là nơi NAT diễn ra: mọi máy trong nhà dùng địa chỉ riêng kiểu <code>192.168.x.x</code>, còn router đứng ra đại diện bằng một địa chỉ duy nhất phía nhà mạng. <span class="credit">Ảnh: Evan-Amos, <a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Wikimedia Commons</a>, public domain; đã chuyển hai tông mực/giấy.</span></figcaption>
+</figure>
+
 
 <p>Mọi miếng vá đều có giá, và giá của NAT là phá vỡ một nguyên tắc gốc của Internet: <strong>mọi máy
 đều có thể gọi thẳng mọi máy</strong>. Cuốn sổ NAT chỉ được ghi khi có một kết nối <em>đi ra</em>; một
