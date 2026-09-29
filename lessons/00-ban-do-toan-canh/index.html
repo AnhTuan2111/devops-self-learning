@@ -374,29 +374,29 @@ VPS, và ở giữa là Internet — một vùng mà bạn không kiểm soát �
 
 <figure class="fig">
 <pre class="diagram"><code>  ┌──────────────── MÁY NGƯỜI DÙNG ─────────────────────────┐
-  │  ① Trình duyệt tách URL: scheme/host/port/path          │
-  │  ② DNS      "api.tuan.dev là số mấy?" → 123.45.67.89    │
-  │  ③ TCP      mở kết nối tới 123.45.67.89, phòng 443      │
-  │  ④ TLS      bắt tay, kiểm chứng chỉ, bật mã hóa         │
-  │  ⑤ HTTP     gửi "GET /users/42" + headers               │
+  │  1 Trình duyệt tách URL: scheme/host/port/path          │
+  │  2 DNS      "api.tuan.dev là số mấy?" → 123.45.67.89    │
+  │  3 TCP      mở kết nối tới 123.45.67.89, phòng 443      │
+  │  4 TLS      bắt tay, kiểm chứng chỉ, bật mã hóa         │
+  │  5 HTTP     gửi "GET /users/42" + headers               │
   └──────────────────────────┬──────────────────────────────┘
                              │
                     ~~~ INTERNET ~~~
                              │
   ┌────────── VPS (một máy Linux chạy 24/7) ────────────────┐
-  │  ⑥ FIREWALL      cửa 443 có mở không?                   │
+  │  6 FIREWALL      cửa 443 có mở không?                   │
   │                         ▼                               │
-  │  ⑦ NGINX         gỡ mã hóa TLS                          │
+  │  7 NGINX         gỡ mã hóa TLS                          │
   │     phòng 443    đọc header Host → biết hỏi web nào     │
   │     cửa CHÍNH    đọc path → biết đẩy đi đâu             │
   │                         ▼                               │
-  │  ⑧ SPRING BOOT   định tuyến, chạy logic                 │
+  │  8 SPRING BOOT   định tuyến, chạy logic                 │
   │     phòng 8080                                          │
-  │     cửa HÔNG ← chỉ Nginx gọi được                      │
+  │     cửa HÔNG ← chỉ Nginx gọi được                       │
   │                         ▼                               │
-  │  ⑨ POSTGRESQL    truy vấn dữ liệu                       │
+  │  9 POSTGRESQL    truy vấn dữ liệu                       │
   │     phòng 5432                                          │
-  │     cửa HÔNG ← chỉ app gọi được                        │
+  │     cửa HÔNG ← chỉ app gọi được                         │
   └─────────────────────────────────────────────────────────┘</code></pre>
 <figcaption><b>Hình 5</b> Bản đồ 9 chặng của một HTTPS request. Chặng <span class="stg">1</span>–<span class="stg">5</span> chạy trên máy người dùng,
 chặng <span class="stg">6</span>–<span class="stg">9</span> chạy trên VPS. Mọi công cụ trong lộ trình đều được gắn vào một hoặc vài chặng trên hình
@@ -599,8 +599,8 @@ Kubernetes.</p>
   <code>timeout</code> hoàn toàn không phải mã HTTP; chúng là lỗi ở tầng thấp hơn, nghĩa là <em>chưa có
   cuộc hội thoại HTTP nào diễn ra cả</em>.</p>
   <figure class="fig">
-  <pre class="diagram"><code>  Thấy SỐ     →  đã vào được nhà  →  soi NỬA TRONG (⑦⑧⑨)
-  Không thấy  →  còn ngoài cổng   →  soi NỬA NGOÀI (②③⑥⑦)</code></pre>
+  <pre class="diagram"><code>  Thấy SỐ     →  đã vào được nhà  →  soi NỬA TRONG (7, 8, 9)
+  Không thấy  →  còn ngoài cổng   →  soi NỬA NGOÀI (2, 3, 6, 7)</code></pre>
   <figcaption><b>Hình 8</b> Một câu hỏi nhị phân — có thấy mã HTTP hay không — chia đôi vùng nghi
   ngờ trên bản đồ.</figcaption>
   </figure>
@@ -1035,11 +1035,11 @@ kết nối để so sánh cơ chế của chúng bằng số đo thời gian. C
 Kết quả thật và phần mổ xẻ từng dòng output nằm ở <a href="phan-tich-output.html">trang riêng</a> — nó
 dài và đáng đọc kỹ, vì chính những chỗ output lệch khỏi lý thuyết mới dạy được nhiều nhất.</p>
 
-<pre><code># Lab 1 — nhìn chặng ② (DNS)
+<pre><code># Lab 1 — nhìn chặng 2 (DNS)
 nslookup github.com
 nslookup khong-ton-tai-dau-nhe-12345.com
 
-# Lab 2 — nhìn chặng ③④⑤ nối nhau
+# Lab 2 — nhìn chặng 3, 4, 5 nối nhau
 curl -v https://example.com
 
 # Lab 3 — đọc tấm "căn cước" của một website thật
@@ -1092,13 +1092,13 @@ một cái tên rời rạc để học thuộc, mà là một vật được g�
 nhiệm cụ thể và một kiểu hỏng cụ thể. Hình 18 là tấm bản đồ ấy nhìn theo góc của lộ trình.</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  Linux      → cái máy ở chặng ⑥⑦⑧⑨ chạy trên nền gì
-  Networking → chặng ② ③
-  Docker     → cách đóng gói chặng ⑧ và ⑨ cho gọn
-  Nginx      → chặng ⑦
+<pre class="diagram"><code>  Linux      → cái máy ở chặng 6, 7, 8, 9 chạy trên nền gì
+  Networking → chặng 2 và 3
+  Docker     → cách đóng gói chặng 8 và 9 cho gọn
+  Nginx      → chặng 7
   VPS        → cái hộp chứa toàn bộ nửa dưới sơ đồ
-  HTTPS      → chặng ④
-  CI/CD      → cách thay mới chặng ⑧ mà không phải làm tay
+  HTTPS      → chặng 4
+  CI/CD      → cách thay mới chặng 8 mà không phải làm tay
   Monitoring → cách biết chặng nào đang hỏng, trước khi sếp nhắn tin</code></pre>
 <figcaption><b>Hình 18</b> Mỗi module của lộ trình gắn vào một hoặc vài chặng của bản đồ 9 chặng.</figcaption>
 </figure>

@@ -99,16 +99,16 @@ firewall (vì cửa ngõ giờ phơi ra Internet), và Nginx (vì phải có ai 
 Ghép lại, ta được chín chặng nối tiếp nhau:
 
 ```
-① Trình duyệt tách URL
-② DNS          tên miền  →  IP
-③ TCP          mở kết nối tới IP:443
-④ TLS          bắt tay, kiểm chứng chỉ, mã hóa
-⑤ HTTP         gửi GET /users/42 + headers
+1 Trình duyệt tách URL
+2 DNS          tên miền  →  IP
+3 TCP          mở kết nối tới IP:443
+4 TLS          bắt tay, kiểm chứng chỉ, mã hóa
+5 HTTP         gửi GET /users/42 + headers
        ~~~ INTERNET ~~~
-⑥ FIREWALL     port 443 có mở không
-⑦ NGINX        gỡ TLS → đọc Host → đẩy vào app     [cửa CHÍNH]
-⑧ SPRING BOOT  :8080   định tuyến, chạy logic      [cửa HÔNG]
-⑨ POSTGRESQL   :5432   truy vấn dữ liệu            [cửa HÔNG]
+6 FIREWALL     port 443 có mở không
+7 NGINX        gỡ TLS → đọc Host → đẩy vào app     [cửa CHÍNH]
+8 SPRING BOOT  :8080   định tuyến, chạy logic      [cửa HÔNG]
+9 POSTGRESQL   :5432   truy vấn dữ liệu            [cửa HÔNG]
 ```
 
 **Chín chặng. Chỉ chặng 8 là code bạn viết.** Tám chặng còn lại là hạ tầng, và do đó khi
@@ -176,8 +176,8 @@ không phải mã HTTP; chúng có nghĩa là chưa có câu trả lời nào c�
 "có thấy con số không?" đã loại được một nửa bản đồ:
 
 ```
-Thấy SỐ     →  đã vào được nhà  →  soi NỬA TRONG (⑦⑧⑨)
-Không thấy  →  còn ngoài cổng   →  soi NỬA NGOÀI (②③⑥⑦)
+Thấy SỐ     →  đã vào được nhà  →  soi NỬA TRONG (7, 8, 9)
+Không thấy  →  còn ngoài cổng   →  soi NỬA NGOÀI (2, 3, 6, 7)
 ```
 
 **2. Triệu chứng không chỉ cho biết chặng nào hỏng — nó còn chứng minh mọi chặng TRƯỚC đó đã

@@ -132,17 +132,14 @@ là ba con số trong bảng giá ở Hình 1 — cộng thêm băng thông mạ
 một dòng nhỏ hơn bên dưới.</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  ┌────────────────────────────────────────────────────────────┐
-  │                                                            │
-  │     CPU             RAM            DISK         NETWORK    │
-  │  thực thi      dữ liệu ĐANG     lưu trữ       truyền dữ    │
-  │    lệnh            dùng         BỀN VỮNG      liệu ra/vào  │
-  │                                                            │
-  │  đo bằng        đo bằng GB      đo bằng GB    đo bằng      │
-  │  số core        volatile        persistent    Mbps         │
-  │                 (mất điện       (mất điện                  │
-  │                  là mất)         vẫn còn)                  │
-  └────────────────────────────────────────────────────────────┘</code></pre>
+<pre class="diagram"><code>     CPU             RAM            DISK         NETWORK
+  thực thi      dữ liệu ĐANG     lưu trữ       truyền dữ
+    lệnh            dùng         BỀN VỮNG      liệu ra/vào
+  
+  đo bằng        đo bằng GB      đo bằng GB    đo bằng
+  số core        volatile        persistent    Mbps
+                 (mất điện       (mất điện
+                  là mất)         vẫn còn)</code></pre>
   <figcaption><b>Hình 2</b> Bốn tài nguyên mà mọi máy tính cung cấp cho phần mềm, kèm đơn vị đo và
   tính bền vững của từng loại.</figcaption>
 </figure>
@@ -221,7 +218,7 @@ mở bất kỳ file log nào.</p>
     <tr><td><strong>CPU</strong></td><td>Công việc <strong>xếp hàng chờ</strong>. Không ai chết, chỉ chậm dần.</td><td>Chậm</td></tr>
     <tr><td><strong>RAM</strong></td><td>Kernel <strong>GIẾT một process</strong> để lấy lại chỗ</td><td><strong>Chết</strong></td></tr>
     <tr><td><strong>DISK</strong></td><td>Không ghi được gì nữa. Log tắt, DB không commit được.</td><td>Lỗi rất lạ</td></tr>
-    <tr><td><strong>NETWORK</strong></td><td>Gói tin bị vứt bỏ</td><td>⏳ Timeout</td></tr>
+    <tr><td><strong>NETWORK</strong></td><td>Gói tin bị vứt bỏ</td><td>Timeout</td></tr>
   </tbody>
 </table>
 </div>
@@ -517,7 +514,7 @@ chương trình và máy, quyết định ai được làm gì. Lớp đó là <
                      syscall          ← cách DUY NHẤT để xin việc
                           │
   ┌───────────────────────▼─────────────────────┐
-  │                   KERNEL                     │  ← độc quyền phần cứng
+  │                   KERNEL                    │  ← độc quyền phần cứng
   └───────────────────────┬─────────────────────┘
                           ▼
                 CPU   RAM   DISK   NETWORK</code></pre>
@@ -808,19 +805,19 @@ vật lý tới con số người dùng nhìn thấy. Hãy đọc chuỗi dướ
 là hệ quả tất yếu của bước trước, và mỗi bước dựa trên một khái niệm bạn đã gặp.</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  ① RAM cạn
+<pre class="diagram"><code>  1 RAM cạn
         ↓
-  ② Kernel chấm điểm, chọn JVM (ăn RAM nhiều nhất)
+  2 Kernel chấm điểm, chọn JVM (ăn RAM nhiều nhất)
         ↓
-  ③ SIGKILL — process 4123 biến mất tức thì, không kịp log
+  3 SIGKILL — process 4123 biến mất tức thì, không kịp log
         ↓
-  ④ Kernel XÓA TÊN khỏi sổ phòng:  8080 → (trống)
+  4 Kernel XÓA TÊN khỏi sổ phòng:  8080 → (trống)
         ↓
-  ⑤ Nginx nhận request, gõ cửa 127.0.0.1:8080
+  5 Nginx nhận request, gõ cửa 127.0.0.1:8080
         ↓
-  ⑥ Kernel trả lời Nginx:  "không có ai ở đây"   ← Connection refused
+  6 Kernel trả lời Nginx:  "không có ai ở đây"   ← Connection refused
         ↓
-  ⑦ Nginx dịch sang ngôn ngữ HTTP cho người dùng:
+  7 Nginx dịch sang ngôn ngữ HTTP cho người dùng:
                                               502 Bad Gateway</code></pre>
   <figcaption><b>Hình 14</b> Bảy bước từ RAM cạn tới 502. Bước <span class="stg">1</span>–<span class="stg">2</span> thuộc tab Bốn tài nguyên,
   <span class="stg">3</span> thuộc tab này, <span class="stg">4</span>–<span class="stg">6</span> thuộc tab Kernel, <span class="stg">7</span> thuộc Bài 00.</figcaption>

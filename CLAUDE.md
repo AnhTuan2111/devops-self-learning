@@ -205,6 +205,15 @@ Người học yêu cầu **một kiểu duy nhất**: không chế độ tối,
    Trong README (Markdown) thì **viết thành chữ** ("chặng 8", "7 tới 8", "dẫn tới").
    Ngoại lệ duy nhất: **nét vẽ bên trong sơ đồ ASCII** (`<pre class="diagram">`, khối ```) và
    **output thật** dán nguyên văn. Emoji thì cấm cả trong sơ đồ.
+9. **Sơ đồ ASCII phải thẳng cột tuyệt đối** (người học chỉ ra khung vỡ 30/09/2026):
+   - Font code là **JetBrains Mono bản đầy đủ tự host** (`assets/fonts/`). Đừng quay lại lấy
+     nó từ Google Fonts — subset của Google thiếu ký tự kẻ khung và mũi tên, trình duyệt phải
+     mượn font khác có ô chữ hẹp hơn, khung lệch.
+   - **Không dùng số khoanh tròn trong sơ đồ** — font code không có chúng. Đánh số bước bằng
+     chữ số thường ("1 Trình duyệt…").
+   - **Không vẽ khung bọc trọn cả sơ đồ** ("bảng trong bảng") — `<pre>` đã có viền riêng.
+     Chỉ vẽ khung khi nó phân vùng ý nghĩa (máy người dùng / VPS, user space / kernel).
+   - Viết xong sơ đồ thì chạy `node scripts/check-diagrams.mjs` (thêm `--fix` để tự bù dấu cách).
 
 **Hình + màu = nghĩa** (theo bảng tương ứng của Kandinsky ở Weimar: vàng–tam giác, đỏ–vuông,
 lam–tròn — một *quy ước* của trường, không phải cảm nhận phổ quát, nên luôn kèm chữ). Khối chú

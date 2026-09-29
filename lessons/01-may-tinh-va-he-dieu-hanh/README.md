@@ -99,7 +99,7 @@ triệu chứng khác nhau**. Đây chính là bảng tra dùng khi một server
 | **CPU** | công việc xếp hàng chờ | Chậm |
 | **RAM** | **kernel GIẾT một process** | **Chết** |
 | **DISK** | không ghi được gì nữa | Lỗi rất lạ |
-| **NETWORK** | gói tin bị vứt bỏ | ⏳ Timeout |
+| **NETWORK** | gói tin bị vứt bỏ | Timeout |
 
 Sự bất đối xứng giữa CPU và RAM là trọng tâm của bài. Hết CPU thì công việc chỉ phải chờ tới
 lượt, nên mọi thứ chậm đi nhưng vẫn chạy. Hết RAM thì không có "chờ" nào cả: dữ liệu phải có
@@ -260,13 +260,13 @@ Ghép tất cả các mảnh trên lại, ta có câu trả lời cho câu hỏi
 nhân quả bảy bước, và điểm cần thấm là người dùng chỉ nhìn thấy bước cuối cùng:
 
 ```
-① RAM cạn
-② kernel chọn JVM (ăn RAM nhiều nhất)
-③ SIGKILL — process biến mất, không kịp log
-④ kernel XÓA TÊN khỏi sổ phòng: 8080 → (trống)
-⑤ Nginx gõ cửa 127.0.0.1:8080
-⑥ kernel: "không có ai ở đây"        ← Connection refused
-⑦ Nginx dịch cho người dùng:        502 Bad Gateway
+1 RAM cạn
+2 kernel chọn JVM (ăn RAM nhiều nhất)
+3 SIGKILL — process biến mất, không kịp log
+4 kernel XÓA TÊN khỏi sổ phòng: 8080 → (trống)
+5 Nginx gõ cửa 127.0.0.1:8080
+6 kernel: "không có ai ở đây"        ← Connection refused
+7 Nginx dịch cho người dùng:        502 Bad Gateway
 ```
 
 > Người dùng thấy **502**, nhưng nguyên nhân thật ở **bước 1** — sáu bước phía trước.
