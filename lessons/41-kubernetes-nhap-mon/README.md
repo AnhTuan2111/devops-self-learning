@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/41.svg" width="132" align="right" alt="Ấn ký của Bài 41">
 
 > **Module M8** · Mở rộng — Khi hệ thống lớn lên
-> Ước lượng: ~90 phút · Trạng thái: `todo`
+> Ước lượng: 10–16 giờ học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: `todo`
 
 ## Mục tiêu
 

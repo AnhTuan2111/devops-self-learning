@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 01 — Máy tính, Hệ điều hành, Process</title>
 <meta name="description" content="Server chỉ là một máy tính chạy 24/7 mà không có ai ngồi trước. Mọi thứ bạn deploy, cuối cùng, chỉ là một process đang chạy dưới quyền quản lý của kernel — bài này mổ xẻ process từ lúc sinh ra tới lúc chết đi.">
-<link rel="stylesheet" href="../../assets/style.css?v=28e8e2c0">
+<link rel="stylesheet" href="../../assets/style.css?v=54f2ff0e">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01">
@@ -28,7 +28,7 @@
   dưới quyền cai quản tuyệt đối của kernel.</p>
   <div class="meta">
     <span class="chip yellow">Đang học</span>
-    <span class="chip">~45 phút</span>
+    <span class="chip">5–8 giờ học</span>
     <span class="chip">Không cần WSL</span>
     <span class="chip">Lab: Node + Git Bash</span>
   </div>
@@ -152,10 +152,10 @@ một dòng nhỏ hơn bên dưới.</p>
 
 <figure class="fig photo">
   <div class="photo-row n4">
-    <figure><img src="img/cpu-ryzen.webp" width="800" height="600" loading="lazy" alt="Con chip CPU AMD Ryzen 9 9950X nhìn từ mặt trên."><div class="lbl"><span class="shp s-0">1</span>cpu <small>thực thi lệnh</small></div></figure>
-    <figure><img src="img/ram-ddr4.webp" width="800" height="600" loading="lazy" alt="Một thanh RAM DDR4 dài, có tám chip nhớ màu đen."><div class="lbl"><span class="shp s-1">2</span>ram <small>dữ liệu đang dùng</small></div></figure>
-    <figure><img src="img/o-cung-nvme.webp" width="800" height="600" loading="lazy" alt="Một ổ SSD NVMe dạng thanh M.2, dán nhãn WD_BLACK SN850X."><div class="lbl"><span class="shp s-2">3</span>disk <small>lưu bền vững</small></div></figure>
-    <figure><img src="img/card-mang-pci.webp" width="800" height="600" loading="lazy" alt="Một card mạng Ethernet cắm khe PCI, có một cổng RJ45 để cắm cáp mạng."><div class="lbl"><span class="shp s-3">4</span>network <small>dữ liệu ra/vào</small></div></figure>
+    <figure><img src="img/cpu-ryzen.webp" width="800" height="600" loading="lazy" alt="Con chip CPU AMD Ryzen 9 9950X nhìn từ mặt trên."><div class="lbl">cpu <small>thực thi lệnh</small></div></figure>
+    <figure><img src="img/ram-ddr4.webp" width="800" height="600" loading="lazy" alt="Một thanh RAM DDR4 dài, có tám chip nhớ màu đen."><div class="lbl">ram <small>dữ liệu đang dùng</small></div></figure>
+    <figure><img src="img/o-cung-nvme.webp" width="800" height="600" loading="lazy" alt="Một ổ SSD NVMe dạng thanh M.2, dán nhãn WD_BLACK SN850X."><div class="lbl">disk <small>lưu bền vững</small></div></figure>
+    <figure><img src="img/card-mang-pci.webp" width="800" height="600" loading="lazy" alt="Một card mạng Ethernet cắm khe PCI, có một cổng RJ45 để cắm cáp mạng."><div class="lbl">network <small>dữ liệu ra/vào</small></div></figure>
   </div>
   <figcaption><b>Ảnh 2</b> Bốn tài nguyên của Hình 2, nhìn bằng mắt thường: con chip CPU (AMD Ryzen 9 9950X), một thanh RAM DDR4, một ổ SSD NVMe (WD SN850X) và một card mạng Ethernet. Mọi máy chủ, kể cả VPS, đều chỉ là tổ hợp của bốn loại linh kiện này — khác nhau ở số lượng và tốc độ.</figcaption>
 </figure>
@@ -727,8 +727,8 @@ tới cái chết của một process, và điểm mấu chốt là phân biệt
 <h3 id="term-vs-kill">SIGTERM và SIGKILL — một khác biệt rất thật</h3>
 
 <figure class="fig photo shot">
-  <img src="img/man-signal7.webp" width="798" height="629" loading="lazy" alt="Bảng tín hiệu chuẩn trong man page signal(7), ba dòng SIGINT, SIGKILL và SIGTERM được khoanh màu.">
-  <figcaption><b>Ảnh 4</b> Bảng tín hiệu chuẩn trong man page <code>signal(7)</code>. Cả ba dòng khoanh đều có hành động mặc định <code>Term</code> — kết thúc process — nhưng chỉ SIGKILL là không bắt được và không bỏ qua được, nên app không có cơ hội dọn dẹp. Cột <em>Standard</em> ghi <code>P1990</code> nghĩa là tín hiệu đã có từ chuẩn POSIX.1-1990.</figcaption>
+  <img src="img/man-signal7.webp" width="1313" height="1293" loading="lazy" alt="Bảng tín hiệu chuẩn trong man page signal(7), ba dòng SIGINT, SIGKILL và SIGTERM được khoanh màu.">
+  <figcaption><b>Ảnh 4</b> Bảng tín hiệu chuẩn trong man page <code>signal(7)</code>, với ba dòng khoanh: <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>SIGINT,</span> tín hiệu mà phím Ctrl+C gửi tới; <span class="kw"><i class="key k-red" aria-hidden="true"></i>SIGKILL,</span> tín hiệu của <code>kill -9</code>; và <span class="kw"><i class="key k-blue" aria-hidden="true"></i>SIGTERM,</span> tín hiệu mặc định của lệnh <code>kill</code>. Cả ba đều có hành động mặc định <code>Term</code> — kết thúc process — nhưng chỉ SIGKILL là không bắt được và không bỏ qua được, nên app không có cơ hội dọn dẹp; với SIGINT và SIGTERM, app được báo trước và có thể dọn dẹp rồi mới thoát. Cột <em>Standard</em> ghi <code>P1990</code> nghĩa là tín hiệu đã có từ chuẩn POSIX.1-1990.</figcaption>
 </figure>
 
 
@@ -879,8 +879,8 @@ không có cơ chế nào khiến nó tự khởi động khi máy bật lên. �
 <strong>service</strong> xuất hiện.</p>
 
 <figure class="fig photo shot">
-  <img src="img/systemd-restart.webp" width="1067" height="452" loading="lazy" alt="Bảng 1 trong man page systemd.service: hàng là các kiểu process chết, cột là các giá trị Restart=, dấu X cho biết systemd có khởi động lại hay không.">
-  <figcaption><b>Ảnh 5</b> Bảng 1 trong man page <code>systemd.service(5)</code>: với từng kiểu chết (hàng) và từng giá trị <code>Restart=</code> (cột), dấu X cho biết systemd có dựng process dậy lại hay không. Dòng khoanh đỏ là trường hợp của <code>kill -9</code> — một tín hiệu "không sạch"; dòng khoanh lam là OOM killer. Cả hai đều được <code>Restart=on-failure</code> khởi động lại — đó chính là "người canh" biến một process thành một service.</figcaption>
+  <img src="img/systemd-restart.webp" width="1118" height="892" loading="lazy" alt="Bảng 1 trong man page systemd.service: hàng là các kiểu process chết, cột là các giá trị Restart=, dấu X cho biết systemd có khởi động lại hay không.">
+  <figcaption><b>Ảnh 5</b> Bảng 1 trong man page <code>systemd.service(5)</code>: với từng kiểu chết (hàng) và từng giá trị <code>Restart=</code> (cột), dấu X cho biết systemd có dựng process dậy lại hay không. <span class="kw"><i class="key k-red" aria-hidden="true"></i>Dòng</span> khoanh đỏ là trường hợp của <code>kill -9</code> — một tín hiệu "không sạch"; <span class="kw"><i class="key k-blue" aria-hidden="true"></i>dòng</span> khoanh lam là OOM killer. Cả hai đều được <code>Restart=on-failure</code> khởi động lại — đó chính là "người canh" biến một process thành một service.</figcaption>
 </figure>
 
 
@@ -1168,7 +1168,7 @@ gọi được tên.</p>
   <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg">Card mạng Ethernet PCI</a> — afrank99, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
   <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Ken_Thompson_and_Dennis_Ritchie--1973.jpg">Ken Thompson và Dennis Ritchie</a> — không rõ tác giả, Wikimedia Commons, public domain.</li>
   <li><b>Ảnh 4</b>Bảng tín hiệu chuẩn, signal(7) — chụp màn hình <a href="https://man7.org/linux/man-pages/man7/signal.7.html">man7.org</a>, 30/09/2026.</li>
-  <li><b>Ảnh 5</b>Bảng 1, systemd.service(5) — chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a>, 30/09/2026.</li>
+  <li><b>Ảnh 5</b>Bảng 1, systemd.service(5) — chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a>, 30/09/2026; đã ẩn ba cột on-abnormal, on-abort, on-watchdog.</li>
 </ol>
 </section>
 
@@ -1192,6 +1192,6 @@ gọi được tên.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=28e8e2c0"></script>
+<script src="../../assets/app.js?v=54f2ff0e"></script>
 </body>
 </html>

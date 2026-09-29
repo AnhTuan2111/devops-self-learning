@@ -4,12 +4,16 @@
  * rồi: const r = await page.evaluate(() => window.__annotate({ marks, clipFrom, clipTo }));
  *      await page.screenshot({ path, clip: r.clip, fullPage: true });
  *   marks: [{ find, label?, color?: red|blue|yellow, occurrence?, leftOf?, spanTo?, spanOcc? }]
- *   clipFrom / clipTo: chuỗi mở đầu / kết thúc vùng cần chụp.
- * Khung màu đỏ/lam/vàng + nhãn League Spartan chữ thường, đúng màu của hệ Bauhaus.
+ *   clipFrom / clipTo: chuỗi mở đầu / kết thúc vùng cần chụp. Mặc định (spanClip) vùng chụp bao trọn
+ *   MỌI dòng ở giữa — dòng giữa thường dài hơn dòng đầu/cuối, chỉ lấy hai dòng biên sẽ cắt mất mép phải.
+ *   label: KHÔNG dùng cho ảnh trong bài — ảnh hiện ở 2/3 cột nên chữ vẽ trong ảnh không đọc được;
+ *   nói khung nào là gì bằng ô màu .key trong chú thích (xem CLAUDE.md, mục Ảnh minh hoạ).
+ *   Chụp với deviceScaleFactor: 2 để chữ trong ảnh còn nét.
+ * Khung màu đỏ/lam/vàng, đúng màu của hệ Bauhaus.
  * Trang có CSP chặn font: mở context với { bypassCSP: true }. Trang chặn bot (403): KHÔNG vượt,
  * tìm bản khác của cùng tài liệu (vd. man7.org thay cho freedesktop.org).
  */
-window.__annotate = async function ({ marks, clipFrom, clipTo, pad = 14, root = document }) {
+window.__annotate = async function ({ marks, clipFrom, clipTo, pad = 14, root = document, spanClip = true }) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = 'https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&display=swap';
@@ -58,6 +62,23 @@ window.__annotate = async function ({ marks, clipFrom, clipTo, pad = 14, root = 
     }
   }
   const a = lineRect(clipFrom), b = lineRect(clipTo);
-  if (a && b) out.clip = { x: Math.max(0, Math.min(a.left, b.left) - pad), y: a.top - pad, width: Math.max(a.right, b.right, out.maxRight || 0) - Math.min(a.left, b.left) + pad * 2, height: b.bottom - a.top + pad * 2 };
+  if (a && b && spanClip) {
+    // bao trọn mọi dòng nằm giữa clipFrom và clipTo (dòng giữa có thể dài hơn hai dòng biên)
+    let L = Math.min(a.left, b.left), R = Math.max(a.right, b.right);
+    for (const el of document.querySelectorAll('pre, table, div[style*="absolute"]')) {
+      for (const r of el.getClientRects()) {
+        const top = r.top + scrollY, bottom = r.bottom + scrollY;
+        if (bottom <= a.top || top >= b.bottom || r.width < 2) continue;
+        if (el.tagName === 'PRE') {
+          const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n;
+          while ((n = w.nextNode())) { const rg = document.createRange(); rg.selectNodeContents(n);
+            for (const x of rg.getClientRects()) { const t = x.top + scrollY; if (t >= a.top - 1 && t < b.bottom && x.width > 2) { L = Math.min(L, x.left + scrollX); R = Math.max(R, x.right + scrollX); } } }
+        } else if (top >= a.top - 60 && bottom <= b.bottom + 60) {   // chỉ khối nằm gọn trong vùng (bỏ bảng dàn trang bao cả trang)
+          L = Math.min(L, r.left + scrollX); R = Math.max(R, r.right + scrollX);
+        }
+      }
+    }
+    out.clip = { x: Math.max(0, L - pad), y: a.top - pad, width: R - L + pad * 2, height: b.bottom - a.top + pad * 2 };
+  } else if (a && b) out.clip = { x: Math.max(0, Math.min(a.left, b.left) - pad), y: a.top - pad, width: Math.max(a.right, b.right, out.maxRight || 0) - Math.min(a.left, b.left) + pad * 2, height: b.bottom - a.top + pad * 2 };
   return out;
 };

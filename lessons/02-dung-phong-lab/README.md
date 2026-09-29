@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/02.svg" width="132" align="right" alt="Ấn ký của Bài 02">
 
 > **Module M0** · Nền tảng — Server và Internet thực sự là gì
-> Ước lượng: ~45 phút · Trạng thái: `todo`
+> Ước lượng: 3–6 giờ học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: `todo`
 
 ## Mục tiêu
 

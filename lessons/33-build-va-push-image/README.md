@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/33.svg" width="132" align="right" alt="Ấn ký của Bài 33">
 
 > **Module M6** · CI/CD — Tự động hóa toàn bộ
-> Ước lượng: ~65 phút · Trạng thái: `todo`
+> Ước lượng: 4–7 giờ học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: `todo`
 
 ## Mục tiêu
 

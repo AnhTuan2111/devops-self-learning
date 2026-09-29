@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/28.svg" width="132" align="right" alt="Ấn ký của Bài 28">
 
 > **Module M5** · Production — VPS thật, domain thật, HTTPS thật
-> Ước lượng: ~65 phút · Trạng thái: `todo`
+> Ước lượng: 5–8 giờ học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: `todo`
 
 ## Mục tiêu
 

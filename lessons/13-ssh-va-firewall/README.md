@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/13.svg" width="132" align="right" alt="Ấn ký của Bài 13">
 
 > **Module M2** · Networking — Làm sao dữ liệu tới được máy bạn
-> Ước lượng: ~55 phút · Trạng thái: `todo`
+> Ước lượng: 5–8 giờ học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: `todo`
 
 ## Mục tiêu
 

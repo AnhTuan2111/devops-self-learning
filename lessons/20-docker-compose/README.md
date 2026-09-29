@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/20.svg" width="132" align="right" alt="Ấn ký của Bài 20">
 
 > **Module M3** · Docker — Đóng gói ứng dụng
-> Ước lượng: ~70 phút · Trạng thái: `todo`
+> Ước lượng: 6–10 giờ học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: `todo`
 
 ## Mục tiêu
 

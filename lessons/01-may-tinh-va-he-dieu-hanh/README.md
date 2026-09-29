@@ -2,7 +2,7 @@
 
 <img src="../../assets/readme/glyph/01.svg" width="132" align="right" alt="Ấn ký của Bài 01">
 
-> **Module M0** · Nền tảng · ~45 phút · không cần WSL, không cần Docker
+> **Module M0** · Nền tảng · 5–8 giờ học (đọc trước, đối thoại, lab, ghi chép) · không cần WSL, không cần Docker
 
 **Bài giảng đầy đủ:** [`index.html`](index.html) —
 [bản online](https://anhtuan2111.github.io/devops-self-learning/lessons/01-may-tinh-va-he-dieu-hanh/)

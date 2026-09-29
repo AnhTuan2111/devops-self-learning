@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — IPv4, IPv6 và NAT</title>
 <meta name="description" content="Vì sao địa chỉ IPv4 cạn kiệt, CIDR và NAT đã trì hoãn khủng hoảng thế nào, cái giá của NAT khiến bạn phải thuê VPS, và vì sao IPv6 sau gần 30 năm vẫn chưa thắng.">
-<link rel="stylesheet" href="../../assets/style.css?v=28e8e2c0">
+<link rel="stylesheet" href="../../assets/style.css?v=54f2ff0e">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00-ipv6">
@@ -68,8 +68,8 @@ giản:</p>
 </figure>
 
 <figure class="fig photo shot">
-  <img src="img/rfc791-header.webp" width="670" height="283" loading="lazy" alt="Sơ đồ header IPv4 trong RFC 791 vẽ bằng ký tự, hai hàng Source Address và Destination Address được khoanh đỏ và lam.">
-  <figcaption><b>Ảnh 2</b> Khuôn header IPv4 nguyên bản trong RFC 791 (tháng 9/1981). Mỗi hàng của sơ đồ rộng đúng 32 bit; hai trường khoanh màu — địa chỉ nguồn và địa chỉ đích — mỗi trường chiếm trọn một hàng, nên một địa chỉ IPv4 không thể dài hơn 32 bit. Con số 2³² tính ở trên bị khoá cứng từ chính dòng này.</figcaption>
+  <img src="img/rfc791-header.webp" width="1036" height="558" loading="lazy" alt="Sơ đồ header IPv4 trong RFC 791 vẽ bằng ký tự, hai hàng Source Address và Destination Address được khoanh đỏ và lam.">
+  <figcaption><b>Ảnh 2</b> Khuôn header IPv4 nguyên bản trong RFC 791 (tháng 9/1981). Mỗi hàng của sơ đồ rộng đúng 32 bit; hai trường khoanh màu — <span class="kw"><i class="key k-red" aria-hidden="true"></i>địa</span> chỉ nguồn và <span class="kw"><i class="key k-blue" aria-hidden="true"></i>địa</span> chỉ đích — mỗi trường chiếm trọn một hàng, nên một địa chỉ IPv4 không thể dài hơn 32 bit. Con số 2³² tính ở trên bị khoá cứng từ chính dòng này.</figcaption>
 </figure>
 
 
@@ -95,8 +95,8 @@ thuộc lớp nào, và lớp quyết định luôn kích thước khối đư�
 lớp — một tổ chức chỉ có thể nhận nguyên một khối lớp A, B hoặc C.</p>
 
 <figure class="fig photo shot">
-  <img src="img/iana-ipv4.webp" width="652" height="529" loading="lazy" alt="Bảng sổ đăng ký IPv4 của IANA, mỗi dòng một khối /8; hai dòng 010/8 Private Use và 127/8 Loopback được khoanh màu.">
-  <figcaption><b>Ảnh 3</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA. Mỗi dòng là một khối /8 — khoảng 16,7 triệu địa chỉ. Cột <em>Designation</em> cho thấy những khối trọn gói từng thuộc về một tổ chức duy nhất như DoD Intel Information Systems hay AT&amp;T Bell Laboratories: dấu vết còn lại của cách chia theo class. Hai dòng khoanh là hai dải bài học đã gặp: <code>10.0.0.0/8</code> dành cho mạng riêng (RFC 1918) và <code>127.0.0.0/8</code> cho loopback.</figcaption>
+  <img src="img/iana-ipv4.webp" width="928" height="1046" loading="lazy" alt="Bảng sổ đăng ký IPv4 của IANA, mỗi dòng một khối /8; hai dòng 010/8 Private Use và 127/8 Loopback được khoanh màu.">
+  <figcaption><b>Ảnh 3</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA. Mỗi dòng là một khối /8 — khoảng 16,7 triệu địa chỉ. Cột <em>Designation</em> cho thấy những khối trọn gói từng thuộc về một tổ chức duy nhất như DoD Intel Information Systems hay AT&amp;T Bell Laboratories: dấu vết còn lại của cách chia theo class. Hai dòng khoanh là hai dải bài học đã gặp: <span class="kw"><i class="key k-red" aria-hidden="true"></i><code>10.0.0.0/8</code></span> dành cho mạng riêng (RFC 1918) và <span class="kw"><i class="key k-blue" aria-hidden="true"></i><code>127.0.0.0/8</code></span> cho loopback.</figcaption>
 </figure>
 
 
@@ -603,7 +603,7 @@ không phải một lỗi bí ẩn.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Interface_Message_Processor_-_BBN_Arpanet_Router_-_Computer_History_Museum_(2007-11-10_23.06.56_by_Carlo_Nardone).jpg">Interface Message Processor của ARPANET</a> — Carlo Nardone, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
   <li><b>Ảnh 2</b>Khuôn header IPv4, RFC 791 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc791.html">rfc-editor.org</a>, 30/09/2026.</li>
-  <li><b>Ảnh 3</b>Sổ đăng ký không gian địa chỉ IPv4 — chụp màn hình <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org</a>, 30/09/2026; đã ẩn các khối 015/8 tới 123/8 và hai cột WHOIS, RDAP.</li>
+  <li><b>Ảnh 3</b>Sổ đăng ký không gian địa chỉ IPv4 — chụp màn hình <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org</a>, 30/09/2026; đã ẩn các khối 015/8 tới 123/8 và ba cột WHOIS, RDAP, Note.</li>
   <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Router gia đình Linksys WRT54G</a> — Evan-Amos, Wikimedia Commons, public domain.</li>
 </ol>
 </section>
@@ -627,6 +627,6 @@ không phải một lỗi bí ẩn.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=28e8e2c0"></script>
+<script src="../../assets/app.js?v=54f2ff0e"></script>
 </body>
 </html>

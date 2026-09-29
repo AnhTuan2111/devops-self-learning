@@ -28,6 +28,16 @@ node scripts/generate.mjs
 
 Script **không ghi đè** file đã tồn tại trong `lessons/` — an toàn khi chạy lại.
 
+### Thời lượng bài (sửa 30/09/2026)
+
+Mỗi bài có `"hours": [ít, nhiều]` trong `curriculum.json` — **giờ học thật cho trọn một bài**,
+không phải thời gian giảng. Trước đây ghi `"est"` 40–90 phút; người học chỉ ra là không thể tự học
+một chủ đề trong 45 phút, và dữ liệu thật đồng ý: Bài 00 kéo dài 4 ngày, riêng `index.html` của
+Bài 01 đã khoảng 10.000 chữ (đọc kỹ một lượt đã mất 1–1,5 giờ). Thời lượng cộng từ bốn phần ghi
+ở `meta.time.parts`: đọc trước 1–2 giờ · đối thoại 1,5–3 giờ · lab (kể cả bước tự gây lỗi) 1–3 giờ
+· ghi notes và bồi tài liệu 0,5–1 giờ. Bài nhẹ 3–6 giờ; bài đụng server thật tới 10–16 giờ. Khi
+có thời gian thật của một bài, hiệu chỉnh các bài cùng loại theo đó — đừng giữ con số cũ cho đẹp.
+
 ## Cấu trúc một bài học
 
 ```
@@ -296,7 +306,13 @@ trang bài giảng chính tối thiểu **4 khối ảnh**, mỗi trang phụ t�
    Không dùng ảnh không rõ giấy phép. Trang chặn bot (403) thì **không vượt**, tìm bản khác.
 2. **Tùy biến theo phong cách bài** (`python scripts/anh/hau-ky.py`): ảnh chụp thật chuyển hai
    tông mực/giấy; ảnh chụp màn hình giữ màu (`--giu-mau`) và được đánh dấu bằng khung
-   đỏ/lam/vàng + nhãn tiếng Việt chữ thường (`scripts/anh/danh-dau.js`, chạy qua Playwright).
+   đỏ/lam/vàng (`scripts/anh/danh-dau.js`, chạy qua Playwright). **Không vẽ nhãn chữ vào ảnh**
+   (người học phản ánh 30/09/2026): ảnh hiện ở 2/3 cột nên chữ vẽ trong ảnh nhỏ lại tới mức không
+   đọc được. Nói khung nào là gì ngay trong chú thích, bằng ô màu vẽ bằng CSS:
+   `<span class="kw"><i class="key k-red" aria-hidden="true"></i>từ đầu</span>` (`k-blue`, `k-yellow`).
+   Chụp màn hình ở **mật độ 2×** (`deviceScaleFactor: 2`), viewport đủ rộng để không dòng nào bị
+   cắt, và vùng chụp phải bao trọn mọi dòng (dòng giữa có thể dài hơn dòng đầu/cuối). Ẩn bớt
+   hàng/cột thì ẩn **theo tên cột**, không theo chỉ số, và ghi rõ đã ẩn gì ở mục "Nguồn ảnh".
 3. **Kiểm tận mắt hai lần**: xem ảnh gốc để chắc nó đúng là thứ chú thích nói (loại ngay ảnh
    sai đời, sai loại — như card mạng ISA không có cổng RJ45); rồi chụp lại trang sau khi đặt
    ảnh, ở **máy tính và điện thoại**, để kiểm bố cục và độ đọc được của chữ trong ảnh.
@@ -311,16 +327,25 @@ trang bài giảng chính tối thiểu **4 khối ảnh**, mỗi trang phụ t�
    phép và mọi bước đã chỉnh (bản đầy đủ cho repo; mục "Nguồn ảnh" trên trang là bản gọn).
 
 **Nhịp đọc kiểu sách / tạp chí** — đo được, kiểm sau mỗi bài:
-- Cột chữ ~70 ký tự/dòng (`max-width: 35em` cho `p`, danh sách, khối chú thích); hình, bảng, sơ
-  đồ vẫn dùng hết cột — cột chữ hẹp hơn cột hình như lưới tạp chí.
+- **Chữ, bảng, sơ đồ, khối chú thích dùng TRỌN cột đọc** — cả trang chỉ có một mép phải. Đừng
+  thu hẹp cột chữ (đã thử `max-width: 35em` ngày 30/09/2026; người học bác: hai mép phải lệch
+  nhau trông như lỗi, và "việc gì phải cắt nó đi").
+- **Chỉ ảnh là không chiếm hết bề ngang.** Từ 48rem trở lên, mỗi `figure.photo` là lưới
+  **ảnh 2/3 + chú thích 1/3** đứng cạnh, thanh kẻ đầu chú thích thẳng hàng thanh kẻ đầu ảnh.
+  Nhiều ảnh thì dàn **bên trong** 2/3 đó: bốn ảnh thành lưới 2×2, ba ảnh chụp màn hình dẹt xếp
+  chồng. Ảnh phụ (`side`): ở máy tính lệch phải 40% cho chữ chảy quanh, ở máy tính bảng chiếm
+  một nửa. Điện thoại: ảnh rộng hết, chú thích bên dưới.
+- Nhãn dưới ô ảnh (`.lbl`) chỉ là chữ — **không** đặt ô số trong hình khối nhỏ (số trong tam
+  giác, phần tư tròn cỡ 22px bị méo; người học đã chỉ ra hai lần).
 - Không để mảng chữ liền nào quá ~250 chữ mà không có một điểm nghỉ mắt: hình, bảng, khối chú
   thích, hoặc **trích dẫn nổi bật** `<blockquote class="pull"><p>…</p></blockquote>` — câu trích
   phải là **nguyên văn** từ đoạn quanh nó, không bao giờ thêm ý mới.
 - Tab nào cũng nên có ít nhất một yếu tố thị giác (ảnh hoặc sơ đồ), không chỉ chữ và bảng.
 
-Markup: `<figure class="fig photo">` (ảnh rộng) · thêm `side` (lệch phải, chữ chảy quanh, chỉ ở
-màn rộng; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền) · `small` · dải nhiều ảnh:
-`<div class="photo-row n3|n4 [shots]">` với mỗi ô `<figure>` + `<div class="lbl">`.
+Markup: `<figure class="fig photo">` (ảnh 2/3 + chú thích 1/3) · thêm `side` (ảnh phụ, lệch
+phải; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền) · `small` (ảnh nhỏ cố định
+360px, chú thích chiếm phần còn lại) · nhiều ảnh: `<div class="photo-row n3|n4 [shots]">` với mỗi
+ô `<figure>` + `<div class="lbl">`, rồi một `<figcaption>` chung cho cả khối.
 
 ### Nguồn thiết kế (đã tải được, dùng khi cần trích)
 

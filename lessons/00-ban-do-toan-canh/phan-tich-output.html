@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00 — Mổ băng output thật</title>
 <meta name="description" content="Đọc từng dòng output thật của nslookup, curl -v, openssl và time chạy trên máy học viên. Mỗi chỗ lệch so với tài liệu mẫu được giải thích như một dữ kiện về DNS, TCP, TLS, HTTP và shell.">
-<link rel="stylesheet" href="../../assets/style.css?v=28e8e2c0">
+<link rel="stylesheet" href="../../assets/style.css?v=54f2ff0e">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00-output">
@@ -630,8 +630,8 @@ notAfter=Oct 27 22:17:21 2026 GMT</code></pre>
 <h3 id="ba-dieu">Ba điều tấm chứng chỉ này tiết lộ</h3>
 
 <figure class="fig photo shot">
-  <img src="img/crtsh-example-com.webp" width="1035" height="385" loading="lazy" alt="Bảng kết quả tra crt.sh cho example.com, cột Issuer Name; một dòng có issuer Cloudflare TLS Issuing ECC CA 3 được khoanh đỏ.">
-  <figcaption><b>Ảnh 2</b> Sổ công khai Certificate Transparency cho example.com, tra trên crt.sh ngày 30/09/2026 (hiện 10 dòng đầu). Dòng khoanh có issuer <code>C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3</code> và thời hạn 29/07 tới 27/10/2026 — trùng khít với <code>notBefore</code> và <code>notAfter</code> trong output openssl ở trên. Cùng ngày có nhiều dòng gần giống nhau, vì example.com dùng cả chứng chỉ khoá ECC lẫn RSA, và mỗi chứng chỉ thường được ghi vào sổ hai lần (tiền chứng chỉ và chứng chỉ chính thức). Dòng trên cùng cho thấy một chứng chỉ mới do Sectigo cấp từ 24/09 — trang có thể sẽ sớm chuyển sang nó.</figcaption>
+  <img src="img/crtsh-example-com.webp" width="1264" height="580" loading="lazy" alt="Bảng kết quả tra crt.sh cho example.com, cột Issuer Name; một dòng có issuer Cloudflare TLS Issuing ECC CA 3 được khoanh đỏ.">
+  <figcaption><b>Ảnh 2</b> Sổ công khai Certificate Transparency cho example.com, tra trên crt.sh ngày 30/09/2026 (hiện 7 dòng đầu). <span class="kw"><i class="key k-red" aria-hidden="true"></i>Dòng</span> khoanh có issuer <code>C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3</code> và thời hạn 29/07 tới 27/10/2026 — trùng khít với <code>notBefore</code> và <code>notAfter</code> trong output openssl ở trên. Cùng ngày có nhiều dòng gần giống nhau, vì example.com dùng cả chứng chỉ khoá ECC lẫn RSA, và mỗi chứng chỉ thường được ghi vào sổ hai lần (tiền chứng chỉ và chứng chỉ chính thức). Dòng trên cùng cho thấy một chứng chỉ mới do Sectigo cấp từ 24/09 — trang có thể sẽ sớm chuyển sang nó.</figcaption>
 </figure>
 
 
@@ -997,7 +997,7 @@ nào.</p>
 <p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang. Ảnh chụp màn hình do người viết tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b>Trang example.com — chụp màn hình <a href="https://example.com/">example.com</a>, 30/09/2026.</li>
-  <li><b>Ảnh 2</b>Sổ Certificate Transparency của example.com — chụp màn hình <a href="https://crt.sh/?q=example.com">crt.sh</a>, 30/09/2026; đã ẩn các dòng sau dòng thứ 10.</li>
+  <li><b>Ảnh 2</b>Sổ Certificate Transparency của example.com — chụp màn hình <a href="https://crt.sh/?q=example.com">crt.sh</a>, 30/09/2026; đã ẩn hai cột Common Name, Matching Identities và các dòng sau dòng thứ 7.</li>
 </ol>
 </section>
 
@@ -1021,6 +1021,6 @@ nào.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=28e8e2c0"></script>
+<script src="../../assets/app.js?v=54f2ff0e"></script>
 </body>
 </html>

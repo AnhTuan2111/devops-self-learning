@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/03.svg" width="132" align="right" alt="Ấn ký của Bài 03">
 
 > **Module M1** · Linux — Điều khiển một server
-> Ước lượng: ~40 phút · Trạng thái: `todo`
+> Ước lượng: 3–5 giờ học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: `todo`
 
 ## Mục tiêu
 

@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/24.svg" width="132" align="right" alt="Ấn ký của Bài 24">
 
 > **Module M4** · Nginx — Đưa ứng dụng ra Internet
-> Ước lượng: ~60 phút · Trạng thái: `todo`
+> Ước lượng: 6–10 giờ học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: `todo`
 
 ## Mục tiêu
 

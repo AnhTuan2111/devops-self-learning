@@ -60,7 +60,15 @@ const STATUS_MARK = { done: 'xong', doing: 'đang học', todo: '' };   // READM
 const doneCount = allLessons.filter((l) => statusOf(l.id) === 'done').length;
 const current = allLessons.find((l) => statusOf(l.id) === 'doing') ?? allLessons.find((l) => statusOf(l.id) === 'todo');
 const pct = Math.round((doneCount / allLessons.length) * 100);
-const totalHours = Math.round(allLessons.reduce((s, l) => s + l.est, 0) / 60);
+// Thời lượng: giờ học THẬT cho trọn một bài (đọc trước, đối thoại, lab có bước tự gây lỗi, ghi
+// chép), ghi thành khoảng [ít, nhiều] trong curriculum.json — không phải thời gian giảng.
+const hrs = (l) => `${l.hours[0]}–${l.hours[1]} giờ`;
+const hoursLo = allLessons.reduce((s, l) => s + l.hours[0], 0);
+const hoursHi = allLessons.reduce((s, l) => s + l.hours[1], 0);
+const totalHours = Math.round((hoursLo + hoursHi) / 20) * 10;   // số giữa, làm tròn chục — cho ô số liệu
+// Quy ra tháng nếu học đều 6–8 giờ mỗi tuần (4,35 tuần/tháng) — để hình dung, không phải lịch
+const monthsLo = Math.round(hoursLo / 8 / 4.35), monthsHi = Math.round(hoursHi / 6 / 4.35);
+const timeParts = meta.time.parts;
 const SITE = 'https://anhtuan2111.github.io/devops-self-learning/';
 
 const esc = (s) =>
@@ -122,7 +130,7 @@ const modulesHtml = moduleStats
       .map((l) => {
         const st = statusOf(l.id);
         const d = dateOf(l.id);
-        const sub = `${esc(l.goal)} · ~${l.est} phút${d ? ` · học ${viDate(d)}` : ''}`;
+        const sub = `${esc(l.goal)} · ${hrs(l)}${d ? ` · học ${viDate(d)}` : ''}`;
         return `        <a class="lesson ${st}" href="${dirOf(l)}/">
           <span class="num">${l.id}</span>
           <span class="txt">
@@ -177,7 +185,7 @@ const indexHtml = `${head({ title: meta.title, desc: meta.subtitle, base: '' })}
         <span class="chip ink">${esc(meta.stack)}</span>
       </div>
     </div>
-    <div class="hh-stats" role="img" aria-label="Đã xong ${doneCount} trên ${allLessons.length} bài; khoảng ${totalHours} giờ học; ${curriculum.modules.length} module">
+    <div class="hh-stats" role="img" aria-label="Đã xong ${doneCount} trên ${allLessons.length} bài; khoảng ${hoursLo} tới ${hoursHi} giờ học; ${curriculum.modules.length} module">
       <div class="st st-c"><b>${pad2(doneCount)}<small>/${allLessons.length}</small></b><small>bài đã xong</small></div>
       <div class="st st-s"><b>~${totalHours}</b><small>giờ học</small></div>
       <div class="st st-t"><b>${curriculum.modules.length}</b><small>module</small></div>
@@ -376,7 +384,7 @@ const readmeModules = curriculum.modules
       .map((l) => {
         const st = statusOf(l.id);
         const d = dateOf(l.id);
-        return `| ${STATUS_MARK[st]} | \`${l.id}\` | [${l.title}](${dirOf(l)}/) | ${l.goal} | ${l.est}' | ${d ? viDate(d) : '—'} |`;
+        return `| ${STATUS_MARK[st]} | \`${l.id}\` | [${l.title}](${dirOf(l)}/) | ${l.goal} | ${hrs(l)} | ${d ? viDate(d) : '—'} |`;
       })
       .join('\n');
     return `### ${m.id} · ${m.title}
@@ -411,8 +419,25 @@ và phần đào sâu học thuật; tệp này là mục lục để duyệt nh
 | **Stack thực hành** | ${meta.stack} |
 | **Môi trường** | ${meta.env} |
 | **Bắt đầu** | ${viDate(meta.started)} |
-| **Quy mô** | ${allLessons.length} bài · ${curriculum.modules.length} module · khoảng ${totalHours} giờ |
+| **Quy mô** | ${allLessons.length} bài · ${curriculum.modules.length} module |
+| **Thời lượng** | khoảng ${hoursLo}–${hoursHi} giờ học thật — học đều 6–8 giờ mỗi tuần thì mất chừng ${monthsLo}–${monthsHi} tháng |
 | **Tiến độ** | ${doneCount}/${allLessons.length} bài đã xong (${pct}%) — xem bức tranh lộ trình trên bản web |
+
+### Thời lượng được ước lượng thế nào
+
+Con số ghi ở mỗi bài là **${meta.time.unit.charAt(0).toLowerCase() + meta.time.unit.slice(1)}**. Một bài tự học
+không kết thúc khi đọc xong trang giảng: nó chỉ xong khi đã giải thích lại được bằng lời của mình,
+đã chạy lab trên máy thật, đã cố tình làm hỏng rồi tự sửa, và đã ghi lại những gì chỉ buổi học đó mới
+sinh ra. Vì vậy thời lượng được cộng từ bốn phần:
+
+| Phần | Thường mất |
+|---|---|
+${timeParts.map(([p, t]) => `| ${p} | ${t} |`).join('\n')}
+
+Bài nhẹ (khái niệm, cài đặt) rơi vào khoảng 3–6 giờ; bài có nhiều mảnh ghép hoặc đụng tới server
+thật (Compose, VPS, CD, Kubernetes) có thể tới 10–16 giờ. Đây là **ước lượng**, và nên chia một bài
+thành nhiều buổi — Bài 00 kéo dài bốn ngày. Nếu một bài mất lâu hơn con số ghi ở đây, điều đó
+thường có nghĩa là bạn đang học kỹ, không phải đang học chậm.
 
 ---
 
@@ -591,7 +616,7 @@ function stubHtml(l, prev, next) {
   <p class="lede">${esc(l.goal)}</p>
   <div class="meta">
     <span class="chip ${STATUS_CHIP[st]}">${STATUS_LABEL[st]}</span>
-    <span class="chip">~${l.est} phút</span>
+    <span class="chip">${hrs(l)}</span>
     <span class="chip">${esc(l.moduleTitle.split(' — ')[0])}</span>
   </div>
 </header>
@@ -664,8 +689,13 @@ ${link(next, 'Bài tiếp', ' class="next"')}
 // đè lên thư mục assets/ của chính ta.
 writeFileSync(join(ROOT, '.nojekyll'), '');
 
+// Dòng siêu dữ liệu của README khung — máy sinh, nên được làm mới mỗi lần chạy (xem bên dưới)
+const stubMetaLine = (l) => `> Ước lượng: ${hrs(l)} học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: \`${statusOf(l.id)}\``;
+const STUB_META_RE = /^> Ước lượng: [^\n]*· Trạng thái: `\w+`$/m;
+
 let created = 0;
 let stubs = 0;
+let refreshed = 0;
 for (const [i, l] of allLessons.entries()) {
   const dir = join(ROOT, dirOf(l));
   mkdirSync(join(dir, 'lab'), { recursive: true });
@@ -682,13 +712,19 @@ for (const [i, l] of allLessons.entries()) {
   }
 
   const readmePath = join(dir, 'README.md');
-  if (!existsSync(readmePath)) {
+  if (existsSync(readmePath)) {
+    // README khung chỉ tạo một lần, nhưng dòng siêu dữ liệu do máy sinh thì phải theo curriculum.json.
+    // Chỉ đụng tới đúng dòng còn nguyên mẫu máy sinh; README viết tay không có dòng này.
+    const old = readFileSync(readmePath, 'utf8');
+    const upd = old.replace(STUB_META_RE, stubMetaLine(l));
+    if (upd !== old) { writeFileSync(readmePath, upd, 'utf8'); refreshed++; }
+  } else {
     const body = `# Bài ${l.id} — ${l.title}
 
 ${glyphImg(l.id)}
 
 > **Module ${l.moduleId}** · ${l.moduleTitle}
-> Ước lượng: ~${l.est} phút · Trạng thái: \`${statusOf(l.id)}\`
+${stubMetaLine(l)}
 
 ## Mục tiêu
 
@@ -741,7 +777,7 @@ for (const d of readdirSync(join(ROOT, 'lessons'))) {
 console.log(`OK  index.html + README.md + .nojekyll + ${artCount} ảnh README (assets/readme/) đã cập nhật`);
 console.log(
   `OK  ${allLessons.length} bài · ${doneCount} xong (${pct}%) · ` +
-    `${created} README mới · ${stubs} trang HTML sinh tự động ` +
+    `${created} README mới${refreshed ? ` · làm mới dòng ước lượng ở ${refreshed} README khung` : ''} · ${stubs} trang HTML sinh tự động ` +
     `(${allLessons.length - stubs} viết tay, không đụng tới nội dung)` +
     ` · tài sản v=${ASSET_V}${versioned ? ` (cập nhật đường dẫn ở ${versioned} trang)` : ''}`
 );

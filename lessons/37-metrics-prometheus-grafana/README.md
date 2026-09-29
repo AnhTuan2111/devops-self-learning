@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/37.svg" width="132" align="right" alt="Ấn ký của Bài 37">
 
 > **Module M7** · Monitoring & Vận hành — Biết server còn sống
-> Ước lượng: ~75 phút · Trạng thái: `todo`
+> Ước lượng: 6–10 giờ học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: `todo`
 
 ## Mục tiêu
 

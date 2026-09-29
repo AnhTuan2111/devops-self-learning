@@ -556,7 +556,7 @@ figure.fig figcaption b, table caption b {
 /* =========================================================================
    ẢNH MINH HOẠ — đánh số riêng "Ảnh N" (sơ đồ là "Hình N").
    Ảnh chụp thật đã hậu kỳ hai tông mực/giấy (nhiếp ảnh đen trắng kiểu Bauhaus);
-   ảnh chụp màn hình giữ màu. Mỗi ảnh BẮT BUỘC có dòng nguồn .credit.
+   ảnh chụp màn hình giữ màu. Nguồn ảnh gom ở mục "Nguồn ảnh" cuối bài, không đặt dưới ảnh.
    Không bóng, không bo góc: một thanh kẻ đen phía trên là đủ để tách ảnh khỏi chữ.
    ========================================================================= */
 
@@ -571,24 +571,21 @@ figure.photo.small img { width: auto; max-width: min(100%, 360px); }
 .credit a { color: inherit; font-weight: 500; }
 
 /* Nguồn ảnh: gom ở CUỐI mỗi bài như phần "nguồn hình ảnh" của sách, không chen dưới từng ảnh */
-ol.photo-credits { list-style: none; padding: 0; margin: 12px 0 24px; max-width: 42em; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+ol.photo-credits { list-style: none; padding: 0; margin: 12px 0 24px; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
 ol.photo-credits li { margin: 0; padding: 7px 0; border-bottom: 1px solid var(--line); }
 ol.photo-credits li b { font-family: var(--f-display); font-weight: 700; text-transform: lowercase; color: var(--ink); margin-right: 6px; }
-.photo-credits-note { font-size: 14px; color: var(--ink-3); max-width: 42em; }
+.photo-credits-note { font-size: 14px; color: var(--ink-3); }
 
 /* =========================================================================
    NHỊP ĐỌC KIỂU SÁCH / TẠP CHÍ
+   Chữ, bảng, sơ đồ, khối chú thích dùng TRỌN cột đọc — cả trang chỉ có một mép phải.
+   Chỉ ẢNH là không chiếm hết bề ngang (xem "Ảnh trên lưới 2/3" bên dưới).
    ========================================================================= */
-
-/* Độ dài dòng ~70 ký tự — chuẩn dàn trang sách (45–75). Hình, bảng, sơ đồ vẫn dùng hết cột,
-   nên cột chữ hẹp hơn cột hình: lưới quen thuộc của tạp chí. */
-section.tab > p, section.tab > ul, section.tab > ol, section.tab > h3, section.tab > dl.terms,
-section.tab > .callout, section.tab > .check-meter, .panel-intro { max-width: 35em; }
 
 /* Trích dẫn nổi bật: một câu then chốt lấy NGUYÊN VĂN từ đoạn quanh nó, để mắt có điểm dừng
    trong mảng chữ dài. Không bao giờ chứa ý mới. */
 blockquote.pull {
-  margin: 34px 0 36px; padding: 16px 0 14px; max-width: 30em;
+  margin: 34px 0 36px; padding: 16px 0 14px;
   border-top: var(--rule-l) solid var(--ink); border-bottom: var(--rule-s) solid var(--ink);
 }
 blockquote.pull p {
@@ -610,17 +607,39 @@ blockquote.pull p::before {
   display: flex; align-items: center; gap: 8px; margin-top: 8px;
   font-family: var(--f-display); font-weight: 700; font-size: 16px; line-height: 1.2; text-transform: lowercase;
 }
-.photo-row .lbl .shp { width: 22px; height: 22px; font-size: 11px; }
 .photo-row .lbl small { font-family: var(--f-sans); font-weight: 400; font-size: 13px; text-transform: none; color: var(--ink-3); }
 
+/* Ô màu chú giải: lặp lại đúng khung đánh dấu trong ảnh (viền màu + lòng vàng nhạt), đặt trong
+   chú thích để nói khung nào là gì. Ảnh không mang nhãn chữ, vì chữ vẽ trong ảnh nhỏ lại theo ảnh. */
+.key {
+  display: inline-block; width: 1.15em; height: .78em; margin: 0 .3em 0 .1em; vertical-align: -.04em;
+  border: 2px solid var(--ink); background: rgba(245, 184, 0, .22);
+}
+.key.k-red { border-color: var(--red); }
+.key.k-blue { border-color: var(--blue); }
+.key.k-yellow { border-color: var(--yellow); }
+.kw { white-space: nowrap; }   /* ô màu không đứng lẻ ở cuối dòng, tách khỏi chữ nó chú giải */
+
+/* Ảnh trên lưới 2/3: từ màn vừa trở lên, ảnh chiếm hai phần ba bề ngang, chú thích đứng ở một
+   phần ba còn lại như trang tạp chí. Thanh kẻ trên đầu chú thích thẳng hàng với thanh kẻ trên
+   đầu ảnh, nên hai cột đọc như một khối. Nhiều ảnh thì dàn lưới BÊN TRONG hai phần ba đó:
+   bốn ảnh thành 2×2, ba ảnh chụp màn hình dẹt xếp chồng. Điện thoại: ảnh rộng hết, chú thích dưới. */
 @media (min-width: 48rem) {
-  .photo-row.n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .photo-row.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  figure.photo {
+    display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    column-gap: 26px; align-items: start;
+  }
+  figure.photo > figcaption { margin-top: 0; padding-top: 9px; border-top: var(--rule-m) solid var(--ink); }
+  figure.photo.small { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); }
+  figure.photo.side { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }   /* ảnh phụ: một nửa */
+  .photo-row.n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .photo-row.n3 { grid-template-columns: minmax(0, 1fr); }
 }
 /* Ảnh bên lề: chỉ ở màn rộng mới lệch phải cho chữ chảy quanh — bố cục bất đối xứng */
 @media (min-width: 64rem) {
-  figure.photo.side { float: right; width: 40%; margin: 6px 0 22px 30px; }
+  figure.photo.side { display: block; float: right; width: 40%; margin: 6px 0 22px 30px; }
   figure.photo.side.narrow { width: 32%; }
+  figure.photo.side > figcaption { margin-top: 10px; padding-top: 0; border-top: 0; }
   section.tab h2, section.tab .table-scroll, section.tab figure.fig, section.tab dl.terms, section.tab .callout { clear: right; }
 }
 

@@ -6,7 +6,16 @@
     "started": "2026-09-21",
     "stack": "Spring Boot + PostgreSQL + Docker + Nginx + GitHub Actions",
     "env": "Windows 11 + WSL2 Ubuntu + Docker Desktop",
-    "principle": "Problem, rồi Concept, rồi Tool. Không học lệnh, học hệ thống."
+    "principle": "Problem, rồi Concept, rồi Tool. Không học lệnh, học hệ thống.",
+    "time": {
+      "unit": "Giờ học thật cho trọn một bài, không phải thời gian giảng",
+      "parts": [
+        ["Đọc trước index.html và README.md", "1–2 giờ"],
+        ["Học đối thoại: trả lời câu hỏi, sửa chỗ hiểu sai", "1,5–3 giờ"],
+        ["Lab, kể cả bước tự gây lỗi rồi tự sửa", "1–3 giờ"],
+        ["Ghi notes.md và bồi tài liệu lượt hai", "0,5–1 giờ"]
+      ]
+    }
   },
   "modules": [
     {
@@ -27,7 +36,7 @@
             "Nói được vì sao cần Nginx khi đã có Spring Boot",
             "Vẽ lại sơ đồ request không cần nhìn tài liệu"
           ],
-          "est": 45
+          "hours": [6, 10]
         },
         {
           "id": "01",
@@ -41,7 +50,7 @@
             "Giải thích được OOM (hết RAM) sẽ làm gì với app",
             "Phân biệt process và service"
           ],
-          "est": 45
+          "hours": [5, 8]
         },
         {
           "id": "02",
@@ -55,7 +64,7 @@
             "Chạy được `docker run hello-world` từ trong WSL",
             "Biết đường dẫn qua lại giữa Windows và WSL"
           ],
-          "est": 45
+          "hours": [3, 6]
         }
       ]
     },
@@ -76,7 +85,7 @@
             "Biết log hệ thống nằm ở đâu",
             "Dùng được đường dẫn tương đối thành thạo"
           ],
-          "est": 40
+          "hours": [3, 5]
         },
         {
           "id": "04",
@@ -90,7 +99,7 @@
             "Lọc log bằng grep + pipe nhiều tầng",
             "Sửa và lưu một file bằng nano hoặc vim"
           ],
-          "est": 50
+          "hours": [4, 6]
         },
         {
           "id": "05",
@@ -104,7 +113,7 @@
             "Giải thích được vì sao chmod 777 là nguy hiểm",
             "Tạo được user riêng cho ứng dụng"
           ],
-          "est": 50
+          "hours": [4, 7]
         },
         {
           "id": "06",
@@ -118,7 +127,7 @@
             "Giải thích khác biệt kill vs kill -9",
             "Hiểu vì sao PID 1 trong container quan trọng"
           ],
-          "est": 50
+          "hours": [4, 7]
         },
         {
           "id": "07",
@@ -132,7 +141,7 @@
             "Đọc log service bằng journalctl",
             "Cho service tự restart khi bị kill"
           ],
-          "est": 55
+          "hours": [5, 8]
         },
         {
           "id": "08",
@@ -146,7 +155,7 @@
             "Viết script có xử lý lỗi, không im lặng thất bại",
             "Đặt được một cron job và xác minh nó chạy"
           ],
-          "est": 55
+          "hours": [5, 8]
         }
       ]
     },
@@ -167,7 +176,7 @@
             "Biết máy mình có IP nào trong mạng LAN",
             "Hiểu vì sao Docker container không thấy localhost của host"
           ],
-          "est": 50
+          "hours": [4, 6]
         },
         {
           "id": "10",
@@ -181,7 +190,7 @@
             "Truy từ port ra PID ra tên process",
             "Giải thích vì sao port < 1024 cần quyền root"
           ],
-          "est": 45
+          "hours": [4, 6]
         },
         {
           "id": "11",
@@ -195,7 +204,7 @@
             "Phân biệt A record và CNAME, biết khi nào dùng cái nào",
             "Giả lập được domain nội bộ bằng /etc/hosts"
           ],
-          "est": 45
+          "hours": [4, 7]
         },
         {
           "id": "12",
@@ -209,7 +218,7 @@
             "Đọc được toàn bộ header trong curl -v",
             "Nói được 502 khác 504 ở đâu và lỗi nằm ở tầng nào"
           ],
-          "est": 50
+          "hours": [4, 7]
         },
         {
           "id": "13",
@@ -223,7 +232,7 @@
             "Copy file hai chiều bằng scp/rsync",
             "Cấu hình ufw chỉ mở 22/80/443"
           ],
-          "est": 55
+          "hours": [5, 8]
         }
       ]
     },
@@ -244,7 +253,7 @@
             "Chỉ ra process của container trên host",
             "Nói được Docker giải quyết vấn đề gì, và KHÔNG giải quyết vấn đề gì"
           ],
-          "est": 50
+          "hours": [4, 6]
         },
         {
           "id": "15",
@@ -258,7 +267,7 @@
             "Đọc log container để tìm lỗi khởi động",
             "Dọn sạch container/image không dùng"
           ],
-          "est": 50
+          "hours": [4, 6]
         },
         {
           "id": "16",
@@ -272,7 +281,7 @@
             "Phân biệt CMD và ENTRYPOINT bằng ví dụ",
             "Viết .dockerignore hợp lý"
           ],
-          "est": 55
+          "hours": [5, 8]
         },
         {
           "id": "17",
@@ -286,7 +295,7 @@
             "Container chạy bằng user không phải root",
             "App nhận được biến môi trường từ ngoài"
           ],
-          "est": 60
+          "hours": [6, 10]
         },
         {
           "id": "18",
@@ -300,7 +309,7 @@
             "Backup và restore được dữ liệu một volume",
             "Xử lý được lỗi permission khi bind mount"
           ],
-          "est": 55
+          "hours": [4, 7]
         },
         {
           "id": "19",
@@ -314,7 +323,7 @@
             "Biết port nào thực sự lộ ra ngoài",
             "Cô lập được database không cho truy cập từ ngoài"
           ],
-          "est": 50
+          "hours": [4, 7]
         },
         {
           "id": "20",
@@ -328,7 +337,7 @@
             "Không có mật khẩu nào hard-code trong compose.yaml",
             "Người khác clone repo về chạy được ngay"
           ],
-          "est": 70
+          "hours": [6, 10]
         }
       ]
     },
@@ -349,7 +358,7 @@
             "Hiểu thứ tự ưu tiên của location",
             "Đọc được error.log khi cấu hình sai"
           ],
-          "est": 55
+          "hours": [4, 7]
         },
         {
           "id": "22",
@@ -363,7 +372,7 @@
             "Asset có cache header hợp lý",
             "Phân biệt được root và alias"
           ],
-          "est": 50
+          "hours": [4, 6]
         },
         {
           "id": "23",
@@ -377,7 +386,7 @@
             "Upload file lớn không bị 413",
             "Biết chỉnh timeout ở đúng chỗ"
           ],
-          "est": 55
+          "hours": [5, 8]
         },
         {
           "id": "24",
@@ -391,7 +400,7 @@
             "Vẫn vào được app qua :80",
             "Vẽ lại được sơ đồ network của compose"
           ],
-          "est": 60
+          "hours": [6, 10]
         }
       ]
     },
@@ -412,7 +421,7 @@
             "ufw chỉ cho 22/80/443",
             "Tự tin rằng mất laptop vẫn không mất server"
           ],
-          "est": 70
+          "hours": [6, 10]
         },
         {
           "id": "26",
@@ -426,7 +435,7 @@
             "Có một file runbook liệt kê mọi bước",
             "Chỉ ra được ít nhất 3 bước dễ sai nếu làm thủ công"
           ],
-          "est": 70
+          "hours": [6, 10]
         },
         {
           "id": "27",
@@ -440,7 +449,7 @@
             "Có subdomain riêng cho API",
             "Giải thích được vì sao đôi khi phải chờ DNS"
           ],
-          "est": 50
+          "hours": [3, 6]
         },
         {
           "id": "28",
@@ -454,7 +463,7 @@
             "Kiểm chứng được auto-renew hoạt động",
             "Biết chứng chỉ hết hạn ngày nào và ai sẽ báo bạn"
           ],
-          "est": 65
+          "hours": [5, 8]
         },
         {
           "id": "29",
@@ -468,7 +477,7 @@
             "Backup chạy tự động và có retention",
             "Đã thực sự restore thành công ít nhất một lần"
           ],
-          "est": 65
+          "hours": [5, 8]
         }
       ]
     },
@@ -489,7 +498,7 @@
             "Phân biệt rõ CI và CD",
             "Biết bước nào bắt buộc phải có người duyệt"
           ],
-          "est": 45
+          "hours": [3, 5]
         },
         {
           "id": "31",
@@ -503,7 +512,7 @@
             "Đọc và hiểu được toàn bộ file YAML mình viết",
             "Debug được khi workflow đỏ"
           ],
-          "est": 60
+          "hours": [5, 8]
         },
         {
           "id": "32",
@@ -517,7 +526,7 @@
             "Build lần 2 nhanh hơn hẳn nhờ cache",
             "Integration test chạy với DB thật trong CI"
           ],
-          "est": 65
+          "hours": [5, 8]
         },
         {
           "id": "33",
@@ -531,7 +540,7 @@
             "Mỗi image truy ngược được về đúng commit",
             "Build trên CI có dùng cache"
           ],
-          "est": 65
+          "hours": [4, 7]
         },
         {
           "id": "34",
@@ -545,7 +554,7 @@
             "Secret không lộ trong log",
             "Deploy hỏng thì workflow phải đỏ, không im lặng"
           ],
-          "est": 75
+          "hours": [6, 10]
         },
         {
           "id": "35",
@@ -559,7 +568,7 @@
             "Rollback về bản trước trong 1 lệnh",
             "Hiểu vì sao migration DB là phần nguy hiểm nhất"
           ],
-          "est": 75
+          "hours": [6, 10]
         }
       ]
     },
@@ -580,7 +589,7 @@
             "Truy được một request từ Nginx xuống app",
             "Không có mật khẩu/token nào trong log"
           ],
-          "est": 65
+          "hours": [5, 8]
         },
         {
           "id": "37",
@@ -594,7 +603,7 @@
             "Hiểu ý nghĩa p95 latency",
             "Biết ngưỡng nào là nguy hiểm với hệ thống của mình"
           ],
-          "est": 75
+          "hours": [6, 10]
         },
         {
           "id": "38",
@@ -608,7 +617,7 @@
             "Mỗi cảnh báo đều có hành động cụ thể phải làm",
             "Không có cảnh báo nào bị bỏ qua vì quá ồn"
           ],
-          "est": 65
+          "hours": [5, 8]
         },
         {
           "id": "39",
@@ -622,7 +631,7 @@
             "Khoanh vùng được lỗi nằm ở tầng nào trong 5 phút",
             "Có runbook viết sẵn cho ít nhất 3 sự cố"
           ],
-          "est": 70
+          "hours": [5, 8]
         }
       ]
     },
@@ -643,7 +652,7 @@
             "Chạy playbook 2 lần cho kết quả giống nhau",
             "Hiểu khác biệt Ansible và Terraform"
           ],
-          "est": 80
+          "hours": [8, 14]
         },
         {
           "id": "41",
@@ -657,7 +666,7 @@
             "Giải thích Pod khác Container ở đâu",
             "Trả lời trung thực: dự án hiện tại có cần K8s không, vì sao"
           ],
-          "est": 90
+          "hours": [10, 16]
         },
         {
           "id": "42",
@@ -671,7 +680,7 @@
             "Chỉ ra được 3 điểm yếu của hệ thống hiện tại",
             "Có kế hoạch học tiếp cụ thể"
           ],
-          "est": 60
+          "hours": [4, 8]
         }
       ]
     }
