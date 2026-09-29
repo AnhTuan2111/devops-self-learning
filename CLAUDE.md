@@ -275,6 +275,15 @@ trang — chỉ cần viết `prevnext`, và **đừng** thêm link topbar trỏ
 
 **Không viết `style="…"` inline** — cần thì thêm class vào `style.css`.
 
+**Bài giảng thiết kế như một quyển sách giáo khoa, một bài báo hay một tạp chí** (người học,
+30/09/2026): trải nghiệm thị giác của người đọc được ưu tiên **ngang** với nội dung truyền tải.
+
+**Bộ nhớ đệm trình duyệt:** GitHub Pages cho trình duyệt giữ CSS/JS tới 10 phút, nên HTML mới
+có thể bị vẽ bằng CSS cũ và trông như vỡ giao diện (người học đã gặp 30/09/2026). `generate.mjs`
+gắn `?v=<hash nội dung>` vào đường dẫn `style.css`/`app.js` của **mọi** trang (trang viết tay chỉ
+bị sửa đúng tham số đó) — nên **sau khi sửa CSS/JS, luôn chạy `node scripts/generate.mjs`**. Khi
+người học báo giao diện lạ ngay sau một lần deploy, hỏi họ tải lại cứng (Ctrl+F5) trước khi sửa.
+
 ### Ảnh minh hoạ (người học yêu cầu 30/09/2026)
 
 **Mỗi bài phải có nhiều ảnh minh hoạ hoặc ảnh tham chiếu**, không chỉ chữ và sơ đồ ASCII:

@@ -16,7 +16,8 @@
  * Giao diện theo hệ "Bauhaus" trong assets/style.css — đọc bảng luật ở đầu file đó.
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
@@ -25,6 +26,14 @@ import { makeArt } from './readme-art.mjs';
 // Bộ sinh hình Bauhaus sống trong assets/app.js (trình duyệt dùng nó để vẽ ấn ký đầu trang bài).
 // Nạp chung một file để ô ở trang chủ và ấn ký ở trang bài không bao giờ lệch nhau.
 const Bauhaus = createRequire(import.meta.url)('../assets/app.js');
+
+// Số phiên bản tài sản = hash nội dung style.css + app.js. Gắn vào đường dẫn (?v=…) để khi CSS/JS
+// đổi, trình duyệt buộc phải tải bản mới. Không có nó, GitHub Pages cho trình duyệt giữ bản cũ tới
+// 10 phút (Cache-Control: max-age=600) và HTML mới bị vẽ bằng CSS cũ — người học đã gặp 30/09/2026.
+const ASSET_V = createHash('sha1')
+  .update(readFileSync(new URL('../assets/style.css', import.meta.url)))
+  .update(readFileSync(new URL('../assets/app.js', import.meta.url)))
+  .digest('hex').slice(0, 8);
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
@@ -69,7 +78,7 @@ const head = ({ title, desc, base }) => `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
-<link rel="stylesheet" href="${base}assets/style.css">
+<link rel="stylesheet" href="${base}assets/style.css?v=${ASSET_V}">
 <link rel="icon" href="${base}assets/favicon.svg">
 </head>`;
 
@@ -338,7 +347,7 @@ ${modulesHtml}
 
 </div>
 
-<script src="assets/app.js"></script>
+<script src="assets/app.js?v=${ASSET_V}"></script>
 </body>
 </html>
 `;
@@ -644,7 +653,7 @@ ${link(next, 'Bài tiếp', ' class="next"')}
 
 </div>
 
-<script src="../../assets/app.js"></script>
+<script src="../../assets/app.js?v=${ASSET_V}"></script>
 </body>
 </html>
 `;
@@ -718,9 +727,21 @@ cùng với \`index.html\` ghi lại những gì đã thực sự làm và nhữ
   }
 }
 
+// Trang viết tay: chỉ cập nhật đúng tham số ?v= trong hai đường dẫn tài sản, không đụng nội dung.
+let versioned = 0;
+for (const d of readdirSync(join(ROOT, 'lessons'))) {
+  for (const f of readdirSync(join(ROOT, 'lessons', d)).filter((x) => x.endsWith('.html'))) {
+    const p = join(ROOT, 'lessons', d, f);
+    const s = readFileSync(p, 'utf8');
+    const t = s.replace(/(assets\/(?:style\.css|app\.js))(?:\?v=[0-9a-f]+)?"/g, `$1?v=${ASSET_V}"`);
+    if (t !== s) { writeFileSync(p, t, 'utf8'); versioned++; }
+  }
+}
+
 console.log(`OK  index.html + README.md + .nojekyll + ${artCount} ảnh README (assets/readme/) đã cập nhật`);
 console.log(
   `OK  ${allLessons.length} bài · ${doneCount} xong (${pct}%) · ` +
     `${created} README mới · ${stubs} trang HTML sinh tự động ` +
-    `(${allLessons.length - stubs} viết tay, không đụng tới)`
+    `(${allLessons.length - stubs} viết tay, không đụng tới nội dung)` +
+    ` · tài sản v=${ASSET_V}${versioned ? ` (cập nhật đường dẫn ở ${versioned} trang)` : ''}`
 );
