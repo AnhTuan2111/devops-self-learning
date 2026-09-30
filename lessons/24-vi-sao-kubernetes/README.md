@@ -24,7 +24,7 @@ Nói được Kubernetes giải quyết điều gì mà Compose trên một máy
 
 ## Bài lab
 
-Dựng một cụm k3d nhiều node, xem các node và pod hệ thống. Cố tình xoá một pod hệ thống để thấy cụm tự dựng lại nó.
+Dựng một cụm k3d nhiều node và xem các node. Cố tình dừng một node (docker stop container của node đó) để thấy nó chuyển NotReady, rồi bật lại.
 
 ## Tự kiểm tra
 

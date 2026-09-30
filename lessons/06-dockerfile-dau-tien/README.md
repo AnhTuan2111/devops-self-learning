@@ -16,7 +16,7 @@ Tự viết Dockerfile đóng gói project Spring Boot của bạn, và hiểu m
 
 ## Khái niệm sẽ gặp
 
-- FROM, WORKDIR, COPY, RUN, CMD, ENTRYPOINT, ENV, EXPOSE
+- FROM, WORKDIR, COPY, RUN, CMD, ENTRYPOINT, EXPOSE
 - Build context và .dockerignore
 - Cache theo layer: vì sao thứ tự các dòng quyết định tốc độ build
 - CMD và ENTRYPOINT khác nhau thế nào
@@ -31,7 +31,7 @@ Viết Dockerfile cho jar Spring Boot, build rồi chạy. Sửa một dòng cod
 Học xong phải tự làm được, không nhìn tài liệu:
 
 - [ ] Viết được Dockerfile chạy được cho một project Spring Boot
-- [ ] Giải thích được vì sao sửa code mà không phải tải lại dependency
+- [ ] Giải thích được vì sao đổi một dòng thì mọi dòng sau nó phải build lại
 - [ ] Nói được CMD khác ENTRYPOINT thế nào
 - [ ] Biết .dockerignore nên chứa những gì
 

@@ -131,37 +131,10 @@ giờ</em> chuyển tiếp gói tin mang địa chỉ link-local sang mạng kh�
 bị đang cùng bắt một sóng WiFi mới nói chuyện được với <code>fe80::10</code>; một máy ở mạng khác
 gõ đúng địa chỉ đó sẽ chạm tới một thiết bị hoàn toàn khác — hoặc không chạm tới gì cả.</p>
 
-<p>Nếu đặt nó cạnh hai dải đặc biệt đã gặp trong bài giảng, ta được một thang đo rất gọn về độ
-"gần" của một địa chỉ. Cả ba đều <strong>không định tuyến được ra Internet</strong>, nhưng mỗi
-dải giới hạn ở một phạm vi khác nhau:</p>
-
-<figure class="fig">
-<pre class="diagram"><code>  127.0.0.1   →  "chỉ trong MÁY này"        (loopback)
-  fe80::…     →  "chỉ trong ĐOẠN MẠNG này"  (link-local)
-  192.168.…   →  "chỉ trong MẠNG NỘI BỘ"    (private)</code></pre>
-<figcaption><b>Hình 3</b> Ba dải địa chỉ đặc biệt, ba mức độ "gần". Phạm vi nới rộng dần từ trên
-xuống, nhưng không dải nào ra được Internet.</figcaption>
-</figure>
-
-<div class="callout deep">
-  <span class="label">Đào sâu — chuẩn nào quy định những dải này</span>
-  <p>Dải <code>127.0.0.0/8</code> được dành cho loopback từ các chuẩn yêu cầu đối với máy chủ
-  Internet (RFC 1122): gói tin gửi tới đó không bao giờ được phép rời khỏi máy. Ba dải private
-  <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code> và <code>192.168.0.0/16</code> được định
-  nghĩa trong RFC 1918. Dải link-local <code>fe80::/10</code> của IPv6 nằm trong kiến trúc địa chỉ
-  IPv6 (RFC 4291). IPv4 cũng có một dải link-local tương ứng là <code>169.254.0.0/16</code>
-  (RFC 3927) — và đó là lý do khi máy Windows không xin được địa chỉ từ router, bạn sẽ thấy nó tự
-  gán một địa chỉ <code>169.254.x.x</code>: đó là dấu hiệu chắc chắn rằng DHCP đã thất bại.</p>
-</div>
-
-<div class="callout warn">
-  <span class="label">Chỗ đã hiểu sai trong buổi học · đã sửa</span>
-  <p>Khi thấy dải <code>127.0.0.0/8</code>, người học từng nghĩ máy có <code>127⁴</code> địa chỉ
-  loopback. Phép tính đúng dựa trên số bit chứ không dựa trên con số 127: ký hiệu <code>/8</code>
-  nghĩa là 8 bit đầu cố định, còn lại 24 bit tự do, nên dải này chứa <code>2²⁴ ≈ 16,7 triệu</code>
-  địa chỉ. Tuy vậy, dải được <em>dành riêng</em> không có nghĩa là máy được <em>gán</em> tất cả —
-  mặc định máy chỉ được gán đúng một địa chỉ là <code>127.0.0.1</code>.</p>
-</div>
+<p>Nếu đặt nó cạnh hai dải đặc biệt đã gặp trong bài giảng — loopback <code>127.0.0.1</code> và
+private <code>192.168.…</code> — ta được đúng thang đo độ "gần" đã học: cả ba đều <strong>không được
+chuyển ra Internet</strong>, và <code>fe80::…</code> đứng ở bậc giữa, rộng hơn một máy nhưng hẹp
+hơn cả một mạng nội bộ.</p>
 
 <h3 id="dns-non-auth"><code>Non-authoritative answer</code> — dòng hay nhất khối này</h3>
 
@@ -195,14 +168,13 @@ gây hiểu nhầm: không có gì lan đi cả; thứ thực sự xảy ra là 
 cho Azure, còn GitHub thuộc về Microsoft từ năm 2018 — nên việc GitHub chạy trên Azure là hoàn
 toàn khớp. Đây là một mẹo nhỏ nhưng dùng được trong chẩn đoán: nhìn địa chỉ IP, bạn thường đoán
 được một dịch vụ đang nằm trên hạ tầng của ai. Tuy vậy, cần nhớ đây là <em>suy luận</em> chứ không
-phải <em>chứng minh</em>: các khối địa chỉ có thể được mua bán và chia lại, nên muốn chắc chắn thì
-phải tra cơ sở dữ liệu đăng ký địa chỉ (dịch vụ whois/RDAP của các cơ quan quản lý địa chỉ khu vực).</p>
+phải <em>chứng minh</em>: các khối địa chỉ có thể được mua bán và chia lại.</p>
 
 <h2 id="nxdomain"><span class="stg">2</span> Tên miền không tồn tại — chặng <span class="stg">2</span> hỏng</h2>
 
 <figure class="fig">
 <pre><code>*** wifi.cmcc can't find khong-ton-tai-dau-nhe-12345.com: Non-existent domain</code></pre>
-<figcaption><b>Hình 4</b> Truy vấn một tên miền không tồn tại. Chỉ một dòng, nhưng đủ để khoanh vùng sự cố.</figcaption>
+<figcaption><b>Hình 3</b> Truy vấn một tên miền không tồn tại. Chỉ một dòng, nhưng đủ để khoanh vùng sự cố.</figcaption>
 </figure>
 
 <p>Đây là chặng <span class="stg">2</span> hỏng, ở dạng thuần khiết nhất. Cụm <em>Non-existent domain</em> chính là
@@ -263,7 +235,7 @@ mãi.</p>
 <pre><code>* Host example.com:443 was resolved.
 * IPv6: 2606:4700:10::ac42:93f3, 2606:4700:10::6814:179a
 * IPv4: 104.20.23.154, 172.66.147.243</code></pre>
-<figcaption><b>Hình 5</b> Phần phân giải tên trong output thật của <code>curl -v</code>.</figcaption>
+<figcaption><b>Hình 4</b> Phần phân giải tên trong output thật của <code>curl -v</code>.</figcaption>
 </figure>
 
 <p><strong><code>:443</code> là do <code>curl</code> tự điền.</strong> Ta gõ
@@ -286,22 +258,12 @@ nó thử địa chỉ tiếp theo.</p>
   nhất của các hệ thống chịu tải lớn, vì nó hoạt động trước cả khi gói tin đầu tiên được gửi đi.</p>
 </div>
 
-<div class="callout deep">
-  <span class="label">Chính xác hơn một chút — anycast</span>
-  <p>Với riêng Cloudflare (bên phục vụ <code>example.com</code>, như ta sẽ thấy ở tab sau), bức
-  tranh còn mạnh hơn "bốn địa chỉ là bốn máy". Cloudflare dùng kỹ thuật <strong>anycast</strong>:
-  cùng một địa chỉ IP được công bố đồng thời từ rất nhiều trung tâm dữ liệu trên thế giới, và mạng
-  Internet tự đưa gói tin của bạn tới trung tâm <em>gần nhất về mặt định tuyến</em>. Nghĩa là mỗi
-  địa chỉ trong bốn địa chỉ trên tự nó đã đứng trước cả một đội máy chủ ở nhiều châu lục. Dòng
-  <code>CF-RAY: …-HKG</code> ở tab sau chính là dấu vết cho biết lần này gói tin đã được đưa tới đâu.</p>
-</div>
-
 <h3 id="curl-chon-duong">Chọn đường: Happy Eyeballs</h3>
 
 <figure class="fig">
 <pre><code>*   Trying [2606:4700:10::ac42:93f3]:443...
 *   Trying 104.20.23.154:443...</code></pre>
-<figcaption><b>Hình 6</b> <code>curl</code> thử IPv6 trước, rồi thử IPv4.</figcaption>
+<figcaption><b>Hình 5</b> <code>curl</code> thử IPv6 trước, rồi thử IPv4.</figcaption>
 </figure>
 
 <p>Khi một tên có cả địa chỉ IPv6 lẫn IPv4, client đứng trước một câu hỏi thực dụng: thử cái nào
@@ -329,13 +291,13 @@ bại) và xem trong <code>ipconfig</code> máy có địa chỉ IPv6 toàn cầ
 <pre><code>* schannel: disabled automatic use of client certificate
 * ALPN: curl offers http/1.1
 * ALPN: server accepted http/1.1</code></pre>
-<figcaption><b>Hình 7</b> Phần bắt tay TLS. Ngắn hơn hẳn so với output trong tài liệu Linux.</figcaption>
+<figcaption><b>Hình 6</b> Phần bắt tay TLS. Ngắn hơn hẳn so với output trong tài liệu Linux.</figcaption>
 </figure>
 
 <p><strong><code>schannel</code> là viết tắt của Secure Channel — thư viện TLS có sẵn trong chính
 Windows.</strong> <code>curl</code> không tự cài đặt mật mã; nó giao phần bắt tay TLS cho một thư
 viện bên dưới, và cùng một chương trình <code>curl</code> có thể được biên dịch với những thư viện
-khác nhau: OpenSSL, schannel, và một số thư viện khác. Dòng đầu tiên trong Hình 7 là bằng chứng
+khác nhau: OpenSSL, schannel, và một số thư viện khác. Dòng đầu tiên trong Hình 6 là bằng chứng
 rằng bản <code>curl</code> trên máy này đã dùng schannel.</p>
 
 <p>Chi tiết đó giải thích trọn vẹn việc ta <strong>không thấy</strong> những dòng mà tài liệu viết
@@ -345,7 +307,7 @@ trên Linux hay in ra, vì những dòng đó là do thư viện OpenSSL cung c�
 <pre class="diagram"><code>  thiếu:  SSL connection using TLSv1.3
   thiếu:  subject: CN=example.com
   thiếu:  expire date: ...</code></pre>
-<figcaption><b>Hình 8</b> Những dòng tài liệu mẫu có mà máy này không in ra.</figcaption>
+<figcaption><b>Hình 7</b> Những dòng tài liệu mẫu có mà máy này không in ra.</figcaption>
 </figure>
 
 <div class="callout warn">
@@ -387,7 +349,7 @@ request đi ra, câu trả lời đi về — và trong câu trả lời có m�
 
 <figure class="fig">
 <pre><code>* Established connection to example.com (104.20.23.154 port 443) from 192.168.10.38 port 55289</code></pre>
-<figcaption><b>Hình 9</b> Kết nối TCP đã thành lập. Một dòng, bốn con số.</figcaption>
+<figcaption><b>Hình 8</b> Kết nối TCP đã thành lập. Một dòng, bốn con số.</figcaption>
 </figure>
 
 <p>Dòng này tiết lộ một sự thật mà người mới hầu như không bao giờ tự nghĩ tới: <strong>một kết
@@ -403,7 +365,7 @@ diện kết nối bằng cả bốn con số: IP và port phía client, IP và 
                        ↑
                  tôi không chọn nó.
                  Hệ điều hành tự cấp — gọi là ephemeral port</code></pre>
-<figcaption><b>Hình 10</b> Bốn thành phần của một kết nối TCP. Port phía client do hệ điều hành cấp tạm thời.</figcaption>
+<figcaption><b>Hình 9</b> Bốn thành phần của một kết nối TCP. Port phía client do hệ điều hành cấp tạm thời.</figcaption>
 </figure>
 
 <p>Port <code>55289</code> phía client được gọi là <strong>ephemeral port</strong> — port "phù
@@ -415,11 +377,8 @@ gõ cửa phòng nào.</p>
 <div class="callout deep">
   <span class="label">Đào sâu — khoảng ephemeral port</span>
   <p>Cơ quan quản lý số hiệu Internet (IANA) khuyến nghị dùng khoảng <code>49152–65535</code> làm
-  port động/tạm thời (RFC 6335), và Windows hiện đại mặc định dùng đúng khoảng này — <code>55289</code>
-  nằm gọn trong đó. Linux mặc định dùng một khoảng khác, <code>32768–60999</code>, xem được bằng
-  <code>cat /proc/sys/net/ipv4/ip_local_port_range</code>. Khoảng này có giới hạn, nên một máy mở ra
-  quá nhiều kết nối đi tới cùng một đích có thể cạn ephemeral port — một sự cố có thật trên các
-  server gọi API ngoài với tần suất rất cao.</p>
+  port tạm thời (RFC 6335), và Windows hiện đại mặc định cấp port tạm trong đúng khoảng này —
+  <code>55289</code> nằm gọn trong đó.</p>
 </div>
 
 <div class="callout">
@@ -433,10 +392,15 @@ gõ cửa phòng nào.</p>
 
 <h3 id="dhcp">Một phát hiện bất ngờ: IP nội bộ đã đổi</h3>
 
+<p>Lab của bài không chạy <code>ipconfig</code> — lệnh của Windows in ra địa chỉ IP của từng giao
+diện mạng. Nhưng nếu bạn chạy nó ở hai thời điểm khác nhau rồi so với địa chỉ đứng sau chữ
+<code>from</code> ở dòng trên, hai con số có thể không giống nhau. Trên máy chạy lab này, chúng đã
+khác:</p>
+
 <figure class="fig">
 <pre class="diagram"><code>  Lúc chạy ipconfig lần đầu:   192.168.110.203
   Trong kết nối này:           192.168.10.38     ← ĐÃ ĐỔI</code></pre>
-<figcaption><b>Hình 11</b> Cùng một máy, hai địa chỉ LAN khác nhau trong cùng một buổi học.</figcaption>
+<figcaption><b>Hình 10</b> Cùng một máy, hai địa chỉ LAN khác nhau trong cùng một buổi học.</figcaption>
 </figure>
 
 <p>Địa chỉ LAN của máy đã thay đổi giữa hai lần đo — hoặc vì máy đã chuyển sang một mạng khác,
@@ -449,8 +413,7 @@ hết hạn mà không gia hạn, hoặc đổi mạng, thì địa chỉ có th
   <span class="label">Hệ quả — ghim lại</span>
   <p><strong>IP nội bộ không cố định. Không thể dựa vào nó.</strong></p>
   <p>Đó chính là lý do server production cần <strong>IP tĩnh</strong>, và là lý do ta dùng
-  <strong>tên miền</strong> thay vì ghi cứng địa chỉ IP vào file cấu hình. Cũng vì thế mà tài liệu
-  của lộ trình này không bao giờ ghi cứng địa chỉ LAN của máy học.</p>
+  <strong>tên miền</strong> thay vì ghi cứng địa chỉ IP vào file cấu hình.</p>
 </div>
 
 <h2 id="request">Phần request đi ra — chặng <span class="stg">5</span></h2>
@@ -461,7 +424,7 @@ hết hạn mà không gia hạn, hoặc đổi mạng, thì địa chỉ có th
 &gt; User-Agent: curl/8.21.0
 &gt; Accept: */*
 &gt;</code></pre>
-<figcaption><b>Hình 12</b> Request HTTP mà <code>curl</code> gửi đi, nguyên văn.</figcaption>
+<figcaption><b>Hình 11</b> Request HTTP mà <code>curl</code> gửi đi, nguyên văn.</figcaption>
 </figure>
 
 <p>Ký tự <code>&gt;</code> nghĩa là gửi đi, và đây là <strong>chặng <span class="stg">5</span></strong> của bản đồ. Cấu
@@ -504,7 +467,7 @@ và thứ gì theo sau là body. <code>GET</code> không có body, nên request 
 &lt; Age: 3889
 &lt; cf-cache-status: HIT
 &lt; CF-RAY: a40142dcc8e87164-HKG</code></pre>
-<figcaption><b>Hình 13</b> Các header trả lời, nguyên văn. Món quà bất ngờ nằm ở bốn dòng giữa.</figcaption>
+<figcaption><b>Hình 12</b> Các header trả lời, nguyên văn. Món quà bất ngờ nằm ở bốn dòng giữa.</figcaption>
 </figure>
 
 <p>Ký tự <code>&lt;</code> nghĩa là nhận về. Dòng đầu tiên là <em>dòng trạng thái</em>: phiên bản
@@ -527,7 +490,7 @@ thật</strong> trông như thế nào.</p>
     <tr><td><code>Server: cloudflare</code></td><td><code>example.com</code> <strong>không</strong> được phục vụ trực tiếp bởi máy gốc. Có một <strong>reverse proxy</strong> đứng trước — đúng vai trò của Nginx trong bản đồ, chỉ là phiên bản khổng lồ phân tán khắp thế giới.</td></tr>
     <tr><td><code>cf-cache-status: HIT</code></td><td>Cloudflare trả lời <strong>từ cache của nó</strong>. Request <strong>chưa bao giờ tới máy gốc</strong>. Lễ tân trả lời luôn, không cần đi vào trong hỏi.</td></tr>
     <tr><td><code>Age: 3889</code></td><td>Header chuẩn của cơ chế cache HTTP (RFC 9111): bản cache này đã nằm sẵn ở đó <strong>3889 giây ≈ 65 phút</strong>.</td></tr>
-    <tr><td><code>CF-RAY: …-HKG</code></td><td><strong>HKG là mã sân bay Hong Kong.</strong> Request được phục vụ từ trung tâm dữ liệu của Cloudflare ở Hong Kong, không phải ở Mỹ. Đó là <strong>CDN</strong>, và đó là lý do nó nhanh.</td></tr>
+    <tr><td><code>CF-RAY: …-HKG</code></td><td><strong>HKG là mã sân bay Hong Kong.</strong> Request được phục vụ từ trung tâm dữ liệu của Cloudflare ở Hong Kong, không phải ở Mỹ. Đó là <strong>CDN</strong> (content delivery network — các máy chủ đặt ở nhiều nước, trả lời từ chỗ gần người dùng nhất), và đó là lý do nó nhanh.</td></tr>
     <tr><td><code>Connection: keep-alive</code></td><td>Giữ ống TCP mở để dùng lại cho request sau, khỏi phải bắt tay TCP và TLS lại từ đầu.</td></tr>
     <tr><td><code>Transfer-Encoding: chunked</code></td><td>Server không khai báo trước độ dài nội dung, mà gửi thành từng khúc, mỗi khúc tự ghi độ dài của mình.</td></tr>
   </tbody>
@@ -536,7 +499,7 @@ thật</strong> trông như thế nào.</p>
 
 <figure class="fig">
 <pre><code>* Connection #0 to host example.com:443 left intact</code></pre>
-<figcaption><b>Hình 14</b> Dòng cuối cùng của output <code>curl -v</code>.</figcaption>
+<figcaption><b>Hình 13</b> Dòng cuối cùng của output <code>curl -v</code>.</figcaption>
 </figure>
 
 <p>Dòng cuối cùng xác nhận ống TCP <strong>vẫn còn mở</strong> khi <code>curl</code> kết thúc — đúng
@@ -587,7 +550,7 @@ subject=CN=example.com
 issuer=C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3
 notBefore=Jul 29 22:10:08 2026 GMT
 notAfter=Oct 27 22:17:21 2026 GMT</code></pre>
-<figcaption><b>Hình 15</b> Output thật khi đọc chứng chỉ của <code>example.com</code>, 24/09/2026.</figcaption>
+<figcaption><b>Hình 14</b> Output thật khi đọc chứng chỉ của <code>example.com</code>, 24/09/2026.</figcaption>
 </figure>
 
 <div class="table-scroll">
@@ -604,10 +567,10 @@ notAfter=Oct 27 22:17:21 2026 GMT</code></pre>
 </div>
 
 <div class="callout warn">
-  <span class="label">Đính chính so với bản ghi đầu tiên</span>
-  <p>Bản ghi đầu tiên của trang này viết rằng "Cloudflare vận hành CA của chính họ". Đọc kỹ trường
-  <code>O=SSL Corporation</code> thì thấy cách nói đó không chính xác: CA trung gian này mang tên
-  Cloudflare nhưng thuộc về một CA công khai khác. Bài học phương pháp: <strong>đọc từng trường
+  <span class="label">Bẫy khi đọc trường issuer</span>
+  <p>Thấy chữ Cloudflare trong <code>CN</code>, rất dễ kết luận rằng "Cloudflare vận hành CA của
+  chính họ". Đọc kỹ trường <code>O=SSL Corporation</code> thì thấy không phải: CA trung gian này mang
+  tên Cloudflare nhưng thuộc về một CA công khai khác. Bài học phương pháp: <strong>đọc từng trường
   một</strong>, đừng suy ra cả dòng từ cái tên nổi bật nhất trong đó.</p>
 </div>
 
@@ -631,7 +594,7 @@ notAfter=Oct 27 22:17:21 2026 GMT</code></pre>
 
 <figure class="fig photo shot">
   <img src="img/crtsh-example-com.webp" width="1264" height="580" loading="lazy" alt="Bảng kết quả tra crt.sh cho example.com, cột Issuer Name; một dòng có issuer Cloudflare TLS Issuing ECC CA 3 được khoanh đỏ.">
-  <figcaption><b>Ảnh 2</b> Sổ công khai Certificate Transparency cho example.com, tra trên crt.sh ngày 30/09/2026 (hiện 7 dòng đầu). <span class="kw"><i class="key k-red" aria-hidden="true"></i>Dòng</span> khoanh có issuer <code>C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3</code> và thời hạn 29/07 tới 27/10/2026 — trùng khít với <code>notBefore</code> và <code>notAfter</code> trong output openssl ở trên. Cùng ngày có nhiều dòng gần giống nhau, vì example.com dùng cả chứng chỉ khoá ECC lẫn RSA, và mỗi chứng chỉ thường được ghi vào sổ hai lần (tiền chứng chỉ và chứng chỉ chính thức). Dòng trên cùng cho thấy một chứng chỉ mới do Sectigo cấp từ 24/09 — trang có thể sẽ sớm chuyển sang nó.</figcaption>
+  <figcaption><b>Ảnh 2</b> Sổ công khai Certificate Transparency cho example.com, tra trên crt.sh ngày 30/09/2026 (hiện 7 dòng đầu). <span class="kw"><i class="key k-red" aria-hidden="true"></i>Dòng</span> khoanh có issuer <code>C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3</code> và thời hạn 29/07 tới 27/10/2026 — trùng khít với <code>notBefore</code> và <code>notAfter</code> trong output openssl ở trên. Cùng ngày có nhiều dòng gần giống nhau, vì example.com dùng song song hai loại chứng chỉ, và mỗi chứng chỉ thường được ghi vào sổ hai lần. Dòng trên cùng cho thấy một chứng chỉ mới do Sectigo cấp từ 24/09 — trang có thể sẽ sớm chuyển sang nó.</figcaption>
 </figure>
 
 
@@ -640,15 +603,6 @@ phải ngẫu nhiên: 90 ngày là thời hạn mà Let's Encrypt phổ biến t
 cũng cấp chứng chỉ ngắn hạn cho các dịch vụ tự động hóa được việc gia hạn. Những lý do đằng sau thời
 hạn ngắn — giới hạn thiệt hại khi lộ private key, ép phải tự động hóa, và việc thu hồi chứng chỉ
 hoạt động kém — đã được phân tích trong bài giảng.</p>
-
-<div class="callout deep">
-  <span class="label">Đào sâu — xu hướng của cả ngành</span>
-  <p>Cần nói chính xác: 90 ngày là lựa chọn của từng CA, chưa phải trần bắt buộc chung. Trần bắt
-  buộc do CA/Browser Forum — diễn đàn giữa các CA và các hãng trình duyệt — quy định, và diễn đàn này
-  đã thông qua lộ trình rút ngắn dần: tối đa 200 ngày từ 15/03/2026, 100 ngày từ 15/03/2027, và 47
-  ngày từ 15/03/2029. Nói cách khác, cả ngành đang đi đúng về phía mà chứng chỉ 90 ngày này đã ở từ
-  trước: <em>thời hạn ngắn, gia hạn hoàn toàn tự động</em>.</p>
-</div>
 
 <p><strong><span class="stg">2</span> Có một tiến trình tự động đang chạy, ngay lúc này.</strong></p>
 
@@ -696,7 +650,7 @@ cùng máy chủ biên đã trả lời header <code>Server: cloudflare</code> �
 <pre class="diagram"><code>  Chứng chỉ mà trình duyệt kiểm tra
   là chứng chỉ của LỄ TÂN (Cloudflare),
   KHÔNG phải của máy gốc.</code></pre>
-<figcaption><b>Hình 16</b> TLS được gỡ ngay tại lớp proxy.</figcaption>
+<figcaption><b>Hình 15</b> TLS được gỡ ngay tại lớp proxy.</figcaption>
 </figure>
 
 <p>TLS được "gỡ" ngay tại lớp proxy — kỹ thuật này tên là <strong>TLS termination</strong>, và nó
@@ -706,14 +660,14 @@ hoặc, ở cấu hình yếu nhất mà Cloudflare cho phép, hoàn toàn khôn
 thấy ổ khóa. Đây là một trong những mặt trái của proxy mà lộ trình sẽ nói thẳng khi tới phần HTTPS
 thật ở <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
 
-<h3 id="hieu-sai-chung-chi">Ba chỗ hiểu sai về chứng chỉ, đã sửa trong buổi học</h3>
+<h3 id="hieu-sai-chung-chi">Ba chỗ người mới hay hiểu sai về chứng chỉ</h3>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 5</b> Lấy từ ghi chú của người học (<code>notes.md</code>).</caption>
-  <thead><tr><th>Đã từng nghĩ</th><th>Thực tế</th></tr></thead>
+  <caption><b>Bảng 5</b> Ba cách hiểu sai phổ biến về chứng chỉ, và thực tế.</caption>
+  <thead><tr><th>Người mới hay nghĩ</th><th>Thực tế</th></tr></thead>
   <tbody>
-    <tr><td>Chứng chỉ là "đăng ký tên miền với IP"</td><td>Đó là việc của DNS. Chứng chỉ chứng minh <strong>danh tính</strong> của một tên, và chứng chỉ web thông thường không chứa địa chỉ IP nào — Hình 15 là bằng chứng.</td></tr>
+    <tr><td>Chứng chỉ là "đăng ký tên miền với IP"</td><td>Đó là việc của DNS. Chứng chỉ chứng minh <strong>danh tính</strong> của một tên, và chứng chỉ web thông thường không chứa địa chỉ IP nào — Hình 14 là bằng chứng.</td></tr>
     <tr><td>"Chứng chỉ bị đánh cắp"</td><td>Chứng chỉ là thứ <strong>công khai</strong> — ai cũng đọc được, như bạn vừa làm. Thứ bí mật và bị đánh cắp là <strong>private key</strong> nằm trên server.</td></tr>
     <tr><td>Lỗi chứng chỉ là do "không dịch được DNS"</td><td>Ngược lại: thấy được lỗi chứng chỉ <strong>chứng minh</strong> DNS và TCP đã chạy tốt. Nếu DNS hỏng thì đã dừng ở NXDOMAIN, không bao giờ tới được bước kiểm tra chứng chỉ.</td></tr>
   </tbody>
@@ -735,7 +689,7 @@ real    0m2.155s
 $ time curl -4 -o /dev/null --max-time 5 http://10.255.255.1:9999
 curl: (28) Connection timed out after 5007 milliseconds
 real    0m5.066s</code></pre>
-<figcaption><b>Hình 17</b> Hai kiểu thất bại, đo bằng <code>time</code> trong Git Bash, 24/09/2026.</figcaption>
+<figcaption><b>Hình 16</b> Hai kiểu thất bại, đo bằng <code>time</code> trong Git Bash, 24/09/2026.</figcaption>
 </figure>
 
 <p>Để hiểu vì sao hai lệnh này thất bại theo hai cách khác nhau, cần nhìn vào bước đầu tiên của mọi
@@ -743,7 +697,8 @@ kết nối TCP: <strong>bắt tay ba bước</strong> (three-way handshake), đ
 (RFC 9293). Client gửi một gói <code>SYN</code> — "tôi muốn mở kết nối tới phòng này". Nếu có một
 process đang listen ở port đó, hệ điều hành phía server trả lời <code>SYN-ACK</code>, client đáp
 <code>ACK</code>, và kết nối thành lập. Nếu <em>không</em> có ai listen, nhưng máy vẫn sống, chính
-kernel của máy đó trả lời bằng một gói <code>RST</code> (reset) — "phòng này không có ai". Còn nếu
+hệ điều hành của máy đó (phần lõi của nó, gọi là kernel — học ở
+<a href="../01-may-tinh-va-he-dieu-hanh/">Bài 01</a>) trả lời bằng một gói <code>RST</code> (reset) — "phòng này không có ai". Còn nếu
 không có máy nào ở địa chỉ đó, hoặc firewall lặng lẽ vứt gói tin, thì không có gì quay về cả, và
 client chỉ còn cách gửi lại <code>SYN</code> theo những khoảng chờ tăng dần cho tới khi bỏ cuộc.</p>
 
@@ -758,7 +713,7 @@ client chỉ còn cách gửi lại <code>SYN</code> theo những khoảng chờ
   curl ── SYN (gửi lại) ───────→        …
   curl ── SYN (gửi lại) ───────→        …
   … im lặng … hết --max-time → curl bỏ cuộc → lỗi (28)</code></pre>
-<figcaption><b>Hình 18</b> Hai kịch bản ở tầng TCP. Chỉ kịch bản đầu có một gói tin quay về.</figcaption>
+<figcaption><b>Hình 17</b> Hai kịch bản ở tầng TCP. Chỉ kịch bản đầu có một gói tin quay về.</figcaption>
 </figure>
 
 <p>Địa chỉ <code>10.255.255.1</code> được chọn có chủ đích: nó nằm trong dải private
@@ -774,7 +729,7 @@ máy của ai.</p>
 
   (28) dừng ở 5007 ms  →  curl DỪNG VÌ TA BẢO NÓ DỪNG.
                           Ta đặt --max-time 5. Khớp tới từng mili-giây.</code></pre>
-<figcaption><b>Hình 19</b> Phép thử phân biệt không dựa vào tốc độ, mà dựa vào việc ai quyết định điểm kết thúc.</figcaption>
+<figcaption><b>Hình 18</b> Phép thử phân biệt không dựa vào tốc độ, mà dựa vào việc ai quyết định điểm kết thúc.</figcaption>
 </figure>
 
 <p>Người mới thường phân biệt refused và timeout bằng tốc độ: "refused thì nhanh, timeout thì
@@ -795,12 +750,12 @@ lượng của nó chính là con số ta chọn, khớp tới từng mili-giây
 <figure class="fig">
 <pre class="diagram"><code>  (7)  CURLE_COULDNT_CONNECT    →  "tôi không kết nối được"  (có kết luận)
   (28) CURLE_OPERATION_TIMEDOUT →  "tôi hết giờ chờ"          (không có kết luận)</code></pre>
-<figcaption><b>Hình 20</b> Tên chính thức của hai mã thoát trong thư viện libcurl.</figcaption>
+<figcaption><b>Hình 19</b> Tên chính thức của hai mã thoát trong thư viện libcurl.</figcaption>
 </figure>
 
 <div class="callout warn">
-  <span class="label">Chỗ đã hiểu sai trong buổi học · đã sửa</span>
-  <p>Người học từng nghĩ: "VPS còn sống thì không thể bị <code>refused</code>." Sự thật thì ngược
+  <span class="label">Chỗ người mới hay hiểu sai</span>
+  <p>Người mới hay nghĩ: "VPS còn sống thì không thể bị <code>refused</code>." Sự thật thì ngược
   lại hoàn toàn: <strong><code>refused</code> CHỈ xảy ra khi máy còn sống</strong>, vì phải có một
   kernel đang chạy mới gửi được gói <code>RST</code>. Máy chết, hoặc bị firewall che kín, thì cho ra
   <code>timeout</code>. Do đó refused là một tin <em>tốt một nửa</em>: máy vẫn sống, chỉ có process
@@ -814,14 +769,14 @@ tức thì — thường chỉ vài mili-giây. Windows thì có một hành vi 
 <strong>thử lại vài lần</strong> trước khi kết luận rằng kết nối bị từ chối, kể cả khi đích là chính
 máy mình. Cần lưu ý rằng hai lệnh trên đã dùng cờ <code>-4</code> và gõ thẳng địa chỉ
 <code>127.0.0.1</code>, nên giả thuyết "Windows thử <code>::1</code> của IPv6 trước" không áp dụng
-cho con số 2,155s này (xem đính chính ở <a href="ipv4-vs-ipv6.html">phụ lục</a>).</p>
+cho con số 2,155s này (xem <a href="ipv4-vs-ipv6.html#dinh-chinh-2s">phụ lục</a>).</p>
 
 <div class="callout">
   <span class="label">Bài học</span>
   <p><strong>Cùng một cơ chế mạng có thể biểu hiện rất khác nhau tùy hệ điều hành.</strong></p>
   <p>Đó là một lý do nữa để deploy lên Linux và học trên Linux, chứ không dựa vào cảm nhận từ máy
   Windows. Thí nghiệm đối chứng — chạy đúng lệnh này trong WSL Ubuntu rồi so với 2,155s — sẽ làm ở
-  <a href="../02-phong-lab-wsl-docker/">Bài 02</a>, khi phòng lab Linux được dựng lại.</p>
+  <a href="../02-phong-lab-wsl-docker/">Bài 02</a>, khi phòng lab Linux được dựng.</p>
 </div>
 
 </section>
@@ -840,7 +795,7 @@ A required privilege is not held by the client.
 
 C:\Users\pc&gt; curl -s -o /dev/null http://127.0.0.1:9999 ; echo "---"
 curl: option ---: is unknown</code></pre>
-<figcaption><b>Hình 21</b> Cùng một dòng lệnh, chạy nhầm trong <code>cmd.exe</code>.</figcaption>
+<figcaption><b>Hình 20</b> Cùng một dòng lệnh, chạy nhầm trong <code>cmd.exe</code>.</figcaption>
 </figure>
 
 <p>Chìa khóa nằm ở một dòng mà mắt rất dễ lướt qua: <strong>"Enter the new time"</strong> — "hãy
@@ -852,27 +807,12 @@ mấy giờ.</p>
   <p>Trong <code>cmd.exe</code>, <code>time</code> <strong>không phải</strong> lệnh đo thời gian. Nó là
   một lệnh có sẵn của <code>cmd</code> dùng để <strong>xem và đặt lại đồng hồ hệ thống</strong>.</p>
   <p>Chuỗi sự kiện diễn ra như sau: <code>time</code> nhận phần <code>curl …</code> làm giờ mới <i class="ic ic-r" role="img" aria-label="sang"></i>
-  không hợp lệ ("cannot accept the time entered") <i class="ic ic-r" role="img" aria-label="sang"></i> hỏi lại <i class="ic ic-r" role="img" aria-label="sang"></i> phía người học gõ <code>2</code> <i class="ic ic-r" role="img" aria-label="sang"></i> việc
+  không hợp lệ ("cannot accept the time entered") <i class="ic ic-r" role="img" aria-label="sang"></i> hỏi lại <i class="ic ic-r" role="img" aria-label="sang"></i> người gõ lệnh nhập <code>2</code> <i class="ic ic-r" role="img" aria-label="sang"></i> việc
   đổi giờ hệ thống đòi quyền Administrator, nên Windows báo "A required privilege is not held by the
   client".</p>
   <p>Và <code>;</code> trong <code>cmd.exe</code> cũng không phải dấu tách lệnh (ở đó dấu tách lệnh là
   <code>&amp;</code>) — nên ở lần chạy thứ hai, <code>; echo "---"</code> bị chuyển nguyên cho
   <code>curl</code> làm tham số, và <code>curl</code> than rằng nó không biết tùy chọn <code>---</code>.</p>
-</div>
-
-<p>Để thấy đây không phải một sự trùng hợp mà là một khác biệt có hệ thống, hãy đặt ba ký hiệu vừa
-gây lỗi cạnh nhau trong ba shell mà người học đang có trên cùng một máy:</p>
-
-<div class="table-scroll">
-<table>
-  <caption><b>Bảng 6</b> Cùng một ký hiệu, ba nghĩa khác nhau.</caption>
-  <thead><tr><th>Ký hiệu</th><th><code>cmd.exe</code></th><th>PowerShell</th><th>bash (Git Bash, Linux)</th></tr></thead>
-  <tbody>
-    <tr><td><code>time</code></td><td>Xem / <strong>đặt</strong> đồng hồ hệ thống</td><td>Không có lệnh này; đo thời gian dùng <code>Measure-Command { … }</code></td><td>Từ khóa của shell: <strong>đo thời gian</strong> chạy một lệnh</td></tr>
-    <tr><td><code>;</code></td><td>Không tách lệnh; tách lệnh dùng <code>&amp;</code></td><td>Tách câu lệnh</td><td>Tách lệnh</td></tr>
-    <tr><td>Thiết bị rỗng</td><td><code>NUL</code></td><td><code>$null</code> (hoặc <code>NUL</code>)</td><td><code>/dev/null</code></td></tr>
-  </tbody>
-</table>
 </div>
 
 <div class="callout ok">
@@ -881,26 +821,9 @@ gây lỗi cạnh nhau trong ba shell mà người học đang có trên cùng m
   <p>Cùng một chữ <code>time</code> mang nghĩa hoàn toàn khác. Cùng dấu <code>;</code> hành xử hoàn
   toàn khác. Shell không phải một "cửa sổ gõ lệnh" trung lập; nó là một trình thông dịch có cú pháp
   riêng, và dòng lệnh bạn gõ được hiểu theo cú pháp của shell đang chạy.</p>
-  <p>Đây không phải chuyện vặt — nó là một trong những nguyên nhân gây lỗi phổ biến nhất trong CI/CD:
-  script chạy ngon trên máy mình, đẩy lên GitLab CI chạy trong một container Linux, và gãy vì
-  <strong>shell khác</strong>. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../02-phong-lab-wsl-docker/">Bài 02</a> và
-  <a href="../20-gitlab-ci-co-ban/">Bài 20</a>.</p>
+  <p>Đây không phải chuyện vặt: một script chạy được trên máy này có thể gãy trên máy khác chỉ vì máy
+  đó dùng <strong>shell khác</strong> — gặp lại ở <a href="../02-phong-lab-wsl-docker/">Bài 02</a>.</p>
 </div>
-
-<h3 id="co-s">Và một bẫy nhỏ nữa: cờ <code>-s</code></h3>
-
-<figure class="fig">
-<pre><code>curl -s -o /dev/null --max-time 5 http://10.255.255.1:9999
-# (không có output nào)</code></pre>
-<figcaption><b>Hình 22</b> Lệnh chạy xong, thất bại, nhưng không nói một lời.</figcaption>
-</figure>
-
-<p>Cờ <code>-s</code> (silent) <strong>giấu luôn cả thông báo lỗi</strong>, chứ không chỉ giấu thanh
-tiến trình như nhiều người vẫn nghĩ. Khi kết hợp với <code>-o /dev/null</code> (vứt nội dung trả về),
-lệnh trở nên câm hoàn toàn: ta đã tự bịt miệng chính thứ mình cần xem. Cách dùng đúng khi viết script
-là <code>curl -sS</code>: <code>-s</code> để tắt thanh tiến trình, <code>-S</code> (show error) để vẫn
-in lỗi khi có lỗi. Ngoài ra, <code>/dev/null</code> là cách viết của thế giới Unix; trên Windows, thiết
-bị tương đương là <code>NUL</code> — một khác biệt nữa trong Bảng 6.</p>
 
 </section>
 
@@ -916,7 +839,7 @@ phải biết là nó tồn tại, dù chưa cần biết tường tận.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 7</b> Chỗ lệch so với tài liệu mẫu, và bài học rút ra.</caption>
+  <caption><b>Bảng 6</b> Chỗ lệch so với tài liệu mẫu, và bài học rút ra.</caption>
   <thead><tr><th>Chỗ lệch so với tài liệu mẫu</th><th>Tầng gây ra</th><th>Bài học</th></tr></thead>
   <tbody>
     <tr><td>Không thấy dòng chứng chỉ trong <code>curl -v</code></td><td>Thư viện TLS</td><td>Cùng tên lệnh, khác thư viện mã hóa bên dưới <i class="ic ic-r" role="img" aria-label="sang"></i> khác output</td></tr>
@@ -953,7 +876,7 @@ nào.</p>
   <li>Giải thích được vì sao cần cả header <code>Host</code> lẫn SNI khi một IP phục vụ nhiều website HTTPS</li>
   <li>Đọc được <code>subject</code>, <code>issuer</code>, <code>notAfter</code> của một chứng chỉ bằng <code>openssl</code></li>
   <li>Phân biệt refused và timeout bằng câu hỏi "ai quyết định dừng", không bằng tốc độ</li>
-  <li>Kể được ba ký hiệu mang nghĩa khác nhau giữa <code>cmd</code>, PowerShell và bash</li>
+  <li>Giải thích được vì sao <code>time</code> và <code>;</code> trong <code>cmd.exe</code> hành xử khác hẳn trong bash</li>
 </ul>
 
 <h2 id="nguon-output">Nguồn đọc thêm</h2>

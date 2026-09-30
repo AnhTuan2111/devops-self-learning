@@ -20,10 +20,10 @@ Một lệnh dựng lên toàn bộ Spring Boot + PostgreSQL, tái lập đượ
 
 - compose.yaml: services, volumes, networks
 - depends_on và vì sao nó không đợi app sẵn sàng
-- healthcheck và depends_on: condition: service_healthy
+- HEALTHCHECK trong Dockerfile, healthcheck trong Compose và depends_on: condition: service_healthy
 - env_file và .env
 - up -d, down, logs -f, ps, exec
-- Compose thường dùng cho môi trường dev
+- Compose hợp với một máy (dev hoặc một server nhỏ); cần nhiều máy thì tới Kubernetes
 
 ## Bài lab
 

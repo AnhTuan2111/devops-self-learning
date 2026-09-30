@@ -21,7 +21,7 @@ Các pod gọi nhau ổn định bằng tên, dù pod liên tục bị thay.
 - Label và selector
 - DNS trong cụm: tên-service.namespace.svc (nối Bài 10)
 - kubectl port-forward
-- Namespace
+- Namespace của Kubernetes: chia cụm thành vùng tên riêng (khác namespace Linux ở Bài 03)
 
 ## Bài lab
 

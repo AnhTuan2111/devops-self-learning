@@ -59,27 +59,28 @@
     <li>Máy ảo (VM) là gì — để bài sau so với container</li>
     <li>Terminal, shell, bash; lệnh, tham số, PATH</li>
     <li>Đi lại và đọc tệp: pwd, ls, cd, cat, less, nano</li>
-    <li>Pipe | và chuyển hướng &gt; ở mức cơ bản</li>
+    <li>Pipe | và chuyển hướng: ba luồng vào/ra chuẩn (0 stdin, 1 stdout, 2 stderr), &gt;, 2&gt;/dev/null — giải nghĩa lệnh openssl … 2&gt;/dev/null ở Bài 00</li>
     <li>Docker Desktop với WSL backend: docker version, docker run hello-world</li>
   </ul>
 </section>
 
 <section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
   <h2 id="lab">Bài lab dự kiến</h2>
-  <p>Cài lại Ubuntu trên WSL2, bật Docker Desktop, chạy hello-world. Cố tình tắt Docker Desktop rồi chạy lại lệnh docker để gặp lỗi &quot;Cannot connect to the Docker daemon&quot;, rồi tự sửa. Làm nốt phép đo đối chứng đã hứa ở Bài 00: thời gian một kết nối bị từ chối trên Linux so với 2,155 giây đo trên Windows.</p>
+  <p>Cài Ubuntu trên WSL2, bật Docker Desktop, chạy hello-world. Cố tình tắt Docker Desktop rồi chạy lại lệnh docker để gặp lỗi &quot;Cannot connect to the Docker daemon&quot;, rồi tự sửa. Làm nốt phép đo đối chứng đã hứa ở Bài 00: thời gian một kết nối bị từ chối trên Linux so với 2,155 giây đo trên Windows.</p>
   <div class="callout warn">
     <span class="label">Luật của mọi bài lab</span>
     <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
   </div>
 </section>
 
-<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="5 mục">
   <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
   <ul class="check">
-    <li>Giải thích được WSL2 là một máy ảo, và vì sao đó chưa phải container</li>
+    <li>Giải thích được WSL2 là một máy ảo có kernel Linux riêng</li>
     <li>Tới một thư mục, xem và sửa một tệp bằng nano mà không cần chuột</li>
     <li>Đọc được lỗi &quot;Cannot connect to the Docker daemon&quot; nói lên điều gì, và sửa được</li>
     <li>Dùng pipe để lọc output của một lệnh</li>
+    <li>Giải thích được con số 2 trong 2&gt;/dev/null</li>
   </ul>
 </section>
 

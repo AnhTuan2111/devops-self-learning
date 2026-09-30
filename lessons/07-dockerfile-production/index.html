@@ -57,11 +57,10 @@
   <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
   <ul>
     <li>Multi-stage build: build bằng JDK, chạy bằng JRE</li>
-    <li>Cache Maven/Gradle khi build trong Docker</li>
-    <li>User root và user thường; quyền của một process (Linux dạy đúng lúc)</li>
+    <li>Cache Maven/Gradle khi build trong Docker (nối cache theo layer ở Bài 06)</li>
+    <li>User root và user thường; quyền của một process (Linux dạy đúng lúc); vì sao process không chạy bằng root không mở được port dưới 1024, và capabilities</li>
     <li>Chạy container bằng user thường: dòng USER</li>
     <li>JVM trong container: giới hạn bộ nhớ, MaxRAMPercentage; OOM đã gặp ở Bài 01</li>
-    <li>HEALTHCHECK</li>
   </ul>
 </section>
 

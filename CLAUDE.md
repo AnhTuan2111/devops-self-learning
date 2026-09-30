@@ -94,6 +94,10 @@ Nhịp chuẩn của một buổi:
 1. Chia bài thành **3–5 phần**. Mỗi lần chat chỉ dạy **một phần**.
 2. Cuối mỗi phần, hỏi **2–3 câu** buộc người học suy luận, không phải nhắc lại.
    Câu hỏi phải có đáp án đúng/sai rõ ràng, không hỏi kiểu "bạn hiểu chưa".
+   **Đáp án chỉ được dựa vào những phần người học ĐÃ học** (người học cấm 30/09/2026, sau khi bị
+   hỏi một câu cần SSH và tín hiệu SIGHUP — hai thứ chưa dạy — và gọi đó là "đánh đố"). Trước khi
+   gửi câu hỏi, viết sẵn đáp án, liệt kê mọi khái niệm **và cơ chế** mà đáp án dùng, rồi đối chiếu
+   từng cái với các bài trong `needs` và các phần đã học của bài đang học. Thiếu một cái thì bỏ câu.
 3. **Dừng lại. Đợi trả lời.** Không dạy tiếp khi chưa có phản hồi.
 4. Đọc câu trả lời để tìm **chỗ hiểu sai**, giảng lại đúng chỗ đó, rồi mới sang phần sau.
 5. Trả lời đúng thì xác nhận ngắn gọn rồi đi tiếp — không khen dài dòng.
@@ -152,6 +156,16 @@ Khi người học nói "dạy bài tiếp theo" / "học bài NN":
   niệm của bài trước ("kernel — người quản lý phần cứng đã gặp ở Bài 01 — …") để kiến thức nối thành
   chuỗi theo thời gian, không phân mảnh. Lượt soát 30/09/2026 đếm được 78 thuật ngữ dùng trước khi
   giới thiệu ở Bài 00–01 (tệ nhất: "gói tin" dùng 44 lần mà không trang nào định nghĩa).
+- **Không có mục lạc đề** (người học cấm 30/09/2026: "một bài học cấu trúc phải chặt chẽ, ràng buộc
+  và liên kết với nhau"). Mỗi `h2`/`h3`, mỗi khối chú thích, kể cả khối "Đào sâu", phải trả lời
+  được: *nó phục vụ câu hỏi nào ở tab `Vấn đề`, hoặc mục tiêu nào trong `curriculum.json`?* — và
+  **câu nối đó phải viết ra trên trang**, không để người đọc tự đoán. Không trả lời được thì bỏ.
+  Nội dung đúng nhưng thuộc bài khác thì **chuyển sang bài đó** (ghi vào `concepts` của bài đó trong
+  `curriculum.json`), không giữ lại làm "kiến thức tặng thêm". Các dạng đã mắc: giải nghĩa bù một
+  lệnh của bài trước (`2>/dev/null` ở Bài 01 — chỗ đúng là Bài 02); dạy trước công cụ của bài sau
+  (`docker stop`, cấu hình Kubernetes trong Bài 01); khối "Đào sâu" mở ra chủ đề mới thay vì đào sâu
+  đúng khái niệm vừa giảng (zombie, capabilities). Viết xong một bài, soát lại từng mục theo câu hỏi
+  trên trước khi đưa người học đọc.
 - **Problem → Concept → Tool.** Không bao giờ mở đầu bằng "Docker là...".
   Mở đầu bằng một vấn đề khiến ta cần Docker.
 - **Luôn nối về bản đồ ở Bài 00.** Mỗi công cụ phải được gắn vào một chặng ①–⑨ cụ thể.

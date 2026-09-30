@@ -18,7 +18,7 @@ Hiểu vì sao trong Docker bạn viết jdbc:postgresql://db:5432 thay vì loca
 
 - localhost bên trong container là chính container đó
 - Bridge network và network tự tạo
-- DNS nội bộ của Docker: gọi nhau bằng tên (DNS dạy đúng lúc)
+- DNS nội bộ của Docker: gọi nhau bằng tên (nối DNS ở Bài 00)
 - Chỉ publish những cổng cần lộ ra ngoài
 - host.docker.internal
 - ping và nslookup từ trong container

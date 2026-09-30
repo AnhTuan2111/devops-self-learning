@@ -86,7 +86,8 @@ phân công này là bước đầu tiên để biết một lỗi thuộc về 
   (<code>http</code>, <code>https</code>…). Nó còn ngầm quyết định port mặc định.</dd>
   <dt>host <small>tên máy chủ</small></dt>
   <dd>Một <strong>cái tên</strong> dành cho con người đọc, như <code>api.example.com</code>. Máy tính
-  không gửi được gói tin tới một cái tên; tên phải được dịch sang địa chỉ IP bởi DNS trước đã.</dd>
+  không gửi được gói tin — mẩu dữ liệu nhỏ mà mạng chuyển đi, phần đầu ghi địa chỉ nơi gửi và nơi
+  nhận — tới một cái tên; tên phải được dịch sang địa chỉ IP bởi DNS trước đã.</dd>
   <dt>port <small>cổng</small></dt>
   <dd>Một con số 16 bit (0–65535) chỉ ra chương trình nào trên máy đích sẽ nhận kết nối. Nếu URL không
   ghi port, trình duyệt dùng port mặc định của scheme.</dd>
@@ -121,8 +122,10 @@ mạnh.</p>
 port, trình duyệt ngầm hiểu <code>http://</code> đi kèm <code>:80</code> và <code>https://</code> đi kèm
 <code>:443</code>. Đây là lý do bạn chưa bao giờ phải gõ port khi vào Facebook hay GitHub, nhưng luôn
 phải gõ <code>:8080</code> khi chạy Spring Boot trên máy mình: ứng dụng của bạn đang nghe ở một port
-không phải mặc định, nên trình duyệt không thể tự đoán. Về sau, khi đặt Nginx đứng trước ứng dụng, chính
-Nginx sẽ chiếm port 443 để người dùng không bao giờ phải biết con số 8080 tồn tại.</p>
+không phải mặc định, nên trình duyệt không thể tự đoán. Về sau ta sẽ đặt Nginx đứng trước ứng dụng —
+Nginx là một chương trình nhận request thay cho ứng dụng rồi chuyển vào trong, một vai gọi là
+<em>reverse proxy</em> — và chính Nginx sẽ chiếm port 443 để người dùng không bao giờ phải biết con số
+8080 tồn tại.</p>
 
 <p>Quan sát thứ ba: <strong><code>path</code> và <code>query</code> là phần hạ tầng không quan
 tâm.</strong> DNS, firewall, router, thậm chí phần lớn cấu hình Nginx cơ bản — không thành phần nào hiểu
@@ -164,8 +167,8 @@ chỉ ứng dụng — tức code bạn viết — mới gán ý nghĩa cho nó.
 
 <p>Đây là bộ từ vựng mà mọi bài sau sẽ dùng lại, và nó ra đời để giải quyết một nhầm lẫn rất phổ biến:
 người mới thường gộp "địa chỉ IP", "port", "chương trình đang chạy" và "firewall" thành một khối mơ hồ
-gọi chung là "server", rồi khi có lỗi thì không biết khối nào hỏng. Bốn thứ đó là bốn tầng khác nhau
-của ngăn xếp mạng, chúng hỏng theo bốn kiểu khác nhau và cho ra bốn triệu chứng khác nhau. Vì vậy việc
+gọi chung là "server", rồi khi có lỗi thì không biết khối nào hỏng. Thực ra đó là bốn thứ riêng biệt,
+chúng hỏng theo bốn kiểu khác nhau và cho ra bốn triệu chứng khác nhau. Vì vậy việc
 đầu tiên phải làm là định nghĩa từng thứ cho chính xác.</p>
 
 <dl class="terms">
@@ -174,7 +177,7 @@ của ngăn xếp mạng, chúng hỏng theo bốn kiểu khác nhau và cho ra 
   thường viết thành bốn số như <code>192.168.10.38</code>. Nó cho mạng biết phải chuyển gói tin tới cửa
   ngõ nào.</dd>
   <dt>port <small>cổng</small></dt>
-  <dd>Con số 16 bit trong phần đầu gói TCP/UDP, cho hệ điều hành biết gói tin thuộc về chương trình nào
+  <dd>Con số 16 bit trong phần đầu gói tin, cho hệ điều hành biết gói tin thuộc về chương trình nào
   trong máy. Cùng một IP có thể có hàng chục nghìn port.</dd>
   <dt>listen <small>lắng nghe</small></dt>
   <dd>Trạng thái một process đã yêu cầu hệ điều hành "mọi kết nối tới port này, qua địa chỉ này, hãy giao
@@ -229,7 +232,7 @@ khác nhau, nên tách được vai là tách được nguyên nhân.</figcaptio
 
 <p>Điều đầu tiên mô hình này phá vỡ là niềm tin ngầm rằng "mỗi máy có một địa chỉ IP". Trên thực tế, địa
 chỉ IP không được gán cho cái máy mà được gán cho từng <em>giao diện mạng</em> của nó — card WiFi, card
-Ethernet, card ảo của VPN, card ảo của Docker, và một card đặc biệt không có phần cứng nào đứng sau là
+Ethernet, các card ảo do VPN hay phần mềm khác tạo ra, và một card đặc biệt không có phần cứng nào đứng sau là
 <em>loopback</em>. Một chiếc laptop bình thường vì vậy có ít nhất hai, thường là ba bốn địa chỉ cùng lúc,
 như trong Hình 3.</p>
 
@@ -246,7 +249,7 @@ như trong Hình 3.</p>
     │  10.8.0.2                          │
     └────────────────────────────────────┘</code></pre>
 <figcaption><b>Hình 3</b> Ba giao diện mạng, ba địa chỉ, cùng dẫn vào một laptop. Địa chỉ WiFi do router
-cấp qua DHCP nên có thể đổi giữa các lần kết nối.</figcaption>
+tự cấp mỗi lần kết nối nên có thể đổi giữa các lần.</figcaption>
 </figure>
 
 <div class="callout ok">
@@ -262,7 +265,7 @@ cấp qua DHCP nên có thể đổi giữa các lần kết nối.</figcaption>
 <h3 id="ba-dai">Ba dải địa chỉ đặc biệt, ba mức độ "gần"</h3>
 
 <p>Trong không gian địa chỉ IP, có những dải được dành riêng cho mục đích đặc biệt và theo quy ước sẽ
-không bao giờ được định tuyến ra Internet công cộng. Ba dải bạn sẽ gặp nhiều nhất khác nhau ở chỗ "phạm
+không bao giờ được chuyển ra Internet công cộng. Ba dải bạn sẽ gặp nhiều nhất khác nhau ở chỗ "phạm
 vi gần" mà chúng đại diện: một dải chỉ có nghĩa bên trong một máy, một dải chỉ có nghĩa trong một đoạn
 mạng vật lý, và một dải có nghĩa trong cả một mạng nội bộ.</p>
 
@@ -270,13 +273,13 @@ mạng vật lý, và một dải có nghĩa trong cả một mạng nội bộ.
 <pre class="diagram"><code>  127.0.0.1   →  "chỉ trong MÁY này"        (loopback)
   fe80::…     →  "chỉ trong ĐOẠN MẠNG này"  (link-local, IPv6)
   192.168.…   →  "chỉ trong MẠNG NỘI BỘ"    (private)</code></pre>
-<figcaption><b>Hình 4</b> Ba dải địa chỉ đặc biệt xếp theo phạm vi từ hẹp tới rộng. Không dải nào định
-tuyến được ra Internet.</figcaption>
+<figcaption><b>Hình 4</b> Ba dải địa chỉ đặc biệt xếp theo phạm vi từ hẹp tới rộng. Không dải nào được
+chuyển ra Internet.</figcaption>
 </figure>
 
-<p>Hệ quả của việc không định tuyến ra ngoài là rất lớn và sẽ quay lại ở phụ lục IPv6: một máy chỉ có
+<p>Hệ quả của việc không được chuyển ra ngoài là rất lớn và sẽ quay lại ở phụ lục IPv6: một máy chỉ có
 địa chỉ <code>192.168.x.x</code> thì không ai trên Internet có thể chủ động gọi tới nó, và đó chính là lý
-do một server thật phải đặt ở nơi có IP công khai — trong một trung tâm dữ liệu hay trên một VPS
+do một server thật phải đặt ở nơi có IP công khai — trên một máy chủ thuê trong trung tâm dữ liệu
 — chứ không chạy được trên laptop ở nhà. Chi tiết nằm ở
 <a href="ipv4-vs-ipv6.html">phụ lục IPv4, IPv6 và NAT</a>.</p>
 
@@ -335,9 +338,12 @@ giá trị chẩn đoán của việc tách khái niệm.</p>
 thể chọn gắn vào <code>127.0.0.1</code> (chỉ nhận kết nối từ trong máy), vào một địa chỉ cụ thể như
 <code>192.168.10.38</code>, hoặc vào địa chỉ đặc biệt <code>0.0.0.0</code> nghĩa là "mọi cửa ngõ". Đây
 là điều kiện hay bị bỏ sót nhất, bởi vì từ phía người gọi, thiếu <span class="stg">3</span> trông giống hệt thiếu <span class="stg">1</span>: cả hai đều
-cho ra <code>refused</code>. Nó cũng là lỗi kinh điển nhất khi bắt đầu đóng gói ứng dụng vào Docker, nơi
-"cửa hông" của container không phải là cửa hông của máy bạn. Cơ chế này được mổ xẻ trọn vẹn ở
-<a href="../04-port-va-publish/">Bài 04</a>.</p>
+cho ra <code>refused</code>.</p>
+
+<p>Listen address cũng là lỗi kinh điển nhất khi bắt đầu dùng Docker — công cụ đóng gói và chạy ứng
+dụng, học từ <a href="../03-container-dau-tien/">Bài 03</a>. Docker chạy mỗi ứng dụng thành một
+<em>container</em>, tức một process được cô lập khỏi phần còn lại của máy. Chuyện listen address bên trong
+container được mổ xẻ trọn vẹn ở <a href="../04-port-va-publish/">Bài 04</a>.</p>
 
 <div class="callout warn">
   <span class="label">Thói quen phải bỏ từ hôm nay</span>
@@ -364,7 +370,7 @@ cho ra <code>refused</code>. Nó cũng là lỗi kinh điển nhất khi bắt �
 
 <p>Bốn khái niệm ở tab trước mô tả một tình huống trong mạng LAN, nơi hai máy ngồi cạnh nhau. Giờ hãy
 đưa nó lên Internet thật: ứng dụng nằm trên một VPS — một máy Linux thuê trong trung tâm dữ liệu, chạy
-24/7 — còn người dùng ngồi ở nhà và gõ <code>https://api.tuan.dev/users/42</code>. Khoảng cách xa hơn
+24/7 — còn người dùng ngồi ở nhà và gõ <code>https://api.example.com/users/42</code>. Khoảng cách xa hơn
 và môi trường thù địch hơn khiến bốn thành phần mới buộc phải xuất hiện, và mỗi thành phần tồn tại để
 giải quyết đúng một vấn đề mà mạng LAN chưa có.</p>
 
@@ -374,8 +380,8 @@ giải quyết đúng một vấn đề mà mạng LAN chưa có.</p>
   thành phần giải quyết.</caption>
   <thead><tr><th>Mọc thêm</th><th>Chặng</th><th>Vì sao phải có</th></tr></thead>
   <tbody>
-    <tr><td><strong>DNS</strong></td><td><span class="stg">2</span></td><td>Người dùng chỉ biết cái tên <code>api.tuan.dev</code>, không biết địa chỉ số của VPS</td></tr>
-    <tr><td><strong>TLS</strong></td><td><span class="stg">4</span></td><td><code>https</code> đòi hỏi mã hóa đường truyền, và quan trọng hơn, phải <em>chứng minh</em> máy bên kia đúng là <code>api.tuan.dev</code></td></tr>
+    <tr><td><strong>DNS</strong></td><td><span class="stg">2</span></td><td>Người dùng chỉ biết cái tên <code>api.example.com</code>, không biết địa chỉ số của VPS</td></tr>
+    <tr><td><strong>TLS</strong></td><td><span class="stg">4</span></td><td><code>https</code> đòi hỏi mã hóa đường truyền, và quan trọng hơn, phải <em>chứng minh</em> máy bên kia đúng là <code>api.example.com</code></td></tr>
     <tr><td><strong>Firewall</strong></td><td><span class="stg">6</span></td><td>Cửa ngõ giờ phơi ra toàn bộ Internet, nơi có bot quét port liên tục — cần một bảo vệ thật</td></tr>
     <tr><td><strong>Nginx</strong></td><td><span class="stg">7</span></td><td>Phải có ai đó gỡ lớp mã hóa, và phân luồng khi nhiều website cùng chạy trên một máy</td></tr>
   </tbody>
@@ -389,7 +395,7 @@ VPS, và ở giữa là Internet — một vùng mà bạn không kiểm soát �
 <figure class="fig">
 <pre class="diagram"><code>  ┌──────────────── MÁY NGƯỜI DÙNG ─────────────────────────┐
   │  1 Trình duyệt tách URL: scheme/host/port/path          │
-  │  2 DNS      "api.tuan.dev là số mấy?" → 123.45.67.89    │
+  │  2 DNS      "api.example.com là số mấy?" → 123.45.67.89 │
   │  3 TCP      mở kết nối tới 123.45.67.89, phòng 443      │
   │  4 TLS      bắt tay, kiểm chứng chỉ, bật mã hóa         │
   │  5 HTTP     gửi "GET /users/42" + headers               │
@@ -423,7 +429,8 @@ này.</figcaption>
 </figure>
 
 
-<p>Có một chi tiết tinh tế trong thứ tự <span class="stg">3</span> <i class="ic ic-r" role="img" aria-label="sang"></i> <span class="stg">4</span> <i class="ic ic-r" role="img" aria-label="sang"></i> <span class="stg">5</span> đáng dừng lại. Kết nối TCP ở chặng <span class="stg">3</span> phải được thiết
+<p>Có một chi tiết tinh tế trong thứ tự <span class="stg">3</span> <i class="ic ic-r" role="img" aria-label="sang"></i> <span class="stg">4</span> <i class="ic ic-r" role="img" aria-label="sang"></i> <span class="stg">5</span> đáng dừng lại. TCP là giao thức mở một kết
+nối tin cậy giữa hai máy trước khi gửi dữ liệu, và kết nối TCP ở chặng <span class="stg">3</span> phải được thiết
 lập xong trước, bởi vì TLS ở chặng <span class="stg">4</span> là một cuộc hội thoại chạy <em>bên trên</em> kết nối đó; và chỉ khi
 TLS đã bật mã hóa, trình duyệt mới gửi dòng <code>GET /users/42</code> ở chặng <span class="stg">5</span>. Hệ quả là path và
 header của request — kể cả cookie đăng nhập — đi qua Internet ở dạng đã mã hóa, người đứng giữa không
@@ -497,11 +504,11 @@ biết request đã đi tới đâu trên bản đồ.</p>
   <tbody>
     <tr><td>"Không tìm thấy máy chủ"<br><code>NXDOMAIN</code></td><td>Trình duyệt / HĐH <strong>của người dùng</strong>, dựa trên câu trả lời của DNS</td><td><span class="stg">2</span></td><td>Domain chưa trỏ, gõ sai, hoặc <strong>hết hạn</strong></td></tr>
     <tr><td><code>Timeout</code></td><td><strong>Không ai cả</strong></td><td><span class="stg">3</span> <span class="stg">6</span></td><td>Máy chết, sai IP, firewall nuốt gói tin</td></tr>
-    <tr><td><code>Connection refused</code></td><td><strong>Kernel</strong> của server</td><td><span class="stg">3</span> <span class="stg">7</span></td><td>Máy sống, nhưng phòng đó trống <i class="ic ic-r" role="img" aria-label="sang"></i> Nginx chết</td></tr>
+    <tr><td><code>Connection refused</code></td><td><strong>Kernel</strong> của server (phần lõi của hệ điều hành — học ở Bài 01)</td><td><span class="stg">3</span> <span class="stg">7</span></td><td>Máy sống, nhưng phòng đó trống <i class="ic ic-r" role="img" aria-label="sang"></i> Nginx chết</td></tr>
     <tr><td><code>ERR_CERT_DATE_INVALID</code></td><td><strong>Trình duyệt</strong> người dùng</td><td><span class="stg">4</span></td><td>Chứng chỉ hết hạn / cấp cho tên miền khác</td></tr>
-    <tr><td><strong>502</strong> Bad Gateway</td><td><strong>Nginx</strong></td><td><span class="stg">7</span><i class="ic ic-r" role="img" aria-label="sang"></i><span class="stg">8</span></td><td>App chết, sai port, container chưa lên</td></tr>
+    <tr><td><strong>502</strong> Bad Gateway</td><td><strong>Nginx</strong></td><td><span class="stg">7</span><i class="ic ic-r" role="img" aria-label="sang"></i><span class="stg">8</span></td><td>App chết, sai port, app chưa khởi động xong</td></tr>
     <tr><td><strong>504</strong> Gateway Timeout</td><td><strong>Nginx</strong></td><td><span class="stg">7</span><i class="ic ic-r" role="img" aria-label="sang"></i><span class="stg">8</span></td><td>App sống nhưng trả lời quá chậm</td></tr>
-    <tr><td><strong>503</strong> Service Unavailable</td><td>Nginx hoặc app</td><td><span class="stg">7</span> <span class="stg">8</span></td><td>App đang khởi động, hoặc dính rate limit</td></tr>
+    <tr><td><strong>503</strong> Service Unavailable</td><td>Nginx hoặc app</td><td><span class="stg">7</span> <span class="stg">8</span></td><td>App đang khởi động, hoặc bị chặn vì gửi quá nhiều request trong thời gian ngắn (rate limit)</td></tr>
     <tr><td><strong>500</strong> Internal Server Error</td><td><strong>Spring Boot</strong></td><td><span class="stg">8</span></td><td>Bug trong code — giờ mới đọc code</td></tr>
     <tr><td><strong>404</strong> Not Found</td><td>Nginx <em>hoặc</em> Spring Boot</td><td><span class="stg">7</span> <span class="stg">8</span></td><td>Sai path, hoặc Nginx định tuyến nhầm</td></tr>
     <tr><td>Log app: <code>pool exhausted</code></td><td>Spring Boot</td><td><span class="stg">9</span></td><td>DB chết, quá tải, hoặc rò rỉ connection</td></tr>
@@ -510,7 +517,7 @@ biết request đã đi tới đâu trên bản đồ.</p>
 </div>
 
 <p>Hai dòng đầu bảng có tác giả đặc biệt. Với <code>NXDOMAIN</code>, không máy chủ nào của bạn được liên
-lạc cả: DNS resolver trả lời rằng tên miền không tồn tại, và trình duyệt trên máy người dùng tự viết
+lạc cả: máy chủ DNS mà máy người dùng hỏi trả lời rằng tên miền không tồn tại, và trình duyệt trên máy người dùng tự viết
 thông báo lỗi dựa trên câu trả lời đó. Với <code>timeout</code>, tình hình còn cực đoan hơn: không có ai
 viết ra gì hết. Timeout chỉ là việc phía gọi đã chờ đủ lâu mà không nhận được bất kỳ phản hồi nào, và tự
 bỏ cuộc. Sự vắng mặt của tác giả chính là thông tin.</p>
@@ -547,7 +554,7 @@ trên bản đồ, và dẫn tới hai hành động chẩn đoán đối lập 
 
 <figure class="fig">
 <pre class="diagram"><code>  502  →  ĐỪNG mở code. Code không chạy dòng nào cả.
-          Đi xem: process còn sống không? container còn chạy không? sai port không?
+          Đi xem: process còn sống không? sai port không?
 
   500  →  GIỜ mới mở code. App đã chạy và tự ném exception.
           Đi xem: log ứng dụng, stack trace.</code></pre>
@@ -591,7 +598,7 @@ lỗi; lễ tân chỉ bê mẩu giấy ấy ra nguyên vẹn, không đọc, kh
     <figure><img src="img/nginx-502.webp" width="680" height="208" loading="lazy" alt="Trang lỗi trắng, tiêu đề 502 Bad Gateway, bên dưới là dòng nginx/1.30.5."><div class="lbl">502 <small>không ai listen phía sau</small></div></figure>
     <figure><img src="img/nginx-504.webp" width="680" height="208" loading="lazy" alt="Trang lỗi trắng, tiêu đề 504 Gateway Time-out, bên dưới là dòng nginx/1.30.5."><div class="lbl">504 <small>app không trả lời kịp</small></div></figure>
   </div>
-  <figcaption><b>Ảnh 4</b> Ba trang lỗi do chính Nginx viết, chụp từ Nginx 1.30.5 chạy thật trên máy người viết ngày 30/09/2026: xin một file không tồn tại (404); proxy tới một port không có ai listen (502); proxy tới một server nhận kết nối nhưng không bao giờ trả lời, với <code>proxy_read_timeout 2s</code> (504). Cả ba cùng một khuôn và cùng chữ ký <code>nginx/1.30.5</code> ở cuối — đó là cách nhận ra người viết. Hai chi tiết chỉ lộ ra khi chạy thật: Nginx viết "Gateway Time-out" có gạch nối, khác cụm "Gateway Timeout" trong RFC 9110; và trang 502 mất 2,03 giây mới hiện, vì trên Windows một lần kết nối bị từ chối tốn khoảng 2 giây — đúng hiện tượng đã đo ở Lab 4 (xem <a href="phan-tich-output.html#t-refused">trang mổ băng output</a>).</figcaption>
+  <figcaption><b>Ảnh 4</b> Ba trang lỗi do chính Nginx viết, chụp từ Nginx 1.30.5 chạy thật trên máy người viết ngày 30/09/2026: xin một file không tồn tại (404); proxy tới một port không có ai listen (502); proxy tới một server nhận kết nối nhưng không bao giờ trả lời, với thời gian chờ của Nginx đặt còn 2 giây (504). Cả ba cùng một khuôn và cùng chữ ký <code>nginx/1.30.5</code> ở cuối — đó là cách nhận ra người viết. Hai chi tiết chỉ lộ ra khi chạy thật: Nginx viết "Gateway Time-out" có gạch nối, khác cụm "Gateway Timeout" trong RFC 9110; và trang 502 mất 2,03 giây mới hiện, vì trên Windows một lần kết nối bị từ chối tốn khoảng 2 giây — đúng hiện tượng đã đo ở Lab 4 (xem <a href="phan-tich-output.html#t-refused">trang mổ băng output</a>).</figcaption>
 </figure>
 
 
@@ -714,7 +721,7 @@ thể phát biểu thành một câu hỏi rất đời thường.</p>
 
 <div class="callout warn">
   <span class="label">Vấn đề</span>
-  <p>Bạn kết nối tới <code>123.45.67.89</code>. Máy đó nói: <em>"Chào, tôi là api.tuan.dev."</em>
+  <p>Bạn kết nối tới <code>123.45.67.89</code>. Máy đó nói: <em>"Chào, tôi là api.example.com."</em>
   <strong>Nhưng ai cũng nói được câu đó.</strong> Lấy gì để tin?</p>
 </div>
 
@@ -739,7 +746,7 @@ và cần nắm cả bốn trước khi nói tiếp.</p>
 
 <p>Từ cấu trúc đó, chứng chỉ làm <strong>hai</strong> việc, và người mới thường chỉ biết việc thứ hai.
 Việc thứ nhất là <strong>danh tính</strong>: chứng minh máy đang nói chuyện với bạn đúng là
-<code>api.tuan.dev</code>. Việc thứ hai là <strong>chìa khóa</strong>: cung cấp khóa công khai để hai bên
+<code>api.example.com</code>. Việc thứ hai là <strong>chìa khóa</strong>: cung cấp khóa công khai để hai bên
 thiết lập mã hóa. Thứ tự này không tùy tiện, bởi vì không có việc thứ nhất thì việc thứ hai trở nên vô
 nghĩa — một đường dây được mã hóa cực kỳ chắc chắn nhưng nối tới <em>kẻ xấu</em> thì cũng chẳng bảo vệ
 được gì. Mã hóa chỉ có giá trị khi bạn chắc chắn mình đang mã hóa cho đúng người.</p>
@@ -856,14 +863,14 @@ làm cho nó tự hết hạn thật sớm.</p>
 <h3 id="dns-long-tin">DNS là gốc rễ của lòng tin — và điều đó đáng sợ</h3>
 
 <p>Đến đây, một câu hỏi phản biện tự nhiên nảy ra: nếu kẻ tấn công chiếm được tài khoản quản lý DNS của
-bạn và trỏ <code>api.tuan.dev</code> về máy của hắn, thì chứng chỉ có chặn được hắn không? Trực giác nói
+bạn và trỏ <code>api.example.com</code> về máy của hắn, thì chứng chỉ có chặn được hắn không? Trực giác nói
 "có", vì hắn không có private key của bạn. Nhưng trực giác sai, và lý do nằm ở cách CA xác minh quyền sở
 hữu tên miền.</p>
 
 <div class="callout warn">
   <span class="label">Đáp án: KHÔNG</span>
   <figure class="fig">
-  <pre class="diagram"><code>  Kẻ xấu xin Let's Encrypt cấp cert cho api.tuan.dev
+  <pre class="diagram"><code>  Kẻ xấu xin Let's Encrypt cấp cert cho api.example.com
            ▼
   Let's Encrypt: "Chứng minh anh sở hữu tên miền đi.
                   Tạo cho tôi một bản ghi DNS thế này."
@@ -882,31 +889,13 @@ hữu tên miền.</p>
 </div>
 
 <p>Rất nhiều người nghĩ HTTPS là lớp bảo vệ ngoài cùng. Thực ra bên dưới nó còn một tầng nữa, và tầng đó
-là DNS: lòng tin vào chứng chỉ được xây trên lòng tin vào quyền kiểm soát tên miền. Vì vậy có ba việc
-phòng thủ cần làm, xếp theo thứ tự ưu tiên:</p>
+là DNS: lòng tin vào chứng chỉ được xây trên lòng tin vào quyền kiểm soát tên miền. Vì vậy việc phòng
+thủ đầu tiên, và quan trọng nhất, là <strong>bật 2FA (xác thực hai lớp) cho tài khoản nhà đăng ký tên
+miền</strong> — ưu tiên còn cao hơn cả 2FA của GitHub, vì mất tài khoản này là mất cả tên miền lẫn
+HTTPS.</p>
 
-<ol>
-  <li><strong>Bật 2FA cho tài khoản nhà đăng ký tên miền</strong> — ưu tiên còn cao hơn cả 2FA của GitHub,
-  vì mất tài khoản này là mất cả tên miền lẫn HTTPS.</li>
-  <li><strong>Khai báo bản ghi CAA</strong> — một bản ghi DNS nói rằng "chỉ CA này được cấp chứng chỉ cho
-  tên miền của tôi", để các CA khác từ chối yêu cầu.</li>
-  <li><strong>Theo dõi Certificate Transparency</strong> — mọi chứng chỉ công khai đều bị ghi vào các sổ
-  nhật ký công khai chỉ-ghi-thêm; đăng ký theo dõi thì hễ có ai xin chứng chỉ cho tên miền của bạn, bạn
-  sẽ biết.</li>
-</ol>
-
-<div class="callout deep">
-  <span class="label">Đào sâu · CAA và Certificate Transparency</span>
-  <p>Bản ghi CAA (<em>Certification Authority Authorization</em>) hiện được đặc tả trong
-  <strong>RFC 8659</strong>; các CA công khai buộc phải kiểm tra nó trước khi cấp chứng chỉ. Certificate
-  Transparency được mô tả lần đầu trong <strong>RFC 6962</strong>: các log công khai được xây theo cấu trúc
-  cây Merkle, cho phép bất kỳ ai kiểm chứng rằng log chỉ được ghi thêm chứ không bị sửa hay xóa bớt. Lưu ý
-  rằng cả hai cơ chế đều <em>không</em> cứu được bạn nếu kẻ tấn công đã chiếm trọn DNS — với CAA, hắn có
-  thể sửa luôn bản ghi CAA. Chúng thu hẹp bề mặt tấn công và giúp phát hiện sớm, chứ không thay thế được
-  việc bảo vệ tài khoản DNS.</p>
-</div>
-
-<p>Việc <span class="stg">2</span> và <span class="stg">3</span> sẽ được làm thật ở <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
+<p>Hai lớp phòng thủ nữa — chỉ định CA nào được cấp chứng chỉ cho tên miền của bạn, và theo dõi sổ công
+khai ghi lại mọi chứng chỉ được cấp — học và làm thật ở <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
 
 <p>Cuối cùng, để giữ bức tranh cân bằng: <strong>khi kẻ xấu KHÔNG nắm DNS</strong> — ví dụ hắn ngồi trên
 mạng WiFi của quán cà phê và chen vào giữa đường truyền — thì chứng chỉ chặn được hắn hoàn toàn, vì hắn
@@ -951,7 +940,8 @@ thường có ít dữ liệu và ít thời gian hoạt động liên tục hơ
 hai loại công cụ khác hẳn:</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  Tự động gia hạn      →  Bài 18: certbot trên server; Bài 30: cert-manager trong cụm
+<pre class="diagram"><code>  Tự động gia hạn      →  Bài 18: tự gia hạn trên một server;
+                          Bài 30: tự gia hạn khi chạy trên nhiều máy
   Giám sát & cảnh báo  →  Bài 36: báo trước 14 ngày khi cert sắp hết hạn</code></pre>
 <figcaption><b>Hình 14</b> Hai lớp phòng thủ trước sự cố do thời gian: loại bỏ việc làm tay, và phát hiện
 trước khi quá muộn.</figcaption>
@@ -968,7 +958,8 @@ trước khi quá muộn.</figcaption>
 <h3 id="container-san-sang">Và anh em của nó: "container đang chạy" ≠ "app sẵn sàng"</h3>
 
 <p>Có một dạng khác của việc thời gian gây sự cố, nhưng ở thang giây thay vì thang tháng: khoảng trống giữa
-lúc một process <em>khởi động</em> và lúc nó <em>sẵn sàng phục vụ</em>.</p>
+lúc một process <em>khởi động</em> và lúc nó <em>sẵn sàng phục vụ</em>. Hình 15 vẽ khoảng trống ấy khi ứng
+dụng chạy trong một container — process được Docker cô lập, đã gặp ở tab <em>Bốn khái niệm</em>.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  t=0s    deploy: container mới khởi động
@@ -996,10 +987,8 @@ phải một lỗi hiếm gặp mà là một tính chất cố hữu của vi�
 đo lường.</figcaption>
 </figure>
 
-<p>Đây là lý do <code>depends_on</code> trong Docker Compose ở dạng mặc định <strong>không đủ</strong>: nó
-chỉ đợi container <em>khởi động</em>, không đợi ứng dụng bên trong <em>sẵn sàng</em>. Cái bẫy đó được mổ
-xẻ ở <a href="../11-docker-compose/">Bài 11</a>, và cách chữa triệt để — chỉ chuyển request vào khi app báo đã sẵn sàng, tức
-readiness probe của Kubernetes — ở <a href="../28-probe-va-tai-nguyen/">Bài 28</a>.</p>
+<p><a href="../11-docker-compose/">Bài 11</a> và <a href="../28-probe-va-tai-nguyen/">Bài 28</a> sẽ dạy
+cách bắt hệ thống đợi app báo sẵn sàng rồi mới chuyển request vào.</p>
 
 <h2 id="vi-sao-nginx">9. Tám lý do cần Nginx dù Spring Boot tự chạy được web server</h2>
 
@@ -1008,7 +997,7 @@ sao gần như mọi hệ thống production đều đặt thêm Nginx đứng t
 lẻ mà ở việc Nginx gánh hộ ứng dụng tám trách nhiệm khác nhau, như Bảng 7 liệt kê.</p>
 <figure class="fig photo shot">
   <img src="img/nginx-welcome.webp" width="640" height="300" loading="lazy" alt="Trang trắng với tiêu đề lớn Welcome to nginx! và vài dòng hướng dẫn, kết thúc bằng Thank you for using nginx.">
-  <figcaption><b>Ảnh 5</b> Trang chào mặc định của Nginx, chụp từ Nginx 1.30.5 chạy thật trên máy người viết. Đây là thứ bạn sẽ thấy ngay sau lần cài Nginx đầu tiên ở Module 4: Nginx đã nhận request và tự trả về một file HTML tĩnh có sẵn, chưa chuyển gì tới ứng dụng nào phía sau — đúng vai trò "lễ tân tự trả lời được những câu đơn giản".</figcaption>
+  <figcaption><b>Ảnh 5</b> Trang chào mặc định của Nginx, chụp từ Nginx 1.30.5 chạy thật trên máy người viết. Đây là thứ bạn sẽ thấy ngay sau lần cài Nginx đầu tiên ở <a href="../17-reverse-proxy/">Bài 17</a>: Nginx đã nhận request và tự trả về một file HTML tĩnh có sẵn, chưa chuyển gì tới ứng dụng nào phía sau — đúng vai trò "lễ tân tự trả lời được những câu đơn giản".</figcaption>
 </figure>
 
 
@@ -1021,7 +1010,7 @@ lẻ mà ở việc Nginx gánh hộ ứng dụng tám trách nhiệm khác nhau
     <tr><td><span class="stg">2</span></td><td><strong>Lớp chắn</strong></td><td>Rate limit, giới hạn kích thước body, chặn request rác — <em>trước khi</em> chúng chạm vào app</td></tr>
     <tr><td><span class="stg">3</span></td><td><strong>Giảm attack surface</strong></td><td>Lỗ hổng trong dependency của app vẫn nằm đó, nhưng không ai từ Internet chạm trực tiếp tới được</td></tr>
     <tr><td><span class="stg">4</span></td><td><strong>Lễ tân</strong></td><td>Nhận việc, đưa vào trong, bê kết quả ra. Khách không bao giờ bước vào trong.</td></tr>
-    <tr><td><span class="stg">5</span></td><td><strong>Port &lt;1024 cần root</strong></td><td>Nginx khởi động bằng root <em>chỉ để chiếm port</em>, rồi các tiến trình con xử lý request chạy với quyền thấp</td></tr>
+    <tr><td><span class="stg">5</span></td><td><strong>Port &lt;1024 cần root</strong></td><td>Nginx khởi động bằng root (tài khoản có toàn quyền trên máy Linux — học ở Bài 07) <em>chỉ để chiếm port</em>, rồi các tiến trình con xử lý request chạy với quyền thấp</td></tr>
     <tr><td><span class="stg">6</span></td><td><strong>Một IP, nhiều app</strong></td><td>Đọc header <code>Host</code> để biết khách đang hỏi website nào</td></tr>
     <tr><td><span class="stg">7</span></td><td><strong>File tĩnh</strong></td><td>Trả file ảnh, CSS, JS là việc Nginx làm cực rẻ; để JVM làm thì tốn thread</td></tr>
     <tr><td><span class="stg">8</span></td><td><strong>Deploy không đứt</strong></td><td>Khởi động bản mới, đợi sẵn sàng, rồi mới chuyển luồng</td></tr>
@@ -1032,16 +1021,16 @@ lẻ mà ở việc Nginx gánh hộ ứng dụng tám trách nhiệm khác nhau
 <p>Lý do <span class="stg">5</span> đáng giải thích kỹ hơn vì nó cho thấy một nguyên tắc bảo mật tinh tế. Trên Linux, các port dưới
 1024 — gồm 80 và 443 — theo truyền thống chỉ process có quyền root mới được mở. Nếu để Spring Boot tự nghe
 port 443, bạn phải chạy cả JVM với quyền root, và khi đó bất kỳ lỗ hổng nào trong ứng dụng cũng thành lỗ
-hổng cấp root. Nginx giải quyết bằng cách tách vai: tiến trình <em>master</em> chạy bằng root chỉ đủ lâu
-để mở port, còn các tiến trình <em>worker</em> — nơi thực sự xử lý request từ Internet — chạy với một
-người dùng không có đặc quyền. Đây lại là nguyên tắc least privilege, lần này được áp vào bên trong một
+hổng cấp root. Nginx giải quyết bằng cách tách vai: một tiến trình chính (<em>master</em>) chạy bằng root chỉ đủ
+lâu để mở port, còn các tiến trình con (<em>worker</em>) — nơi thực sự xử lý request từ Internet — chạy
+bằng một tài khoản ít quyền. Đây lại là nguyên tắc least privilege, lần này được áp vào bên trong một
 chương trình.</p>
 
 <figure class="fig">
-<pre class="diagram"><code>     api.tuan.dev  ─┐
-     app.tuan.dev  ─┼──→  NGINX :443  ─┬──→  Spring Boot :8080
-   admin.tuan.dev  ─┘                  ├──→  React build (file tĩnh)
-                                       └──→  Trang admin  :9000</code></pre>
+<pre class="diagram"><code>    api.example.com  ─┐
+    app.example.com  ─┼──→  NGINX :443  ─┬──→  Spring Boot :8080
+  admin.example.com  ─┘                  ├──→  React build (file tĩnh)
+                                         └──→  Trang admin  :9000</code></pre>
 <figcaption><b>Hình 17</b> Lý do <span class="stg">6</span> và <span class="stg">7</span> minh họa bằng sơ đồ: ba tên miền trỏ về cùng một IP, Nginx đọc
 header <code>Host</code> để phân luồng tới ba đích khác nhau.</figcaption>
 </figure>
@@ -1172,10 +1161,6 @@ không cần đọc hết ngay; hãy dùng chúng như tài liệu tra cứu khi
   <a href="https://www.rfc-editor.org/rfc/rfc9110">rfc-editor.org/rfc/rfc9110</a></li>
   <li>RFC 5280 — <em>Internet X.509 Public Key Infrastructure Certificate and CRL Profile</em>.
   <a href="https://www.rfc-editor.org/rfc/rfc5280">rfc-editor.org/rfc/rfc5280</a></li>
-  <li>RFC 8659 — <em>DNS Certification Authority Authorization (CAA) Resource Record</em>.
-  <a href="https://www.rfc-editor.org/rfc/rfc8659">rfc-editor.org/rfc/rfc8659</a></li>
-  <li>RFC 6962 — <em>Certificate Transparency</em>.
-  <a href="https://www.rfc-editor.org/rfc/rfc6962">rfc-editor.org/rfc/rfc6962</a></li>
   <li>Let's Encrypt — tài liệu chính thức, gồm cách hoạt động và lý do hạn 90 ngày.
   <a href="https://letsencrypt.org/docs/">letsencrypt.org/docs</a></li>
   <li>Nginx — tài liệu chính thức.

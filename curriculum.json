@@ -29,7 +29,7 @@
           "slug": "ban-do-toan-canh",
           "title": "Bản đồ toàn cảnh: một request đi từ browser tới code của bạn",
           "goal": "Vẽ lại được bằng trí nhớ toàn bộ đường đi của một HTTP request, và gọi tên được mọi thành phần trên đường đi đó.",
-          "concepts": ["Client - Server", "DNS", "IP & Port", "Reverse proxy", "Application server", "Database", "Vì sao cần từng tầng một"],
+          "concepts": ["Client - Server", "DNS", "IP & Port", "Firewall", "Reverse proxy", "Application server", "Database", "Vì sao cần từng tầng một", "refused và timeout", "Mã lỗi HTTP và ai viết ra nó", "Chứng chỉ TLS, CA và DNS", "Đang chạy chưa phải sẵn sàng"],
           "lab": "Dùng trình duyệt + lệnh curl/ping/nslookup quan sát một request thật đi ra Internet. Tự vẽ lại sơ đồ.",
           "checklist": [
             "Giải thích được localhost:8080 nghĩa là gì, từng phần một",
@@ -45,8 +45,8 @@
           "slug": "may-tinh-va-he-dieu-hanh",
           "title": "Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì",
           "goal": "Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy.",
-          "concepts": ["CPU / RAM / Disk", "Kernel & user space", "Process, PID, thread", "File descriptor", "Filesystem", "Vì sao app chết thì website sập"],
-          "lab": "Quan sát process của chính Spring Boot / Node trên máy mình. Tìm PID, xem RAM, kill nó, xem điều gì xảy ra.",
+          "concepts": ["CPU, RAM, ổ đĩa, mạng: hết cái nào thì hỏng kiểu nào", "Kernel, user space và syscall", "Process, PID, thread", "Process chết: SIGTERM, SIGKILL, OOM killer", "Service: process có người trông coi", "Vì sao app chết thì website sập"],
+          "lab": "Quan sát process của chính Spring Boot / Node trên máy mình. Tìm PID, xem RAM, kill nó, xem điều gì xảy ra. Tìm xem process nào đang giữ port 8080.",
           "checklist": [
             "Chỉ ra được process nào đang giữ một port",
             "Giải thích được OOM (hết RAM) sẽ làm gì với app",
@@ -60,13 +60,14 @@
           "slug": "phong-lab-wsl-docker",
           "title": "Phòng lab: WSL2, Docker Desktop và shell tối thiểu",
           "goal": "Có một máy Linux thật ngay trong Windows, Docker chạy được trong đó, và đủ vài lệnh shell để đi lại, đọc và sửa tệp.",
-          "concepts": ["WSL2: một máy ảo Linux nhẹ chạy trong Windows", "Máy ảo (VM) là gì — để bài sau so với container", "Terminal, shell, bash; lệnh, tham số, PATH", "Đi lại và đọc tệp: pwd, ls, cd, cat, less, nano", "Pipe | và chuyển hướng > ở mức cơ bản", "Docker Desktop với WSL backend: docker version, docker run hello-world"],
-          "lab": "Cài lại Ubuntu trên WSL2, bật Docker Desktop, chạy hello-world. Cố tình tắt Docker Desktop rồi chạy lại lệnh docker để gặp lỗi \"Cannot connect to the Docker daemon\", rồi tự sửa. Làm nốt phép đo đối chứng đã hứa ở Bài 00: thời gian một kết nối bị từ chối trên Linux so với 2,155 giây đo trên Windows.",
+          "concepts": ["WSL2: một máy ảo Linux nhẹ chạy trong Windows", "Máy ảo (VM) là gì — để bài sau so với container", "Terminal, shell, bash; lệnh, tham số, PATH", "Đi lại và đọc tệp: pwd, ls, cd, cat, less, nano", "Pipe | và chuyển hướng: ba luồng vào/ra chuẩn (0 stdin, 1 stdout, 2 stderr), >, 2>/dev/null — giải nghĩa lệnh openssl … 2>/dev/null ở Bài 00", "Docker Desktop với WSL backend: docker version, docker run hello-world"],
+          "lab": "Cài Ubuntu trên WSL2, bật Docker Desktop, chạy hello-world. Cố tình tắt Docker Desktop rồi chạy lại lệnh docker để gặp lỗi \"Cannot connect to the Docker daemon\", rồi tự sửa. Làm nốt phép đo đối chứng đã hứa ở Bài 00: thời gian một kết nối bị từ chối trên Linux so với 2,155 giây đo trên Windows.",
           "checklist": [
-            "Giải thích được WSL2 là một máy ảo, và vì sao đó chưa phải container",
+            "Giải thích được WSL2 là một máy ảo có kernel Linux riêng",
             "Tới một thư mục, xem và sửa một tệp bằng nano mà không cần chuột",
             "Đọc được lỗi \"Cannot connect to the Docker daemon\" nói lên điều gì, và sửa được",
-            "Dùng pipe để lọc output của một lệnh"
+            "Dùng pipe để lọc output của một lệnh",
+            "Giải thích được con số 2 trong 2>/dev/null"
           ],
           "hours": [3, 5],
           "needs": ["01"]
@@ -83,7 +84,7 @@
           "slug": "container-dau-tien",
           "title": "Container đầu tiên: nó chỉ là một process bị cô lập",
           "goal": "Chạy, xem, vào trong và xoá container thành thạo, và chứng minh được container chỉ là một process Linux bị giới hạn tầm nhìn.",
-          "concepts": ["Vấn đề \"máy tôi chạy được mà\" và vì sao Docker ra đời", "Image và container (giống class và object)", "docker run, ps, logs, exec, stop, start, rm", "Namespace: process trong container thấy gì và không thấy gì", "Cgroup: giới hạn CPU và bộ nhớ cho một process", "Container khác máy ảo ở đâu"],
+          "concepts": ["Vấn đề \"máy tôi chạy được mà\" và vì sao Docker ra đời", "Image và container (giống class và object)", "docker run, ps, logs, exec, stop, start, rm", "Namespace: process trong container thấy gì và không thấy gì", "Cgroup: giới hạn CPU và bộ nhớ cho một process", "Container khác máy ảo ở đâu (nối Bài 02)"],
           "lab": "Chạy container Nginx và PostgreSQL, exec vào trong xem danh sách process và hostname, rồi so với cảnh nhìn từ ngoài bằng docker top. Cố tình xoá một container đang chạy, và chạy một container không có -d rồi đóng terminal, để thấy chuyện gì xảy ra.",
           "checklist": [
             "Giải thích bằng lời thường vì sao container không phải máy ảo",
@@ -99,13 +100,13 @@
           "slug": "port-va-publish",
           "title": "Gọi được app trong container: port và listen address",
           "goal": "Không bao giờ còn mắc lỗi kinh điển: app chạy trong container nhưng từ ngoài không ai gọi được.",
-          "concepts": ["Nhắc lại từ Bài 00: IP, port, listen address", "Container có mạng riêng, IP riêng", "Publish port: -p cổng_máy:cổng_container", "127.0.0.1 và 0.0.0.0 bên trong container (server.address của Spring Boot)", "Lỗi \"port is already allocated\" và cách tìm ai đang giữ port", "curl để kiểm tra từ ngoài vào"],
-          "lab": "Chạy một app trong container, lần lượt cho nó listen 127.0.0.1 rồi 0.0.0.0, gọi từ máy bằng curl và so kết quả. Cố tình publish trùng một port đang có người dùng để gặp lỗi \"port is already allocated\", rồi tự sửa.",
+          "concepts": ["Nhắc lại từ Bài 00: IP, port, listen address", "Container có mạng riêng, IP riêng", "Publish port: -p cổng_máy:cổng_container", "127.0.0.1 và 0.0.0.0 bên trong container (server.address của Spring Boot)", "Lỗi \"port is already allocated\" và cách tìm ai đang giữ port (nối Bài 01)", "curl để kiểm tra từ ngoài vào"],
+          "lab": "Chạy một image có sẵn cho chọn địa chỉ listen bằng tham số (ví dụ python -m http.server --bind 127.0.0.1), lần lượt cho nó listen 127.0.0.1 rồi 0.0.0.0, gọi từ máy bằng curl và so kết quả. Cố tình publish trùng một port đang có người dùng để gặp lỗi \"port is already allocated\", rồi tự sửa.",
           "checklist": [
             "Giải thích được vì sao app listen 127.0.0.1 trong container thì từ ngoài không gọi được",
             "Viết đúng tham số -p khi biết cổng máy và cổng container",
             "Tìm ra ai đang giữ một port khi gặp lỗi port đã bị chiếm",
-            "Phân biệt refused và timeout khi gọi vào container (nối Bài 00)"
+            "Phân biệt được refused, timeout và Empty reply khi gọi vào container (nối Bài 00)"
           ],
           "hours": [3, 5],
           "needs": ["00", "03"]
@@ -115,7 +116,7 @@
           "slug": "image-va-registry",
           "title": "Image và registry: image được làm từ những lớp nào",
           "goal": "Hiểu một image gồm những gì, lấy về từ đâu, và đặt tên phiên bản thế nào cho đúng.",
-          "concepts": ["Layer: image là một chồng các lớp chỉ đọc", "Registry, repository, tag; Docker Hub", "Tag latest và vì sao không nên tin nó", "Digest: định danh không bao giờ đổi của một image", "docker pull, images, history, rmi", "Image chính thức và image lạ: rủi ro bảo mật"],
+          "concepts": ["Layer: image là một chồng các lớp chỉ đọc", "Registry, repository, tag; Docker Hub", "Tag latest và vì sao không nên tin nó", "Digest: định danh không bao giờ đổi của một image", "docker pull, push, login, images, history, rmi", "Image chính thức và image lạ: rủi ro bảo mật"],
           "lab": "Pull hai tag của cùng một image và xem history để thấy những layer được dùng chung. Cố tình pull một tag không tồn tại để gặp lỗi \"manifest unknown\", đọc lỗi và sửa.",
           "checklist": [
             "Giải thích được vì sao pull tag thứ hai nhanh hơn tag đầu",
@@ -131,11 +132,11 @@
           "slug": "dockerfile-dau-tien",
           "title": "Dockerfile đầu tiên cho Spring Boot",
           "goal": "Tự viết Dockerfile đóng gói project Spring Boot của bạn, và hiểu mỗi dòng tạo ra layer nào.",
-          "concepts": ["FROM, WORKDIR, COPY, RUN, CMD, ENTRYPOINT, ENV, EXPOSE", "Build context và .dockerignore", "Cache theo layer: vì sao thứ tự các dòng quyết định tốc độ build", "CMD và ENTRYPOINT khác nhau thế nào", "docker build, gắn tag và chạy image tự build"],
+          "concepts": ["FROM, WORKDIR, COPY, RUN, CMD, ENTRYPOINT, EXPOSE", "Build context và .dockerignore", "Cache theo layer: vì sao thứ tự các dòng quyết định tốc độ build", "CMD và ENTRYPOINT khác nhau thế nào", "docker build, gắn tag và chạy image tự build"],
           "lab": "Viết Dockerfile cho jar Spring Boot, build rồi chạy. Sửa một dòng code, build lại và đo thời gian; đảo thứ tự các lệnh COPY để phá cache rồi đo lại. Cố tình bỏ .dockerignore để thấy build context phình to.",
           "checklist": [
             "Viết được Dockerfile chạy được cho một project Spring Boot",
-            "Giải thích được vì sao sửa code mà không phải tải lại dependency",
+            "Giải thích được vì sao đổi một dòng thì mọi dòng sau nó phải build lại",
             "Nói được CMD khác ENTRYPOINT thế nào",
             "Biết .dockerignore nên chứa những gì"
           ],
@@ -147,7 +148,7 @@
           "slug": "dockerfile-production",
           "title": "Dockerfile chuẩn production: nhỏ, không root, không bị giết vì hết bộ nhớ",
           "goal": "Biến image Spring Boot thành một image nhỏ, chạy không bằng root, và không bị giết vì hết bộ nhớ.",
-          "concepts": ["Multi-stage build: build bằng JDK, chạy bằng JRE", "Cache Maven/Gradle khi build trong Docker", "User root và user thường; quyền của một process (Linux dạy đúng lúc)", "Chạy container bằng user thường: dòng USER", "JVM trong container: giới hạn bộ nhớ, MaxRAMPercentage; OOM đã gặp ở Bài 01", "HEALTHCHECK"],
+          "concepts": ["Multi-stage build: build bằng JDK, chạy bằng JRE", "Cache Maven/Gradle khi build trong Docker (nối cache theo layer ở Bài 06)", "User root và user thường; quyền của một process (Linux dạy đúng lúc); vì sao process không chạy bằng root không mở được port dưới 1024, và capabilities", "Chạy container bằng user thường: dòng USER", "JVM trong container: giới hạn bộ nhớ, MaxRAMPercentage; OOM đã gặp ở Bài 01"],
           "lab": "Viết Dockerfile multi-stage, so dung lượng image trước và sau. Chạy container với giới hạn bộ nhớ quá thấp để thấy nó bị giết với exit code 137, rồi chỉnh JVM cho vừa.",
           "checklist": [
             "Giải thích được multi-stage build bỏ đi những gì khỏi image cuối",
@@ -163,7 +164,7 @@
           "slug": "cau-hinh-va-secret",
           "title": "Cấu hình và secret: một image, nhiều môi trường",
           "goal": "Chạy cùng một image ở dev, staging và production chỉ bằng cách đổi cấu hình, và không bao giờ nhúng mật khẩu vào image.",
-          "concepts": ["Biến môi trường: export, env, ${...} (Linux dạy đúng lúc)", "12-factor: tách cấu hình khỏi code", "docker run -e và --env-file", "Spring Boot đọc cấu hình từ biến môi trường", "Vì sao secret không được nằm trong image hay trong Git", "Xử lý khi lỡ commit secret"],
+          "concepts": ["Biến môi trường: export, env, ${...} (Linux dạy đúng lúc)", "ENV và ARG trong Dockerfile", "12-factor: tách cấu hình khỏi code", "docker run -e và --env-file", "Spring Boot đọc cấu hình từ biến môi trường", "Vì sao secret không được nằm trong image hay trong Git", "Xử lý khi lỡ commit secret"],
           "lab": "Chạy cùng một image với hai bộ biến môi trường khác nhau. Cố tình nhúng mật khẩu vào Dockerfile rồi dùng docker history lấy nó ra, để thấy vì sao không được làm vậy.",
           "checklist": [
             "Chạy được một image với cấu hình khác mà không build lại",
@@ -195,7 +196,7 @@
           "slug": "docker-network",
           "title": "Docker network: container gọi nhau bằng tên",
           "goal": "Hiểu vì sao trong Docker bạn viết jdbc:postgresql://db:5432 thay vì localhost, và sửa được khi hai container không thấy nhau.",
-          "concepts": ["localhost bên trong container là chính container đó", "Bridge network và network tự tạo", "DNS nội bộ của Docker: gọi nhau bằng tên (DNS dạy đúng lúc)", "Chỉ publish những cổng cần lộ ra ngoài", "host.docker.internal", "ping và nslookup từ trong container"],
+          "concepts": ["localhost bên trong container là chính container đó", "Bridge network và network tự tạo", "DNS nội bộ của Docker: gọi nhau bằng tên (nối DNS ở Bài 00)", "Chỉ publish những cổng cần lộ ra ngoài", "host.docker.internal", "ping và nslookup từ trong container"],
           "lab": "Cho Spring Boot và PostgreSQL vào chung một network và nối bằng tên. Cố tình để app dùng localhost:5432 để gặp \"Connection refused\", rồi sửa. Tách hai container ra hai network để thấy tên không còn phân giải được.",
           "checklist": [
             "Giải thích được vì sao localhost trong container không trỏ tới máy bạn",
@@ -211,7 +212,7 @@
           "slug": "docker-compose",
           "title": "Docker Compose: cả hệ thống trong một file",
           "goal": "Một lệnh dựng lên toàn bộ Spring Boot + PostgreSQL, tái lập được trên máy bất kỳ.",
-          "concepts": ["compose.yaml: services, volumes, networks", "depends_on và vì sao nó không đợi app sẵn sàng", "healthcheck và depends_on: condition: service_healthy", "env_file và .env", "up -d, down, logs -f, ps, exec", "Compose thường dùng cho môi trường dev"],
+          "concepts": ["compose.yaml: services, volumes, networks", "depends_on và vì sao nó không đợi app sẵn sàng", "HEALTHCHECK trong Dockerfile, healthcheck trong Compose và depends_on: condition: service_healthy", "env_file và .env", "up -d, down, logs -f, ps, exec", "Compose hợp với một máy (dev hoặc một server nhỏ); cần nhiều máy thì tới Kubernetes"],
           "lab": "Viết compose.yaml cho project của bạn: xoá sạch mọi thứ rồi docker compose up -d là hệ thống sống lại. Cố tình để app khởi động trước database để gặp lỗi kết nối lúc khởi động, rồi sửa bằng healthcheck.",
           "checklist": [
             "Viết được compose.yaml cho app + database từ đầu",
@@ -227,7 +228,7 @@
           "slug": "vong-doi-container",
           "title": "Container sống và chết thế nào: signal, restart, log",
           "goal": "Container tắt êm không mất request đang xử lý, tự sống lại khi chết, và log không làm đầy ổ đĩa.",
-          "concepts": ["Signal: SIGTERM, SIGKILL, SIGINT (nối Bài 01)", "PID 1 trong container, và vì sao dạng shell của CMD làm mất signal", "docker stop, thời gian chờ, và tắt êm (graceful shutdown) của Spring Boot", "Restart policy: no, on-failure, always, unless-stopped", "docker logs, log driver và xoay vòng log", "Exit code 0, 1, 137, 143 nói lên điều gì"],
+          "concepts": ["Signal: SIGTERM, SIGKILL, SIGINT (nối Bài 01)", "PID 1 trong container: nhận nuôi process mồ côi, dọn zombie; và vì sao dạng shell của CMD làm mất signal", "docker stop, thời gian chờ, và tắt êm (graceful shutdown) của Spring Boot", "Restart policy: no, on-failure, always, unless-stopped", "docker logs, log driver và xoay vòng log", "Exit code 0, 1, 137, 143 nói lên điều gì"],
           "lab": "Chạy Spring Boot với CMD dạng shell và dạng exec, docker stop cả hai và so thời gian tắt. Cố tình cho app crash liên tục để quan sát restart policy. Cấu hình xoay vòng log để log không nuốt ổ đĩa.",
           "checklist": [
             "Giải thích được vì sao docker stop đôi khi phải chờ 10 giây",
@@ -266,7 +267,7 @@
           "slug": "ssh-vao-server",
           "title": "SSH vào server",
           "goal": "Vào server an toàn bằng khóa, cấu hình một lần rồi chỉ cần gõ ssh tên-server.",
-          "concepts": ["Cặp khóa công khai và khóa bí mật: khóa dùng để làm gì (nối chứng chỉ ở Bài 00)", "Chữ ký số ở mức khái niệm", "ssh-keygen và authorized_keys", "~/.ssh/config", "scp và rsync", "known_hosts và cảnh báo \"host key changed\"", "Quy tắc khi dùng chung một server với người khác"],
+          "concepts": ["Cặp khóa công khai và khóa bí mật: khóa dùng để làm gì (nối chứng chỉ ở Bài 00)", "Chữ ký số ở mức khái niệm", "ssh-keygen và authorized_keys", "~/.ssh/config", "scp và rsync", "known_hosts và cảnh báo \"host key changed\""],
           "lab": "Tạo khóa, đăng nhập server bằng khóa, cấu hình ~/.ssh/config. Cố tình đặt quyền tệp khóa quá rộng để SSH từ chối dùng nó, rồi sửa.",
           "checklist": [
             "Giải thích được khóa công khai và khóa bí mật, cái nào được phép đưa cho người khác",
@@ -281,13 +282,13 @@
           "id": "15",
           "slug": "linux-tren-server",
           "title": "Linux sinh tồn trên server",
-          "goal": "Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ và port mà không bị lạc.",
-          "concepts": ["Cây thư mục: /etc, /var/log, /home, /opt, /tmp", "Đọc log: tail -f, grep, less", "df, du, free: đầy đĩa và hết bộ nhớ", "ss: process nào đang listen port nào, và từng kết nối đang mở (bộ bốn IP:port)", "sudo, user và group trên server", "Firewall trên server: xem luật đang mở, cả IPv4 lẫn IPv6"],
+          "goal": "Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ, port và giới hạn của process mà không bị lạc.",
+          "concepts": ["Cây thư mục: /etc, /var/log, /home, /opt, /tmp", "Đọc log: tail -f, grep, less", "df, du, free: đầy đĩa và hết bộ nhớ", "Giới hạn số file một process được mở cùng lúc: ulimit -n, lỗi Too many open files, rò rỉ do quên đóng (try-with-resources)", "ss: process nào đang listen port nào, và từng kết nối đang mở (bộ bốn IP:port)", "sudo, user và group trên server", "Quy tắc khi dùng chung một server với người khác", "Firewall trên server: xem luật đang mở, cả IPv4 lẫn IPv6"],
           "lab": "Đi một vòng server và trả lời: log nằm ở đâu, đĩa còn bao nhiêu, ai đang giữ port nào. Tạo một tệp lớn trong thư mục của mình để thấy df thay đổi, tìm ra nó bằng du, rồi dọn.",
           "checklist": [
             "Tìm được log của một dịch vụ lạ trên server",
             "Tìm ra thư mục đang ăn nhiều đĩa nhất",
-            "Biết process nào đang giữ một port",
+            "Liệt kê được mọi kết nối đang mở tới một port bằng ss (nối Bài 01)",
             "Đọc được firewall đang mở những cổng nào"
           ],
           "hours": [4, 7],
@@ -439,7 +440,7 @@
           "title": "Vì sao cần Kubernetes, và dựng một cụm nhỏ trên máy",
           "goal": "Nói được Kubernetes giải quyết điều gì mà Compose trên một máy không làm được, và có một cụm để thực hành.",
           "concepts": ["Giới hạn của một máy: máy chết là hệ thống chết", "Cụm (cluster): control plane và node; node chỉ là một máy Linux", "Trạng thái mong muốn và vòng lặp điều chỉnh", "kubectl và kubeconfig", "Cụm học trên máy: k3d hoặc kind", "Chi phí vận hành thật của Kubernetes"],
-          "lab": "Dựng một cụm k3d nhiều node, xem các node và pod hệ thống. Cố tình xoá một pod hệ thống để thấy cụm tự dựng lại nó.",
+          "lab": "Dựng một cụm k3d nhiều node và xem các node. Cố tình dừng một node (docker stop container của node đó) để thấy nó chuyển NotReady, rồi bật lại.",
           "checklist": [
             "Nói được ba việc Kubernetes làm mà Compose trên một máy không làm",
             "Giải thích được control plane và node",
@@ -470,7 +471,7 @@
           "slug": "service-va-dns-trong-cum",
           "title": "Service và DNS trong cụm",
           "goal": "Các pod gọi nhau ổn định bằng tên, dù pod liên tục bị thay.",
-          "concepts": ["Vì sao không gọi thẳng IP của pod", "Service: ClusterIP, NodePort, LoadBalancer", "Label và selector", "DNS trong cụm: tên-service.namespace.svc (nối Bài 10)", "kubectl port-forward", "Namespace"],
+          "concepts": ["Vì sao không gọi thẳng IP của pod", "Service: ClusterIP, NodePort, LoadBalancer", "Label và selector", "DNS trong cụm: tên-service.namespace.svc (nối Bài 10)", "kubectl port-forward", "Namespace của Kubernetes: chia cụm thành vùng tên riêng (khác namespace Linux ở Bài 03)"],
           "lab": "Tạo Service cho app và cho PostgreSQL, cho chúng gọi nhau bằng tên. Cố tình để selector lệch label để Service không có endpoint nào, chẩn đoán và sửa.",
           "checklist": [
             "Giải thích được vì sao cần Service thay vì IP của pod",
@@ -621,7 +622,7 @@
           "slug": "metric-va-dashboard",
           "title": "Metric và dashboard",
           "goal": "Có một dashboard trả lời được: service đang khoẻ hay yếu, và yếu ở đâu.",
-          "concepts": ["Metric, log, trace khác nhau thế nào", "Spring Boot Actuator và Micrometer", "Prometheus: mô hình scrape; ServiceMonitor", "Grafana dashboard", "Bốn tín hiệu vàng: độ trễ, lưu lượng, lỗi, độ bão hoà", "Bộ giám sát có sẵn của Rancher"],
+          "concepts": ["Metric, log, trace khác nhau thế nào", "Micrometer: metric qua Actuator (đã dùng làm probe ở Bài 28)", "Prometheus: mô hình scrape; ServiceMonitor", "Grafana dashboard", "Bốn tín hiệu vàng: độ trễ, lưu lượng, lỗi, độ bão hoà", "Bộ giám sát có sẵn của Rancher"],
           "lab": "Cài bộ giám sát, cho Prometheus lấy metric từ Actuator, vẽ dashboard bộ nhớ, CPU, số request, độ trễ p95. Cố tình tắt endpoint metric để thấy target báo down, rồi sửa.",
           "checklist": [
             "Giải thích được metric khác log thế nào",

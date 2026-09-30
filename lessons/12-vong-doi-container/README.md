@@ -17,7 +17,7 @@ Container tắt êm không mất request đang xử lý, tự sống lại khi c
 ## Khái niệm sẽ gặp
 
 - Signal: SIGTERM, SIGKILL, SIGINT (nối Bài 01)
-- PID 1 trong container, và vì sao dạng shell của CMD làm mất signal
+- PID 1 trong container: nhận nuôi process mồ côi, dọn zombie; và vì sao dạng shell của CMD làm mất signal
 - docker stop, thời gian chờ, và tắt êm (graceful shutdown) của Spring Boot
 - Restart policy: no, on-failure, always, unless-stopped
 - docker logs, log driver và xoay vòng log

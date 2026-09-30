@@ -19,7 +19,7 @@ Hiểu một image gồm những gì, lấy về từ đâu, và đặt tên phi
 - Registry, repository, tag; Docker Hub
 - Tag latest và vì sao không nên tin nó
 - Digest: định danh không bao giờ đổi của một image
-- docker pull, images, history, rmi
+- docker pull, push, login, images, history, rmi
 - Image chính thức và image lạ: rủi ro bảo mật
 
 ## Bài lab

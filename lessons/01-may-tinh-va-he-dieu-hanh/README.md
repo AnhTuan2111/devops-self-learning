@@ -39,7 +39,6 @@ trả lời. Hãy thử tự trả lời trước khi đọc, rồi so lại khi
 | Kernel | nhân hệ điều hành | Phần duy nhất của hệ điều hành được chạm trực tiếp vào phần cứng. |
 | User space | không gian người dùng | Vùng nơi mọi ứng dụng (Spring Boot, Nginx, bash) chạy, không có quyền chạm phần cứng. |
 | Syscall | lời gọi hệ thống | Cách một process nhờ kernel làm hộ một việc cần phần cứng: mở file, mở port, tạo process. |
-| File descriptor (fd) | bộ mô tả file | Con số nhỏ mà kernel đưa cho process để đại diện một file, một kết nối mạng hay một luồng vào/ra. |
 | Signal | tín hiệu | Thông điệp ngắn kernel gửi tới process, ví dụ "hãy dừng lại" (`SIGTERM`) hay "chết ngay" (`SIGKILL`). |
 | OOM killer | bộ giết khi hết bộ nhớ | Cơ chế của kernel Linux chọn và giết một process khi RAM cạn, để cả máy không treo. |
 | Service | dịch vụ | Một process có "người trông" — tự khởi động cùng máy và tự dựng dậy khi chết. |
@@ -55,8 +54,7 @@ mọi thứ trên laptop vẫn "tự lành" được là nhờ có bạn ở đ�
 
 > Không ai bấm OK. Không ai khởi động lại. Không ai nhìn thấy khi nó báo lỗi.
 
-Nói cách khác, gần như mọi kỹ thuật trong lộ trình này — restart policy, healthcheck,
-probe của Kubernetes, monitoring, alert — đều sinh ra để **thay thế một con người không có mặt ở đó**. Gặp
+Nói cách khác, gần như mọi kỹ thuật trong lộ trình này đều sinh ra để **thay thế một con người không có mặt ở đó**. Gặp
 một công cụ mới, hãy thử hỏi: nó đang làm thay việc gì mà một người trực lẽ ra sẽ làm?
 
 ---
@@ -87,8 +85,8 @@ Quy luật rút ra: **muốn dùng file nào, phải bê nó từ tủ lên bàn
 JVM đọc hàng nghìn file class từ đĩa lên RAM lúc khởi động.
 
 > **Giới hạn của ẩn dụ.** "Một người, một cái bàn" gợi ý mỗi lúc chỉ có một việc chạy; thực tế
-> CPU nhiều core chạy song song thật, và kernel còn luân phiên hàng trăm process trên cùng một
-> core (*context switching*). Ẩn dụ cũng bỏ qua **cache** (L1/L2/L3) nằm giữa CPU và RAM —
+> CPU nhiều core chạy song song thật, và kernel còn luân phiên hàng trăm chương trình trên cùng
+> một core. Ẩn dụ cũng bỏ qua **cache**, bộ nhớ nhỏ nằm ngay trong chip CPU, nhanh hơn RAM nhiều bậc —
 > nói cho đúng thì "mặt bàn" là cache, còn RAM đã là cái giá sách kê cạnh bàn.
 
 Điều đáng học nhất không phải là định nghĩa từng loại, mà là **mỗi loại khi cạn thì gây ra
@@ -136,13 +134,13 @@ copy được, xóa được                  kill được — và chết là h
 
 **"Người ngồi trong phòng 8080" ở Bài 00 — chính là process này.**
 
-Mỗi process sở hữu riêng một bộ tài nguyên do kernel cấp: vùng RAM · bảng file descriptor ·
+Mỗi process sở hữu riêng một bộ tài nguyên do kernel cấp: vùng RAM · danh sách file đang mở ·
 thư mục làm việc · **biến môi trường** · **user chạy nó**. Hệ quả dễ bị bỏ qua nhất nằm ở biến
 môi trường:
 
 > Biến môi trường là thuộc tính của **process**, không phải của máy.
 > Đó là lý do `export` ở terminal này không ảnh hưởng terminal kia,
-> và lý do `docker run -e` hoạt động.
+> và là cách mật khẩu, cấu hình được đưa vào ứng dụng ở Bài 08.
 
 ### Process vs Thread
 
@@ -190,24 +188,6 @@ kill → refused          →  process chết, kernel XÓA TÊN khỏi sổ ngay
 port <1024 cần root     →  kernel kiểm tra quyền TRƯỚC khi ghi sổ
 ```
 
-### File descriptor — mọi thứ đều là file
-
-Trong Unix và Linux, kernel đại diện gần như mọi nguồn vào/ra bằng cùng một khái niệm: file
-descriptor, một con số nhỏ trong bảng riêng của mỗi process. Ba con số đầu tiên luôn được cấp
-sẵn cho mọi process:
-
-```
-fd 0 → stdin      fd 1 → stdout      fd 2 → stderr
-```
-
-> `2>/dev/null` mà bạn gõ ở Bài 00 nghĩa là: **chuyển fd số 2 (stderr) vào hố đen.**
-
-Mỗi kết nối TCP cũng là một fd. Kernel giới hạn số fd mỗi process được giữ (xem bằng
-`ulimit -n`, mặc định thường là 1024). Khi vượt giới hạn, app gặp lỗi `Too many open files`, và
-triệu chứng rất khó chịu: **process vẫn sống nhưng không nhận được kết nối mới**, nên người dùng
-thấy "lúc vào được lúc không" mà log không nói rõ ràng. Nguyên nhân phổ biến nhất là mở file
-hoặc connection mà không đóng; trong Java, cách phòng tránh chuẩn là **dùng `try-with-resources`**.
-
 ---
 
 ## Khi process chết
@@ -231,9 +211,6 @@ SIGTERM  "Anh thu xếp rồi đi."  → @PreDestroy, đóng pool, flush log
 SIGKILL  "Ra ngay."             → connection treo, transaction dở, mất log cuối
 ```
 
-Docker kết hợp cả hai: `docker stop` gửi SIGTERM, **đợi 10 giây**, rồi nếu process chưa tự thoát
-thì gửi SIGKILL. Ứng dụng nào tắt chậm hơn 10 giây sẽ luôn bị giết ép.
-
 ### OOM Killer
 
 Khi RAM cạn, kernel không có lựa chọn "chờ": nó **phải** giết một process để lấy lại chỗ. Nó
@@ -249,7 +226,6 @@ dòng nào. Dấu vết vì thế nằm ở một nơi khác: **log của kernel
 
 ```bash
 dmesg | grep -i "killed process"
-journalctl -k | grep -i oom
 ```
 
 ---
@@ -286,8 +262,8 @@ khác đóng vai người trực — và process được trông như vậy gọ
 | Ai trông | — | `systemd`, Docker hoặc Kubernetes |
 
 ```
-Docker      restart: unless-stopped   → Bài 12
-Kubernetes  Deployment + probe        → Bài 25, 28
+Docker      trông coi các container trên một máy      → Bài 12
+Kubernetes  trông coi container trên cả một cụm máy   → Bài 25
 ```
 
 Hai công cụ, **cùng một ý tưởng**: thay thế người trực.
@@ -391,8 +367,8 @@ echo $BI_MAT                  # → (trống)
 Bước này chứng minh biến môi trường là thuộc tính của process chứ không phải của máy. `export`
 chỉ ghi biến vào process bash của cửa sổ 1 (và các process con mà nó sinh ra sau đó). Cửa sổ
 mới là một process bash **khác**, không phải con của cửa sổ 1, nên nó không có biến đó. Kỳ vọng
-dòng cuối in ra trống. Đây cũng là cơ chế đứng sau `docker run -e`: Docker đặt biến vào đúng
-process của container, không đụng tới máy chủ.
+dòng cuối in ra trống. Đây cũng là nền tảng của cách đưa mật khẩu và cấu hình vào ứng dụng
+ở Bài 08.
 
 ---
 
@@ -407,7 +383,6 @@ Chỉ đánh dấu khi trả lời được bằng lời của mình, không nh�
 - [ ] **Chỉ ra được process nào đang giữ một port** (từ port, tới PID, tới tên)
 - [ ] Giải thích `Address already in use` bằng khái niệm "sổ phòng của kernel"
 - [ ] Phân biệt process và thread, vì sao giết process là giết mọi thread
-- [ ] Giải thích con số `2` trong `2>/dev/null`
 - [ ] **OOM làm gì với app**, và vì sao log ứng dụng trống trơn
 - [ ] Biết tìm dấu vết OOM ở đâu khi log app không có gì
 - [ ] **Phân biệt process và service**, vì sao server cần service
@@ -430,10 +405,7 @@ Chỉ gồm man page của Linux và tài liệu chính thức — nơi định 
 - `syscalls(2)` — danh sách lời gọi hệ thống của Linux: https://man7.org/linux/man-pages/man2/syscalls.2.html
 - `bind(2)` — nơi định nghĩa lỗi `EADDRINUSE` và quyền với port đặc quyền: https://man7.org/linux/man-pages/man2/bind.2.html
 - `listen(2)`: https://man7.org/linux/man-pages/man2/listen.2.html
-- `getrlimit(2)` — giới hạn tài nguyên, gồm số file descriptor tối đa (`RLIMIT_NOFILE`): https://man7.org/linux/man-pages/man2/getrlimit.2.html
 - `environ(7)` — biến môi trường của process: https://man7.org/linux/man-pages/man7/environ.7.html
 - `proc(5)` — hệ thống file `/proc`, gồm `/proc/<pid>/oom_score`: https://man7.org/linux/man-pages/man5/proc.5.html
 - `systemd.service(5)` — gồm tùy chọn `Restart=`: https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html
-- `docker container stop` — hành vi SIGTERM rồi SIGKILL: https://docs.docker.com/reference/cli/docker/container/stop/
 - Node.js — sự kiện tín hiệu của process: https://nodejs.org/api/process.html#signal-events
-- Java — câu lệnh `try-with-resources`: https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html

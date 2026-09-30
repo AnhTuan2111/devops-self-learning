@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 15 — Linux sinh tồn trên server</title>
-<meta name="description" content="Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ và port mà không bị lạc.">
+<meta name="description" content="Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ, port và giới hạn của process mà không bị lạc.">
 <link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
@@ -25,7 +25,7 @@
 <header class="hero">
   <p class="eyebrow">Module 2 · Bài 15</p>
   <h1>Linux sinh tồn trên server</h1>
-  <p class="lede">Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ và port mà không bị lạc.</p>
+  <p class="lede">Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ, port và giới hạn của process mà không bị lạc.</p>
   <div class="meta">
     <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
     <span class="chip">4–7 giờ</span>
@@ -42,7 +42,7 @@
   </div>
 
   <h2 id="muc-tieu">Mục tiêu</h2>
-  <p>Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ và port mà không bị lạc.</p>
+  <p>Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ, port và giới hạn của process mà không bị lạc.</p>
 
   <h2 id="vi-tri">Vì sao bài này nằm ở M2</h2>
   <p>Tự tay đưa ứng dụng lên một server thật một lần, để biết các module sau đang tự động hoá những gì.</p>
@@ -59,8 +59,10 @@
     <li>Cây thư mục: /etc, /var/log, /home, /opt, /tmp</li>
     <li>Đọc log: tail -f, grep, less</li>
     <li>df, du, free: đầy đĩa và hết bộ nhớ</li>
+    <li>Giới hạn số file một process được mở cùng lúc: ulimit -n, lỗi Too many open files, rò rỉ do quên đóng (try-with-resources)</li>
     <li>ss: process nào đang listen port nào, và từng kết nối đang mở (bộ bốn IP:port)</li>
     <li>sudo, user và group trên server</li>
+    <li>Quy tắc khi dùng chung một server với người khác</li>
     <li>Firewall trên server: xem luật đang mở, cả IPv4 lẫn IPv6</li>
   </ul>
 </section>
@@ -79,7 +81,7 @@
   <ul class="check">
     <li>Tìm được log của một dịch vụ lạ trên server</li>
     <li>Tìm ra thư mục đang ăn nhiều đĩa nhất</li>
-    <li>Biết process nào đang giữ một port</li>
+    <li>Liệt kê được mọi kết nối đang mở tới một port bằng ss (nối Bài 01)</li>
     <li>Đọc được firewall đang mở những cổng nào</li>
   </ul>
 </section>

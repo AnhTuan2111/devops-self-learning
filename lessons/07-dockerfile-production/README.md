@@ -17,11 +17,10 @@ Biến image Spring Boot thành một image nhỏ, chạy không bằng root, v�
 ## Khái niệm sẽ gặp
 
 - Multi-stage build: build bằng JDK, chạy bằng JRE
-- Cache Maven/Gradle khi build trong Docker
-- User root và user thường; quyền của một process (Linux dạy đúng lúc)
+- Cache Maven/Gradle khi build trong Docker (nối cache theo layer ở Bài 06)
+- User root và user thường; quyền của một process (Linux dạy đúng lúc); vì sao process không chạy bằng root không mở được port dưới 1024, và capabilities
 - Chạy container bằng user thường: dòng USER
 - JVM trong container: giới hạn bộ nhớ, MaxRAMPercentage; OOM đã gặp ở Bài 01
-- HEALTHCHECK
 
 ## Bài lab
 

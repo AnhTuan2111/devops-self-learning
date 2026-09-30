@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/00.svg" width="132" align="right" alt="Ấn ký của Bài 00">
 
 > **Module M0** · Nền tảng tối thiểu — Request, process và phòng lab
-> Học ngày **21–24/09/2026** · đối thoại thầy–trò · 4 phần + 5 lab
+> Học ngày **21–24/09/2026** · 5 lab
 
 ## Ba trang tài liệu của bài này
 
@@ -29,6 +29,7 @@ cố ý ngắn một câu; phiên bản đầy đủ nằm trong bài giảng.
 | Thuật ngữ | Tiếng Việt | Định nghĩa một câu |
 |---|---|---|
 | URL | địa chỉ tài nguyên | Chuỗi gồm năm phần `scheme://host:port/path?query`, trong đó chỉ `path` và `query` là thứ ứng dụng của bạn đọc. |
+| Packet | gói tin | Mẩu dữ liệu nhỏ mà mạng chuyển đi; phần đầu ghi địa chỉ nơi gửi và nơi nhận. |
 | DNS | hệ thống tên miền | Hệ thống phân tán dịch một cái **tên** (`github.com`) thành một **địa chỉ IP** mà máy tính gửi gói tin tới được. |
 | IP address | địa chỉ IP | Địa chỉ của **một cửa ngõ mạng** (network interface) của máy, không phải của cả cái máy. |
 | Port | cổng | Con số 0–65535 chỉ "phòng" bên trong một cửa ngõ; một kết nối luôn nhắm tới cặp IP + port. |
@@ -40,7 +41,7 @@ cố ý ngắn một câu; phiên bản đầy đủ nằm trong bài giảng.
 | Certificate | chứng chỉ | "Tấm căn cước" công khai của một tên miền, được một CA ký bảo lãnh. |
 | CA | tổ chức cấp chứng chỉ | Bên thứ ba mà trình duyệt tin sẵn, có quyền ký chứng chỉ (Let's Encrypt, DigiCert…). |
 | Private key | khóa bí mật | File bí mật trên server, thứ duy nhất chứng minh tấm căn cước kia đúng là của bạn. |
-| Reverse proxy | proxy ngược | Máy chủ đứng trước ứng dụng, nhận request thay nó rồi chuyển vào trong — ở lộ trình này là Nginx (Bài 17), và trong Kubernetes là Ingress controller (Bài 30). |
+| Reverse proxy | proxy ngược | Máy chủ đứng trước ứng dụng, nhận request thay nó rồi chuyển vào trong — ở lộ trình này là Nginx (Bài 17). |
 | `refused` / `timeout` | bị từ chối / hết giờ chờ | Hai cách một kết nối thất bại **trước khi** có bất kỳ câu trả lời HTTP nào; nghĩa của chúng khác hẳn nhau. |
 
 ---
@@ -48,7 +49,7 @@ cố ý ngắn một câu; phiên bản đầy đủ nằm trong bài giảng.
 ## Bốn khái niệm nền: địa chỉ IP, port, listen, firewall
 
 Bốn khái niệm này rất dễ bị gộp làm một trong đầu người mới, và phần lớn nhầm lẫn về mạng đều
-bắt nguồn từ việc gộp đó. Chúng nằm ở bốn tầng khác nhau của ngăn xếp mạng, hỏng theo bốn kiểu
+bắt nguồn từ việc gộp đó. Thực ra chúng là bốn thứ riêng biệt, hỏng theo bốn kiểu
 khác nhau và cho ra bốn triệu chứng khác nhau — định nghĩa chính xác của từng cái nằm ở bảng
 thuật ngữ phía trên.
 
@@ -79,7 +80,7 @@ máy, nhưng không thay thế được cho nhau, bởi vì mỗi cửa mở ra 
 
 ```
 127.0.0.1       →  cửa hông, chỉ mở vào bên trong nhà
-192.168.10.38   →  cửa chính, mở ra mạng WiFi       (DHCP cấp — CÓ THỂ ĐỔI)
+192.168.10.38   →  cửa chính, mở ra mạng WiFi       (router cấp — CÓ THỂ ĐỔI)
 10.8.0.2        →  cửa sau, mở ra mạng nội bộ qua VPN
 ```
 
@@ -134,9 +135,9 @@ cố, hãy tra theo hàng, rồi bắt đầu nghi ngờ từ cột cuối.
 |---|---|---|---|
 | `NXDOMAIN` | Máy **của người dùng** | 2 | Domain chưa trỏ, gõ sai, hết hạn |
 | `Timeout` | **Không ai cả** | 3, 6 | Máy chết, sai IP, firewall nuốt gói tin |
-| `Connection refused` | **Kernel** của server | 3, 7 | Máy sống nhưng phòng trống: Nginx chết |
+| `Connection refused` | **Kernel** của server (phần lõi của hệ điều hành — học ở Bài 01) | 3, 7 | Máy sống nhưng phòng trống: Nginx chết |
 | `ERR_CERT_DATE_INVALID` | **Trình duyệt** người dùng | 4 | Cert hết hạn / sai tên miền |
-| **502** Bad Gateway | **Nginx** | 7 tới 8 | App chết, sai port, container chưa lên |
+| **502** Bad Gateway | **Nginx** | 7 tới 8 | App chết, sai port, app chưa khởi động xong |
 | **504** Gateway Timeout | **Nginx** | 7 tới 8 | App sống nhưng quá chậm |
 | **500** Internal Server Error | **Spring Boot** | 8 | Bug code — giờ mới đọc code |
 | **404** Not Found | Nginx *hoặc* Spring Boot | 7, 8 | Sai path / định tuyến nhầm |
@@ -207,7 +208,7 @@ timeout  →  curl dừng vì TA bảo dừng.  Thời lượng là con số B�
 ## Chứng chỉ TLS
 
 Chứng chỉ không liên quan gì tới việc gán tên miền với IP — **đó là việc của DNS**. Chứng chỉ
-giải quyết một bài toán khác: khi một máy nói "tôi là api.tuan.dev", lấy gì để tin nó?
+giải quyết một bài toán khác: khi một máy nói "tôi là api.example.com", lấy gì để tin nó?
 
 Lời giải mà web đang dùng tên là **hạ tầng khóa công khai** (public key infrastructure, PKI).
 Nó chuyển bài toán "làm sao tin một người lạ" thành "làm sao tin một bên thứ ba mà cả hai cùng
@@ -264,10 +265,10 @@ thấy ổ khóa bình thường.
 
 > **CA không biết chủ sở hữu là ai. CA chỉ biết ai đang KIỂM SOÁT tên miền.**
 
-Vì vậy ba việc phòng thủ là: bật 2FA cho tài khoản nhà đăng ký tên miền (ưu tiên hơn cả 2FA
-GitHub); khai báo bản ghi CAA để chỉ định CA nào được cấp chứng chỉ cho tên miền của bạn; và
-theo dõi Certificate Transparency — sổ công khai ghi lại mọi chứng chỉ được cấp. Việc thứ hai
-và thứ ba sẽ làm thật ở Bài 18.
+Vì vậy việc phòng thủ đầu tiên, và quan trọng nhất, là bật 2FA (xác thực hai lớp) cho tài khoản
+nhà đăng ký tên miền — ưu tiên hơn cả 2FA GitHub. Hai lớp phòng thủ nữa — chỉ định CA nào được
+cấp chứng chỉ cho tên miền của bạn, và theo dõi sổ công khai ghi lại mọi chứng chỉ được cấp —
+học và làm thật ở Bài 18.
 
 ---
 
@@ -291,11 +292,12 @@ giám sát có cảnh báo trước (Bài 36).
 > **Câu hỏi tự kiểm tra:** *"Cái gì trong hệ thống này sẽ tự hỏng nếu tôi không động vào nó
 > trong 6 tháng?"*
 
-Một biến thể của cùng ý tưởng là `"container đang chạy"` ≠ `"app sẵn sàng"`. Docker báo
-container `Up` ngay giây đầu tiên vì process đã khởi động, nhưng Spring Boot cần thêm 15–60
-giây để nạp context và mở port 8080. Khoảng chênh đó là **cửa sổ 502 ở mọi lần deploy**. Đó là
-lý do `depends_on` trong Docker Compose không đủ (Bài 11), và vì sao Kubernetes cần readiness probe
-(Bài 28).
+Một biến thể của cùng ý tưởng là `"container đang chạy"` ≠ `"app sẵn sàng"`. Docker — công cụ
+đóng gói và chạy ứng dụng, học từ Bài 03 — chạy mỗi ứng dụng thành một container, tức một process
+được cô lập khỏi phần còn lại của máy. Docker báo container `Up` ngay giây đầu tiên vì process đã
+khởi động, nhưng Spring Boot cần thêm 15–60 giây để nạp context và mở port 8080. Khoảng chênh đó
+là **cửa sổ 502 ở mọi lần deploy**. Bài 11 và Bài 28 sẽ dạy cách bắt hệ thống đợi app báo sẵn
+sàng rồi mới chuyển request vào.
 
 ---
 
@@ -305,13 +307,13 @@ Mẫu tư duy đứng sau danh sách này là: mỗi tầng trong hệ thống t
 nhiệm ra khỏi tầng khác**. Mỗi dòng dưới đây là một trách nhiệm mà Nginx gánh hộ ứng dụng.
 
 1. **Gỡ TLS** — app không cần biết HTTPS tồn tại, và gia hạn chứng chỉ không phải restart app.
-2. **Lớp chắn** — rate limit, giới hạn kích thước body, chặn rác được xử lý *trước khi* chạm
-   vào app.
+2. **Lớp chắn** — chặn nguồn gửi quá nhiều request trong thời gian ngắn (rate limit), giới hạn
+   kích thước body, chặn rác, tất cả được xử lý *trước khi* chạm vào app.
 3. **Giảm attack surface** — lỗ hổng trong dependency vẫn nằm đó, nhưng không ai từ Internet
    chạm trực tiếp tới được.
 4. **Lễ tân** — nhận việc, đưa vào trong, bê kết quả ra; khách không bao giờ vào trong.
-5. **Port <1024 cần root** — Nginx khởi động bằng root chỉ để chiếm port 80/443, rồi *hạ quyền
-   ngay* cho các tiến trình con.
+5. **Port <1024 cần root** — Nginx khởi động bằng root (tài khoản có toàn quyền trên máy Linux —
+   học ở Bài 07) chỉ để chiếm port 80/443, rồi *hạ quyền ngay* cho các tiến trình con.
 6. **Một IP, nhiều app** — Nginx đọc header `Host` để biết khách đang hỏi website nào.
 7. **File tĩnh** — trả file ảnh, CSS, JS là việc Nginx làm rẻ hơn JVM rất nhiều.
 8. **Deploy không đứt** — khởi động bản mới, đợi nó sẵn sàng, rồi mới chuyển luồng sang.
@@ -328,8 +330,7 @@ trên máy. Mỗi bước dưới đây ghi rõ ba điều: làm để thấy g�
 thật trên máy học ngày 24/09/2026), và nếu kết quả khác thì nó nói lên điều gì.
 
 **Lưu ý:** chạy trong **Git Bash** hoặc WSL. **Không** chạy trong `cmd.exe` — ở đó `time` là lệnh
-**đặt đồng hồ hệ thống** chứ không phải đo thời gian, và `;` không tách được hai lệnh. Đây là
-lỗi đã thực sự gặp trong buổi học.
+**đặt đồng hồ hệ thống** chứ không phải đo thời gian, và `;` không tách được hai lệnh.
 
 Cách nhanh nhất là chạy cả kịch bản một lượt:
 
@@ -347,8 +348,8 @@ nslookup khong-ton-tai-dau-nhe-12345.com
 ```
 
 Lệnh thứ nhất cho thấy DNS làm đúng việc của nó: nhận một cái tên, trả về một địa chỉ IP. Kỳ
-vọng thấy dòng `Server:` là máy chủ DNS mà máy bạn đang hỏi (trên máy học là router WiFi
-`wifi.cmcc`, địa chỉ link-local `fe80::10`) và một dòng `Address:` là IP của GitHub. Lệnh thứ
+vọng thấy dòng `Server:` là máy chủ DNS mà máy bạn đang hỏi (thường là router WiFi, đôi khi
+hiện bằng một địa chỉ IPv6 dạng `fe80::…`) và một dòng `Address:` là IP của GitHub. Lệnh thứ
 hai cố ý hỏi một tên không tồn tại để thấy chặng 2 **hỏng** trông thế nào: kỳ vọng
 `Non-existent domain`, tức `NXDOMAIN`. Nếu lệnh thứ nhất cũng báo lỗi, thì vấn đề nằm ở kết
 nối tới máy chủ DNS (mạng, router), chứ chưa liên quan gì tới GitHub.
@@ -438,12 +439,11 @@ Chỉ đánh dấu khi trả lời được bằng lời của mình, không nh�
 
 ## Còn treo sang bài sau
 
-Có một thí nghiệm đối chứng chưa làm được vì phòng lab Linux đã bị gỡ: chạy lại
-`time curl -4 -o /dev/null http://127.0.0.1:9999` trong **WSL Ubuntu** để so với con số
-**2,155s** đo trên Windows. Việc này làm ở **Bài 02**, ngay sau khi cài lại Ubuntu.
+**Bài 02** sẽ chạy lại `time curl -4 -o /dev/null http://127.0.0.1:9999` trong **WSL Ubuntu**
+để so con số đo trên Windows (**2,155s**) với Linux — một thí nghiệm đối chứng cho Lab 4.
 
-Lỗi đã gặp trong buổi học và chín chỗ hiểu sai đã được sửa (chẳng hạn "VPS còn sống thì không
-thể `refused`" — thực tế là ngược lại) được ghi ở [`notes.md`](notes.md).
+Những chỗ người mới hay hiểu sai, chẳng hạn "máy chủ còn sống thì không thể `refused`" — thực tế
+là ngược lại — được ghi ở [`notes.md`](notes.md).
 
 **Bài tiếp:** [01 — Máy tính, Hệ điều hành, Process](../01-may-tinh-va-he-dieu-hanh/)
 
@@ -459,8 +459,6 @@ Chỉ gồm tài liệu chuẩn và tài liệu chính thức — nơi định n
 - RFC 8446 — TLS 1.3: https://www.rfc-editor.org/rfc/rfc8446
 - RFC 9110 — ngữ nghĩa HTTP, gồm định nghĩa các mã 404, 500, 502, 504: https://www.rfc-editor.org/rfc/rfc9110
 - RFC 5280 — cấu trúc chứng chỉ X.509: https://www.rfc-editor.org/rfc/rfc5280
-- RFC 8659 — bản ghi DNS CAA: https://www.rfc-editor.org/rfc/rfc8659
-- RFC 6962 — Certificate Transparency: https://www.rfc-editor.org/rfc/rfc6962
 - `connect(2)` — nơi Linux định nghĩa lỗi `ECONNREFUSED` và `ETIMEDOUT`: https://man7.org/linux/man-pages/man2/connect.2.html
 - Tài liệu chính thức của curl: https://curl.se/docs/manpage.html
 - Let's Encrypt — tài liệu và FAQ: https://letsencrypt.org/docs/

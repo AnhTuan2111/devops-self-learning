@@ -21,7 +21,6 @@ Vào server an toàn bằng khóa, cấu hình một lần rồi chỉ cần gõ
 - ~/.ssh/config
 - scp và rsync
 - known_hosts và cảnh báo "host key changed"
-- Quy tắc khi dùng chung một server với người khác
 
 ## Bài lab
 

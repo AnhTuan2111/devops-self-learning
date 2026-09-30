@@ -96,7 +96,7 @@ lớp — một tổ chức chỉ có thể nhận nguyên một khối lớp A,
 
 <figure class="fig photo shot">
   <img src="img/iana-ipv4.webp" width="928" height="1046" loading="lazy" alt="Bảng sổ đăng ký IPv4 của IANA, mỗi dòng một khối /8; hai dòng 010/8 Private Use và 127/8 Loopback được khoanh màu.">
-  <figcaption><b>Ảnh 3</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA. Mỗi dòng là một khối /8 — khoảng 16,7 triệu địa chỉ. Cột <em>Designation</em> cho thấy những khối trọn gói từng thuộc về một tổ chức duy nhất như DoD Intel Information Systems hay AT&amp;T Bell Laboratories: dấu vết còn lại của cách chia theo class. Hai dòng khoanh là hai dải bài học đã gặp: <span class="kw"><i class="key k-red" aria-hidden="true"></i><code>10.0.0.0/8</code></span> dành cho mạng riêng (RFC 1918) và <span class="kw"><i class="key k-blue" aria-hidden="true"></i><code>127.0.0.0/8</code></span> cho loopback.</figcaption>
+  <figcaption><b>Ảnh 3</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA. Mỗi dòng là một khối khoảng 16,7 triệu địa chỉ (cách ghi <code>/8</code> được giải thích ở tab Hai miếng vá). Cột <em>Designation</em> cho thấy những khối trọn gói từng thuộc về một tổ chức duy nhất như DoD Intel Information Systems hay AT&amp;T Bell Laboratories: dấu vết còn lại của cách chia theo class. Hai dòng khoanh là hai dải bài học đã gặp: <span class="kw"><i class="key k-red" aria-hidden="true"></i><code>10.0.0.0/8</code></span> dành cho mạng riêng (RFC 1918) và <span class="kw"><i class="key k-blue" aria-hidden="true"></i><code>127.0.0.0/8</code></span> cho loopback.</figcaption>
 </figure>
 
 
@@ -108,8 +108,8 @@ lớp — một tổ chức chỉ có thể nhận nguyên một khối lớp A,
     <tr><td><strong>A</strong></td><td><code>0</code></td><td>128</td><td>16.777.216</td><td>Mạng <code>0</code> và <code>127</code> dành riêng; cả lớp chiếm <strong>một nửa</strong> toàn bộ không gian</td></tr>
     <tr><td><strong>B</strong></td><td><code>10</code></td><td>16.384</td><td>65.536</td><td>Một phần tư không gian</td></tr>
     <tr><td><strong>C</strong></td><td><code>110</code></td><td>2.097.152</td><td>256</td><td>Một phần tám không gian</td></tr>
-    <tr><td>D</td><td><code>1110</code></td><td>—</td><td>—</td><td>Multicast (<code>224.0.0.0/4</code>)</td></tr>
-    <tr><td>E</td><td><code>1111</code></td><td>—</td><td>—</td><td>Dự trữ (<code>240.0.0.0/4</code>)</td></tr>
+    <tr><td>D</td><td><code>1110</code></td><td>—</td><td>—</td><td>Gửi một gói tin tới cả một nhóm máy cùng lúc (từ <code>224.x.x.x</code>)</td></tr>
+    <tr><td>E</td><td><code>1111</code></td><td>—</td><td>—</td><td>Dự trữ (từ <code>240.x.x.x</code>)</td></tr>
   </tbody>
 </table>
 </div>
@@ -125,7 +125,7 @@ lớp — một tổ chức chỉ có thể nhận nguyên một khối lớp A,
 khối lớp C (256) không đủ, nên phải nhận một khối lớp B với 65.536 địa chỉ — và bỏ không hơn 99% số đó.
 Ở cực trên, MIT, Ford, Apple, IBM, Bộ Quốc phòng Mỹ — mỗi nơi được <strong>nguyên một khối lớp
 A</strong>, tức hơn 16 triệu địa chỉ. Hàng trăm triệu địa chỉ bị khóa trong tay vài chục tổ chức, phần
-lớn không bao giờ dùng hết. Sổ đăng ký chính thức của IANA về các khối <code>/8</code> đến nay vẫn còn
+lớn không bao giờ dùng hết. Sổ đăng ký chính thức của IANA về các khối lớn này đến nay vẫn còn
 ghi lại dấu vết của thời kỳ này; về sau, khi địa chỉ trở nên khan hiếm và có giá, một số tổ chức đã
 trả lại hoặc bán bớt khối lớp A của mình.</p>
 
@@ -138,8 +138,8 @@ trả lại hoặc bán bớt khối lớp A của mình.</p>
 
 <p>World Wide Web ra đời năm 1991, và Internet bắt đầu bùng nổ thương mại. Tới đầu thập niên 1990,
 cộng đồng kỹ thuật nhận ra hai cuộc khủng hoảng đang tới cùng lúc: các khối lớp B — cỡ khối "vừa vặn"
-nhất cho doanh nghiệp — đang cạn nhanh, và bảng định tuyến của các router lõi Internet đang phình ra
-vì mỗi khối lớp C được cấp lại là một dòng định tuyến riêng. Khoảng năm <strong>1992</strong>, IETF —
+nhất cho doanh nghiệp — đang cạn nhanh, và danh sách đường đi mà mỗi router lớn của Internet phải
+nhớ đang phình ra, vì mỗi khối lớp C được cấp là thêm một dòng riêng trong danh sách đó. Khoảng năm <strong>1992</strong>, IETF —
 tổ chức soạn thảo các chuẩn Internet — bắt đầu thiết kế một thế hệ giao thức kế tiếp. Đặc tả IPv6 đầu
 tiên xuất hiện năm 1995 (RFC 1883), được sửa lại thành RFC 2460 vào cuối năm <strong>1998</strong>, và
 mãi tới năm 2017 mới được nâng lên thành chuẩn Internet chính thức (RFC 8200).</p>
@@ -156,7 +156,7 @@ mất.</p>
 được thay bằng RFC 4632, làm một việc nghe thì đơn giản: <em>bỏ hệ thống lớp</em>. Thay vì để vài bit
 đầu quyết định cỡ khối, CIDR cho phép ranh giới giữa phần "mạng" và phần "máy" nằm ở bất kỳ bit nào,
 và ghi vị trí đó bằng một con số sau dấu gạch chéo. Đây chính là nguồn gốc của ký hiệu mà bạn sẽ gặp
-suốt đời làm nghề, trong cấu hình firewall, Docker network, VPC trên cloud:</p>
+suốt đời làm nghề, chẳng hạn trong cấu hình firewall:</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  192.168.1.0/24    ← 24 bit đầu cố định, 8 bit cuối tự do → 256 địa chỉ
@@ -166,10 +166,15 @@ suốt đời làm nghề, trong cấu hình firewall, Docker network, VPC trên
 <figcaption><b>Hình 3</b> Ký hiệu CIDR: con số sau dấu gạch chéo là số bit cố định.</figcaption>
 </figure>
 
-<p>Nhờ đó, công ty cần 300 địa chỉ ở ví dụ trước giờ nhận một khối <code>/23</code> (512 địa chỉ) thay
-vì 65.536. CIDR còn giải quyết luôn cuộc khủng hoảng thứ hai: nhiều khối nhỏ nằm liền nhau có thể được
-gộp thành một khối lớn và quảng bá bằng một dòng định tuyến duy nhất, giúp bảng định tuyến lõi ngừng
-phình to vô tội vạ.</p>
+<p>Con số sau dấu gạch chéo đếm <em>bit</em>, không liên quan gì tới các con số trong địa chỉ: dải
+loopback <code>127.0.0.0/8</code> không chứa <code>127⁴</code> địa chỉ như người mới hay đoán, mà chứa
+<code>2²⁴ ≈ 16,7 triệu</code> — dù mặc định máy chỉ dùng đúng một địa chỉ trong đó là
+<code>127.0.0.1</code>.</p>
+
+<p>Quay lại ví dụ trước: nhờ CIDR, công ty cần 300 địa chỉ giờ nhận một khối <code>/23</code> (512 địa
+chỉ) thay vì 65.536. CIDR còn giải quyết luôn cuộc khủng hoảng thứ hai: nhiều khối nhỏ nằm liền nhau có
+thể được gộp thành một khối lớn và chỉ chiếm một dòng trong danh sách đường đi của router, nhờ đó danh
+sách ấy ngừng phình to vô tội vạ.</p>
 
 <dl class="terms">
   <dt>Prefix <small>tiền tố mạng</small></dt>
@@ -178,8 +183,6 @@ phình to vô tội vạ.</p>
   <dt>Subnet mask <small>mặt nạ mạng con</small></dt>
   <dd>Cách viết cũ của cùng thông tin đó: <code>/24</code> tương đương <code>255.255.255.0</code>. Bạn sẽ
   còn thấy cả hai cách viết trong các công cụ.</dd>
-  <dt>Route aggregation <small>gộp tuyến</small></dt>
-  <dd>Quảng bá nhiều khối liền nhau bằng một prefix ngắn hơn, để router chỉ cần nhớ một dòng thay vì nhiều dòng.</dd>
 </dl>
 
 <h3 id="nat">Miếng vá <span class="stg">2</span> — NAT (1994), miếng vá thay đổi tất cả</h3>
@@ -201,10 +204,12 @@ dùng lại, chính vì chúng không bao giờ xuất hiện trên Internet.</p
                        │
                   ROUTER (NAT)
                        │
-               14.161.xx.xx   ← PUBLIC, MỘT địa chỉ duy nhất
+               203.0.113.7    ← PUBLIC, MỘT địa chỉ duy nhất
                        │           cả nhà dùng chung
                   ~ INTERNET ~</code></pre>
-<figcaption><b>Hình 4</b> Mọi thiết bị trong nhà dùng địa chỉ private; chỉ router có một địa chỉ public.</figcaption>
+<figcaption><b>Hình 4</b> Mọi thiết bị trong nhà dùng địa chỉ private; chỉ router có một địa chỉ public.
+Địa chỉ public trong hình và trong Hình 5 là <code>203.0.113.7</code>, thuộc dải mà RFC 5737 dành riêng
+cho tài liệu, nên không trỏ tới mạng thật của ai.</figcaption>
 </figure>
 
 <p>Cơ chế cụ thể như sau. Khi laptop gửi một gói tin ra Internet, router thay địa chỉ nguồn private
@@ -213,12 +218,12 @@ chọn, rồi ghi cặp thay thế đó vào một cuốn sổ. Dạng NAT có d
 là NAPT (hay PAT), và đó là thứ gần như mọi router gia đình đang chạy:</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  192.168.10.38 : 55289   ⟷   14.161.xx.xx : 61204   →  104.20.23.154:443
-  192.168.10.51 : 49802   ⟷   14.161.xx.xx : 61205   →  104.20.23.154:443</code></pre>
+<pre class="diagram"><code>  192.168.10.38 : 55289   ⟷   203.0.113.7 : 61204   →  104.20.23.154:443
+  192.168.10.51 : 49802   ⟷   203.0.113.7 : 61205   →  104.20.23.154:443</code></pre>
 <figcaption><b>Hình 5</b> Cuốn sổ NAT của router: mỗi kết nối đi ra được gán một port public riêng.</figcaption>
 </figure>
 
-<p>Khi gói tin trả lời quay về <code>14.161.xx.xx:61204</code>, router tra sổ, thấy port
+<p>Khi gói tin trả lời quay về <code>203.0.113.7:61204</code>, router tra sổ, thấy port
 <code>61204</code> ứng với <code>192.168.10.38:55289</code>, đổi địa chỉ đích lại cho đúng, và chuyển
 cho laptop chứ không phải điện thoại — dù cả hai đang nói chuyện với cùng một server.</p>
 
@@ -278,7 +283,7 @@ ngày nay coi là hiển nhiên, dù nó chưa bao giờ là thiết kế ban đ
   <thead><tr><th>Hiện tượng bạn gặp hằng ngày</th><th>Nguyên nhân gốc</th></tr></thead>
   <tbody>
     <tr><td>Muốn chạy server tại nhà cho người ngoài truy cập <i class="ic ic-r" role="img" aria-label="sang"></i> phải cấu hình <strong>port forwarding</strong> trên router</td><td>NAT chặn chiều vào; port forwarding là ghi tay một dòng cố định vào sổ</td></tr>
-    <tr><td>Gọi video, chơi game P2P, VoIP cần máy chủ STUN/TURN làm trung gian</td><td>Hai máy cùng nằm sau NAT không gọi thẳng nhau được</td></tr>
+    <tr><td>Gọi video giữa hai nhà thường phải đi vòng qua một máy chủ trung gian</td><td>Hai máy cùng nằm sau NAT không gọi thẳng nhau được</td></tr>
     <tr><td><strong>Server phải đặt ở trung tâm dữ liệu, không đặt ở nhà</strong></td><td>Máy bạn không có địa chỉ mà thế giới gọi tới được</td></tr>
   </tbody>
 </table>
@@ -333,8 +338,7 @@ nhanh hơn, và cho phép thiết bị tự cấu hình địa chỉ mà không 
     <tr><td>Cách viết</td><td>thập phân, 4 nhóm</td><td><strong>thập lục phân, 8 nhóm</strong></td></tr>
     <tr><td>Ví dụ</td><td><code>192.168.1.1</code></td><td><code>2606:4700:10::ac42:93f3</code></td></tr>
     <tr><td>Đầu gói tin</td><td>20–60 byte, độ dài thay đổi</td><td>Cố định 40 byte</td></tr>
-    <tr><td>Tự cấu hình địa chỉ</td><td>Cần DHCP</td><td>Tự cấu hình được (SLAAC), hoặc DHCPv6</td></tr>
-    <tr><td>Broadcast</td><td>Có</td><td>Không có — thay bằng multicast</td></tr>
+    <tr><td>Cấp địa chỉ</td><td>Cần một máy chủ cấp địa chỉ (DHCP)</td><td>Thiết bị tự đặt được địa chỉ cho mình, không cần máy chủ cấp</td></tr>
     <tr><td>NAT</td><td>Phổ biến, gần như bắt buộc</td><td>Không cần trong thiết kế</td></tr>
   </tbody>
 </table>
@@ -377,35 +381,28 @@ mỗi chỗ thay cho mấy nhóm. Với hai quy tắc đó, bạn đọc đượ
 </figure>
 
 <div class="callout deep">
-  <span class="label">Đào sâu — cách viết "chuẩn" của một địa chỉ IPv6</span>
-  <p>Vì có nhiều cách viết cùng một địa chỉ, RFC 5952 quy định một dạng khuyến nghị duy nhất để công cụ
-  và con người so sánh được với nhau: chữ thường, bỏ số 0 đầu nhóm, và <code>::</code> dùng cho chuỗi
-  nhóm 0 <em>dài nhất</em>. Kiến trúc địa chỉ IPv6 (RFC 4291) cũng định nghĩa các dải đặc biệt tương
-  ứng với những gì bạn đã biết ở IPv4: <code>::1</code> là loopback, <code>fe80::/10</code> là
-  link-local, và dải <em>Unique Local Address</em> <code>fc00::/7</code> (RFC 4193, thực tế dùng
-  <code>fd00::/8</code>) đóng vai trò gần giống các dải private của RFC 1918.</p>
+  <span class="label">Đào sâu — các dải đặc biệt của IPv6</span>
+  <p>Kiến trúc địa chỉ IPv6 (RFC 4291) định nghĩa các dải đặc biệt tương ứng với những gì bạn đã biết
+  ở IPv4: <code>::1</code> là loopback, <code>fe80::/10</code> là link-local.</p>
 </div>
 
-<h3 id="dinh-chinh-2s">Đính chính: <code>::1</code> không phải thủ phạm của 2,155 giây</h3>
+<h3 id="dinh-chinh-2s"><code>localhost</code> ra hai địa chỉ — nhưng không giải thích được 2,155 giây</h3>
 
 <p>Trên Windows hiện đại, tên <code>localhost</code> thường phân giải ra <strong>hai</strong> địa chỉ:
 <code>::1</code> trước, rồi <code>127.0.0.1</code>. Vì thế <code>curl localhost:9999</code> phải thử
 lần lượt cả hai và bị từ chối cả hai, nên tốn thời gian hơn so với khi chỉ thử một địa chỉ.</p>
 
 <div class="callout warn">
-  <span class="label">Đính chính so với bản ghi đầu tiên</span>
-  <p>Bản ghi đầu tiên của phụ lục này cho rằng việc <code>localhost</code> phân giải ra hai địa chỉ là
-  "thủ phạm của 2,2 giây". Đối chiếu lại với lệnh đã thực sự chạy thì kết luận đó không đứng vững: phép
-  đo 2,155 giây dùng <code>curl -4</code> và gõ thẳng <code>127.0.0.1</code>, nên <code>::1</code> không
-  hề tham gia. Con số đó đến từ hành vi thử lại của Windows khi bị từ chối kết nối, như đã phân tích ở
+  <span class="label">Không phải lời giải cho phép đo ở Lab 4</span>
+  <p>Dễ đoán rằng hai địa chỉ này là thủ phạm của 2,155 giây đo được ở Lab 4. Nhưng phép đo đó dùng
+  <code>curl -4</code> và gõ thẳng <code>127.0.0.1</code>, nên <code>::1</code> không hề tham gia. Con số đó đến từ hành vi thử lại của Windows khi bị từ chối kết nối, như đã phân tích ở
   <a href="phan-tich-output.html#windows-2s">trang mổ băng output</a>. Cơ chế hai địa chỉ ở trên vẫn đúng
   — nó chỉ không phải lời giải cho phép đo này.</p>
 </div>
 
 <p>Cơ chế hai địa chỉ đó lại chính là nguồn gốc của một lỗi kinh điển mà rất nhiều người gặp:
 <code>ECONNREFUSED ::1</code>. Kịch bản điển hình là database chỉ listen ở <code>127.0.0.1</code>, còn
-ứng dụng kết nối tới <code>localhost</code> và thử <code>::1</code> trước — ví dụ Node.js từ phiên bản
-17 đã thôi tự ưu tiên IPv4 mà dùng đúng thứ tự hệ điều hành trả về. Kết quả là một lỗi "bị từ chối" dù
+ứng dụng kết nối tới <code>localhost</code> và thử <code>::1</code> trước. Kết quả là một lỗi "bị từ chối" dù
 database đang chạy hoàn toàn bình thường, chỉ là không ngồi ở cửa mà ứng dụng gõ.</p>
 
 </section>
@@ -437,17 +434,13 @@ chủ yếu cho người khác.</p>
   <dt>Dual-stack <small>chạy song song hai giao thức</small></dt>
   <dd>Máy hoặc mạng có cả địa chỉ IPv4 lẫn IPv6 và dùng được cả hai. Đây là trạng thái của phần lớn
   Internet hiện nay, và là trạng thái của <code>example.com</code> trong buổi lab.</dd>
-  <dt>NAT64 / DNS64 <small>cầu nối IPv6 sang IPv4</small></dt>
-  <dd>Cặp cơ chế cho phép một máy chỉ có IPv6 vẫn truy cập được một website chỉ có IPv4: DNS64 "chế" ra
-  một địa chỉ IPv6 đại diện, NAT64 dịch gói tin qua lại ở biên mạng.</dd>
 </dl>
 
 <div class="callout deep">
   <span class="label">Đào sâu — vì sao di động phá được thế bế tắc</span>
   <p>Lực <span class="stg">4</span> chính là lời giải cho bài toán con gà và quả trứng ở lực <span class="stg">3</span>. Nhà mạng di động không thể cấp
-  địa chỉ IPv4 public cho hàng tỷ điện thoại, nên nhiều nhà mạng chọn cho thiết bị chạy IPv6 thuần, rồi
-  dùng các cơ chế như NAT64/DNS64 (RFC 6146, RFC 6147) để thiết bị vẫn vào được phần Internet còn chỉ có
-  IPv4. Khi một lượng lớn người dùng đã đến bằng IPv6, động lực đưa nội dung lên IPv6 tự nhiên xuất hiện
+  địa chỉ IPv4 public cho hàng tỷ điện thoại, nên nhiều nhà mạng cho điện thoại chạy IPv6 thuần, rồi
+  đặt một cầu nối ở biên mạng (RFC 6146, RFC 6147) để điện thoại vẫn vào được các trang chỉ có IPv4. Khi một lượng lớn người dùng đã đến bằng IPv6, động lực đưa nội dung lên IPv6 tự nhiên xuất hiện
   — con gà đã có, quả trứng sẽ theo sau.</p>
 </div>
 
@@ -461,13 +454,13 @@ mạng gia đình và di động nhiều hơn mạng công ty — một bằng c
 </section>
 
 <!-- ================================================================== -->
-<section class="tab" id="t-bang-chung" data-tab="Bằng chứng" data-note="output của chính bạn">
+<section class="tab" id="t-bang-chung" data-tab="Bằng chứng" data-note="output buổi lab">
 
-<h2 id="bang-chung">Output của chính bạn kể lại toàn bộ câu chuyện</h2>
+<h2 id="bang-chung">Output của buổi lab kể lại toàn bộ câu chuyện</h2>
 
 <p>Tất cả những gì đọc ở các tab trước — dual-stack, Happy Eyeballs, nhà mạng đi chậm — không cần tin
-vào sách. Chúng đã hiện ra trên chính terminal của người học trong buổi lab, chỉ cần đọc lại output với
-con mắt của người đã biết lịch sử:</p>
+vào sách. Chúng đã hiện ra trên terminal trong buổi lab, chỉ cần đọc lại output với con mắt của người
+đã biết lịch sử:</p>
 
 <figure class="fig">
 <pre><code>* IPv6: 2606:4700:10::ac42:93f3      ← example.com CÓ IPv6.  Sẵn sàng rồi.
@@ -493,57 +486,44 @@ Address: fe80::10          ← router chỉ có địa chỉ LINK-LOCAL
 
 <p>Router chỉ lộ ra một địa chỉ link-local, nhất quán với giả thuyết rằng mạng gia đình này không có
 đường IPv6 ra Internet. Như đã nói ở trang mổ băng output, đây là dấu hiệu mạnh chứ chưa phải chứng minh
-tuyệt đối; lệnh <code>curl -6 https://example.com</code> sẽ cho câu trả lời dứt khoát.</p>
+tuyệt đối; lệnh <code>curl -6 https://example.com</code> sẽ cho câu trả lời dứt khoát. Trên mạng của
+bạn, kết quả có thể khác: nếu nhà mạng đã có IPv6, dòng <code>Established connection</code> sẽ mang một
+địa chỉ IPv6.</p>
 
 <div class="callout ok">
   <span class="label">Kết luận — ghim lại</span>
   <p><strong>Nội dung đã sẵn sàng cho IPv6. Nhà mạng thì chưa.</strong></p>
-  <p>Đó chính là "vấn đề con gà và quả trứng" ở lực <span class="stg">3</span>, và bạn vừa đo được nó trên terminal của chính
-  mình — không phải đọc trong một báo cáo ngành.</p>
+  <p>Đó chính là "vấn đề con gà và quả trứng" ở lực <span class="stg">3</span>, và output của buổi lab đã đo được nó —
+  không phải đọc trong một báo cáo ngành.</p>
 </div>
 
 </section>
 
 <!-- ================================================================== -->
-<section class="tab" id="t-anh-huong" data-tab="Sáu chỗ vấp" data-note="trong lộ trình">
+<section class="tab" id="t-anh-huong" data-tab="Hai chỗ vấp" data-note="trong lộ trình">
 
-<h2 id="anh-huong">Sáu chỗ điều này sẽ đụng vào bạn trong lộ trình</h2>
+<h2 id="anh-huong">Hai chỗ điều này sẽ đụng vào bạn trong lộ trình</h2>
 
 <p>Việc Internet đang sống ở trạng thái lưng chừng giữa hai giao thức không chỉ là chuyện lịch sử thú
-vị. Nó để lại những cái bẫy cụ thể trong công việc vận hành hằng ngày, và lộ trình này sẽ đi qua từng cái
-một. Bảng dưới đây liệt kê trước để khi gặp, bạn nhận ra ngay đó là di chứng của thời kỳ dual-stack chứ
-không phải một lỗi bí ẩn.</p>
+vị. Nó để lại những cái bẫy cụ thể trong công việc vận hành hằng ngày, và lộ trình này sẽ đi qua cả
+hai chỗ dưới đây. Bảng liệt kê trước để khi gặp, bạn nhận ra ngay đó là di chứng của thời kỳ dual-stack
+chứ không phải một lỗi bí ẩn.</p>
 
 <div class="table-scroll">
 <table>
   <caption><b>Bảng 5</b> Những chỗ IPv4/IPv6 sẽ gây vấp, và bài học xử lý.</caption>
   <thead><tr><th>Chỗ vấp</th><th>Bài</th></tr></thead>
   <tbody>
-    <tr><td>App bind <code>0.0.0.0</code> (mọi IPv4) hay <code>::</code> (mọi IPv6) — chọn sai là không ai gọi được</td><td><a href="../04-port-va-publish/">04</a></td></tr>
-    <tr><td><code>localhost</code> phân giải <code>::1</code> trước <i class="ic ic-r" role="img" aria-label="sang"></i> lỗi <code>ECONNREFUSED ::1</code> khi app kết nối DB</td><td><a href="../04-port-va-publish/">04</a>, <a href="../10-docker-network/">10</a></td></tr>
     <tr><td>DNS: bản ghi <strong><code>A</code></strong> cho IPv4, <strong><code>AAAA</code></strong> cho IPv6</td><td><a href="../18-ten-mien-va-https/">18</a></td></tr>
-    <tr><td>Nginx phải khai báo cả <code>listen 80;</code> <strong>và</strong> <code>listen [::]:80;</code></td><td><a href="../17-reverse-proxy/">17</a></td></tr>
     <tr><td><strong>Firewall: chặn kỹ IPv4 mà để ngỏ IPv6 <i class="ic ic-r" role="img" aria-label="sang"></i> lỗ hổng bảo mật thật</strong></td><td><a href="../15-linux-tren-server/">15</a></td></tr>
-    <tr><td>Docker mặc định chỉ bật IPv4</td><td><a href="../10-docker-network/">10</a></td></tr>
   </tbody>
 </table>
 </div>
 
-<div class="callout deep">
-  <span class="label">Đào sâu — vì sao Nginx cần tới hai dòng <code>listen</code></span>
-  <p>Về nguyên tắc, một socket IPv6 listen ở <code>::</code> có thể nhận luôn cả kết nối IPv4 (dưới dạng
-  địa chỉ "IPv4 ánh xạ" <code>::ffff:a.b.c.d</code>), tùy vào tùy chọn <code>IPV6_V6ONLY</code> của socket
-  và cấu hình hệ điều hành. Nginx chọn cách an toàn và rõ ràng: mặc định đặt socket <code>[::]</code> ở chế
-  độ chỉ nhận IPv6 (tham số <code>ipv6only=on</code> của chỉ thị <code>listen</code>), nên muốn phục vụ cả
-  hai thì phải khai báo cả hai dòng. Hành vi "tùy hệ điều hành" của socket <code>::</code> cũng chính là lý
-  do chỗ vấp đầu tiên trong bảng khó đoán tới vậy.</p>
-</div>
-
 <div class="callout warn">
   <span class="label">Dòng nguy hiểm nhất</span>
-  <p>Rất nhiều người chặn cẩn thận bằng <code>iptables</code> rồi <strong>để ngỏ hoàn toàn
-  <code>ip6tables</code></strong> — hai bộ quy tắc riêng cho hai giao thức — và server vẫn phơi ra
-  Internet qua IPv6 mà họ không biết.</p>
+  <p>Firewall trên Linux giữ <strong>hai bộ luật riêng</strong> cho IPv4 và IPv6. Chặn kỹ bộ này mà
+  quên bộ kia thì server vẫn phơi ra Internet qua IPv6 mà người quản trị không hề biết.</p>
   <p>Ta sẽ kiểm tra đúng chỗ này khi đi một vòng server ở <a href="../15-linux-tren-server/">Bài 15</a>.</p>
 </div>
 
@@ -558,7 +538,7 @@ không phải một lỗi bí ẩn.</p>
   <li>Giải thích được vì sao NAT khiến server không thể đặt trên laptop ở nhà, và CGNAT làm tình hình tệ hơn thế nào</li>
   <li>Rút gọn và viết đầy đủ được một địa chỉ IPv6, và biết vì sao <code>::</code> chỉ dùng một lần</li>
   <li>Kể được ba lý do IPv6 phổ cập chậm và lực nào đang phá thế bế tắc</li>
-  <li>Nói được vì sao chặn <code>iptables</code> mà quên <code>ip6tables</code> là một lỗ hổng thật</li>
+  <li>Nói được vì sao firewall chặn kỹ IPv4 mà quên IPv6 là một lỗ hổng thật</li>
 </ul>
 
 <h2 id="nguon-ipv6">Nguồn đọc thêm</h2>
@@ -577,11 +557,10 @@ không phải một lỗi bí ẩn.</p>
   <a href="https://www.rfc-editor.org/rfc/rfc6598">rfc-editor.org/rfc/rfc6598</a></li>
   <li>RFC 8200 — Internet Protocol, Version 6 (IPv6) Specification.
   <a href="https://www.rfc-editor.org/rfc/rfc8200">rfc-editor.org/rfc/rfc8200</a></li>
-  <li>RFC 4291 — IP Version 6 Addressing Architecture; RFC 5952 — cách viết khuyến nghị cho địa chỉ IPv6.
-  <a href="https://www.rfc-editor.org/rfc/rfc4291">rfc-editor.org/rfc/rfc4291</a> ·
-  <a href="https://www.rfc-editor.org/rfc/rfc5952">rfc5952</a></li>
-  <li>RFC 4193 — Unique Local IPv6 Unicast Addresses.
-  <a href="https://www.rfc-editor.org/rfc/rfc4193">rfc-editor.org/rfc/rfc4193</a></li>
+  <li>RFC 4291 — IP Version 6 Addressing Architecture.
+  <a href="https://www.rfc-editor.org/rfc/rfc4291">rfc-editor.org/rfc/rfc4291</a></li>
+  <li>RFC 5737 — IPv4 Address Blocks Reserved for Documentation (dải chứa <code>203.0.113.7</code>).
+  <a href="https://www.rfc-editor.org/rfc/rfc5737">rfc-editor.org/rfc/rfc5737</a></li>
   <li>RFC 6146 và RFC 6147 — NAT64 và DNS64.
   <a href="https://www.rfc-editor.org/rfc/rfc6146">rfc-editor.org/rfc/rfc6146</a> ·
   <a href="https://www.rfc-editor.org/rfc/rfc6147">rfc6147</a></li>
@@ -589,8 +568,6 @@ không phải một lỗi bí ẩn.</p>
   <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org/assignments/ipv4-address-space</a></li>
   <li>IANA — sổ đăng ký các dải địa chỉ IPv4 dùng cho mục đích đặc biệt.
   <a href="https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml">iana.org/assignments/iana-ipv4-special-registry</a></li>
-  <li>Nginx — tài liệu chỉ thị <code>listen</code>, gồm tham số <code>ipv6only</code>.
-  <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#listen">nginx.org/en/docs/http/ngx_http_core_module.html</a></li>
   <li>Google — thống kê tỉ lệ người dùng truy cập qua IPv6.
   <a href="https://www.google.com/intl/en/ipv6/statistics.html">google.com/intl/en/ipv6/statistics.html</a></li>
   <li>J. H. Saltzer, D. P. Reed, D. D. Clark — <em>End-to-End Arguments in System Design</em>, ACM

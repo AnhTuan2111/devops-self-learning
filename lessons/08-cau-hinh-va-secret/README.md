@@ -16,6 +16,7 @@ Chạy cùng một image ở dev, staging và production chỉ bằng cách đ�
 ## Khái niệm sẽ gặp
 
 - Biến môi trường: export, env, ${...} (Linux dạy đúng lúc)
+- ENV và ARG trong Dockerfile
 - 12-factor: tách cấu hình khỏi code
 - docker run -e và --env-file
 - Spring Boot đọc cấu hình từ biến môi trường

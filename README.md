@@ -59,7 +59,7 @@ một lab chạy thật, với một bước cố tình gây lỗi rồi tự s�
 | | # | Bài | Mục tiêu | Ước lượng | Đã học |
 |---|---|---|---|---|---|
 |  | `14` | [SSH vào server](lessons/14-ssh-vao-server/) | Vào server an toàn bằng khóa, cấu hình một lần rồi chỉ cần gõ ssh tên-server. | 3–5 giờ | — |
-|  | `15` | [Linux sinh tồn trên server](lessons/15-linux-tren-server/) | Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ và port mà không bị lạc. | 4–7 giờ | — |
+|  | `15` | [Linux sinh tồn trên server](lessons/15-linux-tren-server/) | Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ, port và giới hạn của process mà không bị lạc. | 4–7 giờ | — |
 |  | `16` | [Deploy thủ công bằng Compose lên server](lessons/16-deploy-thu-cong/) | Tự tay đưa hệ thống lên server thật một lần, và ghi lại chính xác từng bước để sau này tự động hoá. | 5–8 giờ | — |
 |  | `17` | [Reverse proxy đứng trước ứng dụng](lessons/17-reverse-proxy/) | Đặt Nginx trước Spring Boot, và phân biệt được lỗi 502, 504, 413 do đâu mà ra. | 5–8 giờ | — |
 |  | `18` | [Tên miền và HTTPS](lessons/18-ten-mien-va-https/) | Service có tên miền và ổ khóa HTTPS, chứng chỉ tự gia hạn mà không phải nhớ. | 4–7 giờ | — |

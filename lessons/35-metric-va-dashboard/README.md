@@ -17,7 +17,7 @@ Có một dashboard trả lời được: service đang khoẻ hay yếu, và y�
 ## Khái niệm sẽ gặp
 
 - Metric, log, trace khác nhau thế nào
-- Spring Boot Actuator và Micrometer
+- Micrometer: metric qua Actuator (đã dùng làm probe ở Bài 28)
 - Prometheus: mô hình scrape; ServiceMonitor
 - Grafana dashboard
 - Bốn tín hiệu vàng: độ trễ, lưu lượng, lỗi, độ bão hoà

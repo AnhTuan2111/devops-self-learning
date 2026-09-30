@@ -60,14 +60,14 @@
     <li>Container có mạng riêng, IP riêng</li>
     <li>Publish port: -p cổng_máy:cổng_container</li>
     <li>127.0.0.1 và 0.0.0.0 bên trong container (server.address của Spring Boot)</li>
-    <li>Lỗi &quot;port is already allocated&quot; và cách tìm ai đang giữ port</li>
+    <li>Lỗi &quot;port is already allocated&quot; và cách tìm ai đang giữ port (nối Bài 01)</li>
     <li>curl để kiểm tra từ ngoài vào</li>
   </ul>
 </section>
 
 <section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
   <h2 id="lab">Bài lab dự kiến</h2>
-  <p>Chạy một app trong container, lần lượt cho nó listen 127.0.0.1 rồi 0.0.0.0, gọi từ máy bằng curl và so kết quả. Cố tình publish trùng một port đang có người dùng để gặp lỗi &quot;port is already allocated&quot;, rồi tự sửa.</p>
+  <p>Chạy một image có sẵn cho chọn địa chỉ listen bằng tham số (ví dụ python -m http.server --bind 127.0.0.1), lần lượt cho nó listen 127.0.0.1 rồi 0.0.0.0, gọi từ máy bằng curl và so kết quả. Cố tình publish trùng một port đang có người dùng để gặp lỗi &quot;port is already allocated&quot;, rồi tự sửa.</p>
   <div class="callout warn">
     <span class="label">Luật của mọi bài lab</span>
     <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
@@ -80,7 +80,7 @@
     <li>Giải thích được vì sao app listen 127.0.0.1 trong container thì từ ngoài không gọi được</li>
     <li>Viết đúng tham số -p khi biết cổng máy và cổng container</li>
     <li>Tìm ra ai đang giữ một port khi gặp lỗi port đã bị chiếm</li>
-    <li>Phân biệt refused và timeout khi gọi vào container (nối Bài 00)</li>
+    <li>Phân biệt được refused, timeout và Empty reply khi gọi vào container (nối Bài 00)</li>
   </ul>
 </section>
 

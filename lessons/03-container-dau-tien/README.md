@@ -21,7 +21,7 @@ Chạy, xem, vào trong và xoá container thành thạo, và chứng minh đư�
 - docker run, ps, logs, exec, stop, start, rm
 - Namespace: process trong container thấy gì và không thấy gì
 - Cgroup: giới hạn CPU và bộ nhớ cho một process
-- Container khác máy ảo ở đâu
+- Container khác máy ảo ở đâu (nối Bài 02)
 
 ## Bài lab
 
