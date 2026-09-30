@@ -11,7 +11,7 @@
  * Được gọi từ scripts/generate.mjs; ghi vào assets/readme/.
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 
 const C = { paper: '#f3eee4', surface: '#fffdf8', ink: '#151515', ink2: '#3a3731', ink3: '#5f5950', line: '#d6cebf', red: '#d42a1f', yellow: '#f5b800', blue: '#1d4f9f', ghost: '#b9b0a0' };
@@ -70,12 +70,12 @@ ${body}
     // Độ rộng đo bằng League Spartan 800 cỡ 120px trong trình duyệt: "devops" 382 · "từ số 0" 384
     let b = `<rect width="${W}" height="${H}" fill="${C.paper}"/>`;
     b += `<rect x="36" y="42" width="13" height="13" fill="${C.red}"/>`;
-    b += `<text class="t" x="60" y="55" font-size="20" font-weight="600" fill="${C.ink2}">nhật ký tự học · học công khai</text>`;
+    b += `<text class="t" x="60" y="55" font-size="20" font-weight="600" fill="${C.ink2}">lộ trình tự học · mở cho mọi người</text>`;
     b += `<text class="t" x="32" y="178" font-size="120" font-weight="800" fill="${C.ink}" letter-spacing="-1.4">devops</text>`;
     b += `<rect x="32" y="200" width="414" height="116" fill="${C.yellow}"/>`;
     b += `<text class="t" x="46" y="298" font-size="120" font-weight="800" fill="${C.ink}" letter-spacing="-1.4">từ số 0</text>`;
-    b += `<text class="t" x="36" y="350" font-size="22" font-weight="600" fill="${C.ink}">từ backend java / spring boot</text>`;
-    b += `<text class="t" x="36" y="378" font-size="22" font-weight="600" fill="${C.ink}">tới tự vận hành hệ thống của chính mình</text>`;
+    b += `<text class="t" x="36" y="350" font-size="22" font-weight="600" fill="${C.ink}">từ chưa biết gì về hạ tầng</text>`;
+    b += `<text class="t" x="36" y="378" font-size="22" font-weight="600" fill="${C.ink}">tới tự deploy lên kubernetes</text>`;
     // Ba hình: tròn = bài đã xong · vuông = số giờ · tam giác = số module (như .hh-stats trên web)
     const ox = 650, oy = 44;
     b += `<circle cx="${ox + 210}" cy="${oy + 110}" r="110" fill="${C.blue}"/>`;
@@ -93,9 +93,12 @@ ${body}
 
   // ---------- Bức tranh lộ trình: mỗi hàng một module, mỗi ô một bài ----------
   function roadmap(rows) {
-    const T = 62, X0 = 340, top = 104, W = X0 + 7 * T + 40, H = top + rows.length * T + 34;
+    // Bề ngang theo hàng dài nhất (module Docker có 11 bài), không cố định số ô mỗi hàng
+    const maxTiles = Math.max(...rows.map((r) => r.lessons.length));
+    const T = 62, X0 = 340, top = 104, W = X0 + maxTiles * T + 40, H = top + rows.length * T + 34;
+    const VI = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín', 'mười'];
     let b = `<rect width="${W}" height="${H}" fill="${C.paper}"/>`;
-    b += `<text class="t" x="32" y="56" font-size="40" font-weight="800" fill="${C.ink}">lộ trình chín chặng</text>`;
+    b += `<text class="t" x="32" y="56" font-size="40" font-weight="800" fill="${C.ink}">lộ trình ${VI[rows.length] ?? rows.length} module</text>`;
     b += `<rect x="32" y="74" width="${W - 64}" height="4" fill="${C.ink}"/>`;
     // Chú thích — hình vẽ, không dùng ký tự
     const lg = [['chưa học: chỉ còn nét', 'todo'], ['học xong: ô được tô màu', 'done'], ['đang học: khung đen', 'doing']];
@@ -137,6 +140,10 @@ ${body}
       writeFileSync(join(out, 'banner.svg'), banner(stats), 'utf8');
       writeFileSync(join(out, 'roadmap.svg'), roadmap(rows), 'utf8');
       for (const id of lessonIds) writeFileSync(join(out, 'glyph', `${id}.svg`), glyph(id), 'utf8');
+      // Dọn ấn ký của những bài không còn trong lộ trình, để thư mục ảnh luôn khớp curriculum.json
+      for (const f of readdirSync(join(out, 'glyph'))) {
+        if (f.endsWith('.svg') && !lessonIds.includes(f.slice(0, -4))) unlinkSync(join(out, 'glyph', f));
+      }
       return 2 + lessonIds.length;
     },
   };

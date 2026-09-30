@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 01 — Máy tính, Hệ điều hành, Process</title>
 <meta name="description" content="Server chỉ là một máy tính chạy 24/7 mà không có ai ngồi trước. Mọi thứ bạn deploy, cuối cùng, chỉ là một process đang chạy dưới quyền quản lý của kernel — bài này mổ xẻ process từ lúc sinh ra tới lúc chết đi.">
-<link rel="stylesheet" href="../../assets/style.css?v=45595531">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01">
@@ -41,30 +41,30 @@
 
 <div class="callout story">
   <span class="label">Tình huống</span>
-  <p>Bạn sắp thuê VPS đầu tiên để đưa ứng dụng Spring Boot + PostgreSQL của mình lên Internet.
-  Nhà cung cấp đưa ra hai gói, và ngoài giá tiền thì mọi con số trong bảng đều là những đơn vị mà
-  một backend developer hằng ngày không mấy khi phải nghĩ tới:</p>
+  <p>Bạn sắp đưa ứng dụng Spring Boot + PostgreSQL của mình lên chạy trên một server thật, và
+  người cấp máy hỏi bạn cần cấu hình thế nào. Có hai phương án, và mọi con số trong đó đều là những
+  đơn vị mà một backend developer hằng ngày không mấy khi phải nghĩ tới:</p>
   <figure class="fig">
-<pre class="diagram"><code>  2 vCPU  ·  2 GB RAM  ·  40 GB SSD   →   5 USD / tháng
-  4 vCPU  ·  8 GB RAM  ·  80 GB SSD   →  24 USD / tháng</code></pre>
-    <figcaption><b>Hình 1</b> Hai gói VPS điển hình. Chênh nhau gần năm lần về giá, nhưng chênh ở
-    con số nào mới là thứ quyết định ứng dụng của bạn sống hay chết?</figcaption>
+<pre class="diagram"><code>  Phương án A   2 vCPU  ·  2 GB RAM  ·  40 GB SSD
+  Phương án B   4 vCPU  ·  8 GB RAM  ·  80 GB SSD</code></pre>
+    <figcaption><b>Hình 1</b> Hai cấu hình máy chủ điển hình. Phương án B chiếm gấp đôi tới gấp bốn tài
+    nguyên, nhưng chênh ở con số nào mới là thứ quyết định ứng dụng của bạn sống hay chết?</figcaption>
   </figure>
-  <p>Câu hỏi hiển nhiên là <strong>chọn gói nào</strong>. Nhưng câu hỏi quan trọng hơn, và là câu
+  <p>Câu hỏi hiển nhiên là <strong>chọn phương án nào</strong>. Nhưng câu hỏi quan trọng hơn, và là câu
   hỏi mà phần lớn developer không trả lời được, là: <strong>trong ba con số đó, con số nào sẽ cạn
   trước</strong>, và khi nó cạn thì hệ thống sẽ hỏng theo kiểu gì?</p>
 </div>
 
-<p>Vì không trả lời được, người ta thường chọn theo cảm tính: hoặc chọn gói đắt "cho chắc", tức là
-trả tiền cho sự thiếu hiểu biết của chính mình, hoặc chọn gói rẻ rồi ba tuần sau ngồi debug một sự
-cố mà họ thậm chí không biết tên. Cả hai kết cục đều có chung một gốc rễ: người chọn không có một
+<p>Vì không trả lời được, người ta thường chọn theo cảm tính: hoặc xin cấu hình lớn "cho chắc", tức là
+giữ chỗ những tài nguyên người khác cần chỉ vì thiếu hiểu biết, hoặc xin cấu hình nhỏ rồi ba tuần
+sau ngồi debug một sự cố mà họ thậm chí không biết tên. Cả hai kết cục đều có chung một gốc rễ: người chọn không có một
 mô hình trong đầu về việc <em>bên trong một cái máy chủ thật ra có những gì</em>, và những thứ đó
 tương tác với nhau ra sao khi một trong số chúng hết.</p>
 
 <div class="callout">
   <span class="label">Bài này trả lời ba câu</span>
   <ol>
-    <li>Thuê VPS thì <strong>con số nào</strong> trong bảng cấu hình sẽ hết trước?</li>
+    <li>Chọn cấu hình server thì <strong>con số nào</strong> sẽ hết trước?</li>
     <li>Vì sao <strong>hết RAM thì app CHẾT</strong>, còn hết CPU thì app chỉ <strong>CHẬM</strong>?</li>
     <li>Vì sao <strong>app chết thì website sập</strong> — chuỗi nhân quả đầy đủ, từ tầng vật lý tới
     con số 502 mà người dùng nhìn thấy trên màn hình?</li>
@@ -85,8 +85,8 @@ từ: theo nghĩa <em>phần mềm</em>, server là một chương trình chờ 
 một HTTP server, PostgreSQL là một database server); theo nghĩa <em>phần cứng</em>, server là cái máy
 mà những chương trình đó chạy trên. Trong bài này ta nói về nghĩa thứ hai, và kết luận rất đơn giản:
 <strong>một server là một máy tính bình thường</strong>, có CPU, có RAM, có ổ đĩa, có card mạng, y
-hệt chiếc laptop bạn đang dùng. Cái VPS 5 USD ở Hình 1 thậm chí còn không phải một máy riêng, mà là
-một <em>máy ảo</em> được cắt ra từ một máy vật lý lớn hơn — nhưng từ góc nhìn của phần mềm chạy bên
+hệt chiếc laptop bạn đang dùng. Nếu phương án A ở Hình 1 là một VPS, nó thậm chí còn không phải một
+máy riêng, mà là một <em>máy ảo</em> được cắt ra từ một máy vật lý lớn hơn — nhưng từ góc nhìn của phần mềm chạy bên
 trong, nó vẫn là một máy tính đầy đủ. Điểm khác biệt giữa server và laptop không nằm ở bản chất phần
 cứng, mà nằm ở <em>hoàn cảnh sử dụng</em>, và hoàn cảnh đó khác nhau đúng ba điểm.</p>
 
@@ -105,7 +105,7 @@ cứng, mà nằm ở <em>hoàn cảnh sử dụng</em>, và hoàn cảnh đó k
 <p>Hai điểm đầu dễ hiểu và ít hệ quả. Chạy liên tục 24/7 chỉ có nghĩa là mọi thứ tích tụ theo thời
 gian — log, rò rỉ bộ nhớ, chứng chỉ sắp hết hạn — sẽ có đủ thời gian để tích tụ tới ngưỡng gây sự cố,
 đúng như nguyên lý "hệ thống hỏng mà không ai đụng vào" ở Bài 00. Không có màn hình (người ta gọi là
-<em>headless</em>) chỉ có nghĩa là bạn sẽ điều khiển nó qua mạng bằng dòng lệnh, việc sẽ học ở Bài 13
+<em>headless</em>) chỉ có nghĩa là bạn sẽ điều khiển nó qua mạng bằng dòng lệnh, việc sẽ học ở Bài 14
 với SSH. Điểm thứ ba mới là điểm có sức nặng, và đáng được tách riêng ra.</p>
 
 <div class="callout warn">
@@ -116,8 +116,8 @@ với SSH. Điểm thứ ba mới là điểm có sức nặng, và đáng đư�
   server, không có ai làm ba việc đó. Một hộp thoại chờ người bấm sẽ chờ mãi mãi; một chương trình treo
   lúc hai giờ sáng sẽ treo nguyên như thế cho tới khi có người phát hiện; một dòng lỗi được in ra sẽ
   trôi vào một file log mà không ai đọc.</p>
-  <p>Nhìn theo góc này, gần như mọi kỹ thuật bạn sắp học trong lộ trình — systemd, healthcheck,
-  restart policy, monitoring, alert — đều là những cách khác nhau để <strong>tự động hoá vai trò của
+  <p>Nhìn theo góc này, gần như mọi kỹ thuật bạn sắp học trong lộ trình — restart policy,
+  healthcheck, probe của Kubernetes, monitoring, alert — đều là những cách khác nhau để <strong>tự động hoá vai trò của
   một con người không có mặt ở đó</strong>: có thứ dựng lại chương trình khi nó chết, có thứ đo xem nó
   còn trả lời không, có thứ đánh thức bạn khi nó hỏng. Giữ câu này trong đầu, bạn sẽ thấy nó lặp lại
   ở cuối bài, khi ta nói về sự khác nhau giữa process và service.</p>
@@ -306,7 +306,7 @@ trở nên trống trơn; Nginx gõ cửa và bị từ chối ngay lập tức,
 <strong>RAM</strong>, bởi vì cả JVM lẫn PostgreSQL đều là những chương trình chủ động giữ nhiều bộ
 nhớ để chạy nhanh, trong khi phần lớn thời gian CPU của một ứng dụng web nhỏ ngồi chờ database và
 mạng. Đây là một nhận định "thường thì", không phải "luôn luôn" — một ứng dụng xử lý ảnh hay mã hoá
-nặng có thể cạn CPU trước — và cách duy nhất để biết chắc là đo, việc ta sẽ học ở Bài 37 với
+nặng có thể cạn CPU trước — và cách duy nhất để biết chắc là đo, việc ta sẽ học ở Bài 35 với
 Prometheus và Grafana.</p>
 
 </section>
@@ -458,8 +458,7 @@ vị trí vật lý hoàn toàn khác nhau. Hệ quả là process A không th�
   <p><strong><span class="stg">2</span> User chạy process quyết định nó phá được gì.</strong> Mọi quyết định cho phép hay từ
   chối truy cập file đều được kernel đưa ra dựa trên user của process. App chạy bằng
   <code>root</code> mà có lỗ hổng thì kẻ tấn công có cả máy; app chạy bằng một user riêng thì kẻ tấn
-  công chỉ có đúng phần của user đó. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../05-user-group-permission/">Bài 05</a>,
-  <a href="../17-dockerize-spring-boot/">Bài 17</a>.</p>
+  công chỉ có đúng phần của user đó. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../07-dockerfile-production/">Bài 07</a>.</p>
 </div>
 
 <h3 id="thread">Process và thread — đừng nhầm</h3>
@@ -764,7 +763,7 @@ bộ tài nguyên của nó.</p>
   có thể đã treo, nên sau ân hạn thì chuyển sang ép buộc.</p>
   <p>Hệ quả thực tế: nếu app của bạn cần lâu hơn mười giây để dọn dẹp, bạn sẽ mất dữ liệu ở mỗi lần
   deploy mà không hề biết, vì cú SIGKILL không để lại dấu vết gì trong log ứng dụng. <i class="ic ic-r" role="img" aria-label="sang"></i>
-  <a href="../06-process-va-signal/">Bài 06</a>, <a href="../35-zero-downtime-va-rollback/">Bài 35</a>.</p>
+  <a href="../12-vong-doi-container/">Bài 12</a>, <a href="../25-pod-va-deployment/">Bài 25</a>.</p>
 </div>
 
 <h3 id="oom">OOM killer — kẻ sát nhân trong kernel</h3>
@@ -902,7 +901,7 @@ không có cơ chế nào khiến nó tự khởi động khi máy bật lên. �
     <tr><td>Là gì</td><td>một chương trình đang chạy</td><td>một process + <strong>một người trông coi</strong></td></tr>
     <tr><td>Chết thì sao</td><td><strong>hết. Không ai dựng dậy.</strong></td><td>tự được khởi động lại</td></tr>
     <tr><td>Máy khởi động lại</td><td>không tự chạy</td><td>tự chạy</td></tr>
-    <tr><td>Ai trông</td><td>—</td><td><code>systemd</code>, hoặc Docker</td></tr>
+    <tr><td>Ai trông</td><td>—</td><td><code>systemd</code>, Docker, hoặc Kubernetes</td></tr>
   </tbody>
 </table>
 </div>
@@ -919,8 +918,8 @@ sửa một dòng code nào — chỉ cần viết một file cấu hình cho ng
   việc của con người đó: nhìn thấy app chết, và dựng nó dậy — kể cả lúc hai giờ sáng, kể cả khi thủ
   phạm là OOM killer.</p>
   <figure class="fig">
-<pre class="diagram"><code>  systemd  Restart=always        →  Bài 07
-  Docker   restart: unless-stopped →  Bài 15, 20</code></pre>
+<pre class="diagram"><code>  Docker      restart: unless-stopped   →  Bài 12
+  Kubernetes  Deployment + probe        →  Bài 25, 28</code></pre>
     <figcaption><b>Hình 15</b> Hai người trông coi bạn sẽ học, và dòng cấu hình biến một process
     thành service trong mỗi hệ.</figcaption>
   </figure>
@@ -1078,7 +1077,7 @@ echo $BI_MAT        # → (trống)</code></pre>
 <p>Cùng một máy, cùng một user, nhưng biến chỉ tồn tại trong <strong>process shell</strong> nơi bạn
 đặt nó, và trong những process con mà shell đó sinh ra sau thời điểm <code>export</code>. Cửa sổ thứ
 hai là một process bash khác, với bản sao biến môi trường riêng của nó. Đây là nền tảng của toàn bộ
-cách quản lý cấu hình và secret sau này. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../29-secret-va-backup/">Bài 29</a>.</p>
+cách quản lý cấu hình và secret sau này. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../08-cau-hinh-va-secret/">Bài 08</a>.</p>
 
 <h2 id="tu-kiem-tra">Tự kiểm tra</h2>
 
@@ -1122,8 +1121,10 @@ gọi được tên.</p>
 
 <div class="callout">
   <span class="label">Bài tiếp theo</span>
-  <p><a href="../02-dung-phong-lab/">Bài 02 — Dựng phòng lab: WSL2 Ubuntu + Docker Desktop</a>.</p>
-  <p>Ta sẽ cài lại Ubuntu (đã bị gỡ), và <strong>trả món nợ từ Bài 00</strong>: chạy lại
+  <p><a href="../02-phong-lab-wsl-docker/">Bài 02 — Phòng lab: WSL2, Docker Desktop và shell tối thiểu</a>. Ngay sau
+  đó, từ Bài 03, lộ trình vào thẳng Docker, và process, kernel, OOM của bài này được dùng lại ở từng bài.</p>
+  <p>Ở Bài 02, ta sẽ cài lại Ubuntu (đã bị gỡ), bật Docker Desktop, học vài lệnh shell tối thiểu, và
+  <strong>trả món nợ từ Bài 00</strong>: chạy lại
   <code>time curl -4 http://127.0.0.1:9999</code> trên Linux để so với <strong>2,155 giây</strong> đo
   được trên Windows. Cùng một máy, cùng một lệnh, khác kernel — một thí nghiệm đối chứng đúng nghĩa,
   và là minh chứng rằng những gì bạn học trong bài này về kernel không phải lý thuyết suông.</p>
@@ -1153,7 +1154,7 @@ gọi được tên.</p>
   <li><a href="https://docs.docker.com/reference/cli/docker/container/stop/">docker container stop</a>
   — SIGTERM, thời gian ân hạn, rồi SIGKILL.</li>
   <li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html">systemd.service</a>
-  — tuỳ chọn <code>Restart=</code>, sẽ dùng ở Bài 07.</li>
+  — tuỳ chọn <code>Restart=</code>, để so với restart policy của Docker ở Bài 12.</li>
 </ol>
 
 
@@ -1179,19 +1180,19 @@ gọi được tên.</p>
     <span class="dir">Bài trước</span>
     <span class="t">00 · Bản đồ toàn cảnh</span>
   </a>
-  <a class="next" href="../02-dung-phong-lab/">
+  <a class="next" href="../02-phong-lab-wsl-docker/">
     <span class="dir">Bài tiếp</span>
-    <span class="t">02 · Dựng phòng lab</span>
+    <span class="t">02 · Phòng lab</span>
   </a>
 </nav>
 
 <footer class="page">
-  <p>Bài 01 · Module M0 — Nền tảng · DevOps Self-Learning</p>
+  <p>Bài 01 · Module M0 — Nền tảng tối thiểu · DevOps Self-Learning</p>
   <p>Lượt <span class="stg">1</span>: tài liệu đọc trước. Lượt <span class="stg">3</span> sẽ bồi thêm output lab thật và những chỗ hiểu sai sau buổi đối thoại.</p>
 </footer>
 
 </div>
 
-<script src="../../assets/app.js?v=45595531"></script>
+<script src="../../assets/app.js?v=c4b75b55"></script>
 </body>
 </html>

@@ -251,7 +251,7 @@ th .stg { background: #fff; color: var(--ink); }
 
 /* =========================================================================
    Họ hình mang số — .shp .s-0 … .s-8
-   Tab và đầu tab xoay vòng 6 hình đầu; chín module mỗi module một hình riêng,
+   Tab và đầu tab xoay vòng 6 hình đầu; mỗi module một hình riêng (có sẵn tới chín hình),
    lặp lại ở mọi nơi nhắc tới module đó (lộ trình, đầu module).
    Kích thước do nơi dùng quyết định; ở đây chỉ có HÌNH và MÀU.
    ========================================================================= */
@@ -782,7 +782,9 @@ footer.page code { font-size: 12px; }
 .roadmap-count .n small { font-size: 28px; }
 .roadmap-count .lbl { font-family: var(--f-display); font-weight: 600; font-size: 16px; text-transform: lowercase; margin: 6px 0 14px; }
 .poster {
-  --tile: min(46px, calc((100vw - 32px) / 7));
+  /* 11 = số bài của module dài nhất (Docker): mọi module nằm gọn trên một hàng.
+     generate.mjs báo nếu lộ trình có module dài hơn — khi đó sửa số 11 ở đây và bên dưới. */
+  --tile: min(46px, calc((100vw - 32px) / 11));
   list-style: none; margin: 0; padding: 18px 0 20px;
 }
 .prow { margin: 0 0 14px; display: grid; gap: 6px; }
@@ -794,7 +796,7 @@ footer.page code { font-size: 12px; }
 .phead .shp { width: 30px; height: 30px; font-size: 14px; }
 .phead .nm { font-family: var(--f-display); font-weight: 700; font-size: 16px; line-height: 1.2; text-transform: lowercase; }
 .phead .ct { margin-left: auto; font-family: var(--f-mono); font-size: 12px; color: var(--ink-3); }
-.ptiles { display: flex; }
+.ptiles { display: flex; flex-wrap: wrap; }   /* module dài (Docker 11 bài) xuống dòng thay vì tràn ngang */
 .ptile { display: block; width: var(--tile); height: var(--tile); position: relative; }
 .ptile svg { display: block; width: 100%; height: 100%; }
 .ptile:hover { background: none; }
@@ -887,9 +889,9 @@ footer.page code { font-size: 12px; }
   .hh-stats { width: 320px; height: 320px; }
   .roadmap-body { grid-template-columns: 240px minmax(0, 1fr); }
   .roadmap-count { border-bottom: none; border-right: var(--rule-s) solid var(--ink); padding-right: 20px; }
-  .poster { --tile: 60px; padding-left: 28px; }
+  .poster { --tile: min(60px, calc((min(100vw, 1180px) - 516px) / 11)); padding-left: 28px; }
   .poster-legend { padding: 14px 0 0 28px; }
-  .prow { grid-template-columns: 220px auto; align-items: center; gap: 16px; margin: 0; }
+  .prow { grid-template-columns: 200px auto; align-items: center; gap: 16px; margin: 0; }
   .corner-nav .cn-t { display: inline-block; }
 }
 

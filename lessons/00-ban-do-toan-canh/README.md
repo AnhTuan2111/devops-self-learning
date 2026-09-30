@@ -2,7 +2,7 @@
 
 <img src="../../assets/readme/glyph/00.svg" width="132" align="right" alt="Ấn ký của Bài 00">
 
-> **Module M0** · Nền tảng — Server và Internet thực sự là gì
+> **Module M0** · Nền tảng tối thiểu — Request, process và phòng lab
 > Học ngày **21–24/09/2026** · đối thoại thầy–trò · 4 phần + 5 lab
 
 ## Ba trang tài liệu của bài này
@@ -11,7 +11,7 @@
 |---|---|
 | **[index.html](index.html)** | Bài giảng chính — bốn khái niệm nền, 9 chặng, bảng triệu chứng, chứng chỉ TLS |
 | **[phan-tich-output.html](phan-tich-output.html)** | Mổ băng output thật từng dòng — `nslookup`, `curl -v`, `openssl` |
-| **[ipv4-vs-ipv6.html](ipv4-vs-ipv6.html)** | Phụ lục — vì sao IP cạn kiệt, NAT, và vì sao *phải* thuê VPS |
+| **[ipv4-vs-ipv6.html](ipv4-vs-ipv6.html)** | Phụ lục — vì sao IP cạn kiệt, NAT, và vì sao server không đặt ở nhà được |
 
 File này là **vở bài tập** (workbook) của bài. Nó không giảng lại từ đầu — phần giải thích
 vì sao, kèm sơ đồ và ví dụ đầy đủ, nằm trong `index.html`. Ở đây chỉ giữ lại những gì cần
@@ -40,7 +40,7 @@ cố ý ngắn một câu; phiên bản đầy đủ nằm trong bài giảng.
 | Certificate | chứng chỉ | "Tấm căn cước" công khai của một tên miền, được một CA ký bảo lãnh. |
 | CA | tổ chức cấp chứng chỉ | Bên thứ ba mà trình duyệt tin sẵn, có quyền ký chứng chỉ (Let's Encrypt, DigiCert…). |
 | Private key | khóa bí mật | File bí mật trên server, thứ duy nhất chứng minh tấm căn cước kia đúng là của bạn. |
-| Reverse proxy | proxy ngược | Máy chủ đứng trước ứng dụng, nhận request thay nó rồi chuyển vào trong — ở lộ trình này là Nginx. |
+| Reverse proxy | proxy ngược | Máy chủ đứng trước ứng dụng, nhận request thay nó rồi chuyển vào trong — ở lộ trình này là Nginx (Bài 17), và trong Kubernetes là Ingress controller (Bài 30). |
 | `refused` / `timeout` | bị từ chối / hết giờ chờ | Hai cách một kết nối thất bại **trước khi** có bất kỳ câu trả lời HTTP nào; nghĩa của chúng khác hẳn nhau. |
 
 ---
@@ -267,7 +267,7 @@ thấy ổ khóa bình thường.
 Vì vậy ba việc phòng thủ là: bật 2FA cho tài khoản nhà đăng ký tên miền (ưu tiên hơn cả 2FA
 GitHub); khai báo bản ghi CAA để chỉ định CA nào được cấp chứng chỉ cho tên miền của bạn; và
 theo dõi Certificate Transparency — sổ công khai ghi lại mọi chứng chỉ được cấp. Việc thứ hai
-và thứ ba sẽ làm thật ở Bài 27–28.
+và thứ ba sẽ làm thật ở Bài 18.
 
 ---
 
@@ -285,8 +285,8 @@ API key / token hết hạn        ← tùy nhà cung cấp
 ```
 
 Không sự cố nào trong số đó bị bắt bởi code review, unit test hay staging, bởi vì chúng không
-nằm trong code. Cách chống lại chúng là tự động hóa (gia hạn chứng chỉ bằng timer, Bài 28) và
-giám sát có cảnh báo trước (Bài 38).
+nằm trong code. Cách chống lại chúng là tự động hóa (tự gia hạn chứng chỉ, Bài 18 và 30) và
+giám sát có cảnh báo trước (Bài 36).
 
 > **Câu hỏi tự kiểm tra:** *"Cái gì trong hệ thống này sẽ tự hỏng nếu tôi không động vào nó
 > trong 6 tháng?"*
@@ -294,8 +294,8 @@ giám sát có cảnh báo trước (Bài 38).
 Một biến thể của cùng ý tưởng là `"container đang chạy"` ≠ `"app sẵn sàng"`. Docker báo
 container `Up` ngay giây đầu tiên vì process đã khởi động, nhưng Spring Boot cần thêm 15–60
 giây để nạp context và mở port 8080. Khoảng chênh đó là **cửa sổ 502 ở mọi lần deploy**. Đó là
-lý do `depends_on` trong Docker Compose không đủ (Bài 20), và vì sao cần zero-downtime deploy
-(Bài 35).
+lý do `depends_on` trong Docker Compose không đủ (Bài 11), và vì sao Kubernetes cần readiness probe
+(Bài 28).
 
 ---
 

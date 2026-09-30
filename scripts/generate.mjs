@@ -46,6 +46,20 @@ const allLessons = curriculum.modules.flatMap((m) =>
   m.lessons.map((l) => ({ ...l, moduleId: m.id, moduleTitle: m.title }))
 );
 
+// Học tuần tự: "needs" của mỗi bài chỉ được trỏ về bài ĐỨNG TRƯỚC nó. Sai là dừng luôn, không sinh trang.
+const lessonById = Object.fromEntries(allLessons.map((l) => [l.id, l]));
+for (const l of allLessons) {
+  for (const n of l.needs ?? []) {
+    if (!lessonById[n]) throw new Error(`Bài ${l.id}: needs trỏ tới Bài ${n} không tồn tại`);
+    if (!(n < l.id)) throw new Error(`Bài ${l.id}: needs trỏ tới Bài ${n}, không phải một bài đứng trước`);
+  }
+}
+
+// Bức tranh lộ trình trên web tính cỡ ô cho module dài nhất 11 bài (assets/style.css, .poster)
+const POSTER_MAX = 11;
+const longest = Math.max(...curriculum.modules.map((m) => m.lessons.length));
+if (longest > POSTER_MAX) console.warn(`CẢNH BÁO  có module ${longest} bài > ${POSTER_MAX}: sửa số ${POSTER_MAX} trong .poster ở assets/style.css`);
+
 const statusOf = (id) => progress.lessons?.[id]?.status ?? 'todo';
 const dateOf = (id) => progress.lessons?.[id]?.date ?? null;
 const dirOf = (l) => `lessons/${l.id}-${l.slug}`;
@@ -66,9 +80,6 @@ const hrs = (l) => `${l.hours[0]}–${l.hours[1]} giờ`;
 const hoursLo = allLessons.reduce((s, l) => s + l.hours[0], 0);
 const hoursHi = allLessons.reduce((s, l) => s + l.hours[1], 0);
 const totalHours = Math.round((hoursLo + hoursHi) / 20) * 10;   // số giữa, làm tròn chục — cho ô số liệu
-// Quy ra tháng nếu học đều 6–8 giờ mỗi tuần (4,35 tuần/tháng) — để hình dung, không phải lịch
-const monthsLo = Math.round(hoursLo / 8 / 4.35), monthsHi = Math.round(hoursHi / 6 / 4.35);
-const timeParts = meta.time.parts;
 const SITE = 'https://anhtuan2111.github.io/devops-self-learning/';
 
 const esc = (s) =>
@@ -78,6 +89,8 @@ const shortTitle = (m) => m.title.split(' — ')[0];
 // Ấn ký của bài ở đầu README của bài (ảnh do readme-art.mjs vẽ)
 const glyphImg = (id) => `<img src="../../assets/readme/glyph/${id}.svg" width="132" align="right" alt="Ấn ký của Bài ${id}">`;
 const viDate = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
+const VI_NUM = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín', 'mười'];
+const viNum = (n) => VI_NUM[n] ?? String(n);
 
 const head = ({ title, desc, base }) => `<!doctype html>
 <html lang="vi">
@@ -95,9 +108,8 @@ const head = ({ title, desc, base }) => `<!doctype html>
 /* ------------------------------------------------------------------ */
 
 const STACK = [
-  'Linux', 'Bash', 'systemd', 'TCP/IP', 'DNS', 'HTTP/HTTPS', 'SSH', 'Docker', 'Docker Compose',
-  'Nginx', "Let's Encrypt", 'PostgreSQL', 'Spring Boot', 'GitHub Actions', 'Prometheus', 'Grafana',
-  'Ansible', 'Terraform', 'Kubernetes',
+  'Linux', 'Bash', 'Docker', 'Docker Compose', 'PostgreSQL', 'Spring Boot', 'SSH', 'Nginx',
+  "Let's Encrypt", 'GitLab CI', 'Kubernetes', 'Helm', 'cert-manager', 'Rancher', 'Prometheus', 'Grafana',
 ];
 
 const moduleStats = curriculum.modules.map((m) => {
@@ -172,15 +184,11 @@ const indexHtml = `${head({ title: meta.title, desc: meta.subtitle, base: '' })}
 
   <header class="home-hero">
     <div>
-      <p class="eyebrow">Nhật ký tự học · học công khai</p>
+      <p class="eyebrow">Lộ trình tự học · mở cho mọi người</p>
       <h1>DevOps<br><span class="hl">từ số 0</span></h1>
-      <p class="route"><span>Java / Spring Boot backend</span><i class="ic ic-r arrow" aria-hidden="true"></i><span>vận hành được hệ thống của chính mình</span></p>
-      <p class="lede">Đây là nhật ký tự học DevOps của một lập trình viên backend: người đã viết được
-      API bằng Spring Boot, nhưng gần như chưa biết gì về tầng hạ tầng nằm bên dưới đoạn code ấy —
-      máy chủ chạy trên nền gì, gói tin đi qua những chặng nào, vì sao một hệ thống đang chạy tốt
-      lại có thể tự hỏng mà không ai chạm vào. Mỗi bài không chép lại từ một khoá học nào; nó được
-      viết sau một buổi học đối thoại thật, gồm phần giảng giải <em>vì sao</em>, sơ đồ cơ chế, bài
-      lab đã chạy trên chính máy người học, và cả những chỗ đã hiểu sai cùng cách đã sửa.</p>
+      <p class="route"><span>chưa biết gì về hạ tầng</span><i class="ic ic-r arrow" aria-hidden="true"></i><span>tự deploy lên Kubernetes</span></p>
+      <p class="lede">Học theo thứ tự, bài sau dựa trên bài trước. Bài nào cũng có lý thuyết, một bài
+      lab chạy thật và những lỗi hay gặp.</p>
       <div class="meta">
         <span class="chip ink">${esc(meta.stack)}</span>
       </div>
@@ -196,7 +204,7 @@ const indexHtml = `${head({ title: meta.title, desc: meta.subtitle, base: '' })}
 
   <section class="roadmap" aria-labelledby="roadmap-title">
     <div class="roadmap-head">
-      <h2 id="roadmap-title">Lộ trình chín chặng</h2>
+      <h2 id="roadmap-title">Lộ trình ${viNum(curriculum.modules.length)} module</h2>
       <span class="chip">lý thuyết · lab · lỗi thật</span>
       <span class="chip ink since">từ ${viDate(meta.started)}</span>
     </div>
@@ -222,78 +230,41 @@ ${posterHtml}
   <main class="tabs" data-tabs="Các phần của trang chủ">
 
   <section class="tab" id="lo-trinh" data-tab="Lộ trình" data-note="${curriculum.modules.length} module · ${allLessons.length} bài">
-    <p class="panel-intro">Thứ tự chín module không được xếp tuỳ tiện. Mỗi module dựa trên những
-    gì module trước đã dựng: không hiểu process thì không hiểu vì sao container "chạy" mà app chưa
-    "sẵn sàng"; không hiểu port và listen address thì không hiểu vì sao Nginx trả 502; không tự tay
-    deploy một lần cho thật đau thì không biết CI/CD đang tự động hoá cái gì. Vì vậy lộ trình đi từ
-    cái máy (Linux), ra đường truyền (mạng), rồi mới tới cách đóng gói (Docker), cách mở cửa ra
-    Internet (Nginx), đưa lên máy thật (production), tự động hoá (CI/CD), theo dõi (monitoring), và
-    chỉ ở cuối cùng mới bàn tới mở rộng quy mô.</p>
-
+    <div class="callout ok">
+      <span class="label">Đích đến</span>
+      <p>${esc(meta.goal)}</p>
+    </div>
 ${modulesHtml}
 
   </section>
 
-  <section class="tab" id="cach-hoc" data-tab="Cách học" data-note="Problem, Concept, Tool">
-    <h2 id="nguyen-tac">Nguyên tắc xuyên suốt</h2>
+  <section class="tab" id="cach-hoc" data-tab="Cách học" data-note="vấn đề, khái niệm, công cụ">
     <div class="callout ok">
       <span class="label">${esc(meta.principle)}</span>
-      <p>Mỗi bài bắt đầu bằng một <strong>vấn đề có thật</strong> — một tình huống cụ thể, thường là
-      một sự cố — rồi mới tới <strong>khái niệm</strong> giải thích vì sao vấn đề đó xảy ra, và chỉ sau
-      cùng mới tới <strong>công cụ</strong> dùng để xử lý nó. Học theo chiều ngược lại, tức là học công
-      cụ trước, là con đường ngắn nhất để thuộc hai trăm câu lệnh mà vẫn không giải thích được vì sao
-      một website không vào được.</p>
+      <p>Mỗi bài bắt đầu từ một <strong>vấn đề có thật</strong>, rồi tới <strong>khái niệm</strong>
+      giải thích vì sao nó xảy ra, sau cùng mới tới <strong>công cụ</strong>.</p>
     </div>
-    <p>Lý do nằm ở cách trí nhớ làm việc. Một câu lệnh học thuộc là một mẩu thông tin rời rạc: nó
-    không nối vào đâu, nên khi gặp một tình huống lệch đi một chút so với lúc học, ta không biết nên
-    đổi tham số nào. Ngược lại, một <em>cơ chế</em> đã hiểu là một mô hình có thể suy luận được: biết
-    gói tin phải đi qua firewall trước khi tới process đang listen, ta tự suy ra rằng <code>timeout</code>
-    và <code>connection refused</code> chỉ về hai chặng khác nhau, mà không cần ai dặn trước.</p>
 
-    <h2 id="bon-tep">Mỗi bài gồm bốn tệp, và chúng bổ sung chứ không lặp lại nhau</h2>
+    <h2 id="bon-tep">Mỗi bài gồm bốn phần</h2>
     <div class="table-scroll">
     <table>
-      <caption><b>Bảng 1</b> Vai trò của từng tệp trong một thư mục bài học.</caption>
-      <thead><tr><th>Tệp</th><th>Vai trò</th><th>Đọc khi nào</th></tr></thead>
+      <caption><b>Bảng 1</b> Các tệp trong một thư mục bài học.</caption>
+      <thead><tr><th>Tệp</th><th>Dùng để</th></tr></thead>
       <tbody>
-        <tr><td><code>index.html</code></td><td><strong>Sách giáo khoa.</strong> Bài giảng đầy đủ, chia tab, có sơ đồ, bảng tra, phần đào sâu học thuật và nguồn tham khảo.</td><td>Đọc trước buổi học để có ngữ cảnh, và đọc lại khi cần hiểu <em>vì sao</em>.</td></tr>
-        <tr><td><code>README.md</code></td><td><strong>Vở bài tập.</strong> Bản rút gọn để làm theo: bảng tra nhanh, các bước lab, danh sách tự chấm.</td><td>Mở cạnh terminal khi làm lab.</td></tr>
-        <tr><td><code>notes.md</code></td><td><strong>Ghi chép thô.</strong> Lỗi đã gặp, câu hỏi còn treo, output lab thật dán nguyên văn.</td><td>Khi gặp lại một lỗi và muốn biết lần trước đã sửa ra sao.</td></tr>
-        <tr><td><code>lab/</code></td><td><strong>Tệp thật đã viết:</strong> script, Dockerfile, <code>compose.yaml</code>, cấu hình Nginx…</td><td>Khi cần chép lại một cấu hình đã chạy được.</td></tr>
+        <tr><td><code>index.html</code></td><td>Bài giảng đầy đủ: giải thích, sơ đồ, bảng tra.</td></tr>
+        <tr><td><code>README.md</code></td><td>Vở bài tập: các bước lab và danh sách tự kiểm tra.</td></tr>
+        <tr><td><code>notes.md</code></td><td>Ghi chép: lỗi đã gặp, output thật.</td></tr>
+        <tr><td><code>lab/</code></td><td>Các tệp đã viết trong bài: Dockerfile, cấu hình…</td></tr>
       </tbody>
     </table>
     </div>
 
-    <h2 id="hai-luot">Viết hai lượt: nháp trước, bồi đắp sau</h2>
-    <p>Từ Bài 01, mỗi bài được viết theo hai lượt. Ở <strong>lượt thứ nhất</strong>, tài liệu được viết
-    đầy đủ ngay khi bắt đầu bài, để người học đọc trước và bước vào buổi học với một khung hiểu
-    biết sẵn có. Sau đó là <strong>buổi học đối thoại</strong>: bài được chia thành vài phần, cuối mỗi
-    phần có những câu hỏi buộc phải suy luận chứ không phải nhắc lại, và chỗ nào trả lời sai thì
-    được giảng lại đúng chỗ đó. Ở <strong>lượt thứ hai</strong>, tài liệu được viết lại để bồi thêm
-    những thứ chỉ buổi học mới sinh ra: những chỗ đã hiểu sai và cách đã giảng lại, output lab thật
-    trên máy người học, và những câu hỏi nằm ngoài kịch bản. Chính lượt thứ hai làm cho tài liệu
-    này khác một giáo trình chung chung — nó ghi lại <em>đường đi thật</em> của một người học.</p>
-
-    <h2 id="loi-co-chu-dich">Mỗi lab đều có một bước cố tình gây lỗi</h2>
-    <p>Không bài lab nào dừng ở chỗ "chạy được". Mỗi bài đều có ít nhất một bước <strong>cố ý làm
-    hỏng</strong> hệ thống — tắt process, chặn port, cấu hình sai — rồi quan sát triệu chứng và tự
-    sửa. Lý do rất thực dụng: gặp một lỗi lần đầu tiên trong môi trường an toàn, khi đã biết trước
-    nguyên nhân, là cách duy nhất để lần sau gặp đúng lỗi đó trên production mà không hoảng. Triệu
-    chứng lúc ấy không còn là một thông báo khó hiểu, mà là một thứ đã từng thấy và đã từng sửa.</p>
-
-    <h2 id="ghi-tien-do">Ghi tiến độ</h2>
-    <p>Trạng thái từng bài nằm trong <code>progress.json</code>, nhận một trong ba giá trị
-    <code>todo</code>, <code>doing</code>, <code>done</code>, kèm ngày học và một dòng ghi chú. Toàn bộ
-    lộ trình nằm trong <code>curriculum.json</code>. Trang này, <code>README.md</code> và khung của
-    các bài chưa học đều được sinh lại từ hai tệp đó bằng lệnh dưới đây — nên muốn sửa nội dung lộ
-    trình thì sửa JSON, đừng sửa tay vào HTML.</p>
-    <pre><code>node scripts/generate.mjs</code></pre>
+    <h2 id="loi-co-chu-dich">Mỗi lab có một bước cố tình gây lỗi</h2>
+    <p>Làm hỏng có chủ đích rồi tự sửa, để lần sau gặp lỗi thật thì đã biết nó là gì.</p>
   </section>
 
   <section class="tab" id="tai-nguyen" data-tab="Tài nguyên" data-note="Chỉ nguồn chính thức">
-    <p class="panel-intro">Tài liệu chính thức là nguồn chuẩn để <em>làm cho đúng</em>; video tiếng
-    Việt là nguồn tốt để <em>hiểu nhanh ý tưởng</em>. Hai loại này không thay thế được nhau, và
-    không loại nào thay được việc tự gõ lại từng lệnh trên máy mình.</p>
+    <p class="panel-intro">Nguồn chính thức để tra cứu trong lúc học.</p>
 
     <h2 id="tai-lieu-chinh-thuc">Tài liệu chính thức</h2>
     <div class="table-scroll">
@@ -304,15 +275,22 @@ ${modulesHtml}
         <tr><td>Docker — Get started</td><td><a href="https://docs.docker.com/get-started/">docs.docker.com/get-started</a></td></tr>
         <tr><td>Dockerfile reference</td><td><a href="https://docs.docker.com/reference/dockerfile/">docs.docker.com/reference/dockerfile</a></td></tr>
         <tr><td>Docker Compose</td><td><a href="https://docs.docker.com/compose/">docs.docker.com/compose</a></td></tr>
+        <tr><td>The Twelve-Factor App</td><td><a href="https://12factor.net/">12factor.net</a></td></tr>
         <tr><td>Nginx — Beginner's Guide</td><td><a href="https://nginx.org/en/docs/beginners_guide.html">nginx.org/en/docs/beginners_guide.html</a></td></tr>
-        <tr><td>GitHub Actions</td><td><a href="https://docs.github.com/en/actions">docs.github.com/en/actions</a></td></tr>
         <tr><td>Let's Encrypt / Certbot</td><td><a href="https://certbot.eff.org/">certbot.eff.org</a></td></tr>
-        <tr><td>Ubuntu Server</td><td><a href="https://documentation.ubuntu.com/server/">documentation.ubuntu.com/server</a></td></tr>
+        <tr><td>GitLab CI/CD</td><td><a href="https://docs.gitlab.com/ci/">docs.gitlab.com/ci</a></td></tr>
+        <tr><td>Cú pháp <code>.gitlab-ci.yml</code></td><td><a href="https://docs.gitlab.com/ci/yaml/">docs.gitlab.com/ci/yaml</a></td></tr>
+        <tr><td>Kubernetes</td><td><a href="https://kubernetes.io/docs/home/">kubernetes.io/docs</a></td></tr>
+        <tr><td>k3d — cụm Kubernetes học trên máy</td><td><a href="https://k3d.io/">k3d.io</a></td></tr>
+        <tr><td>Helm</td><td><a href="https://helm.sh/docs/">helm.sh/docs</a></td></tr>
+        <tr><td>cert-manager</td><td><a href="https://cert-manager.io/docs/">cert-manager.io/docs</a></td></tr>
+        <tr><td>Rancher</td><td><a href="https://ranchermanager.docs.rancher.com/">ranchermanager.docs.rancher.com</a></td></tr>
+        <tr><td>RKE2</td><td><a href="https://docs.rke2.io/">docs.rke2.io</a></td></tr>
+        <tr><td>Spring Boot Actuator</td><td><a href="https://docs.spring.io/spring-boot/reference/actuator/index.html">docs.spring.io/spring-boot/reference/actuator</a></td></tr>
+        <tr><td>Prometheus</td><td><a href="https://prometheus.io/docs/introduction/overview/">prometheus.io/docs</a></td></tr>
+        <tr><td>Grafana</td><td><a href="https://grafana.com/docs/grafana/latest/">grafana.com/docs/grafana</a></td></tr>
         <tr><td>Linux man pages</td><td><a href="https://man7.org/linux/man-pages/">man7.org/linux/man-pages</a></td></tr>
         <tr><td>Chuẩn Internet (RFC)</td><td><a href="https://www.rfc-editor.org/">rfc-editor.org</a></td></tr>
-        <tr><td>Prometheus</td><td><a href="https://prometheus.io/docs/introduction/overview/">prometheus.io/docs</a></td></tr>
-        <tr><td>Kubernetes</td><td><a href="https://kubernetes.io/docs/home/">kubernetes.io/docs</a></td></tr>
-        <tr><td>The Twelve-Factor App</td><td><a href="https://12factor.net/">12factor.net</a></td></tr>
       </tbody>
     </table>
     </div>
@@ -327,30 +305,22 @@ ${modulesHtml}
         <tr><td>Giải thích một câu lệnh shell bất kỳ</td><td><a href="https://explainshell.com/">explainshell.com</a></td></tr>
         <tr><td>Lab Linux/Docker/K8s trên trình duyệt</td><td><a href="https://killercoda.com/">killercoda.com</a></td></tr>
         <tr><td>Sandbox Docker</td><td><a href="https://labs.play-with-docker.com/">labs.play-with-docker.com</a></td></tr>
+        <tr><td>Bài hướng dẫn chính thức của Kubernetes</td><td><a href="https://kubernetes.io/docs/tutorials/">kubernetes.io/docs/tutorials</a></td></tr>
         <tr><td>Bản đồ nghề DevOps</td><td><a href="https://roadmap.sh/devops">roadmap.sh/devops</a></td></tr>
-        <tr><td>Full Stack Open — phần CI/CD</td><td><a href="https://fullstackopen.com/en/part11">fullstackopen.com/en/part11</a></td></tr>
         <tr><td>Bảng tra cú pháp nhanh</td><td><a href="https://devhints.io/">devhints.io</a></td></tr>
       </tbody>
     </table>
     </div>
 
-    <h2 id="tieng-viet">Tiếng Việt có video</h2>
-    <p><strong>F8 — fullstack.edu.vn</strong>: tìm khoá <em>"DevOps for Engineers"</em>, miễn phí,
-    tiếng Việt, đi lần lượt qua Docker, Linux, Compose, VPS rồi tới deploy; phù hợp làm nguồn video chính. Trên
-    YouTube, các từ khoá hữu ích là <code>Docker tiếng Việt</code>, <code>Nginx reverse proxy tiếng
-    Việt</code>, <code>CI/CD GitHub Actions tiếng Việt</code> và <code>deploy Spring Boot lên VPS</code>.</p>
-    <div class="callout warn">
-      <span class="label">Cách dùng đúng</span>
-      <p>Chỉ xem video thì kiến thức ở lại trong video. Bài nào cũng phải tự gõ lại trên máy mình,
-      tự gây lỗi và tự sửa, thì mới thực sự thành của mình.</p>
-    </div>
+    <h2 id="tieng-viet">Video tiếng Việt</h2>
+    <p>Tìm trên YouTube: <code>Docker tiếng Việt</code>, <code>Kubernetes tiếng Việt</code>,
+    <code>GitLab CI tiếng Việt</code>. Xem xong thì tự gõ lại trên máy mình.</p>
   </section>
 
   </main>
 
   <footer class="page">
     <p>Bắt đầu ${viDate(meta.started)} · Môi trường: ${esc(meta.env)}</p>
-    <p>Trang này được sinh tự động từ <code>curriculum.json</code> + <code>progress.json</code> bằng <code>scripts/generate.mjs</code>.</p>
   </footer>
 
 </div>
@@ -397,98 +367,27 @@ ${rows}`;
   })
   .join('\n\n');
 
-const readme = `<a href="${SITE}"><img src="assets/readme/banner.svg" width="100%" alt="DevOps từ số 0 — nhật ký tự học, đã xong ${doneCount}/${allLessons.length} bài"></a>
+const readme = `<a href="${SITE}"><img src="assets/readme/banner.svg" width="100%" alt="DevOps từ số 0 — đã xong ${doneCount}/${allLessons.length} bài"></a>
 
 <img src="assets/readme/roadmap.svg" width="100%" alt="Bức tranh lộ trình: mỗi hàng một module, mỗi ô một bài; ô đã học được tô màu">
 
-**[Đọc bản web đầy đủ, có tab và sơ đồ](${SITE})**
+**[Đọc bản web đầy đủ](${SITE})**
 
 # ${meta.title}
 
 > ${meta.subtitle}
 
-Đây là nhật ký tự học DevOps của một lập trình viên backend Java/Spring Boot — người viết được
-code, nhưng gần như chưa biết gì về tầng hạ tầng nằm bên dưới code đó. Nó không phải một khoá
-học được chép lại: mỗi bài là một thư mục ghi lại một buổi học đối thoại thật, gồm phần giảng giải
-*vì sao*, sơ đồ cơ chế, bài lab đã thực sự chạy trên máy người học, những chỗ đã hiểu sai và cách
-đã sửa. Bản web (GitHub Pages) là nơi đọc chính, vì ở đó mỗi bài được chia tab, có bảng tra, sơ đồ
-và phần đào sâu học thuật; tệp này là mục lục để duyệt nhanh trên GitHub.
+**Đích đến:** ${meta.goal}
 
 | | |
 |---|---|
-| **Stack thực hành** | ${meta.stack} |
+| **Công cụ** | ${meta.stack} |
 | **Môi trường** | ${meta.env} |
-| **Bắt đầu** | ${viDate(meta.started)} |
-| **Quy mô** | ${allLessons.length} bài · ${curriculum.modules.length} module |
-| **Thời lượng** | khoảng ${hoursLo}–${hoursHi} giờ học thật — học đều 6–8 giờ mỗi tuần thì mất chừng ${monthsLo}–${monthsHi} tháng |
-| **Tiến độ** | ${doneCount}/${allLessons.length} bài đã xong (${pct}%) — xem bức tranh lộ trình trên bản web |
+| **Quy mô** | ${allLessons.length} bài · ${curriculum.modules.length} module · khoảng ${hoursLo}–${hoursHi} giờ học |
+| **Tiến độ** | ${doneCount}/${allLessons.length} bài đã xong |
 
-### Thời lượng được ước lượng thế nào
-
-Con số ghi ở mỗi bài là **${meta.time.unit.charAt(0).toLowerCase() + meta.time.unit.slice(1)}**. Một bài tự học
-không kết thúc khi đọc xong trang giảng: nó chỉ xong khi đã giải thích lại được bằng lời của mình,
-đã chạy lab trên máy thật, đã cố tình làm hỏng rồi tự sửa, và đã ghi lại những gì chỉ buổi học đó mới
-sinh ra. Vì vậy thời lượng được cộng từ bốn phần:
-
-| Phần | Thường mất |
-|---|---|
-${timeParts.map(([p, t]) => `| ${p} | ${t} |`).join('\n')}
-
-Bài nhẹ (khái niệm, cài đặt) rơi vào khoảng 3–6 giờ; bài có nhiều mảnh ghép hoặc đụng tới server
-thật (Compose, VPS, CD, Kubernetes) có thể tới 10–16 giờ. Đây là **ước lượng**, và nên chia một bài
-thành nhiều buổi — Bài 00 kéo dài bốn ngày. Nếu một bài mất lâu hơn con số ghi ở đây, điều đó
-thường có nghĩa là bạn đang học kỹ, không phải đang học chậm.
-
----
-
-## Nguyên tắc
-
-**${meta.principle}**
-
-Mỗi bài đi theo đúng thứ tự dưới đây. Trước hết là một **vấn đề có thật** — thường là một sự cố cụ
-thể — để có lý do phải học; sau đó là **khái niệm** giải thích vì sao vấn đề ấy xảy ra, ở tầng nào
-của hệ thống; chỉ sau cùng mới tới **công cụ** dùng để xử lý nó.
-
-\`\`\`
-Problem  →  Concept  →  Tool
-   │           │           │
-   │           │           └── Docker, Nginx, GitHub Actions...
-   │           └── Tại sao cần nó, nó giải quyết gì, cơ chế bên dưới là gì
-   └── Một tình huống có thật khiến ta cần thứ đó
-\`\`\`
-
-Học theo chiều ngược lại — công cụ trước — là lý do nhiều người thuộc hai trăm câu lệnh mà vẫn
-không giải thích được vì sao một website không vào được. Một câu lệnh học thuộc là một mẩu thông
-tin rời rạc, không suy luận tiếp được; một cơ chế đã hiểu thì dùng được cả trong những tình huống
-chưa ai dặn trước.
-
----
-
-## Cấu trúc thư mục
-
-\`\`\`
-devops-self-learning/
-├── README.md              ← bạn đang đọc, mục lục chính
-├── index.html             ← trang chủ bản web (sinh tự động)
-├── curriculum.json        ← nguồn sự thật: toàn bộ lộ trình
-├── progress.json          ← trạng thái từng bài
-├── assets/                ← hệ thiết kế Bauhaus: style.css, app.js, font, ảnh README
-├── scripts/generate.mjs   ← sinh README.md + index.html từ 2 tệp JSON trên
-└── lessons/
-    └── NN-ten-bai/
-        ├── index.html     ← sách giáo khoa: bài giảng đầy đủ, chia tab
-        ├── README.md      ← vở bài tập: tra nhanh, lab, tự chấm
-        ├── notes.md       ← ghi chép thô: lỗi đã gặp, output thật
-        └── lab/           ← tệp thật đã viết trong bài
-\`\`\`
-
-\`index.html\` và \`README.md\` của một bài **bổ sung cho nhau, không lặp lại nhau**: bản HTML dạy và
-giải thích *vì sao*, bản Markdown để làm theo và tự chấm. Sau khi sửa \`curriculum.json\` hoặc
-\`progress.json\`, chạy lại:
-
-\`\`\`bash
-node scripts/generate.mjs
-\`\`\`
+Mỗi bài đi từ một **vấn đề có thật**, tới **khái niệm**, rồi mới tới **công cụ**. Bài nào cũng có
+một lab chạy thật, với một bước cố tình gây lỗi rồi tự sửa.
 
 ---
 
@@ -498,71 +397,40 @@ ${readmeModules}
 
 ---
 
-## Tài nguyên tham khảo
+## Mỗi bài gồm
 
-Tài liệu chính thức là nguồn chuẩn để *làm cho đúng*; video tiếng Việt là nguồn tốt để *hiểu nhanh
-ý tưởng*. Hai loại không thay thế được nhau, và không loại nào thay được việc tự gõ lại từng lệnh.
+| Tệp | Dùng để |
+|---|---|
+| \`index.html\` | Bài giảng đầy đủ: giải thích, sơ đồ, bảng tra |
+| \`README.md\` | Vở bài tập: các bước lab, danh sách tự kiểm tra |
+| \`notes.md\` | Ghi chép: lỗi đã gặp, output thật |
+| \`lab/\` | Các tệp đã viết trong bài |
 
-### Tài liệu chính thức
+## Tài liệu chính thức
 
 | Chủ đề | Link |
 |---|---|
 | Docker — Get started | https://docs.docker.com/get-started/ |
 | Docker — Dockerfile reference | https://docs.docker.com/reference/dockerfile/ |
 | Docker Compose | https://docs.docker.com/compose/ |
+| The Twelve-Factor App | https://12factor.net/ |
 | Nginx — Beginner's Guide | https://nginx.org/en/docs/beginners_guide.html |
-| GitHub Actions | https://docs.github.com/en/actions |
 | Let's Encrypt / Certbot | https://certbot.eff.org/ |
-| Ubuntu Server docs | https://documentation.ubuntu.com/server/ |
+| GitLab CI/CD | https://docs.gitlab.com/ci/ |
+| Cú pháp \`.gitlab-ci.yml\` | https://docs.gitlab.com/ci/yaml/ |
+| Kubernetes | https://kubernetes.io/docs/home/ |
+| k3d — cụm Kubernetes học trên máy | https://k3d.io/ |
+| Helm | https://helm.sh/docs/ |
+| cert-manager | https://cert-manager.io/docs/ |
+| Rancher | https://ranchermanager.docs.rancher.com/ |
+| RKE2 | https://docs.rke2.io/ |
+| Spring Boot Actuator | https://docs.spring.io/spring-boot/reference/actuator/index.html |
+| Prometheus | https://prometheus.io/docs/introduction/overview/ |
+| Grafana | https://grafana.com/docs/grafana/latest/ |
 | Linux man pages | https://man7.org/linux/man-pages/ |
 | Chuẩn Internet (RFC) | https://www.rfc-editor.org/ |
-| Prometheus | https://prometheus.io/docs/introduction/overview/ |
-| Kubernetes | https://kubernetes.io/docs/home/ |
-| The Twelve-Factor App | https://12factor.net/ |
 
-### Học nền tảng (miễn phí, chất lượng cao)
-
-| Chủ đề | Link |
-|---|---|
-| Linux từ đầu, rất dễ vào | https://linuxjourney.com/ |
-| Giải thích một câu lệnh shell bất kỳ | https://explainshell.com/ |
-| Lab Linux/Docker/K8s chạy trên trình duyệt | https://killercoda.com/ |
-| Sandbox Docker miễn phí | https://labs.play-with-docker.com/ |
-| Roadmap DevOps (bản đồ nghề) | https://roadmap.sh/devops |
-| Full Stack Open — phần CI/CD (rất sát thực tế) | https://fullstackopen.com/en/part11 |
-| Bảng tra cú pháp nhanh | https://devhints.io/ |
-
-### Tiếng Việt có video
-
-| Nguồn | Ghi chú |
-|---|---|
-| F8 — fullstack.edu.vn | Tìm khoá **"DevOps for Engineers"**. Miễn phí, tiếng Việt, đi lần lượt qua Docker, Linux, Compose, VPS rồi tới deploy. Dùng làm nguồn video chính. |
-| YouTube | Từ khoá hữu ích: \`"Docker tiếng Việt"\`, \`"Nginx reverse proxy tiếng Việt"\`, \`"CI/CD GitHub Actions tiếng Việt"\`, \`"deploy Spring Boot lên VPS"\` |
-
-> **Cách dùng đúng:** chỉ xem video thì kiến thức ở lại trong video. Bài nào cũng phải tự gõ lại
-> trên máy mình, tự gây lỗi và tự sửa, thì mới thực sự thành của mình.
-
----
-
-## Quy ước ghi tiến độ
-
-Mỗi bài học xong thì cập nhật \`progress.json\`. Trường \`status\` nhận một trong ba giá trị
-\`todo\` · \`doing\` · \`done\`; trường \`note\` là một dòng ghi lại điều đáng nhớ nhất, kể cả điều
-còn mơ hồ:
-
-\`\`\`json
-{
-  "lessons": {
-    "00": { "status": "done", "date": "2026-09-21", "note": "hiểu rồi nhưng còn mơ hồ về NAT" }
-  }
-}
-\`\`\`
-
-Rồi chạy \`node scripts/generate.mjs\` để cập nhật README, trang chủ và khung các bài. Hai ảnh ở
-đầu tệp này — tiêu đề và bức tranh lộ trình — cũng do script đó vẽ lại từ \`progress.json\`, bằng
-đúng bộ sinh hình của bản web: học xong một bài thì ô của bài đó trong tranh được tô màu. Ảnh nằm
-trong \`assets/readme/\`, nhúng sẵn font League Spartan (giấy phép OFL) vì GitHub không tải web font
-cho ảnh SVG.
+Thêm nguồn học bổ trợ ở tab Tài nguyên của [bản web](${SITE}#tai-nguyen).
 `;
 
 writeFileSync(join(ROOT, 'README.md'), readme, 'utf8');
@@ -628,8 +496,8 @@ function stubHtml(l, prev, next) {
     <span class="label">${st === 'done' ? 'Đã học, chưa viết lại' : 'Trang này mới là khung'}</span>
     <p>${
       st === 'done'
-        ? 'Bài này đã được học xong nhưng chưa được viết lại thành tài liệu đầy đủ. Những gì bên dưới là phần khung mà lộ trình đã định từ trước.'
-        : 'Bài này chưa được học, nên trang hiện chỉ gồm những gì lộ trình đã định sẵn: mục tiêu, các khái niệm sẽ gặp, bài lab dự kiến và danh sách tự kiểm tra. Nội dung đầy đủ — phần giảng giải theo lối học thuật, sơ đồ cơ chế, bảng tra triệu chứng và phần mổ băng output thật — sẽ được viết vào đúng buổi học bài này, theo hai lượt: viết nháp trước để đọc, rồi bồi đắp sau buổi đối thoại.'
+        ? 'Bài này đã học xong nhưng chưa được viết lại đầy đủ.'
+        : 'Bài này chưa học. Trang mới có khung: mục tiêu, khái niệm, lab và tự kiểm tra.'
     }</p>
   </div>
 
@@ -638,7 +506,13 @@ function stubHtml(l, prev, next) {
 
   <h2 id="vi-tri">Vì sao bài này nằm ở ${esc(l.moduleId)}</h2>
   <p>${esc(mod.why)}</p>
-
+${(l.needs ?? []).length ? `
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+${l.needs.map((n) => `    <li><a href="../${n}-${lessonById[n].slug}/">Bài ${n} · ${esc(lessonById[n].title)}</a></li>`).join('\n')}
+  </ul>
+` : ''}
   <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
   <ul>
 ${l.concepts.map((c) => `    <li>${esc(c)}</li>`).join('\n')}
@@ -650,15 +524,12 @@ ${l.concepts.map((c) => `    <li>${esc(c)}</li>`).join('\n')}
   <p>${esc(l.lab)}</p>
   <div class="callout warn">
     <span class="label">Luật của mọi bài lab</span>
-    <p>Bài lab sẽ không dừng ở chỗ "chạy được". Sẽ có ít nhất một bước cố tình làm hỏng hệ thống,
-    quan sát triệu chứng, rồi tự sửa — vì gặp một lỗi lần đầu trong môi trường an toàn là cách duy
-    nhất để lần sau gặp nó trên production mà không hoảng.</p>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
   </div>
 </section>
 
 <section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="${l.checklist.length} mục">
-  <p>Học xong phải tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào từng dòng để
-  đánh dấu khi đã tự tin; dấu tick được nhớ lại trên trình duyệt này.</p>
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
   <ul class="check">
 ${l.checklist.map((c) => `    <li>${esc(c)}</li>`).join('\n')}
   </ul>
@@ -673,7 +544,6 @@ ${link(next, 'Bài tiếp', ' class="next"')}
 
 <footer class="page">
   <p>Bài ${l.id} · Module ${l.moduleId} — ${esc(l.moduleTitle)} · DevOps Self-Learning</p>
-  <p>Trang khung sinh tự động từ <code>curriculum.json</code>.</p>
 </footer>
 
 </div>
@@ -729,7 +599,11 @@ ${stubMetaLine(l)}
 ## Mục tiêu
 
 ${l.goal}
+${(l.needs ?? []).length ? `
+## Cần đã học trước
 
+${l.needs.map((n) => `- [Bài ${n} · ${lessonById[n].title}](../${n}-${lessonById[n].slug}/)`).join('\n')}
+` : ''}
 ## Khái niệm sẽ gặp
 
 ${l.concepts.map((c) => `- ${c}`).join('\n')}
@@ -746,8 +620,7 @@ ${l.checklist.map((c) => `- [ ] ${c}`).join('\n')}
 
 ---
 
-*Bài này chưa học. Nội dung đầy đủ sẽ được viết vào đúng buổi học,
-cùng với \`index.html\` ghi lại những gì đã thực sự làm và những lỗi đã gặp.*
+*Bài này chưa học. Nội dung đầy đủ sẽ được viết khi học tới bài này.*
 `;
     writeFileSync(readmePath, body, 'utf8');
     created++;

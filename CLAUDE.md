@@ -8,9 +8,43 @@ Claude đóng vai người dạy kèm: mỗi phiên dạy một bài, rồi ghi 
 - Nền tảng: **Java / Spring Boot backend**. Biết code, **chưa biết gì về hạ tầng**.
 - Máy: **Windows 11 + WSL2 (Ubuntu) + Docker Desktop**, Java 25, Node 24, Git Bash.
 - Mục tiêu: hiểu sâu + thực hành thật, **không** cày cho xong.
+- Người học muốn **vào Docker càng sớm càng tốt, không lan man**; lộ trình Docker tới Kubernetes
+  là quyết định của người học.
+- **Viết cho bất kỳ ai đọc** (người học yêu cầu 30/09/2026): tài liệu phải dùng được cho mọi người
+  mới bắt đầu, không phải nhật ký riêng. Xưng "bạn" để nói với người đọc thì được, nhưng không gán
+  cho người đọc hoàn cảnh riêng của một người cụ thể.
 - Nhịp học: linh hoạt. Không ép theo lịch — học được tới đâu ghi tiến độ tới đó.
 - Ngôn ngữ: **viết mọi tài liệu bằng tiếng Việt.** Giữ nguyên thuật ngữ kỹ thuật
   tiếng Anh (reverse proxy, container, volume…) vì đó là từ sẽ gặp trong tài liệu thật.
+
+## Lộ trình
+
+**39 bài (00–38), 6 module**, đích đến ghi ở `meta.goal` của `curriculum.json`. Không nhắc lại
+hay so sánh với bất kỳ lộ trình nào trước đây, ở bất cứ trang nào:
+
+| Module | Bài | Nội dung |
+|---|---|---|
+| M0 Nền tảng tối thiểu | 00–02 | bản đồ request, process/kernel, phòng lab + shell tối thiểu |
+| M1 Docker | 03–13 | vào **ngay sau phòng lab**; Linux và mạng dạy đúng lúc trong từng bài Docker |
+| M2 Server thật | 14–18 | SSH, Linux trên server, deploy tay bằng Compose, Nginx, tên miền + HTTPS — trên một server Linux thật |
+| M3 CI/CD với GitLab | 19–23 | tự động hoá đúng những bước đã làm tay ở M2 |
+| M4 Kubernetes | 24–32 | mỗi khái niệm nối về một bài Docker (pod về container, Service về DNS…) |
+| M5 Rancher và vận hành | 33–38 | Rancher, deploy lên cụm từ GitLab/GitOps, metric, log, cảnh báo, sự cố, tổng kết |
+
+Mỗi bài có trường **`needs`**: danh sách bài phải học trước, **chỉ được trỏ về bài đứng trước**
+(`generate.mjs` dừng nếu sai). Trang khung và README khung hiện mục "Cần đã học trước". Khi viết một
+bài, mọi khái niệm của các bài trong `needs` được dùng lại và gọi đúng tên — xem luật Học tuần tự.
+
+**Thông tin riêng của người học không bao giờ vào repo** — repo này công khai, kể cả `notes.md` và
+chính tệp CLAUDE.md này. Nơi làm việc, tên server, IP, tên miền nội bộ, hệ thống thật đang vận hành,
+output lab có địa chỉ thật: chỉ ghi vào `*.rieng.md` hoặc thư mục `rieng/` (đã có trong `.gitignore`), hoặc
+bộ nhớ riêng của Claude (nằm ngoài repo). Bài giảng chỉ dùng tình huống đã khái quát hoá ("một service
+khởi động chậm bị giới hạn CPU"), không nêu tên hệ thống thật.
+
+**Trang bìa ít chữ** (người học phản ánh 30/09/2026: người mới đọc bìa thấy dài và rối thì nản):
+trang chủ, README của repo, trang khung của bài, câu giới thiệu module — mỗi chỗ một hai câu, không
+thuật ngữ khó. **Không đưa ghi chú tự nhắc lên trang** (lý do xếp thứ tự module, quy trình viết hai
+lượt, cách ghi `progress.json`…): đó là việc của người viết, để trong CLAUDE.md.
 
 ## Nguồn sự thật
 
@@ -31,11 +65,10 @@ Script **không ghi đè** file đã tồn tại trong `lessons/` — an toàn k
 ### Thời lượng bài (sửa 30/09/2026)
 
 Mỗi bài có `"hours": [ít, nhiều]` trong `curriculum.json` — **giờ học thật cho trọn một bài**,
-không phải thời gian giảng. Trước đây ghi `"est"` 40–90 phút; người học chỉ ra là không thể tự học
-một chủ đề trong 45 phút, và dữ liệu thật đồng ý: Bài 00 kéo dài 4 ngày, riêng `index.html` của
-Bài 01 đã khoảng 10.000 chữ (đọc kỹ một lượt đã mất 1–1,5 giờ). Thời lượng cộng từ bốn phần ghi
+không phải thời gian giảng (Bài 00 kéo dài 4 ngày; riêng `index.html` của Bài 01 khoảng 10.000 chữ,
+đọc kỹ một lượt đã mất 1–1,5 giờ). Thời lượng cộng từ bốn phần ghi
 ở `meta.time.parts`: đọc trước 1–2 giờ · đối thoại 1,5–3 giờ · lab (kể cả bước tự gây lỗi) 1–3 giờ
-· ghi notes và bồi tài liệu 0,5–1 giờ. Bài nhẹ 3–6 giờ; bài đụng server thật tới 10–16 giờ. Khi
+· ghi notes và bồi tài liệu 0,5–1 giờ. Bài nhẹ 2–5 giờ; bài nhiều mảnh ghép 5–8 giờ. Khi
 có thời gian thật của một bài, hiệu chỉnh các bài cùng loại theo đó — đừng giữ con số cũ cho đẹp.
 
 ## Cấu trúc một bài học
@@ -91,7 +124,8 @@ nguyên văn tài liệu** — trong chat thì hỏi, ví dụ hóa, và sửa c
 
 Khi người học nói "dạy bài tiếp theo" / "học bài NN":
 
-1. **Đọc `curriculum.json`** lấy mục tiêu, khái niệm, lab, checklist của bài đó.
+1. **Đọc `curriculum.json`** lấy mục tiêu, khái niệm, lab, checklist và `needs` của bài đó — rồi
+   đọc lại các bài trong `needs` để biết người học đã được giới thiệu những khái niệm nào.
 2. **Dạy ngay trong chat trước** — giải thích, hỏi lại, để người học phản hồi.
    Không im lặng đi viết file rồi bảo "xong rồi, đọc đi".
 3. **Viết `index.html`** theo đúng cấu trúc bài 00 (dùng nó làm mẫu), **chia tab** theo
@@ -109,6 +143,15 @@ Khi người học nói "dạy bài tiếp theo" / "học bài NN":
 
 ## Nguyên tắc nội dung (quan trọng)
 
+- **Học tuần tự — không dùng một thuật ngữ trước khi nó được giới thiệu** (người học yêu cầu
+  30/09/2026: "đọc một lèo có 2–3 thuật ngữ chưa gặp bao giờ thì cả đoạn chả đọng lại gì"). Khi viết,
+  hình dung người đọc **chỉ biết code Java/Spring Boot cộng những gì các bài TRƯỚC đã dạy** — không
+  hơn. Thuật ngữ hạ tầng nào xuất hiện lần đầu thì phải được giới thiệu ngay tại đó bằng lời thường
+  (1–2 câu, kèm "học kỹ ở Bài NN" nếu nó có bài riêng), hoặc **thay bằng lời thường** nếu đoạn văn
+  không thật sự cần nó. Một đoạn văn không chứa quá **một** thuật ngữ mới. Bài sau gọi lại tên khái
+  niệm của bài trước ("kernel — người quản lý phần cứng đã gặp ở Bài 01 — …") để kiến thức nối thành
+  chuỗi theo thời gian, không phân mảnh. Lượt soát 30/09/2026 đếm được 78 thuật ngữ dùng trước khi
+  giới thiệu ở Bài 00–01 (tệ nhất: "gói tin" dùng 44 lần mà không trang nào định nghĩa).
 - **Problem → Concept → Tool.** Không bao giờ mở đầu bằng "Docker là...".
   Mở đầu bằng một vấn đề khiến ta cần Docker.
 - **Luôn nối về bản đồ ở Bài 00.** Mỗi công cụ phải được gắn vào một chặng ①–⑨ cụ thể.
@@ -188,7 +231,7 @@ Người học yêu cầu **một kiểu duy nhất**: không chế độ tối,
    định danh bài, mang số liệu — không bao giờ để trang trí suông:
    - **Ấn ký của bài**: lưới 4×4 ở đầu trang, `Bauhaus.glyph(số bài)` trong `app.js` sinh
      **cố định** từ số bài (cùng số → cùng hình ở mọi máy). Trang phụ của một bài dùng chung ấn ký.
-   - **Bức tranh lộ trình** ở trang chủ: 43 ô, mỗi ô là mảnh đầu tiên của ấn ký bài đó
+   - **Bức tranh lộ trình** ở trang chủ: mỗi bài một ô (39 ô), mỗi ô là mảnh đầu tiên của ấn ký bài đó
      (`Bauhaus.tile`). Chưa học = chỉ còn nét; học xong = tô màu; đang học = khung đen.
    - **Hình của module** cố định: `.shp.s-0` … `s-8` = tròn lam · vuông đỏ · tam giác vàng ·
      phần tư đen · vòm lam · vòng khuyên đỏ · thoi vàng · bán nguyệt đen · vuông rỗng lam.
@@ -380,17 +423,18 @@ phải; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền
 - **Bài 01: ĐANG HỌC.** Lượt ① đã xong — `index.html`, `README.md`, `notes.md`, `lab/server.js`
   đã viết đầy đủ để người học đọc trước. **Còn phải làm lượt ③** (bồi đắp sau buổi đối thoại):
   chỗ hiểu sai, output lab thật, câu hỏi ngoài kịch bản.
-- Kế tiếp: **Bài 02** — Dựng phòng lab (cài lại WSL Ubuntu + bật Docker Desktop)
+- Kế tiếp: **Bài 02** — Phòng lab: WSL2, Docker Desktop và shell tối thiểu; rồi vào Docker từ Bài 03.
 - **28/09/2026: đổi giọng văn sang học thuật + chia tab mọi trang; giao diện qua hai lượt** —
   neo-brutalism "Sổ thép" rồi chốt **Bauhaus** (một kiểu duy nhất). Bài 00 (3 trang), Bài 01,
-  trang chủ và 41 trang khung đều đã theo hệ mới.
+  trang chủ và 37 trang khung đều đã theo hệ mới.
 - **README cũng theo Bauhaus** (người học yêu cầu "sửa cả readme cho khớp"): không nhúng card
   neo-brutalism của repo profile nữa. `scripts/readme-art.mjs` (gọi từ `generate.mjs`) vẽ vào
   `assets/readme/`: `banner.svg` (tiêu đề + ba hình số liệu), `roadmap.svg` (bức tranh lộ trình tự
   tô màu theo `progress.json`) và `glyph/NN.svg` (ấn ký từng bài, gắn dưới H1 của README bài).
   Ảnh SVG qua `<img>` không tải được web font, nên font League Spartan được **nhúng base64** từ
-  `assets/fonts/` (giấy phép OFL, file `OFL-LeagueSpartan.txt` đi kèm). Card trên trang profile
-  GitHub vẫn là việc của repo `AnhTuan2111`, không đụng tới.
+  `assets/fonts/` (giấy phép OFL, file `OFL-LeagueSpartan.txt` đi kèm). Giao diện trang profile
+  GitHub là việc của repo `AnhTuan2111` (neo-brutalism, không đổi sang Bauhaus); nhưng **nội dung**
+  profile nói về khoá học (số bài, đích đến, công cụ) phải được sửa theo mỗi lần lộ trình đổi.
 
 ### Khái niệm đã dạy ở Bài 00 — phải tái sử dụng, không định nghĩa lại
 
@@ -422,14 +466,14 @@ Người học đã nắm và đã dùng được những thứ sau. Các bài s
 
 - **Bài 02**: chạy `time curl -4 -o /dev/null http://127.0.0.1:9999` trong WSL Ubuntu và
   so với **2,155s** đo được trên Windows. Đây là thí nghiệm đối chứng đã hứa với người học.
-- GitHub Pages: phục vụ từ nhánh `main`, thư mục gốc.
-  Ở **Bài 31** sẽ thay bằng workflow GitHub Actions thật — đó là bài lab CI/CD đầu tiên,
-  nên **đừng tạo sẵn** `.github/workflows/` trước bài đó.
+- GitHub Pages: phục vụ từ nhánh `main`, thư mục gốc. CI/CD trong lộ trình dùng **GitLab** (Bài
+  19–23), không dùng GitHub Actions. Tự động deploy trang này bằng GitHub Actions chỉ là **phụ lục
+  tự chọn**, làm khi người học yêu cầu — nên **đừng tạo sẵn** `.github/workflows/`.
 
 ## Lưu ý kỹ thuật
 
 Token `gh` hiện tại **không có scope `workflow`**, nên mọi push đụng vào `.github/workflows/`
-sẽ bị GitHub từ chối. Đúng lúc bắt đầu **Bài 31**, chạy:
+sẽ bị GitHub từ chối. Nếu người học chọn làm phụ lục GitHub Actions cho trang này, chạy:
 
 ```bash
 gh auth refresh -s workflow

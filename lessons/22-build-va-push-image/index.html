@@ -1,0 +1,106 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 22 — Build và push image lên GitLab Container Registry</title>
+<meta name="description" content="Mỗi commit trên nhánh chính sinh ra một image có phiên bản rõ ràng, sẵn sàng deploy.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="22">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-22</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M3">Module 3</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 3 · Bài 22</p>
+  <h1>Build và push image lên GitLab Container Registry</h1>
+  <p class="lede">Mỗi commit trên nhánh chính sinh ra một image có phiên bản rõ ràng, sẵn sàng deploy.</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">4–6 giờ</span>
+    <span class="chip">CI/CD với GitLab</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 22">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: mục tiêu, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="muc-tieu">Mục tiêu</h2>
+  <p>Mỗi commit trên nhánh chính sinh ra một image có phiên bản rõ ràng, sẵn sàng deploy.</p>
+
+  <h2 id="vi-tri">Vì sao bài này nằm ở M3</h2>
+  <p>Tự động hoá bằng GitLab CI đúng những bước vừa làm tay ở module trước.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../07-dockerfile-production/">Bài 07 · Dockerfile chuẩn production: nhỏ, không root, không bị giết vì hết bộ nhớ</a></li>
+    <li><a href="../21-ci-spring-boot/">Bài 21 · CI cho Spring Boot: build, test, cache</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>GitLab Container Registry</li>
+    <li>Build image trong CI: Docker-in-Docker, hoặc công cụ không cần daemon như Kaniko, Buildah</li>
+    <li>Chiến lược tag: SHA commit, semver; vì sao tránh latest (nối Bài 05)</li>
+    <li>Đăng nhập registry bằng token của job</li>
+    <li>Quét lỗ hổng image</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Pipeline build image Spring Boot và push lên registry với tag theo SHA commit. Cố tình dùng sai thông tin đăng nhập registry để gặp lỗi &quot;unauthorized&quot;, rồi sửa.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="3 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Mỗi commit trên nhánh chính có một image tương ứng trong registry</li>
+    <li>Giải thích được vì sao tag theo SHA an toàn hơn latest</li>
+    <li>Đọc được kết quả quét lỗ hổng của một image</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../21-ci-spring-boot/">
+    <span class="dir">Bài trước</span>
+    <span class="t">21 · CI cho Spring Boot</span>
+  </a>
+  <a class="next" href="../23-cd-va-rollback/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">23 · Deploy tự động và rollback</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 22 · Module M3 — CI/CD với GitLab — Từ git push tới server · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

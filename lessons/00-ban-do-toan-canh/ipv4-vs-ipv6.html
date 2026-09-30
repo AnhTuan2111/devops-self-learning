@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — IPv4, IPv6 và NAT</title>
-<meta name="description" content="Vì sao địa chỉ IPv4 cạn kiệt, CIDR và NAT đã trì hoãn khủng hoảng thế nào, cái giá của NAT khiến bạn phải thuê VPS, và vì sao IPv6 sau gần 30 năm vẫn chưa thắng.">
-<link rel="stylesheet" href="../../assets/style.css?v=45595531">
+<meta name="description" content="Vì sao địa chỉ IPv4 cạn kiệt, CIDR và NAT đã trì hoãn khủng hoảng thế nào, cái giá của NAT khiến server không thể đặt trên laptop ở nhà, và vì sao IPv6 sau gần 30 năm vẫn chưa thắng.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00-ipv6">
@@ -23,8 +23,8 @@
   <h1>IPv4, IPv6 và NAT: <span class="hl">vì sao chúng tồn tại</span></h1>
   <p class="lede">Câu hỏi này nảy ra giữa buổi lab, khi thấy <code>curl</code> thử IPv6 trước rồi mới
   quay sang IPv4. Trả lời cho đến nơi đòi hỏi quay về năm 1981 và đi qua bốn thập kỷ lịch sử mạng —
-  và ở cuối con đường đó là lời giải thích cho một điều rất thực tế: vì sao bạn <em>phải</em> thuê VPS
-  thay vì chạy server ngay trên laptop ở nhà.</p>
+  và ở cuối con đường đó là lời giải thích cho một điều rất thực tế: vì sao một server <em>phải</em> đặt ở nơi có
+  IP công khai, thay vì chạy ngay trên laptop ở nhà.</p>
   <div class="meta">
     <span class="chip violet">Phụ lục · đào sâu</span>
     <a class="chip" href="index.html"><i class="ic ic-l" role="img" aria-label="từ"></i> Bài giảng 00</a>
@@ -239,9 +239,9 @@ cuối cùng của mình.</p>
 </section>
 
 <!-- ================================================================== -->
-<section class="tab" id="t-gia-nat" data-tab="Giá của NAT" data-note="vì sao phải thuê VPS">
+<section class="tab" id="t-gia-nat" data-tab="Giá của NAT" data-note="vì sao server không đặt ở nhà">
 
-<h2 id="gia-cua-nat">Cái giá của NAT — và vì sao bạn phải thuê VPS</h2>
+<h2 id="gia-cua-nat">Cái giá của NAT — và vì sao server không đặt ở nhà được</h2>
 
 <figure class="fig photo side">
   <img src="img/router-gia-dinh.webp" width="800" height="600" loading="lazy" alt="Một router không dây gia đình màu đen xanh có hai ăng-ten dựng đứng.">
@@ -279,14 +279,14 @@ ngày nay coi là hiển nhiên, dù nó chưa bao giờ là thiết kế ban đ
   <tbody>
     <tr><td>Muốn chạy server tại nhà cho người ngoài truy cập <i class="ic ic-r" role="img" aria-label="sang"></i> phải cấu hình <strong>port forwarding</strong> trên router</td><td>NAT chặn chiều vào; port forwarding là ghi tay một dòng cố định vào sổ</td></tr>
     <tr><td>Gọi video, chơi game P2P, VoIP cần máy chủ STUN/TURN làm trung gian</td><td>Hai máy cùng nằm sau NAT không gọi thẳng nhau được</td></tr>
-    <tr><td><strong>Bạn phải thuê VPS để deploy</strong></td><td>Máy bạn không có địa chỉ mà thế giới gọi tới được</td></tr>
+    <tr><td><strong>Server phải đặt ở trung tâm dữ liệu, không đặt ở nhà</strong></td><td>Máy bạn không có địa chỉ mà thế giới gọi tới được</td></tr>
   </tbody>
 </table>
 </div>
 
 <div class="callout warn">
   <span class="label">Một quan sát đáng suy nghĩ</span>
-  <p>Bạn phải thuê VPS <strong>không phải vì máy bạn yếu</strong> — laptop của bạn thừa sức chạy Spring
+  <p>Server phải đặt ở trung tâm dữ liệu <strong>không phải vì máy bạn yếu</strong> — laptop của bạn thừa sức chạy Spring
   Boot và PostgreSQL. Mà vì máy bạn <strong>không có địa chỉ mà thế giới gọi tới được</strong>.</p>
   <p>NAT đã biến người dùng Internet từ <strong>"người tham gia bình đẳng"</strong> thành
   <strong>"khách hàng chỉ biết tiêu thụ"</strong>. Đó là một thay đổi kiến trúc sâu sắc, và hầu hết mọi
@@ -519,12 +519,12 @@ không phải một lỗi bí ẩn.</p>
   <caption><b>Bảng 5</b> Những chỗ IPv4/IPv6 sẽ gây vấp, và bài học xử lý.</caption>
   <thead><tr><th>Chỗ vấp</th><th>Bài</th></tr></thead>
   <tbody>
-    <tr><td>App bind <code>0.0.0.0</code> (mọi IPv4) hay <code>::</code> (mọi IPv6) — chọn sai là không ai gọi được</td><td><a href="../09-ip-localhost-0000/">09</a></td></tr>
-    <tr><td><code>localhost</code> phân giải <code>::1</code> trước <i class="ic ic-r" role="img" aria-label="sang"></i> lỗi <code>ECONNREFUSED ::1</code> khi app kết nối DB</td><td><a href="../09-ip-localhost-0000/">09</a>, <a href="../19-docker-network/">19</a></td></tr>
-    <tr><td>DNS: bản ghi <strong><code>A</code></strong> cho IPv4, <strong><code>AAAA</code></strong> cho IPv6</td><td><a href="../11-dns/">11</a>, <a href="../27-domain-va-dns-that/">27</a></td></tr>
-    <tr><td>Nginx phải khai báo cả <code>listen 80;</code> <strong>và</strong> <code>listen [::]:80;</code></td><td><a href="../21-reverse-proxy-co-ban/">21</a></td></tr>
-    <tr><td><strong>Firewall: chặn kỹ IPv4 mà để ngỏ IPv6 <i class="ic ic-r" role="img" aria-label="sang"></i> lỗ hổng bảo mật thật</strong></td><td><a href="../13-ssh-va-firewall/">13</a>, <a href="../25-vps-va-hardening/">25</a></td></tr>
-    <tr><td>Docker mặc định chỉ bật IPv4</td><td><a href="../19-docker-network/">19</a></td></tr>
+    <tr><td>App bind <code>0.0.0.0</code> (mọi IPv4) hay <code>::</code> (mọi IPv6) — chọn sai là không ai gọi được</td><td><a href="../04-port-va-publish/">04</a></td></tr>
+    <tr><td><code>localhost</code> phân giải <code>::1</code> trước <i class="ic ic-r" role="img" aria-label="sang"></i> lỗi <code>ECONNREFUSED ::1</code> khi app kết nối DB</td><td><a href="../04-port-va-publish/">04</a>, <a href="../10-docker-network/">10</a></td></tr>
+    <tr><td>DNS: bản ghi <strong><code>A</code></strong> cho IPv4, <strong><code>AAAA</code></strong> cho IPv6</td><td><a href="../18-ten-mien-va-https/">18</a></td></tr>
+    <tr><td>Nginx phải khai báo cả <code>listen 80;</code> <strong>và</strong> <code>listen [::]:80;</code></td><td><a href="../17-reverse-proxy/">17</a></td></tr>
+    <tr><td><strong>Firewall: chặn kỹ IPv4 mà để ngỏ IPv6 <i class="ic ic-r" role="img" aria-label="sang"></i> lỗ hổng bảo mật thật</strong></td><td><a href="../15-linux-tren-server/">15</a></td></tr>
+    <tr><td>Docker mặc định chỉ bật IPv4</td><td><a href="../10-docker-network/">10</a></td></tr>
   </tbody>
 </table>
 </div>
@@ -544,7 +544,7 @@ không phải một lỗi bí ẩn.</p>
   <p>Rất nhiều người chặn cẩn thận bằng <code>iptables</code> rồi <strong>để ngỏ hoàn toàn
   <code>ip6tables</code></strong> — hai bộ quy tắc riêng cho hai giao thức — và server vẫn phơi ra
   Internet qua IPv6 mà họ không biết.</p>
-  <p>Ta sẽ kiểm tra đúng chỗ này khi hardening VPS ở <a href="../25-vps-va-hardening/">Bài 25</a>.</p>
+  <p>Ta sẽ kiểm tra đúng chỗ này khi đi một vòng server ở <a href="../15-linux-tren-server/">Bài 15</a>.</p>
 </div>
 
 <h2 id="tu-kiem-tra-ipv6">Tự kiểm tra</h2>
@@ -555,7 +555,7 @@ không phải một lỗi bí ẩn.</p>
   <li>Tính được số địa chỉ của IPv4 và của một khối <code>/24</code>, <code>/23</code> bằng công thức 2^(32 − n)</li>
   <li>Giải thích được vì sao hệ thống lớp A/B/C làm IPv4 cạn nhanh hơn, và CIDR sửa điều đó thế nào</li>
   <li>Vẽ lại được cuốn sổ NAT và giải thích vai trò của port trong đó</li>
-  <li>Giải thích được vì sao NAT là lý do phải thuê VPS, và CGNAT làm tình hình tệ hơn thế nào</li>
+  <li>Giải thích được vì sao NAT khiến server không thể đặt trên laptop ở nhà, và CGNAT làm tình hình tệ hơn thế nào</li>
   <li>Rút gọn và viết đầy đủ được một địa chỉ IPv6, và biết vì sao <code>::</code> chỉ dùng một lần</li>
   <li>Kể được ba lý do IPv6 phổ cập chậm và lực nào đang phá thế bế tắc</li>
   <li>Nói được vì sao chặn <code>iptables</code> mà quên <code>ip6tables</code> là một lỗ hổng thật</li>
@@ -627,6 +627,6 @@ không phải một lỗi bí ẩn.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=45595531"></script>
+<script src="../../assets/app.js?v=c4b75b55"></script>
 </body>
 </html>

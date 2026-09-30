@@ -2,7 +2,7 @@
 
 <img src="../../assets/readme/glyph/01.svg" width="132" align="right" alt="Ấn ký của Bài 01">
 
-> **Module M0** · Nền tảng · 5–8 giờ học (đọc trước, đối thoại, lab, ghi chép) · không cần WSL, không cần Docker
+> **Module M0** · Nền tảng tối thiểu · 5–8 giờ học (đọc trước, đối thoại, lab, ghi chép) · không cần WSL, không cần Docker
 
 **Bài giảng đầy đủ:** [`index.html`](index.html) —
 [bản online](https://anhtuan2111.github.io/devops-self-learning/lessons/01-may-tinh-va-he-dieu-hanh/)
@@ -19,7 +19,7 @@ của từng lab sẽ được điền vào [`notes.md`](notes.md) trong buổi 
 Cả bài xoay quanh ba câu hỏi rất thực tế, và mỗi phần bên dưới là một mảnh để ghép thành câu
 trả lời. Hãy thử tự trả lời trước khi đọc, rồi so lại khi làm xong lab.
 
-1. Thuê VPS thì **con số nào** trong bảng cấu hình sẽ hết trước?
+1. Chọn cấu hình server thì **con số nào** sẽ hết trước?
 2. Vì sao **hết RAM thì app CHẾT**, còn hết CPU thì app chỉ **CHẬM**?
 3. Vì sao **app chết thì website sập** — chuỗi nhân quả đầy đủ tới con số 502?
 
@@ -55,15 +55,15 @@ mọi thứ trên laptop vẫn "tự lành" được là nhờ có bạn ở đ�
 
 > Không ai bấm OK. Không ai khởi động lại. Không ai nhìn thấy khi nó báo lỗi.
 
-Nói cách khác, gần như mọi kỹ thuật trong lộ trình này — systemd, healthcheck, restart
-policy, monitoring, alert — đều sinh ra để **thay thế một con người không có mặt ở đó**. Gặp
+Nói cách khác, gần như mọi kỹ thuật trong lộ trình này — restart policy, healthcheck,
+probe của Kubernetes, monitoring, alert — đều sinh ra để **thay thế một con người không có mặt ở đó**. Gặp
 một công cụ mới, hãy thử hỏi: nó đang làm thay việc gì mà một người trực lẽ ra sẽ làm?
 
 ---
 
 ## Bốn tài nguyên
 
-Mọi con số trong bảng cấu hình VPS quy về bốn loại tài nguyên, định nghĩa như sau.
+Mọi con số trong bảng cấu hình server quy về bốn loại tài nguyên, định nghĩa như sau.
 
 | Tài nguyên | Là gì | Đơn vị đo | Bền vững |
 |---|---|---|---|
@@ -283,11 +283,11 @@ khác đóng vai người trực — và process được trông như vậy gọ
 |---|---|---|
 | Chết thì sao | **hết, không ai dựng dậy** | tự khởi động lại |
 | Máy reboot | không tự chạy | tự chạy |
-| Ai trông | — | `systemd` hoặc Docker |
+| Ai trông | — | `systemd`, Docker hoặc Kubernetes |
 
 ```
-systemd  Restart=always          → Bài 07
-Docker   restart: unless-stopped → Bài 15, 20
+Docker      restart: unless-stopped   → Bài 12
+Kubernetes  Deployment + probe        → Bài 25, 28
 ```
 
 Hai công cụ, **cùng một ý tưởng**: thay thế người trực.
@@ -416,7 +416,7 @@ Chỉ đánh dấu khi trả lời được bằng lời của mình, không nh�
 ---
 
 **Bài trước:** [00 — Bản đồ toàn cảnh](../00-ban-do-toan-canh/)
-**Bài tiếp:** [02 — Dựng phòng lab: WSL2 Ubuntu + Docker Desktop](../02-dung-phong-lab/)
+**Bài tiếp:** [02 — Phòng lab: WSL2, Docker Desktop và shell tối thiểu](../02-phong-lab-wsl-docker/)
 
 Ghi lỗi đã gặp và chỗ hiểu sai vào [`notes.md`](notes.md).
 

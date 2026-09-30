@@ -1,3 +1,7 @@
+# Thông tin riêng — KHÔNG BAO GIỜ commit (repo này công khai): tên server, IP, tên miền nội bộ…
+*.rieng.md
+rieng/
+
 # Secret — KHÔNG BAO GIỜ commit
 .env
 .env.*

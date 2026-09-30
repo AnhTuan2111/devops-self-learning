@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00 — Bản đồ toàn cảnh</title>
 <meta name="description" content="Đường đi đầy đủ của một HTTP request, từ lúc gõ Enter tới lúc code của bạn chạy: cấu trúc URL, bốn khái niệm nền, bản đồ 9 chặng, bảng tra triệu chứng có cột “ai viết ra”, bản chất của chứng chỉ TLS và những sự cố do thời gian tự gây ra.">
-<link rel="stylesheet" href="../../assets/style.css?v=45595531">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00">
@@ -276,7 +276,8 @@ tuyến được ra Internet.</figcaption>
 
 <p>Hệ quả của việc không định tuyến ra ngoài là rất lớn và sẽ quay lại ở phụ lục IPv6: một máy chỉ có
 địa chỉ <code>192.168.x.x</code> thì không ai trên Internet có thể chủ động gọi tới nó, và đó chính là lý
-do về sau bạn phải thuê VPS có IP công khai thay vì chạy server ở nhà. Chi tiết nằm ở
+do một server thật phải đặt ở nơi có IP công khai — trong một trung tâm dữ liệu hay trên một VPS
+— chứ không chạy được trên laptop ở nhà. Chi tiết nằm ở
 <a href="ipv4-vs-ipv6.html">phụ lục IPv4, IPv6 và NAT</a>.</p>
 
 <div class="callout deep">
@@ -336,7 +337,7 @@ thể chọn gắn vào <code>127.0.0.1</code> (chỉ nhận kết nối từ tr
 là điều kiện hay bị bỏ sót nhất, bởi vì từ phía người gọi, thiếu <span class="stg">3</span> trông giống hệt thiếu <span class="stg">1</span>: cả hai đều
 cho ra <code>refused</code>. Nó cũng là lỗi kinh điển nhất khi bắt đầu đóng gói ứng dụng vào Docker, nơi
 "cửa hông" của container không phải là cửa hông của máy bạn. Cơ chế này được mổ xẻ trọn vẹn ở
-<a href="../09-ip-localhost-0000/">Bài 09</a>.</p>
+<a href="../04-port-va-publish/">Bài 04</a>.</p>
 
 <div class="callout warn">
   <span class="label">Thói quen phải bỏ từ hôm nay</span>
@@ -412,7 +413,7 @@ VPS, và ở giữa là Internet — một vùng mà bạn không kiểm soát �
   │     cửa HÔNG ← chỉ app gọi được                         │
   └─────────────────────────────────────────────────────────┘</code></pre>
 <figcaption><b>Hình 5</b> Bản đồ 9 chặng của một HTTPS request. Chặng <span class="stg">1</span>–<span class="stg">5</span> chạy trên máy người dùng,
-chặng <span class="stg">6</span>–<span class="stg">9</span> chạy trên VPS. Mọi công cụ trong lộ trình đều được gắn vào một hoặc vài chặng trên hình
+chặng <span class="stg">6</span>–<span class="stg">9</span> chạy trên server. Mọi công cụ trong lộ trình đều được gắn vào một hoặc vài chặng trên hình
 này.</figcaption>
 </figure>
 
@@ -848,8 +849,8 @@ làm cho nó tự hết hạn thật sớm.</p>
   </figure>
   <p>Một quy trình hiếm khi chạy sẽ âm thầm mục ruỗng: môi trường thay đổi, người viết nghỉ việc, lệnh cũ
   không còn đúng — và không ai phát hiện cho tới đúng hôm cần tới nó. Nguyên tắc này sẽ gặp lại ở
-  <a href="../29-secret-va-backup/">Bài 29</a> (diễn tập khôi phục backup) và
-  <a href="../35-zero-downtime-va-rollback/">Bài 35</a> (rollback).</p>
+  <a href="../09-volume-va-du-lieu/">Bài 09</a> (diễn tập khôi phục backup) và
+  <a href="../23-cd-va-rollback/">Bài 23</a> (rollback).</p>
 </div>
 
 <h3 id="dns-long-tin">DNS là gốc rễ của lòng tin — và điều đó đáng sợ</h3>
@@ -905,7 +906,7 @@ phòng thủ cần làm, xếp theo thứ tự ưu tiên:</p>
   việc bảo vệ tài khoản DNS.</p>
 </div>
 
-<p>Việc <span class="stg">2</span> và <span class="stg">3</span> sẽ được làm thật ở <a href="../27-domain-va-dns-that/">Bài 27</a>–<a href="../28-https-lets-encrypt/">28</a>.</p>
+<p>Việc <span class="stg">2</span> và <span class="stg">3</span> sẽ được làm thật ở <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
 
 <p>Cuối cùng, để giữ bức tranh cân bằng: <strong>khi kẻ xấu KHÔNG nắm DNS</strong> — ví dụ hắn ngồi trên
 mạng WiFi của quán cà phê và chen vào giữa đường truyền — thì chứng chỉ chặn được hắn hoàn toàn, vì hắn
@@ -950,8 +951,8 @@ thường có ít dữ liệu và ít thời gian hoạt động liên tục hơ
 hai loại công cụ khác hẳn:</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  Tự động gia hạn      →  Bài 28: certbot renew chạy bằng cron/timer
-  Giám sát & cảnh báo  →  Bài 38: báo trước 14 ngày khi cert sắp hết hạn</code></pre>
+<pre class="diagram"><code>  Tự động gia hạn      →  Bài 18: certbot trên server; Bài 30: cert-manager trong cụm
+  Giám sát & cảnh báo  →  Bài 36: báo trước 14 ngày khi cert sắp hết hạn</code></pre>
 <figcaption><b>Hình 14</b> Hai lớp phòng thủ trước sự cố do thời gian: loại bỏ việc làm tay, và phát hiện
 trước khi quá muộn.</figcaption>
 </figure>
@@ -997,8 +998,8 @@ phải một lỗi hiếm gặp mà là một tính chất cố hữu của vi�
 
 <p>Đây là lý do <code>depends_on</code> trong Docker Compose ở dạng mặc định <strong>không đủ</strong>: nó
 chỉ đợi container <em>khởi động</em>, không đợi ứng dụng bên trong <em>sẵn sàng</em>. Cái bẫy đó được mổ
-xẻ ở <a href="../20-docker-compose/">Bài 20</a>, và cách chữa triệt để — healthcheck kết hợp chuyển luồng
-có điều kiện — ở <a href="../35-zero-downtime-va-rollback/">Bài 35</a>.</p>
+xẻ ở <a href="../11-docker-compose/">Bài 11</a>, và cách chữa triệt để — chỉ chuyển request vào khi app báo đã sẵn sàng, tức
+readiness probe của Kubernetes — ở <a href="../28-probe-va-tai-nguyen/">Bài 28</a>.</p>
 
 <h2 id="vi-sao-nginx">9. Tám lý do cần Nginx dù Spring Boot tự chạy được web server</h2>
 
@@ -1126,14 +1127,15 @@ một cái tên rời rạc để học thuộc, mà là một vật được g�
 nhiệm cụ thể và một kiểu hỏng cụ thể. Hình 18 là tấm bản đồ ấy nhìn theo góc của lộ trình.</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  Linux      → cái máy ở chặng 6, 7, 8, 9 chạy trên nền gì
-  Networking → chặng 2 và 3
-  Docker     → cách đóng gói chặng 8 và 9 cho gọn
-  Nginx      → chặng 7
-  VPS        → cái hộp chứa toàn bộ nửa dưới sơ đồ
-  HTTPS      → chặng 4
-  CI/CD      → cách thay mới chặng 8 mà không phải làm tay
-  Monitoring → cách biết chặng nào đang hỏng, trước khi sếp nhắn tin</code></pre>
+<pre class="diagram"><code>  Nền tối thiểu → cái máy ở chặng 6, 7, 8, 9 thật ra là gì
+  Docker        → cách đóng gói chặng 8 và 9, chạy ở đâu cũng như nhau
+  Server thật   → nửa dưới sơ đồ trên một máy thật: Nginx ở chặng 7,
+                  HTTPS ở chặng 4, tên miền ở chặng 2
+  GitLab CI/CD  → cách thay mới chặng 8 mà không phải làm tay
+  Kubernetes    → chạy chặng 7, 8, 9 trên cả một cụm máy, tự dựng lại
+                  khi một phần hỏng
+  Rancher       → nhìn thấy cả cụm, và biết chặng nào đang hỏng trước
+                  khi sếp nhắn tin</code></pre>
 <figcaption><b>Hình 18</b> Mỗi module của lộ trình gắn vào một hoặc vài chặng của bản đồ 9 chặng.</figcaption>
 </figure>
 
@@ -1146,7 +1148,7 @@ là gì, hệ điều hành làm gì trên nó, và vì sao khi một process ch
     <li><a href="phan-tich-output.html">Mổ băng output thật</a> — từng dòng của <code>nslookup</code>,
     <code>curl -v</code> và <code>openssl</code>, chạy trên chính máy học viên</li>
     <li><a href="ipv4-vs-ipv6.html">Phụ lục: IPv4, IPv6 và NAT</a> — vì sao địa chỉ IP cạn kiệt, và vì sao
-    bạn <em>phải</em> thuê VPS thay vì chạy server ở nhà</li>
+    server không thể chạy trên laptop ở nhà</li>
   </ul>
 </div>
 
@@ -1212,11 +1214,11 @@ không cần đọc hết ngay; hãy dùng chúng như tài liệu tra cứu khi
 </nav>
 
 <footer class="page">
-  <p>Bài 00 · Module 0 — Nền tảng · DevOps Self-Learning</p>
+  <p>Bài 00 · Module 0 — Nền tảng tối thiểu · DevOps Self-Learning</p>
 </footer>
 
 </div>
 
-<script src="../../assets/app.js?v=45595531"></script>
+<script src="../../assets/app.js?v=c4b75b55"></script>
 </body>
 </html>

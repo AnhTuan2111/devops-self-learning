@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00 — Mổ băng output thật</title>
 <meta name="description" content="Đọc từng dòng output thật của nslookup, curl -v, openssl và time chạy trên máy học viên. Mỗi chỗ lệch so với tài liệu mẫu được giải thích như một dữ kiện về DNS, TCP, TLS, HTTP và shell.">
-<link rel="stylesheet" href="../../assets/style.css?v=45595531">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00-output">
@@ -186,7 +186,7 @@ gây hiểu nhầm: không có gì lan đi cả; thứ thực sự xảy ra là 
   non-authoritative  →  từ cache, ĐÚNG TẠI THỜI ĐIỂM NÓ ĐƯỢC LƯU</code></pre>
   <p>Bạn sửa bản ghi trong 1 giây, nhưng các cache vẫn đọc bản cũ cho tới khi TTL hết hạn. Cách
   làm chuyên nghiệp là <em>hạ TTL xuống thấp vài ngày trước</em> khi định đổi, rồi mới đổi.
-  <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../11-dns/">Bài 11</a> và <a href="../27-domain-va-dns-that/">Bài 27</a>.</p>
+  <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
 </div>
 
 <h3 id="dns-azure"><code>Address: 20.205.243.166</code> — nhìn IP đoán hạ tầng</h3>
@@ -226,7 +226,7 @@ suy đoán về "server chết" hay "firewall chặn" đều vô nghĩa ở bư�
   vô ích, nhưng sinh ra một cái bẫy thực tế: nếu bạn tra một tên miền <em>trước khi</em> kịp tạo
   bản ghi, rồi tạo bản ghi xong tra lại, bạn vẫn có thể nhận NXDOMAIN thêm một lúc nữa — không phải
   vì bản ghi sai, mà vì cache vẫn đang nhớ câu "không có" cũ. Ta sẽ gặp lại tình huống này khi trỏ
-  tên miền thật ở <a href="../27-domain-va-dns-that/">Bài 27</a>.</p>
+  tên miền cho service ở <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
 </div>
 
 </section>
@@ -428,7 +428,7 @@ gõ cửa phòng nào.</p>
   nào, khi cả 10 cùng đến từ một IP và cùng gõ port 443?</p>
   <p><strong>Bằng port phía client.</strong> Mỗi tab một ephemeral port khác nhau, nên mỗi tab là
   một bộ bốn khác nhau. Server nhìn cả bốn thành phần để biết gói tin nào thuộc kết nối nào.
-  <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../10-port-va-socket/">Bài 10</a>.</p>
+  <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../15-linux-tren-server/">Bài 15</a>, khi lệnh <code>ss</code> liệt kê từng kết nối đang mở.</p>
 </div>
 
 <h3 id="dhcp">Một phát hiện bất ngờ: IP nội bộ đã đổi</h3>
@@ -704,7 +704,7 @@ chính là lý do <span class="stg">1</span> trong danh sách "tám lý do cần
 Cloudflare về máy gốc là <em>một kết nối riêng</em>, có thể được mã hóa bằng một chứng chỉ khác —
 hoặc, ở cấu hình yếu nhất mà Cloudflare cho phép, hoàn toàn không mã hóa, trong khi người dùng vẫn
 thấy ổ khóa. Đây là một trong những mặt trái của proxy mà lộ trình sẽ nói thẳng khi tới phần HTTPS
-thật ở <a href="../28-https-lets-encrypt/">Bài 28</a>.</p>
+thật ở <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
 
 <h3 id="hieu-sai-chung-chi">Ba chỗ hiểu sai về chứng chỉ, đã sửa trong buổi học</h3>
 
@@ -821,7 +821,7 @@ cho con số 2,155s này (xem đính chính ở <a href="ipv4-vs-ipv6.html">ph�
   <p><strong>Cùng một cơ chế mạng có thể biểu hiện rất khác nhau tùy hệ điều hành.</strong></p>
   <p>Đó là một lý do nữa để deploy lên Linux và học trên Linux, chứ không dựa vào cảm nhận từ máy
   Windows. Thí nghiệm đối chứng — chạy đúng lệnh này trong WSL Ubuntu rồi so với 2,155s — sẽ làm ở
-  <a href="../02-dung-phong-lab/">Bài 02</a>, khi phòng lab Linux được dựng lại.</p>
+  <a href="../02-phong-lab-wsl-docker/">Bài 02</a>, khi phòng lab Linux được dựng lại.</p>
 </div>
 
 </section>
@@ -882,9 +882,9 @@ gây lỗi cạnh nhau trong ba shell mà người học đang có trên cùng m
   toàn khác. Shell không phải một "cửa sổ gõ lệnh" trung lập; nó là một trình thông dịch có cú pháp
   riêng, và dòng lệnh bạn gõ được hiểu theo cú pháp của shell đang chạy.</p>
   <p>Đây không phải chuyện vặt — nó là một trong những nguyên nhân gây lỗi phổ biến nhất trong CI/CD:
-  script chạy ngon trên máy mình, đẩy lên GitHub Actions chạy trên Ubuntu, và gãy vì
-  <strong>shell khác</strong>. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../08-package-env-shell-script/">Bài 08</a> và
-  <a href="../31-github-actions-co-ban/">Bài 31</a>.</p>
+  script chạy ngon trên máy mình, đẩy lên GitLab CI chạy trong một container Linux, và gãy vì
+  <strong>shell khác</strong>. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../02-phong-lab-wsl-docker/">Bài 02</a> và
+  <a href="../20-gitlab-ci-co-ban/">Bài 20</a>.</p>
 </div>
 
 <h3 id="co-s">Và một bẫy nhỏ nữa: cờ <code>-s</code></h3>
@@ -1021,6 +1021,6 @@ nào.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=45595531"></script>
+<script src="../../assets/app.js?v=c4b75b55"></script>
 </body>
 </html>
