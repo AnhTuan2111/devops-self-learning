@@ -305,7 +305,16 @@ trang bài giảng chính tối thiểu **4 khối ảnh**, mỗi trang phụ t�
    mềm chạy thật trên máy** (như trang lỗi Nginx ở Bài 00 — chạy Nginx thật để lấy 404/502/504).
    Không dùng ảnh không rõ giấy phép. Trang chặn bot (403) thì **không vượt**, tìm bản khác.
 2. **Tùy biến theo phong cách bài** (`python scripts/anh/hau-ky.py`): ảnh chụp thật chuyển hai
-   tông mực/giấy; ảnh chụp màn hình giữ màu (`--giu-mau`) và được đánh dấu bằng khung
+   tông mực `#151515` / **mặt đọc `#fffdf8`** — tông sáng phải trùng `--surface` của khung tab, nơi
+   mọi ảnh nằm, **không phải** `--paper` `#f3eee4` của nền trang (dùng `--paper` thì nền ảnh thành ô
+   be nhạt trên mặt đọc; đã mắc 30/09/2026). **Người học đã chốt kiểu này** (30/09/2026, sau khi xem thử bốn kiểu: hai tông,
+   màu gốc, màu dịu, tuỳ từng ảnh): ảnh màu gốc bị lạc vì màu không nhất quán với phong cách, và
+   màu ảnh tranh với đỏ/vàng/lam mang nghĩa của trang. Đừng đề xuất lại ảnh màu cho ảnh chụp thật.
+   **Ảnh chụp đồ vật có nền cũ** (xám, chuyển sắc, có bóng, có viền màu) phải **tách nền** trước
+   (`scripts/anh/tach-nen.py`, bốn cách — đọc đầu tệp để chọn), để sau hai tông nền thành đúng màu
+   mặt đọc, không còn "ô nền" lạc trên trang. Xem tận mắt mặt nạ: mô hình tách nền hay bỏ mất nhãn chữ,
+   đế trưng bày, và hỏng với vật dài mảnh. **Không** tách nền ảnh chụp cảnh (trung tâm dữ liệu,
+   bảo tàng, chân dung) — nền ở đó là thông tin. Ảnh chụp màn hình giữ màu (`--giu-mau`) và được đánh dấu bằng khung
    đỏ/lam/vàng (`scripts/anh/danh-dau.js`, chạy qua Playwright). **Không vẽ nhãn chữ vào ảnh**
    (người học phản ánh 30/09/2026): ảnh hiện ở 2/3 cột nên chữ vẽ trong ảnh nhỏ lại tới mức không
    đọc được. Nói khung nào là gì ngay trong chú thích, bằng ô màu vẽ bằng CSS:
@@ -357,6 +366,11 @@ phải; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền
 - Moholy-Nagy, typophoto, "tempo", thanh kẻ lề trái: exhibitions.letterformarchive.org/bauhaus/walkthroughs/typophoto-in-moholy-nagy-s-painting-photography-film
 - Mốc thời gian của trường: tate.org.uk/art/art-terms/b/bauhaus
 - Vì sao neo-brutalism khác Bauhaus: nngroup.com/articles/neobrutalism/
+- Ba bài người học gửi thêm (30/09/2026): betaviet.com/phong-cach-bauhaus/ (tỉ lệ đáng dùng nhất:
+  nền trắng–đen–xám chiếm khoảng 50–65%, ba màu cơ bản chỉ khoảng 15–20% làm điểm nhấn — lý do
+  ảnh chụp thật để hai tông trung tính) · mymodernmet.com/what-is-bauhaus-art-movement/ (mặt phẳng
+  phẳng xếp chồng gợi chiều sâu, ít trang trí, poster chữ đậm + khối màu) · mikotech.vn/bauhaus-la-gi/
+  (bảng màu giới hạn, sans-serif, hình học cơ bản). Cả ba **không** nói gì về nhiếp ảnh.
 
 ## Trạng thái hiện tại
 

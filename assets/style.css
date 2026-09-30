@@ -555,7 +555,8 @@ figure.fig figcaption b, table caption b {
 
 /* =========================================================================
    ẢNH MINH HOẠ — đánh số riêng "Ảnh N" (sơ đồ là "Hình N").
-   Ảnh chụp thật đã hậu kỳ hai tông mực/giấy (nhiếp ảnh đen trắng kiểu Bauhaus);
+   Ảnh chụp thật đã hậu kỳ hai tông mực/mặt đọc (nhiếp ảnh đen trắng kiểu Bauhaus) — tông sáng
+   trùng --surface của khung tab, nên nền ảnh vật thể (đã tách nền) biến mất vào trang;
    ảnh chụp màn hình giữ màu. Nguồn ảnh gom ở mục "Nguồn ảnh" cuối bài, không đặt dưới ảnh.
    Không bóng, không bo góc: một thanh kẻ đen phía trên là đủ để tách ảnh khỏi chữ.
    ========================================================================= */
@@ -563,7 +564,7 @@ figure.fig figcaption b, table caption b {
 figure.photo { margin: 28px 0 30px; }
 figure.photo img {
   display: block; width: 100%; height: auto; max-width: 100%;
-  border-top: var(--rule-m) solid var(--ink); background: var(--paper);
+  border-top: var(--rule-m) solid var(--ink); background: var(--surface);
 }
 figure.photo.shot img { border: var(--rule-s) solid var(--ink); border-top-width: var(--rule-m); }
 figure.photo.small img { width: auto; max-width: min(100%, 360px); }
@@ -601,7 +602,7 @@ blockquote.pull p::before {
 .photo-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .photo-row.n3 { grid-template-columns: minmax(0, 1fr); }
 .photo-row figure { margin: 0; }
-.photo-row img { display: block; width: 100%; height: auto; border-top: var(--rule-m) solid var(--ink); background: var(--paper); }
+.photo-row img { display: block; width: 100%; height: auto; border-top: var(--rule-m) solid var(--ink); background: var(--surface); }
 .photo-row.shots img { border: var(--rule-s) solid var(--ink); border-top-width: var(--rule-m); }
 .photo-row .lbl {
   display: flex; align-items: center; gap: 8px; margin-top: 8px;
