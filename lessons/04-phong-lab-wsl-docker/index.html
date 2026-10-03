@@ -56,7 +56,7 @@ bash: dmesg: command not found</code></pre>
 </div>
 
 <p>Phần Bài 03 dạy về signal, OOM killer và systemd là lý thuyết đúng, nhưng thứ bạn tận mắt thấy mới là bản mô
-phỏng. Bảng 1 gom những chỗ hở đó.</p>
+phỏng. Bảng 1 gom những chỗ đó lại.</p>
 
 <div class="table-scroll">
 <table>
@@ -94,27 +94,16 @@ Docker, công cụ của Module 1, đứng ngay sau vì nó cũng cần kernel �
 <div class="callout">
   <span class="label">Bài này trả lời bốn câu</span>
   <ol>
-    <li>Máy ảo là gì, và WSL2 đặt một kernel Linux thật vào máy mình bằng cách nào?</li>
-    <li>Điều khiển máy Linux đó bằng gì: terminal, shell, lệnh, và cách đi lại giữa các thư mục?</li>
+    <li>Máy ảo là gì, và WSL2 đặt một kernel Linux thật vào máy mình bằng cách nào? Lab 1 cài Ubuntu và tìm
+    bằng chứng của kernel Linux; Lab 4 gửi signal thật.</li>
+    <li>Điều khiển máy Linux đó bằng gì: terminal, shell, lệnh, và cách đi lại giữa các thư mục? Lab 2 đi lại
+    giữa các thư mục và sửa tệp.</li>
     <li>Output và lỗi của một lệnh đi đâu, và các ký hiệu <code>&gt;</code>, <code>2&gt;/dev/null</code>,
-    <code>|</code> đã gặp ở Bài 00, 01, 03 nghĩa là gì?</li>
+    <code>|</code> đã gặp ở Bài 00, 01, 03 nghĩa là gì? Lab 3 tách kết quả khỏi lỗi.</li>
     <li>Docker Desktop đặt Docker ở đâu trong máy Linux đó, và vì sao lệnh <code>docker</code> có thể báo không gọi
-    được daemon?</li>
+    được daemon? Lab 5 chạy hello-world; Lab 6 tắt daemon rồi sửa.</li>
   </ol>
-</div>
-
-<div class="table-scroll">
-<table>
-  <caption><b>Bảng 2</b> Câu hỏi nào được trả lời ở tab nào, và lab nào cho bằng chứng tận mắt.</caption>
-  <thead><tr><th>Câu</th><th>Trả lời ở</th><th>Bằng chứng</th></tr></thead>
-  <tbody>
-    <tr><td>1 · Máy ảo, WSL2</td><td><a href="#wsl2">WSL2</a></td><td>Lab 1, Lab 4: signal thật</td></tr>
-    <tr><td>2 · Terminal, shell, lệnh</td><td><a href="#shell">Shell</a></td><td>Lab 2: đi lại, sửa tệp</td></tr>
-    <tr><td>3 · Output và lỗi đi đâu</td><td><a href="#luong-vao-ra">Luồng vào ra</a></td><td>Lab 3: tách stdout khỏi stderr</td></tr>
-    <tr><td>4 · Docker Desktop, daemon</td><td><a href="#docker-desktop">Docker Desktop</a></td><td>Lab 5: hello-world. Lab 6: tắt daemon rồi sửa</td></tr>
-    <tr><td>Cột phải của Hình 1</td><td><a href="#lab">Lab</a></td><td>Lab 7: phép đo đối chứng</td></tr>
-  </tbody>
-</table>
+  <p>Cột phải của Hình 1 được điền ở Lab 7, phép đo đối chứng.</p>
 </div>
 
 <h2 id="can-hoc-truoc">Cần đã học trước</h2>
@@ -127,7 +116,7 @@ Docker, công cụ của Module 1, đứng ngay sau vì nó cũng cần kernel �
   <li><strong>Service, daemon, systemd là PID 1.</strong> <a href="../03-may-tinh-va-he-dieu-hanh/#service">Bài 03, tab Service</a></li>
   <li><strong><code>refused</code></strong> và con số 2,155 giây. <a href="../01-ip-port-listen-firewall/#ket-noi-tcp">Bài 01, tab Kết nối TCP</a> · <a href="../01-ip-port-listen-firewall/#lab">tab Lab</a></li>
   <li><strong>Lệnh <code>openssl … 2&gt;/dev/null</code></strong> đọc chứng chỉ. <a href="../00-ban-do-toan-canh/#lab">Bài 00, tab Lab</a></li>
-  <li><strong>Nửa phía server của bản đồ</strong>, chặng 6 tới 9. <a href="../00-ban-do-toan-canh/#phia-server">Bài 00, tab Phía server</a></li>
+  <li><strong>Nửa phía server của bản đồ</strong>: firewall của server, Nginx, ứng dụng, database. <a href="../00-ban-do-toan-canh/#phia-server">Bài 00, tab Phía server</a></li>
 </ul>
 
 </section>
@@ -143,12 +132,12 @@ cứng, và chương trình phải xin kernel làm hộ qua syscall.</p>
 <h2 id="vi-sao-kernel-linux">Vì sao phải là chính kernel Linux</h2>
 
 <p>Mọi dòng ở cột phải của Bảng 1 là việc của kernel Linux: signal do kernel gửi, OOM killer là một phần của
-kernel, <code>dmesg</code> đọc thông báo kernel tự ghi. Chúng không phải ứng dụng để "cài thêm" lên Windows. Hơn nữa,
-chương trình biên dịch cho Linux, như bash hay Docker, nói chuyện với kernel bằng bộ syscall của Linux, mà kernel
-Windows không hiểu bộ đó.</p>
+kernel, <code>dmesg</code> đọc thông báo kernel tự ghi. Vì vậy không thể cài chúng lên Windows như cài thêm một ứng
+dụng. Hơn nữa, chương trình biên dịch cho Linux, như bash hay Docker, nói chuyện với kernel bằng bộ syscall của Linux,
+mà kernel Windows không hiểu bộ đó.</p>
 
 <p>Vậy cần một kernel Linux, nhưng Bài 03 còn nói chỉ một kernel nắm phần cứng, và trên máy bạn đó là kernel
-Windows. Lịch sử đã thử ba lối thoát: biên dịch lại từng chương trình Linux cho Windows (Git Bash ra đời như vậy), dịch
+Windows. Đã có ba cách được thử: biên dịch lại từng chương trình Linux cho Windows (Git Bash ra đời như vậy), dịch
 từng syscall Linux sang lời gọi của Windows (WSL thế hệ đầu), hoặc chạy hẳn một kernel Linux trong máy ảo.
 <a href="lich-su-wsl.html">Phụ lục lịch sử WSL</a> kể vì sao hai cách đầu không đủ; tab này đi vào cách thứ ba, cách
 của WSL2.</p>
@@ -167,7 +156,7 @@ của WSL2.</p>
 <p>Cơ chế dựa vào <strong>ảo hoá phần cứng</strong> của CPU (Intel gọi là VT-x, AMD gọi là AMD-V). Khi bật, CPU có
 thêm một mức đặc quyền cao hơn cả kernel mode của Bài 03, và hypervisor chạy ở mức đó. Kernel khách vẫn chạy ở
 kernel mode nhưng chỉ trong phần tài nguyên được chia; mỗi khi nó chạm ra ngoài phần đó, chẳng hạn tới một thiết
-bị thật, CPU dừng nó lại và trao quyền cho hypervisor quyết định. Nhờ vậy hai kernel cùng sống trên một máy: mỗi
+bị thật, CPU dừng nó lại và trao quyền cho hypervisor quyết định. Nhờ vậy hai kernel cùng chạy trên một máy: mỗi
 kernel độc quyền phần của mình, hypervisor độc quyền việc chia. Khi Hyper-V bật, chính Windows cũng chạy bên trên
 hypervisor, cạnh các máy ảo.</p>
 
@@ -247,12 +236,12 @@ $ ps -p 1 -o pid,comm
 thì cài đặt dừng ở lỗi <code>0x80370102</code>. Như hàng vàng của Ảnh 1, tệp lab nên đặt trong thư mục của Linux.
 Và WSL2 là phòng lab chứ không phải server: tài liệu của Microsoft ghi rõ ngay cả service do systemd quản lý cũng
 không giữ máy ảo sống. Trên bản đồ của <a href="../00-ban-do-toan-canh/#phia-server">Bài 00</a>, WSL2 là chỗ dựng
-lại nửa phía server: từ Bài 05, chặng <span class="stg">7</span>, <span class="stg">8</span> và
-<span class="stg">9</span> sẽ chạy trong máy ảo này, trước khi lên server thật ở Module 2.</p>
+lại nửa phía server: từ Bài 05, Nginx, ứng dụng và database sẽ chạy trong máy ảo này, trước khi lên server thật ở
+Module 2.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
-  <p>Câu 1: máy ảo là máy tính dựng bằng phần mềm, có kernel riêng; hypervisor dựa vào ảo hoá phần cứng của CPU để
+  <p>Máy ảo là máy tính dựng bằng phần mềm, có kernel riêng; hypervisor dựa vào ảo hoá phần cứng của CPU để
   chia một máy thật cho nhiều kernel. WSL2 là một máy ảo nhẹ do Windows tự quản, chạy kernel Linux thật do Microsoft
   biên dịch; Ubuntu là distro đặt bộ chương trình lên kernel đó.</p>
   <p>Nhưng máy này không có cửa sổ, cũng không có chuột. Ra lệnh cho nó bằng gì?</p>
@@ -335,7 +324,7 @@ con số này để đọc ra process chết vì signal nào.</p>
 
 <p>Bước 4 phải trả lời: chữ <code>ls</code> ứng với tệp nào trên đĩa? Bash đọc biến môi trường
 <strong>PATH</strong>, một danh sách thư mục ngăn cách bằng dấu hai chấm, rồi tìm lần lượt; thư mục đầu tiên có tệp
-tên <code>ls</code> thắng. PATH là biến môi trường nên, như Bài 03 đã nói, mỗi process mang một bản sao và process
+tên <code>ls</code> được dùng. PATH là biến môi trường nên, như Bài 03 đã nói, mỗi process mang một bản sao và process
 con thừa kế nó.</p>
 
 <figure class="fig">
@@ -378,11 +367,11 @@ không phải <code>\</code>, và phân biệt hoa thường: <code>/etc</code> 
 
 <p>Đây là dòng "đường dẫn tương đối tính từ đây" trong Hình 6 của Bài 03. Cùng lệnh <code>cat ghi-chu.txt</code>:
 đứng ở <code>/home/ten</code> thì mở <code>/home/ten/ghi-chu.txt</code>; sau <code>cd /etc</code> thì nhận <code>No such
-file or directory</code>. Bảng 3 là vốn lệnh tối thiểu mà các bài Docker cần.</p>
+file or directory</code>. Bảng 2 là vốn lệnh tối thiểu mà các bài Docker cần.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 3</b> Vốn lệnh tối thiểu.</caption>
+  <caption><b>Bảng 2</b> Vốn lệnh tối thiểu.</caption>
   <thead><tr><th>Lệnh</th><th>Làm gì</th><th>Thường dùng</th></tr></thead>
   <tbody>
     <tr><td><code>pwd</code></td><td>In thư mục làm việc của bash</td><td><code>pwd</code></td></tr>
@@ -413,7 +402,7 @@ lỗi thì lỗi đó có quyền với cả máy, nên chỉ thêm <code>sudo</
 
 <div class="callout ok">
   <span class="label">Chốt</span>
-  <p>Câu 2: terminal hiện chữ và chuyển phím; bash đọc dòng lệnh, tách thành tên lệnh và tham số, tìm chương trình
+  <p>Terminal hiện chữ và chuyển phím; bash đọc dòng lệnh, tách thành tên lệnh và tham số, tìm chương trình
   theo PATH, rồi nhờ kernel sinh process con chạy nó và lấy exit status. Đường dẫn tương đối tính từ thư mục làm việc
   của process, nên <code>cd</code> phải là builtin; <code>sudo</code> chạy đúng một lệnh bằng root.</p>
   <p>Process con in kết quả ra đâu, và vì sao lệnh đọc chứng chỉ ở Bài 00 phải thêm
@@ -467,10 +456,10 @@ lrwx------ 1 ten ten 64 … 255 -&gt; /dev/pts/0</code></pre>
   bash đang chạy trong đó; số 255 là bản bash tự giữ thêm.</figcaption>
 </figure>
 
-<p><code>pts</code> là <em>pseudo-terminal</em>, terminal giả lập, họ hàng của <code>tty</code> ở Ảnh 2. Java cũng đi
-qua ba số này: <code>System.in</code>, <code>System.out</code>, <code>System.err</code> là 0, 1, 2, và log Spring Boot
-in ra console mặc định vào stdout. Cần hai luồng ra vì kết quả có thể chuyển vào tệp hay sang chương trình khác, còn
-lỗi thì phải tới được mắt người.</p>
+<p><code>pts</code> là <em>pseudo-terminal</em>, terminal giả lập, cùng loại thiết bị terminal với <code>tty</code> ở
+Ảnh 2. Java cũng đi qua ba số này: <code>System.in</code>, <code>System.out</code>, <code>System.err</code> là 0, 1, 2,
+và log Spring Boot in ra console mặc định vào stdout. Cần hai luồng ra vì kết quả có thể được chuyển vào tệp hay sang
+chương trình khác, trong khi lỗi vẫn phải hiện ra cho người đọc.</p>
 
 <h2 id="chuyen-huong">Chuyển hướng: bash đổi số 1, số 2 trước khi chạy lệnh</h2>
 
@@ -481,7 +470,7 @@ tệp.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 4</b> Ký hiệu chuyển hướng của bash. Số đứng trước <code>&gt;</code> là file descriptor; không ghi thì là 1.</caption>
+  <caption><b>Bảng 3</b> Ký hiệu chuyển hướng của bash. Số đứng trước <code>&gt;</code> là file descriptor; không ghi thì là 1.</caption>
   <thead><tr><th>Viết</th><th>Nghĩa</th></tr></thead>
   <tbody>
     <tr><td><code>&gt; tep</code></td><td>Số 1 vào <code>tep</code>; xoá nội dung cũ nếu có</td></tr>
@@ -493,7 +482,7 @@ tệp.</p>
 </table>
 </div>
 
-<p>Hình 7 chứng minh stdout và stderr là hai ống tách biệt: <code>ls</code> được hỏi một đường dẫn có thật và một
+<p>Hình 7 cho thấy stdout và stderr là hai luồng tách biệt: <code>ls</code> được hỏi một đường dẫn có thật và một
 không, nên có cùng lúc một dòng kết quả và một dòng lỗi.</p>
 
 <figure class="fig">
@@ -508,7 +497,7 @@ $ cat ketqua.txt
 
 $ ls /etc/hostname /khong-co 2&gt; /dev/null
 /etc/hostname</code></pre>
-  <figcaption><b>Hình 7</b> Một lệnh, hai ống (output kỳ vọng). Chuyển số 1 vào tệp thì lỗi vẫn hiện, vì số 2 vẫn
+  <figcaption><b>Hình 7</b> Một lệnh, hai luồng ra (output kỳ vọng). Chuyển số 1 vào tệp thì lỗi vẫn hiện, vì số 2 vẫn
   trỏ vào terminal; chuyển số 2 đi thì chỉ còn kết quả.</figcaption>
 </figure>
 
@@ -528,7 +517,7 @@ $ ls /etc/hostname /khong-co 2&gt; /dev/null
 <code>null(4)</code>). Giờ hai lệnh cũ đọc trọn được. Ở Bài 01, <code>-o</code> là tuỳ chọn của <code>curl</code> để
 ghi nội dung nhận được vào một tệp; trao cho nó <code>/dev/null</code> là vứt nội dung, chỉ giữ lỗi và thời gian mà
 phép đo cần. Ở Bài 00, <code>2&gt;/dev/null</code> vứt mọi thứ <code>openssl s_client</code> ghi ra số 2. Con số 2
-không phải số dòng hay mã lỗi; nó chính là stderr.</p>
+ở đó là file descriptor của stderr, không phải số dòng hay mã lỗi.</p>
 
 <h2 id="pipe">Pipe: nối số 1 của lệnh này vào số 0 của lệnh kia</h2>
 
@@ -561,7 +550,7 @@ lệnh phải vào đầu đọc, không qua tệp nào trên đĩa. Chỉ stdou
 gặp hết dữ liệu nên đóng kết nối và thoát thay vì chờ bạn gõ. Nó in chứng chỉ ra số 1 và các dòng chẩn đoán ra số 2.
 Số 2 bị vứt; chứng chỉ chảy qua pipe thứ hai vào <code>openssl x509</code>, chương trình chỉ in ba trường được hỏi.</p>
 
-<h3 id="cu-phap-cua-bash">Cú pháp này là của bash, không phải của Windows</h3>
+<h3 id="cu-phap-cua-bash">Cú pháp này thuộc về bash</h3>
 
 <p>Chuyển hướng và pipe do shell thực hiện, nên cú pháp thuộc về shell: đổi shell là đổi ngôn ngữ. cmd.exe không có
 <code>/dev/null</code> mà dùng tên <code>NUL</code>; còn <code>time</code>, trong bash là từ khoá đo thời gian, thì
@@ -577,17 +566,17 @@ A required privilege is not held by the client.</code></pre>
   giờ mới, từ chối, hỏi lại, rồi báo thiếu quyền vì đặt giờ hệ thống cần quyền quản trị.</figcaption>
 </figure>
 
-<p>Không lệnh nào hỏng; chỉ có một câu đúng ngữ pháp bash bị đọc bằng ngữ pháp cmd.exe. Mọi lệnh trong lộ trình
-viết cho bash.</p>
+<p>Bản thân lệnh không sai: một câu đúng cú pháp bash đã bị đọc theo cú pháp của cmd.exe. Mọi lệnh trong lộ trình
+đều viết cho bash.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
-  <p>Câu 3: mỗi process khởi đầu với ba file descriptor, 0 stdin, 1 stdout, 2 stderr, thừa kế từ bash và mặc định trỏ
+  <p>Mỗi process khởi đầu với ba file descriptor, 0 stdin, 1 stdout, 2 stderr, thừa kế từ bash và mặc định trỏ
   vào terminal. Chuyển hướng là bash đổi đích của một số trước khi chạy lệnh: <code>&gt;</code> đổi số 1,
   <code>2&gt;</code> đổi số 2, <code>/dev/null</code> vứt mọi thứ ghi vào; pipe nối số 1 của lệnh trái vào số 0 của
   lệnh phải.</p>
-  <p>Đã có Linux và bash. Mảnh cuối của phòng lab là Docker, và Docker hoá ra cũng là hai process nói chuyện
-  với nhau.</p>
+  <p>Đã có Linux và bash. Mảnh cuối của phòng lab là Docker: lệnh <code>docker</code> gọi tới đâu, và vì sao nó
+  báo lỗi khi Docker Desktop chưa bật?</p>
 </div>
 
 </section>
@@ -703,16 +692,16 @@ của Docker, nó miễn phí cho cá nhân, giáo dục, mã nguồn mở phi t
 10 triệu đô la doanh thu năm; tổ chức lớn hơn dùng cho công việc thì phải trả phí. Quan trọng nhất: server Linux thật
 không có Docker Desktop. Người ta cài thẳng Docker Engine, tức daemon và client cho Linux; <code>dockerd</code> chạy
 như một service do systemd trông coi, và client gọi nó qua cùng <code>/var/run/docker.sock</code>. Trên bản đồ,
-Docker không phải một chặng mà là cách đóng gói và chạy những gì ở chặng <span class="stg">7</span>,
-<span class="stg">8</span>, <span class="stg">9</span>.</p>
+Docker không thêm chặng nào; nó là cách đóng gói và chạy Nginx, ứng dụng và database.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
-  <p>Câu 4: Docker Desktop chạy daemon <code>dockerd</code> trong distro riêng <code>docker-desktop</code> của máy ảo
+  <p>Docker Desktop chạy daemon <code>dockerd</code> trong distro riêng <code>docker-desktop</code> của máy ảo
   WSL2; lệnh <code>docker</code> chỉ là client gửi request Docker API tới daemon qua một địa chỉ, named pipe trên
-  Windows hay Unix socket trên Linux. Docker Desktop tắt thì client vẫn chạy nhưng đầu bên kia không có ai, và lỗi
-  "không kết nối được tới daemon" là <code>refused</code> của thế giới Docker.</p>
-  <p>Bốn câu trả lời đã đủ. Việc còn lại là biến chúng thành output trên chính máy bạn.</p>
+  Windows hay Unix socket trên Linux. Docker Desktop tắt thì client vẫn chạy nhưng đầu bên kia không có ai, nên lỗi
+  "không kết nối được tới daemon" cùng nghĩa với <code>refused</code> ở Bài 01: ở địa chỉ đó không có process nào
+  trả lời.</p>
+  <p>Tab Lab cho bạn tự kiểm từng điều trên chính máy mình.</p>
 </div>
 
 </section>
@@ -810,8 +799,8 @@ echo $?</code></pre>
 
 <p>Cửa sổ 1 in <code>Terminated</code>, <code>echo $?</code> in <code>143</code>. Làm lại với <code>kill -9 &lt;PID&gt;</code>:
 <code>Killed</code>, và <code>137</code>. Theo tài liệu của bash, lệnh chết vì signal số N có exit status 128 cộng N:
-143 là 128 cộng 15 (SIGTERM), 137 là 128 cộng 9 (SIGKILL). Thấy exit status 137 ở đâu là biết process bị SIGKILL, mà
-Bài 03 đã nói ai hay gửi nó: OOM killer.</p>
+143 là 128 cộng 15 (SIGTERM), 137 là 128 cộng 9 (SIGKILL). Thấy exit status 137 là biết process bị SIGKILL, và
+Bài 03 đã nói một bên hay gửi SIGKILL: OOM killer.</p>
 
 <p><code>sleep</code> không có handler. Muốn thấy "được báo trước" như Spring Boot, tạo script dưới đây bằng
 <code>nano ~/lab04/nghe-signal.sh</code> (bản sao ở <code>lab/nghe-signal.sh</code>); <code>trap</code> là builtin
@@ -851,7 +840,8 @@ kết nối được tới daemon, hoặc báo lệnh <code>docker</code> không
 <code>notes.md</code> và trả lời: ai viết ra thông báo, client có đang chạy không, đầu bên kia thiếu gì?</p>
 
 <p><strong>Sửa.</strong> Mở lại Docker Desktop, đợi engine chạy, chạy lại <code>docker version</code>: phần
-<code>Server</code> quay về. Sửa đúng một tầng thì triệu chứng đổi, đúng nguyên tắc của Bài 02.</p>
+<code>Server</code> quay về. Đây là nguyên tắc "sửa một tầng thì triệu chứng đổi" của Bài 02: sửa đúng tầng daemon,
+lỗi kết nối nhường chỗ cho output đầy đủ.</p>
 
 <h2 id="lab-7">Lab 7 — Phép đo đối chứng</h2>
 
@@ -876,7 +866,7 @@ nhau, nên chênh lệch là chênh lệch giữa hai kernel.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 5</b> Triệu chứng, ai viết ra, nguyên nhân, cách sửa.</caption>
+  <caption><b>Bảng 4</b> Triệu chứng, ai viết ra, nguyên nhân, cách sửa.</caption>
   <thead><tr><th>Thấy gì</th><th>Ai viết</th><th>Nguyên nhân</th><th>Sửa</th></tr></thead>
   <tbody>
     <tr><td><code>command not found</code></td><td>bash</td><td>Không thư mục nào trong PATH có chương trình tên đó</td><td>Kiểm tên; <code>sudo apt install</code>; <code>echo $PATH</code></td></tr>
@@ -916,7 +906,7 @@ nhau, nên chênh lệch là chênh lệch giữa hai kernel.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 6</b> Những cách hiểu nghe hợp lý nhưng sai khi dựng phòng lab.</caption>
+  <caption><b>Bảng 5</b> Những cách hiểu nghe hợp lý nhưng sai khi dựng phòng lab.</caption>
   <thead><tr><th>Dễ nghĩ là</th><th>Thực tế</th><th>Xem lại</th></tr></thead>
   <tbody>
     <tr><td>WSL2 là trình giả lập Linux</td><td>WSL2 chạy kernel Linux thật trong máy ảo; dịch syscall là cách của WSL 1</td><td><a href="#wsl2-la-gi">WSL2</a></td></tr>

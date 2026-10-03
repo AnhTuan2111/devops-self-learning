@@ -48,9 +48,9 @@ trình thường được đưa vào máy dưới dạng <strong>thẻ đục l�
 thẻ giấy cứng, mỗi thẻ thường chứa một dòng lệnh, mã hoá bằng vị trí các lỗ đục.</p>
 
 <p>Cách làm này lãng phí đúng thứ đắt nhất. Trong lúc con người thao tác (đặt bộ thẻ, lắp cuộn băng,
-gạt công tắc, đọc kết quả), CPU không làm gì cả. Vấn đề đầu tiên mà hệ điều hành ra đời để giải quyết
-vì vậy không phải bảo mật hay nhiều người dùng, mà là kinh tế: thời gian của máy đắt hơn thời gian của
-người, nên phải bỏ con người ra khỏi khoảng trống giữa hai chương trình.</p>
+gạt công tắc, đọc kết quả), CPU không làm gì cả. Vì vậy vấn đề đầu tiên mà hệ điều hành ra đời để
+giải quyết là vấn đề kinh tế: thời gian của máy đắt hơn thời gian của người, nên phải bỏ con người ra
+khỏi khoảng trống giữa hai chương trình.</p>
 
 <h2 id="chay-theo-lo">Chạy theo lô và chương trình giám sát</h2>
 
@@ -66,7 +66,7 @@ người, nên phải bỏ con người ra khỏi khoảng trống giữa hai ch
 <p>Cơ chế rất đơn giản. Người lập trình nộp bộ thẻ cho nhân viên vận hành; bộ thẻ của nhiều người được
 xếp nối nhau, thường được chép trước lên băng từ để máy đọc nhanh hơn. Chương trình giám sát lần lượt
 nạp và chạy từng job. Khi một job kết thúc, hoặc chạy quá thời gian cho phép, quyền điều khiển quay
-về chương trình giám sát, và nó nạp job tiếp theo. Đây là mầm mống đầu tiên của thứ Bài 03 gọi là
+về chương trình giám sát, và nó nạp job tiếp theo. Đây là dạng sơ khai đầu tiên của thứ Bài 03 gọi là
 kernel: một chương trình đứng giữa máy và chương trình của người dùng, quyết định chương trình nào
 được chạy tiếp theo.</p>
 
@@ -116,8 +116,8 @@ thiết bị và đổi vùng bảo vệ.</p>
   <span class="label">Nối về Bài 03</span>
   <p>Hai cơ chế đó chính là nền của tab <a href="index.html#kernel">Kernel</a>: kernel chạy ở chế độ
   đặc quyền của CPU, mọi chương trình khác ở user space và phải xin qua syscall; mỗi process có vùng
-  nhớ riêng, không đọc được vùng nhớ của process khác. Chúng không sinh ra từ lý thuyết, mà từ việc
-  nhiều job phải chia nhau một bộ nhớ.</p>
+  nhớ riêng, không đọc được vùng nhớ của process khác. Chúng ra đời vì nhiều job phải chia nhau một
+  bộ nhớ.</p>
 </div>
 
 </section>
@@ -187,8 +187,8 @@ vì thế mất một môi trường làm việc mà họ đã quen.</p>
 
 <div class="callout">
   <span class="label">Nối về Bài 03</span>
-  <p>Bộ lập lịch của kernel trong tab <a href="index.html#tai-nguyen">Bốn tài nguyên</a> là hậu duệ trực
-  tiếp của time-sharing: CPU được chia theo lượt, nên khi có quá nhiều process thì không ai bị huỷ, chỉ
+  <p>Bộ lập lịch của kernel trong tab <a href="index.html#tai-nguyen">Bốn tài nguyên</a> kế thừa trực
+  tiếp ý tưởng của time-sharing: CPU được chia theo lượt, nên khi có quá nhiều process thì không ai bị huỷ, chỉ
   phải chờ lâu hơn tới lượt mình. Đó là lý do hết CPU thì app chậm chứ không chết.</p>
 </div>
 
@@ -198,8 +198,8 @@ vì thế mất một môi trường làm việc mà họ đã quen.</p>
 <section class="tab" id="t-unix" data-tab="Unix" data-note="1969, Bell Labs">
 
 <p class="panel-intro">Process trên server của bạn được sinh ra bằng <code>fork()</code> rồi
-<code>execve()</code>, và shell chỉ là một process như mọi process khác. Cả hai điều ấy có một năm sinh và
-một nơi sinh cụ thể.</p>
+<code>execve()</code>, và shell chỉ là một process như mọi process khác. Cả hai điều ấy bắt nguồn từ
+Unix, ở Bell Labs, năm 1969.</p>
 
 <h2 id="unix-1969">Unix (1969): một hệ thống nhỏ, xây quanh process và file</h2>
 
@@ -241,7 +241,7 @@ file, khái niệm process, rồi một bộ công cụ nhỏ để chép, in, x
   System" của Dennis Ritchie.</figcaption>
 </figure>
 
-<p>Hệ quả của thiết kế này lớn hơn vẻ ngoài của nó. Shell không nằm trong kernel và không có đặc quyền
+<p>Thiết kế này có hai hệ quả. Shell không nằm trong kernel và không có đặc quyền
 gì: nó chạy trong user space, dùng đúng những syscall mà mọi chương trình khác dùng. Vì vậy ai cũng có
 thể viết một shell khác (<code>bash</code> là một trong số đó) mà không phải sửa kernel. Và vì mọi lệnh
 đều được sinh ra bằng <code>fork()</code> từ một process có sẵn, mọi process trên máy xếp thành một cây
@@ -293,12 +293,12 @@ và công bố mã nguồn. Ghép kernel đó với các công cụ của GNU th
 lại sự ghép nối đó bằng chính sơ đồ phân tầng của Bài 03.</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  USER SPACE   bash · trình biên dịch · công cụ dòng lệnh   ← dự án GNU (từ 1983)
+<pre class="diagram"><code>  user space   bash · trình biên dịch · công cụ dòng lệnh   ← dự án GNU (từ 1983)
                Nginx · java · PostgreSQL                   ← chương trình của bạn
                               │  syscall
-  KERNEL       Linux                                       ← Linus Torvalds (1991)
+  kernel       Linux                                       ← Linus Torvalds (1991)
                               ▼
-               CPU    RAM    DISK    NETWORK</code></pre>
+               CPU    RAM    Disk    Network</code></pre>
   <figcaption><b>Hình 4</b> Một hệ thống Linux là kernel Linux cộng phần user space mà phần lớn đến từ
   dự án GNU và các dự án khác.</figcaption>
 </figure>
@@ -322,8 +322,8 @@ signal, PID 1) chạy trên Linux gần như nguyên vẹn.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-dau-vet" data-tab="Dấu vết" data-note="còn lại tới hôm nay">
 
-<p class="panel-intro">Năm bước trên không chỉ nằm trong sách sử. Mỗi bước còn để lại dấu vết trên
-server hôm nay, ngay trong những lệnh bạn đã gõ ở Bài 03.</p>
+<p class="panel-intro">Mỗi bước trên còn để lại dấu vết trên server hôm nay, ngay trong những lệnh
+bạn đã gõ ở Bài 03.</p>
 
 <h2 id="con-lai">Những gì còn lại tới hôm nay</h2>
 
@@ -339,7 +339,7 @@ server hôm nay, ngay trong những lệnh bạn đã gõ ở Bài 03.</p>
   chạy làm PID 1 của Unix; trên nhiều bản Linux hôm nay vai trò đó thuộc về systemd.</figcaption>
 </figure>
 
-<p>Ảnh 4 cho thấy cả hệ thống nhỏ tới mức nào, và cũng cho thấy những cái tên đã sống sót. Ngoài
+<p>Ảnh 4 cho thấy cả hệ thống nhỏ tới mức nào, và cũng cho thấy những cái tên vẫn còn được dùng. Ngoài
 <code>init</code> và <code>sh</code>, nhiều dấu vết khác vẫn nằm ngay trong những lệnh bạn gõ ở Bài 03.
 Con số 9 trong <code>kill -9</code> là số hiệu của SIGKILL từ các bản Unix đời đầu, được Linux giữ nguyên.
 Man page vẫn chia theo những phần đánh số của sổ tay Unix: phần 2 là syscall, nên mới có
@@ -366,9 +366,9 @@ Còn chữ <code>tty</code> trong tên thiết bị terminal của Linux nhắc 
 <h2 id="noi-ve-bai-chinh">Nối về bài chính</h2>
 
 <div class="callout ok">
-  <span class="label">Điều phụ lục này muốn để lại</span>
-  <p>Kernel, process, syscall, bộ lập lịch, fork rồi exec: những khái niệm của Bài 03 không phải quy ước
-  tuỳ tiện. Mỗi khái niệm là lời giải cho một vấn đề có thật: máy đắt phải bận, nhiều chương trình phải
+  <span class="label">Tóm lại</span>
+  <p>Kernel, process, syscall, bộ lập lịch, fork rồi exec: mỗi khái niệm của Bài 03 là lời giải cho một
+  vấn đề có thật: máy đắt phải bận, nhiều chương trình phải
   chung một bộ nhớ mà không phá nhau, nhiều người phải chung một CPU mà không ai chờ quá lâu. Khi một app
   chết vì hết RAM ở <a href="index.html#khi-chet">tab Process chết</a>, bạn đang thấy đúng cơ chế đã ra
   đời để giữ cho nhiều chương trình cùng sống trên một máy.</p>

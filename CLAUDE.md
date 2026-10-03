@@ -59,11 +59,12 @@ Bài 00 cũ rời rạc vì 13 mục đứng cạnh nhau như 13 bài nhỏ, kh�
 theo vì có ba câu hỏi đầu bài và các tab đi theo một chuỗi nhân quả. Từ nay mọi trang bài theo khung:
 
 1. **Tab `van-de`**: đoạn nối "Bài trước kết thúc ở câu hỏi: …" (nguyên văn `question`, link tới
-   `#cau-hoi-tiep` của bài trước) · tình huống cụ thể · câu hỏi của bài chia 2–3 câu hỏi con · **bảng
-   "câu hỏi nào trả lời ở tab nào"** · mục **`#can-hoc-truoc`** (khái niệm dùng lại, link về đúng tab).
-2. **Mỗi tab giữa** mở bằng một đoạn nói tab trả lời câu hỏi con nào và dùng lại gì; kết bằng khối
-   `<div class="callout ok"><span class="label">Chốt</span>…</div>`: đáp án rút gọn + câu còn treo dẫn
-   sang tab sau.
+   `#cau-hoi-tiep` của bài trước) · tình huống cụ thể · câu hỏi của bài chia 2–4 câu hỏi con (một danh
+   sách ngắn; **không** kèm bảng "câu hỏi nào trả lời ở tab nào" — bỏ 03/10/2026 vì nó để lộ khung xương và
+   bắt người đọc nhớ số câu) · mục **`#can-hoc-truoc`** (khái niệm dùng lại, link về đúng tab).
+2. **Mỗi tab giữa** mở bằng một câu tự nhiên nối với câu hỏi nó trả lời; kết bằng khối
+   `<div class="callout ok"><span class="label">Chốt</span>…</div>`: tối đa ba câu ngắn, rồi một câu hỏi
+   tự nhiên dẫn sang tab sau. Gọi câu hỏi bằng nội dung của nó, không bằng số ("câu 2", "câu hỏi thứ ba").
 3. **Tab cuối `ket`**: Tự kiểm tra · Những chỗ hay hiểu sai · Kết lại (trả lời trọn câu hỏi, khớp
    `answer`) · khối **`#cau-hoi-tiep`** nêu nguyên văn `question` của bài sau, vì sao đáp án vừa có lại
    sinh ra câu hỏi đó, và link sang bài sau · Nguồn đọc thêm · Nguồn ảnh.
@@ -202,7 +203,15 @@ Khi người học nói "dạy bài tiếp theo" / "học bài NN":
   trên trước khi đưa người học đọc.
 - **Problem → Concept → Tool.** Không bao giờ mở đầu bằng "Docker là...".
   Mở đầu bằng một vấn đề khiến ta cần Docker.
-- **Luôn nối về bản đồ ở Bài 00.** Mỗi công cụ phải được gắn vào một chặng ①–⑨ cụ thể.
+- **Luôn nối về bản đồ ở Bài 00.** Mỗi công cụ phải được gắn vào một chặng cụ thể của bản đồ, và
+  **gọi chặng bằng tên, không bằng số** (người học yêu cầu 03/10/2026: "những cái chặng sử dụng số thì
+  làm sao ai mà nhớ cho hết được, sử dụng lời văn để miêu tả"). Viết "bước hỏi DNS", "bước mở kết nối",
+  "bước bắt tay TLS", "firewall", "Nginx", "ứng dụng", "database", "phía máy người dùng / phía server",
+  "mọi bước trước khi request tới Nginx", "đoạn Nginx chuyển request vào ứng dụng"; câu nền của Bài 00 là
+  "trong cả đường đi, chỉ ứng dụng là code bạn viết". Cấm "chặng 8", "chặng 2 tới 6", lớp `.stg`, và mọi
+  hệ đánh số khác bắt người đọc giữ một bảng tra trong đầu (kiểu "mảnh 3a/3b/3c", "điều kiện 1/2/3").
+  Bước của một quy trình hay chuỗi nhân quả đọc một lần theo thứ tự (lab, bảy bước từ RAM cạn tới 502)
+  thì được đánh số.
 - **Mỗi lab phải có một bước cố tình gây lỗi**, rồi tự sửa. Gặp lỗi có chủ đích ở môi trường
   an toàn là cách duy nhất để sau này không hoảng khi gặp nó trên production.
 - **Đừng liệt kê lệnh.** Giải thích cơ chế, rồi lệnh tự nhiên theo sau.
@@ -284,7 +293,16 @@ nay **sau mỗi lần sửa một bài, đọc lại bài đó bằng đúng hai
    - **Không lặp nguyên văn giữa các bài**: cùng một dòng hiểu sai, cùng một ảnh, chỉ ở một bài (bài sau
      link về). Câu trích nổi (`blockquote.pull`) không đặt sát câu gốc của nó.
    - **Văn phong đều tay giữa các bài:** dấu gạch dài dùng dè dặt (ưu tiên dấu phẩy, ngoặc, hai chấm);
-     không nhấn mạnh bằng CHỮ IN HOA trong văn xuôi (dùng `<strong>`).
+     không nhấn mạnh bằng chữ in hoa, kể cả trong ô bảng, nhãn khối và sơ đồ (dùng `<strong>` dè dặt).
+   - **Viết như một nhà văn, nhà khoa học, một người làm DevOps; không viết kiểu máy** (người học yêu cầu
+     03/10/2026: "đừng viết kiểu AI slop, đừng giật gân quá, đừng bịa và hạn chế ẩn dụ"). Câu khẳng định
+     thẳng, mỗi câu một ý, từ nối nhân quả, ví dụ thật sau mỗi ý trừu tượng. Cấm: đối lập tu từ "không phải
+     X, mà là Y" (trừ khi đang sửa một cách hiểu sai có thật); câu châm ngôn khép đoạn ("Tấm bản đồ chỉ thật
+     sự thuộc về bạn khi…", "Người viết code hỏi…; người vận hành hỏi thêm…"); nhãn và lời giật gân ("lý do
+     cả nghề DevOps tồn tại", "Câu phải thuộc", "bằng chứng toán học", "bất ngờ", "kẻ…", "chân dung…");
+     hình ảnh trang trí ("hai người anh em", "tin tốt một nửa", "mổ băng", "hết kiên nhẫn", "lời trăng
+     trối"). Con số, năm, trích dẫn, định nghĩa chuẩn phải kiểm được nguồn trước khi viết; đã có chuẩn thì
+     dẫn chuẩn (ví dụ định nghĩa DevOps lấy từ IEEE 2675-2021, không tự nói "DevOps không có chuẩn").
 
 Trong **chat** vẫn giữ nhịp đối thoại (chia phần, hỏi, đợi) — nhưng phần giảng trước câu hỏi
 cũng theo năm nhịp trên, không giảng cụt.
@@ -329,10 +347,10 @@ Người học yêu cầu **một kiểu duy nhất**: không chế độ tối,
    - mũi tên, tick, chéo: `<i class="ic ic-r"></i>` · `ic-l` · `ic-yes` · `ic-no`
      (trong câu thì thêm `role="img" aria-label="sang"`; trang trí thì `aria-hidden="true"`)
    - trạng thái: `<i class="stt stt-done"></i>` · `stt-doing` · `stt-todo`
-   - số chặng của bản đồ 9 chặng: `<span class="stg">8</span>`
+   - (lớp `.stg` đánh số chặng đã bỏ 03/10/2026: chặng gọi bằng tên, xem § Nguyên tắc nội dung)
    - nút trước/sau: chữ trong `.dir` **không** kèm mũi tên — CSS tự vẽ; dấu tick của checklist
      cũng do CSS vẽ.
-   Trong README (Markdown) thì **viết thành chữ** ("chặng 8", "7 tới 8", "dẫn tới").
+   Trong README (Markdown) thì **viết thành chữ** ("dẫn tới", "sang").
    Ngoại lệ duy nhất: **nét vẽ bên trong sơ đồ ASCII** (`<pre class="diagram">`, khối ```) và
    **output thật** dán nguyên văn. Emoji thì cấm cả trong sơ đồ.
 9. **Sơ đồ ASCII phải thẳng cột tuyệt đối** (người học chỉ ra khung vỡ 30/09/2026):
@@ -525,7 +543,9 @@ phải; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền
 
 Người học đã nắm và đã dùng được những thứ sau. Các bài sau **nối vào** chúng (gọi đúng tên, link về):
 
-- **Bài 00:** bản đồ chín chặng, "chỉ chặng 8 là code bạn viết"; URL và các phần; DNS, gói tin,
+- **Bài 00:** bản đồ chín chặng (gọi bằng tên), "trong cả đường đi, chỉ ứng dụng là code bạn viết";
+  định nghĩa DevOps theo chuẩn IEEE 2675-2021 / ISO/IEC/IEEE 32675:2022 và nguyên tắc tư duy hệ thống
+  (hiểu hệ thống từ đầu tới cuối); URL và các phần; DNS, gói tin,
   chứng chỉ và CA ở mức khái niệm (chứng chỉ công khai, private key bí mật).
 - **Bài 01:** một máy nhiều địa chỉ IP; port, listen, listen address (127.0.0.1, 0.0.0.0); firewall;
   ba điều kiện để gọi tới được; refused (máy đích còn sống, trả lời ngay) và timeout (không ai trả lời,

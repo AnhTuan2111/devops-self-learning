@@ -28,9 +28,10 @@ Bốn câu hỏi con, mỗi câu một tab trong bài giảng:
 
 ### Cần đã học trước
 
-- Bản đồ chín chặng, và chặng 7 (Nginx) đứng trước chặng 8 (ứng dụng): [Bài 00](../00-ban-do-toan-canh/)
+- Bản đồ chín chặng, và Nginx đứng trước ứng dụng trên server: [Bài 00](../00-ban-do-toan-canh/)
 - HTTP request, response và header: [Bài 00](../00-ban-do-toan-canh/)
-- Port, listen, ba điều kiện để gọi tới được: [Bài 01](../01-ip-port-listen-firewall/)
+- Port, listen, ba điều kiện để gọi tới được (gọi đúng địa chỉ, firewall cho qua, có chương trình
+  listen đúng địa chỉ): [Bài 01](../01-ip-port-listen-firewall/)
 - Refused và timeout: [Bài 01](../01-ip-port-listen-firewall/)
 
 ---
@@ -44,7 +45,7 @@ Bốn câu hỏi con, mỗi câu một tab trong bài giảng:
 | Trang lỗi (error page) | Nội dung một chương trình gửi kèm mã 4xx hoặc 5xx; mỗi chương trình có kiểu trang lỗi riêng, nên giao diện là dấu hiệu nhận ra tác giả. |
 | Header `Server` | Header trong đó chương trình gửi câu trả lời tự ghi tên mình; là manh mối về tác giả, không phải bằng chứng tuyệt đối. |
 | `NXDOMAIN` | Câu trả lời của DNS cho biết tên miền không tồn tại. |
-| Phía sau (upstream) | Máy chủ mà một reverse proxy chuyển request tới; phía sau của Nginx là ứng dụng ở chặng 8. |
+| Phía sau (upstream) | Máy chủ mà một reverse proxy chuyển request tới; phía sau của Nginx là ứng dụng Spring Boot. |
 
 ---
 
@@ -60,17 +61,20 @@ Bốn câu hỏi con, mỗi câu một tab trong bài giảng:
 
 Nhóm cho biết lỗi thuộc về phía nào, **không** cho biết chương trình nào đã viết ra câu trả lời.
 
-Muốn trả về một mã, phải có một chương trình HTTP đã đọc được request, nên **có mã nghĩa là chặng 2
-tới 6 đã chạy tốt**. Lỗi xảy ra trước cuộc trao đổi HTTP thì không bao giờ có mã:
+Muốn trả về một mã, phải có một chương trình HTTP đã đọc được request, nên **có mã nghĩa là mọi
+bước trước khi request tới Nginx đã chạy tốt** (hỏi DNS, mở kết nối, bắt tay TLS, qua firewall). Lỗi
+xảy ra trước cuộc trao đổi HTTP thì không bao giờ có mã. Các bước dưới đây xếp theo thứ tự request
+đi qua:
 
 ```
-chặng 2  đổi tên ra địa chỉ   hỏng: "không tìm thấy tên"     không có mã
-chặng 3  mở kết nối           hỏng: refused hoặc timeout     không có mã
-chặng 4  mã hoá               hỏng: lỗi chứng chỉ            không có mã
-chặng 6  tới server           hỏng: timeout                  không có mã
-─────────────────────────────────────────────────────────────────────
-chặng 7  Nginx                trả lời bằng một MÃ TRẠNG THÁI
-chặng 8  ứng dụng             trả lời bằng một MÃ TRẠNG THÁI
+DNS          đổi tên ra địa chỉ      hỏng: "không tìm thấy tên"  không có mã
+TCP          mở kết nối              hỏng: refused hoặc timeout  không có mã
+TLS          thoả thuận mã hoá       hỏng: lỗi chứng chỉ         không có mã
+HTTP         gửi request
+Firewall     cho gói tin vào server  hỏng: timeout               không có mã
+────────────────────────────────────────────────────────────────────────────
+Nginx        đọc request             trả lời bằng một mã trạng thái
+Spring Boot  đọc request             trả lời bằng một mã trạng thái
 ```
 
 ---
@@ -81,25 +85,25 @@ Một chương trình chỉ viết được thông báo lỗi khi nó còn chạ
 **ai viết ra** là biết request đã đi tới đâu. Khi gặp sự cố, tra theo hàng, rồi bắt đầu nghi ngờ từ
 cột cuối.
 
-| Người dùng thấy | **Ai viết ra** | Chặng | Nghi ngờ đầu tiên |
+| Người dùng thấy | **Ai viết ra** | Chặng liên quan | Nghi ngờ đầu tiên |
 |---|---|---|---|
-| Không tìm thấy tên miền (`ERR_NAME_NOT_RESOLVED`) | **Trình duyệt**, sau câu `NXDOMAIN` của DNS | 2 | Gõ sai, tên miền chưa trỏ về server, hoặc đã hết hạn |
-| Timeout | **Không ai cả**; trình duyệt tự bỏ cuộc | 3, 6 | Máy tắt, sai IP, firewall lặng lẽ bỏ gói tin |
-| Refused (`ERR_CONNECTION_REFUSED`) | **Hệ điều hành** của server từ chối; trình duyệt viết chữ | 3, 7 | Máy sống nhưng không ai listen: Nginx đã tắt |
-| Lỗi chứng chỉ (`ERR_CERT_DATE_INVALID`) | **Trình duyệt** | 4 | Chứng chỉ hết hạn hoặc cấp cho tên miền khác |
-| **502** Bad Gateway | **Nginx** | 7 tới 8 | Ứng dụng đã tắt, gọi sai port, hoặc chưa khởi động xong |
-| **504** Gateway Timeout | **Nginx** | 7 tới 8 | Ứng dụng còn sống nhưng trả lời quá chậm |
-| **503** Service Unavailable | Nginx hoặc ứng dụng | 7, 8 | Quá tải, bảo trì, hoặc bị chặn vì gửi quá nhiều request |
-| **500** Internal Server Error | **Spring Boot** | 8 | Exception trong code: giờ mới đọc log và code |
-| **404** Not Found | Nginx *hoặc* Spring Boot, xem chữ ký | 7, 8 | Sai đường dẫn, hoặc Nginx chuyển nhầm chỗ |
-| **500**, log báo không lấy được kết nối database | Spring Boot | 9 | Database tắt, quá tải, hoặc kết nối mượn mà không trả |
+| Không tìm thấy tên miền (`ERR_NAME_NOT_RESOLVED`) | **Trình duyệt**, sau câu `NXDOMAIN` của DNS | DNS | Gõ sai, tên miền chưa trỏ về server, hoặc đã hết hạn |
+| Timeout | **Không ai cả**; trình duyệt tự bỏ cuộc | Mở kết nối TCP, firewall của server | Máy tắt, sai IP, firewall lặng lẽ bỏ gói tin |
+| Refused (`ERR_CONNECTION_REFUSED`) | **Hệ điều hành** của server từ chối; trình duyệt viết chữ | Mở kết nối TCP tới Nginx | Máy sống nhưng không ai listen: Nginx đã tắt |
+| Lỗi chứng chỉ (`ERR_CERT_DATE_INVALID`) | **Trình duyệt** | Bắt tay TLS | Chứng chỉ hết hạn hoặc cấp cho tên miền khác |
+| **502** Bad Gateway | **Nginx** | Nginx chuyển request vào ứng dụng | Ứng dụng đã tắt, gọi sai port, hoặc chưa khởi động xong |
+| **504** Gateway Timeout | **Nginx** | Nginx chuyển request vào ứng dụng | Ứng dụng còn sống nhưng trả lời quá chậm |
+| **503** Service Unavailable | Nginx hoặc ứng dụng | Nginx, ứng dụng | Quá tải, bảo trì, hoặc bị chặn vì gửi quá nhiều request |
+| **500** Internal Server Error | **Spring Boot** | Ứng dụng | Exception trong code: giờ mới đọc log và code |
+| **404** Not Found | Nginx *hoặc* Spring Boot, xem chữ ký | Nginx, ứng dụng | Sai đường dẫn, hoặc Nginx chuyển nhầm chỗ |
+| **500**, log báo không lấy được kết nối database | Spring Boot | Database | Database tắt, quá tải, hoặc kết nối mượn mà không trả |
 
 **Con số không phải chữ ký.** Ứng dụng cũng có thể tự trả về 502. Xác định tác giả bằng chữ ký
 (giao diện trang, header `Server`, dòng `nginx/1.30.5` ở cuối), rồi mới dùng con số.
 
 ```
-Nginx:   "404 Not Found / nginx/1.30.5"   ← có ký tên: request dừng ở chặng 7
-Spring:  "Whitelabel Error Page" / JSON    ← ứng dụng có nhận: request tới chặng 8
+Nginx:   "404 Not Found / nginx/1.30.5"   ← có ký tên: request dừng ở Nginx
+Spring:  "Whitelabel Error Page" / JSON    ← không có dòng nginx: request đã tới ứng dụng
 ```
 
 Spring Boot không ký tên trong header `Server`, và dòng trạng thái của nó chỉ có con số
@@ -125,20 +129,21 @@ c) ứng dụng trả lời, kể cả bằng trang 500  → Nginx chuyển ra n
 | 500 | Spring Boot | Có | Có stack trace |
 
 ```
-502  →  ĐỪNG mở code. Đi xem: ứng dụng còn chạy không? còn listen 8080 không?
-500  →  GIỜ mới mở code. Đi xem: log ứng dụng, stack trace.
+502  →  Chưa cần mở code. Đi xem: ứng dụng còn chạy không? còn listen 8080 không?
+500  →  Lúc này mới mở code. Đi xem: log ứng dụng, stack trace.
 ```
 
 ---
 
 ## Ba nguyên tắc chẩn đoán
 
-1. **Mã trạng thái là một câu trả lời.** Có mã thì soi chặng 7, 8, 9; không có mã thì soi chặng
-   2, 3, 4, 6. Một câu hỏi có hoặc không chia đôi vùng nghi ngờ.
-2. **Triệu chứng chứng minh các chặng trước.** Lỗi chứng chỉ ở chặng 4 chứng minh DNS và kết nối đã
-   chạy tốt.
-3. **Sửa một tầng thì triệu chứng đổi.** Timeout chuyển thành refused sau khi mở firewall là bằng
-   chứng firewall đã đúng. Vì vậy sửa từng thứ một.
+- **Có mã là đã có người đọc request.** Có mã thì soi từ Nginx trở vào: Nginx, ứng dụng, database.
+  Không có mã thì soi các bước trước Nginx: DNS, mở kết nối TCP, bắt tay TLS, firewall. Một câu hỏi
+  có hoặc không chia đôi vùng nghi ngờ.
+- **Triệu chứng chứng minh các bước trước.** Lỗi chứng chỉ chứng minh DNS đã trả lời và kết nối đã mở,
+  vì bước bắt tay TLS chỉ diễn ra sau hai bước ấy.
+- **Sửa một tầng thì triệu chứng đổi.** Timeout chuyển thành refused sau khi mở firewall là bằng
+  chứng firewall đã đúng. Vì vậy sửa từng thứ một.
 
 **Thời gian cũng là một nguyên nhân:**
 
@@ -168,9 +173,9 @@ curl: (7) Failed to connect to 127.0.0.1 port 9999 after 2076 ms: Could not conn
 curl: (28) Connection timed out after 5007 milliseconds
 ```
 
-Kết quả kỳ vọng: dòng 1 do nslookup viết, thông tin gốc từ DNS (chặng 2); dòng 2 do curl viết, lời
-từ chối từ hệ điều hành máy đích (chặng 3, máy còn sống); dòng 3 do curl viết, **không ai** gửi gì
-về (5007 ms là thời gian curl tự chờ).
+Kết quả kỳ vọng: dòng 1 do nslookup viết, thông tin gốc từ máy chủ DNS (request dừng ở bước hỏi
+DNS); dòng 2 do curl viết, lời từ chối từ hệ điều hành máy đích (request dừng ở bước mở kết nối, máy
+còn sống); dòng 3 do curl viết, **không ai** gửi gì về (5007 ms là thời gian curl tự chờ).
 
 ### Lab 2 — đọc dòng trạng thái và header `Server`
 
@@ -183,13 +188,14 @@ curl -sS -i https://example.com/khong-ton-tai
 ```
 
 Kết quả kỳ vọng: `HTTP/1.1 200 OK` rồi `HTTP/1.1 404 Not Found`, cả hai có `Server: cloudflare` và
-`cf-cache-status: HIT`. Có dòng trạng thái nghĩa là chặng 2 tới 6 đã chạy tốt. Câu trả lời lấy từ
+`cf-cache-status: HIT`. Có dòng trạng thái nghĩa là các bước hỏi DNS, mở kết nối và bắt tay TLS
+đều đã chạy tốt. Câu trả lời lấy từ
 bản lưu sẵn của Cloudflare: header `Server` chỉ cho biết chương trình **cuối cùng** gửi câu trả lời.
 
 ### Lab 3 — tự gây lỗi: gõ sai tên, gọi sai port
 
-Vì sao: cố tình làm hỏng chặng 2 và chặng 3 để thấy rằng khi chưa có cuộc trao đổi HTTP thì không
-có dòng trạng thái nào, dù đã thêm `-i`. Hãy dự đoán trước khi chạy.
+Vì sao: cố tình làm hỏng bước hỏi DNS và bước mở kết nối để thấy rằng khi chưa có cuộc trao đổi
+HTTP thì không có dòng trạng thái nào, dù đã thêm `-i`. Hãy dự đoán trước khi chạy.
 
 ```bash
 curl -sS -i https://khong-ton-tai-dau-nhe-12345.com/
@@ -220,7 +226,7 @@ chữ ký `nginx` nào: chính ứng dụng đã chọn gửi con số 502.
 
 | Dễ nghĩ là | Thực tế |
 |---|---|
-| Lỗi chứng chỉ chắc do DNS không dịch được tên | Lỗi ở chặng 4 **chứng minh** DNS và kết nối đã chạy tốt |
+| Lỗi chứng chỉ chắc do DNS không dịch được tên | Lỗi chứng chỉ **chứng minh** DNS đã trả lời và kết nối đã mở |
 | Thấy 502 thì mở code ra đọc | Ứng dụng không nhận request; log trống. Xem ứng dụng còn chạy và listen không |
 | Thấy 500 là Nginx hỏng | 500 do **ứng dụng** viết; Nginx chỉ chuyển ra |
 | Mã 502 thì chắc chắn do Nginx viết | Con số ai cũng gửi được; xem chữ ký |

@@ -45,8 +45,8 @@ từ một quyết định thiết kế năm 1981.</p>
   <figcaption><b>Ảnh 1</b> Interface Message Processor (IMP) của hãng BBN, thiết bị chuyển gói tin của ARPANET và là tiền thân của router ngày nay, trưng bày ở Computer History Museum. ARPANET chạy từ năm 1969; IPv4 được đặc tả năm 1981, và ARPANET chuyển hẳn sang TCP/IP vào ngày 1/1/1983.</figcaption>
 </figure>
 
-<p>Trước năm 1981, vấn đề của những người xây mạng không phải là thiếu địa chỉ mà là có quá nhiều kiểu
-mạng không nói chuyện được với nhau. Mạng chính khi ấy là <strong>ARPANET</strong>, một mạng nghiên cứu
+<p>Trước năm 1981, vấn đề của những người xây mạng là có quá nhiều kiểu mạng không nói chuyện được với
+nhau; địa chỉ khi ấy còn chưa thiếu. Mạng chính khi ấy là <strong>ARPANET</strong>, một mạng nghiên cứu
 nối vài trăm máy tính của các trường đại học, phòng thí nghiệm và Bộ Quốc phòng Mỹ. Muốn nối các mạng khác
 nhau thành một "mạng của các mạng", cần một cách đánh địa chỉ chung cho mọi máy, bất kể nó nằm trong mạng
 nào. Lời giải là giao thức IP, và phiên bản được chuẩn hoá vào tháng 9 năm 1981 trong văn bản RFC 791 chính
@@ -70,14 +70,14 @@ thành bốn nhóm 8 bit, mỗi nhóm đổi sang một số thập phân từ 0
 </figure>
 
 <p>Năm 1981, 4,3 tỷ địa chỉ nghe như vô hạn. Dân số thế giới khi ấy khoảng 4,5 tỷ người, gần như không
-ai sở hữu máy tính, và một máy tính to bằng cái tủ, do cả một đội kỹ sư vận hành. Chọn 32 bit vì vậy
-không phải thiếu tầm nhìn, mà là một quyết định hợp lý với những gì người ta biết lúc đó. Nhưng mọi quyết
-định kiến trúc đều mang theo một giả định về tương lai, và giả định "4,3 tỷ là đủ" về sau hết đúng.</p>
+ai sở hữu máy tính, và một máy tính to bằng cái tủ, do cả một đội kỹ sư vận hành. Với những gì người
+ta biết lúc đó, 32 bit là một lựa chọn hợp lý. Lựa chọn ấy dựa trên giả định rằng 4,3 tỷ địa chỉ là đủ,
+và về sau giả định đó không còn đúng.</p>
 
 <h2 id="chia-lop">Cách chia theo lớp làm địa chỉ cạn nhanh hơn</h2>
 
-<p>Vấn đề không chỉ nằm ở con số 4,3 tỷ, mà còn ở cách chia nó cho các tổ chức. Ban đầu, không gian địa
-chỉ được chia theo <strong>lớp</strong>: vài bit đầu của địa chỉ quyết định nó thuộc lớp nào, và lớp quyết
+<p>Cách chia con số 4,3 tỷ đó cho các tổ chức làm vấn đề nặng thêm. Ban đầu, không gian địa chỉ được
+chia theo <strong>lớp</strong>: vài bit đầu của địa chỉ quyết định nó thuộc lớp nào, và lớp quyết
 định luôn kích thước khối được cấp. Không có kích thước nào nằm giữa các lớp.</p>
 
 <div class="table-scroll">
@@ -111,15 +111,15 @@ dấu vết của thời kỳ này: nhiều khối lớn ghi tên một tổ ch�
 <section class="tab" id="t-cidr" data-tab="CIDR" data-note="1993: bỏ chia lớp">
 
 <p class="panel-intro">Mười năm sau RFC 791, hai vấn đề ở tab trước bắt đầu thành khủng hoảng. Lời giải
-đầu tiên không thay IPv4 mà vá nó: chia địa chỉ khéo hơn.</p>
+đầu tiên giữ nguyên IPv4 và vá nó: chia địa chỉ khéo hơn.</p>
 
 <h2 id="bao-dong">Đầu thập niên 1990: hai cuộc khủng hoảng cùng tới</h2>
 
 <p>World Wide Web ra đời năm 1991, và Internet bắt đầu bùng nổ thương mại. Tới đầu thập niên 1990, cộng
 đồng kỹ thuật nhận ra hai cuộc khủng hoảng đang tới cùng lúc. Thứ nhất, các khối lớp B, cỡ "vừa vặn" nhất
 cho doanh nghiệp, đang cạn rất nhanh. Thứ hai, danh sách đường đi mà mỗi router lớn của Internet phải nhớ
-đang phình ra, vì mỗi khối lớp C được cấp là thêm một dòng riêng trong danh sách đó. Một router chỉ có
-bao nhiêu đó bộ nhớ, nên danh sách đường đi không thể phình mãi.</p>
+đang phình ra, vì mỗi khối lớp C được cấp là thêm một dòng riêng trong danh sách đó. Bộ nhớ của router
+có hạn, nên danh sách đường đi không thể phình mãi.</p>
 
 <p>Khoảng năm 1992, IETF, tổ chức soạn các chuẩn của Internet, bắt đầu thiết kế một thế hệ địa chỉ mới;
 đó sẽ là IPv6 ở tab cuối. Nhưng một thế hệ mới cần nhiều năm, trong khi khủng hoảng đang tới ngay. Vì vậy
@@ -172,7 +172,7 @@ router, nên danh sách ấy ngừng phình to.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-nat" data-tab="NAT" data-note="1994: dùng chung một địa chỉ">
 
-<p class="panel-intro">CIDR chia khéo hơn, nhưng không đẻ thêm được địa chỉ nào. Lời giải thứ hai đi
+<p class="panel-intro">CIDR chia khéo hơn, nhưng không tạo thêm được địa chỉ nào. Lời giải thứ hai đi
 thẳng vào tổng số: cho cả một mạng dùng chung một địa chỉ công khai.</p>
 
 <h2 id="nat">NAT (1994): cả một mạng, một địa chỉ công khai</h2>
@@ -190,7 +190,7 @@ hỏi phụ lục: dải mạng riêng tồn tại để hàng triệu mạng c�
 </figure>
 
 <figure class="fig">
-<pre class="diagram"><code>    ┌──── NHÀ CỦA BẠN ──────────────┐
+<pre class="diagram"><code>    ┌──── nhà của bạn ──────────────┐
     │                               │
     │  laptop      192.168.10.38    │  ← mạng riêng,
     │  điện thoại  192.168.10.51    │    không ra Internet
@@ -198,11 +198,11 @@ hỏi phụ lục: dải mạng riêng tồn tại để hàng triệu mạng c�
     │                  │            │
     └──────────────────┼────────────┘
                        │
-                  ROUTER (NAT)
+                  router (NAT)
                        │
-                  203.0.113.7   ← công khai, MỘT địa chỉ
+                  203.0.113.7   ← công khai, một địa chỉ
                        │          cả nhà dùng chung
-                  ~ INTERNET ~</code></pre>
+                  ~ Internet ~</code></pre>
 <figcaption><b>Hình 3</b> Mọi thiết bị trong nhà dùng địa chỉ mạng riêng; chỉ router có một địa chỉ
 công khai. Địa chỉ <code>203.0.113.7</code> thuộc dải mà RFC 5737 dành riêng cho tài liệu, nên không trỏ
 tới mạng thật của ai.</figcaption>
@@ -243,7 +243,7 @@ chuyển sang cấp phát nhỏ giọt khối cuối cùng của mình.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-gia-nat" data-tab="Giá của NAT" data-note="vì sao server không đặt ở nhà">
 
-<p class="panel-intro">NAT cứu được IPv4, nhưng phải trả giá. Cái giá ấy chính là phần sau của câu hỏi
+<p class="panel-intro">NAT giúp IPv4 dùng tiếp được, nhưng có một cái giá. Cái giá ấy chính là phần sau của câu hỏi
 phụ lục: vì sao một máy ở nhà không ai trên Internet gọi tới được.</p>
 
 <h2 id="gia-cua-nat">Cái giá của NAT: kết nối chỉ được khởi tạo từ bên trong</h2>
@@ -251,19 +251,19 @@ phụ lục: vì sao một máy ở nhà không ai trên Internet gọi tới đ
 <p>Internet ban đầu được xây theo một nguyên tắc: <strong>mọi máy đều có thể gọi thẳng mọi máy</strong>.
 NAT phá vỡ nguyên tắc đó. Bảng dịch địa chỉ của router chỉ được ghi khi có một kết nối <em>đi ra</em>;
 một gói tin từ Internet <em>đi vào</em> mà không khớp dòng nào trong bảng thì router không có cách nào biết
-nó dành cho thiết bị nào trong nhà, nên đành vứt bỏ. Kết quả là một sự bất đối xứng mà người dùng ngày nay
+nó dành cho thiết bị nào trong nhà, nên vứt bỏ nó. Kết quả là một sự bất đối xứng mà người dùng ngày nay
 coi là hiển nhiên, dù nó chưa bao giờ là thiết kế ban đầu.</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  Máy bạn GỌI RA Internet    →  được: router ghi bảng và trả lời về
-  Internet GỌI VÀO máy bạn   →  không được: router không biết
+<pre class="diagram"><code>  Máy bạn gọi ra Internet    →  được: router ghi bảng và trả lời về
+  Internet gọi vào máy bạn   →  không được: router không biết
                                 gói tin này dành cho máy nào trong nhà</code></pre>
 <figcaption><b>Hình 5</b> Sau NAT, kết nối chỉ mở được khi máy bên trong là bên khởi tạo.</figcaption>
 </figure>
 
-<p>Đây là câu trả lời đầy đủ cho vì sao server không đặt trên laptop ở nhà. Không phải vì laptop yếu:
-nó thừa sức chạy Spring Boot và PostgreSQL. Mà vì laptop không có địa chỉ nào mà Internet gọi tới được.
-Địa chỉ <code>192.168.10.38</code> chỉ có nghĩa trong nhà, còn địa chỉ công khai thuộc về router, và router
+<p>Đây là câu trả lời đầy đủ cho vì sao server không đặt trên laptop ở nhà. Một laptop bình thường chạy
+được Spring Boot và PostgreSQL, nên vấn đề không nằm ở sức máy; vấn đề là laptop không có địa chỉ nào mà
+Internet gọi tới được. Địa chỉ <code>192.168.10.38</code> chỉ có nghĩa trong nhà, còn địa chỉ công khai thuộc về router, và router
 vứt mọi kết nối đi vào không có trong bảng. Muốn mở đường vào, phải ghi tay một dòng cố định vào bảng của
 router, gọi là <em>port forwarding</em>.</p>
 
@@ -272,8 +272,8 @@ router, gọi là <em>port forwarding</em>.</p>
   <p>Năm 1984, Saltzer, Reed và Clark công bố bài báo <em>End-to-End Arguments in System Design</em>, lập
   luận rằng mạng ở giữa nên càng đơn giản càng tốt, chỉ chuyển gói tin, còn mọi xử lý nên nằm ở hai đầu.
   Internet được xây theo tinh thần đó. NAT đặt một thiết bị ghi nhớ trạng thái từng kết nối vào giữa, và
-  từ đó quyết định kết nối nào được phép tồn tại. Đó là lý do nhiều kỹ sư mạng coi NAT không chỉ là một
-  miếng vá, mà là một thay đổi kiến trúc của Internet.</p>
+  từ đó quyết định kết nối nào được phép tồn tại. Vì vậy nhiều kỹ sư mạng coi NAT là một thay đổi về
+  kiến trúc của Internet.</p>
 </div>
 
 <h2 id="cgnat">Tầng NAT thứ hai: khi nhà mạng cũng NAT</h2>
@@ -282,13 +282,13 @@ router, gọi là <em>port forwarding</em>.</p>
 đình một địa chỉ riêng. Họ đặt thêm một tầng NAT nữa ở phía nhà mạng, gọi là <strong>Carrier-Grade
 NAT</strong> (CGNAT): router nhà bạn chỉ nhận một địa chỉ gần như công khai, và hàng trăm khách hàng dùng
 chung một địa chỉ công khai thật ở phía sau. RFC 6598 dành riêng dải <code>100.64.0.0/10</code> cho khoảng
-giữa này. Hệ quả là ngay cả port forwarding trên router nhà bạn cũng vô dụng, vì gói tin từ Internet đã bị
+giữa này. Hệ quả là ngay cả port forwarding trên router nhà bạn cũng không có tác dụng, vì gói tin từ Internet đã bị
 chặn ở tầng NAT của nhà mạng, trước khi tới được router của bạn.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
-  <p>Cái giá của NAT là <strong>Internet chỉ còn gọi ra được, không gọi vào được</strong>, và CGNAT làm
-  điều đó chặt thêm một tầng. Server vì vậy phải đặt ở nơi có địa chỉ công khai, như trung tâm dữ liệu. Muốn
+  <p>Cái giá của NAT là <strong>máy trong mạng riêng gọi ra Internet được, nhưng Internet không gọi vào
+  được</strong>, và CGNAT làm điều đó chặt thêm một tầng. Server vì vậy phải đặt ở nơi có địa chỉ công khai, như trung tâm dữ liệu. Muốn
   trả lại cho mọi máy một địa chỉ công khai, cần nhiều địa chỉ hơn hẳn 4,3 tỷ.</p>
 </div>
 
@@ -298,8 +298,8 @@ chặn ở tầng NAT của nhà mạng, trước khi tới được router củ
 <section class="tab" id="t-ipv6" data-tab="IPv6" data-note="lời giải gốc">
 
 <p class="panel-intro">Trong khi CIDR và NAT vá IPv4, IETF thiết kế lời giải gốc từ năm 1992: một thế hệ
-địa chỉ đủ lớn để không cần NAT. Lời giải ấy đã có từ lâu; câu chuyện thú vị là vì sao nó phổ cập chậm tới
-vậy.</p>
+địa chỉ đủ lớn để không cần NAT. Lời giải ấy đã có từ lâu; điều cần giải thích là vì sao nó phổ cập chậm
+tới vậy.</p>
 
 <h2 id="ipv6">IPv6: 128 bit, đủ cho mọi máy</h2>
 
@@ -350,21 +350,21 @@ cập Google qua IPv6; con số đã vượt 40% từ vài năm trước, và b�
 <p>Output của lab Bài 00 cho thấy trạng thái lưng chừng đó trên chính một máy thật:</p>
 
 <figure class="fig">
-<pre><code>* IPv6: 2606:4700:10::ac42:93f3      ← example.com CÓ IPv6
+<pre><code>* IPv6: 2606:4700:10::ac42:93f3      ← example.com có IPv6
 * IPv4: 104.20.23.154                ← và vẫn giữ IPv4 (dual-stack)
 
 *   Trying [2606:4700:10::ac42:93f3]:443...   ← curl thử IPv6 trước
 *   Trying 104.20.23.154:443...               ← rồi thử IPv4
-* Established connection ... 104.20.23.154    ← IPv4 thắng</code></pre>
+* Established connection ... 104.20.23.154    ← kết nối qua IPv4</code></pre>
 <figcaption><b>Hình 7</b> Trích output <code>curl -v</code> ở lab Bài 00, chạy trên máy tôi ngày 24/09/2026, có
 chú thích bên phải.</figcaption>
 </figure>
 
 <p><code>example.com</code> có cả IPv6 lẫn IPv4, và <code>curl</code> thử IPv6 trước. Nhưng kết nối cuối
-cùng vẫn đi bằng IPv4, và lệnh
-<code>nslookup</code> ở cùng buổi lab cho thấy router WiFi chỉ có một địa chỉ link-local
-<code>fe80::…</code>. Đó là dấu hiệu mạnh, dù chưa phải chứng minh tuyệt đối, rằng mạng gia đình ấy chưa có
-đường IPv6 ra Internet: nội dung đã sẵn sàng, nhà mạng thì chưa.</p>
+cùng vẫn đi bằng IPv4. Điều đó gợi ý, nhưng chưa chứng minh, rằng mạng gia đình ấy chưa có đường IPv6 ra
+Internet trong khi website đã có địa chỉ IPv6. Địa chỉ link-local <code>fe80::…</code> của router mà
+<code>nslookup</code> in ra không thêm bằng chứng nào, vì mọi giao diện mạng có IPv6 đều mang một địa chỉ
+<code>fe80</code>, kể cả ở mạng có IPv6 đầy đủ.</p>
 
 <h3 id="dinh-chinh-2s"><code>localhost</code> ra hai địa chỉ</h3>
 
@@ -372,15 +372,16 @@ cùng vẫn đi bằng IPv4, và lệnh
 tên <code>localhost</code> phân giải ra hai địa chỉ, <code>::1</code> trước rồi tới <code>127.0.0.1</code>.
 Nếu một database chỉ listen <code>127.0.0.1</code>, còn ứng dụng kết nối tới <code>localhost</code> và thử
 <code>::1</code> trước, ứng dụng có thể nhận lỗi <code>refused</code> dù database đang chạy hoàn toàn bình
-thường: database chỉ không listen trên địa chỉ mà ứng dụng gọi tới, đúng điều kiện 3 của Bài 01. Cơ chế
+thường: database chỉ không listen trên địa chỉ mà ứng dụng gọi tới, tức thiếu điều kiện có chương trình
+listen đúng địa chỉ ở Bài 01. Cơ chế
 này không phải lời giải cho con số 2,155 giây ở lab Bài 01, vì lệnh đó dùng <code>-4</code> và gõ thẳng
 <code>127.0.0.1</code>.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
   <p>IPv6 là lời giải gốc cho tổng số địa chỉ: 128 bit đủ để mọi máy có địa chỉ công khai mà không cần NAT.
-  Nhưng vì không tương thích ngược và vì NAT vẫn đủ dùng, Internet hôm nay sống trong thời kỳ chạy song song
-  hai giao thức, và thời kỳ đó để lại những dấu vết người vận hành sẽ gặp.</p>
+  Nhưng vì không tương thích ngược và vì NAT vẫn đủ dùng, Internet hôm nay chạy song song hai giao thức,
+  và thời kỳ đó để lại những dấu vết người vận hành sẽ gặp.</p>
 </div>
 
 </section>
@@ -388,8 +389,8 @@ này không phải lời giải cho con số 2,155 giây ở lab Bài 01, vì l�
 <!-- ================================================================== -->
 <section class="tab" id="t-hom-nay" data-tab="Dấu vết" data-note="hôm nay, và câu hỏi của Bài 01">
 
-<p class="panel-intro">Bốn công nghệ trên không nằm yên trong sách sử. Chúng để lại dấu vết trong công
-việc hằng ngày, và thêm một tầng cho câu trả lời của Bài 01.</p>
+<p class="panel-intro">Bốn công nghệ trên để lại dấu vết trong công việc hằng ngày, và thêm một tầng cho
+câu trả lời của Bài 01.</p>
 
 <h2 id="dau-vet">Bốn dấu vết còn lại hôm nay</h2>
 
@@ -407,9 +408,9 @@ việc hằng ngày, và thêm một tầng cho câu trả lời của Bài 01.<
 </div>
 
 <div class="callout warn">
-  <span class="label">Dấu vết nguy hiểm nhất</span>
+  <span class="label">Dấu vết dễ bỏ sót nhất</span>
   <p>Firewall trên Linux giữ hai bộ luật riêng cho IPv4 và IPv6. Chặn kỹ bộ này mà quên bộ kia thì máy chủ
-  vẫn phơi ra Internet qua IPv6 mà người quản trị không hề biết. Lộ trình kiểm tra đúng chỗ này khi đi một
+  vẫn mở ra Internet qua IPv6 mà người quản trị không biết. Lộ trình kiểm tra đúng chỗ này khi đi một
   vòng máy chủ ở <a href="../17-linux-tren-server/">Bài 17</a>.</p>
 </div>
 

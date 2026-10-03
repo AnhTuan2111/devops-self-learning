@@ -25,7 +25,7 @@ trước khi đọc, rồi so lại khi làm xong lab.
 2. Vì sao **hết RAM thì app chết**, còn hết CPU thì app chỉ **chậm**?
 3. Vì sao **app chết thì website sập**: chuỗi nhân quả đầy đủ tới con số 502?
 
-Câu nối tiếp: app chết rồi thì **ai dựng nó dậy**?
+Trả lời xong ba câu, một câu hỏi nữa nảy ra: app chết rồi thì **ai dựng nó dậy**?
 
 **Cần đã học trước:** bản đồ chín chặng ([Bài 00](../00-ban-do-toan-canh/)) · port, listen,
 refused và timeout ([Bài 01](../01-ip-port-listen-firewall/)) · 502 và 504 do Nginx viết, hệ thống
@@ -55,15 +55,16 @@ hỏng mà không ai đụng vào ([Bài 02](../02-chan-doan-theo-chang/)).
 
 ## Server là gì
 
-Một server chỉ là một máy tính bình thường, khác laptop của bạn đúng ba điểm: nó chạy
-**24/7**, nó **không có màn hình**, và, quan trọng nhất, **không có ai ngồi trước nó**. Hai
-điểm đầu chỉ là chuyện phần cứng, còn điểm thứ ba thay đổi toàn bộ cách phải vận hành, bởi vì
-mọi thứ trên laptop vẫn "tự lành" được là nhờ có bạn ở đó.
+Một server chỉ là một máy tính bình thường, khác laptop của bạn ở hoàn cảnh sử dụng, đúng ba điểm:
+nó chạy **24/7**, nó **không có màn hình**, và **không có ai ngồi trước nó**. Hai điểm đầu có hệ
+quả dễ thấy: thứ gì tích tụ theo thời gian cũng có đủ thời gian để gây sự cố, và mọi việc phải làm
+qua mạng bằng dòng lệnh. Điểm thứ ba có hệ quả rộng nhất: trên laptop, chương trình treo thì có bạn
+khởi động lại, lỗi hiện ra thì có bạn nhìn thấy; trên server, một chương trình chết lúc hai giờ sáng
+sẽ nằm nguyên như thế cho tới khi có người phát hiện.
 
-> Không ai bấm OK. Không ai khởi động lại. Không ai nhìn thấy khi nó báo lỗi.
-
-Nói cách khác, gần như mọi kỹ thuật trong lộ trình này đều sinh ra để **thay thế một con người không có mặt ở đó**. Gặp
-một công cụ mới, hãy thử hỏi: nó đang làm thay việc gì mà một người trực lẽ ra sẽ làm?
+Vì vậy, nhiều thứ lộ trình này dạy là cách **tự động hoá những việc một người ngồi trước máy sẽ
+làm**: khởi động lại chương trình khi nó chết, kiểm tra xem nó còn trả lời không, báo động khi nó
+hỏng. Gặp một công cụ mới, có thể hỏi: nó làm thay việc nào trong số đó?
 
 ---
 
@@ -80,30 +81,30 @@ Mọi con số trong bảng cấu hình server quy về bốn loại tài nguyê
 
 ### Ẩn dụ hỗ trợ ghi nhớ: người, mặt bàn, cái tủ
 
-Điều quan trọng không phải từng loại riêng lẻ mà là **quan hệ** giữa chúng: CPU chỉ xử lý dữ
-liệu đang nằm trong RAM, nên muốn dùng file nào thì phải đọc nó từ đĩa vào RAM trước; đó chính
-là 30 giây JVM đọc hàng nghìn file class lúc khởi động. Phép so sánh dưới đây giúp nhớ quan hệ đó,
-và **không phải định nghĩa**:
+Với câu hỏi của bài, điều quan trọng là **quan hệ** giữa chúng: CPU chỉ xử lý dữ liệu đang nằm
+trong RAM, nên muốn dùng file nào thì phải đọc nó từ đĩa vào RAM trước; đó chính là 30 giây JVM đọc
+hàng nghìn file class lúc khởi động. Phép so sánh dưới đây là một ẩn dụ giúp nhớ quan hệ đó, không
+phải định nghĩa:
 
 ```
-DISK  = cái tủ hồ sơ   to, rẻ, CHẬM     · tắt điện vẫn còn
-RAM   = mặt bàn        nhỏ, đắt, NHANH  · tắt điện SẠCH TRƠN
-CPU   = người làm việc · chỉ làm được với thứ ĐANG TRÊN BÀN
+Disk  = cái tủ hồ sơ   to, rẻ, chậm     · tắt điện vẫn còn
+RAM   = mặt bàn        nhỏ, đắt, nhanh  · tắt điện sạch trơn
+CPU   = người làm việc · chỉ làm được với thứ đang trên bàn
 ```
 
 > **Giới hạn của ẩn dụ.** "Một người, một cái bàn" gợi ý mỗi lúc chỉ có một việc chạy; thực tế
 > CPU nhiều core chạy song song thật, và kernel còn luân phiên hàng trăm chương trình trên cùng
 > một core. Ẩn dụ cũng bỏ qua **cache**, bộ nhớ nhỏ nằm ngay trong chip CPU, nhanh hơn RAM nhiều bậc.
 
-Điều đáng học nhất không phải là định nghĩa từng loại, mà là **mỗi loại khi cạn thì gây ra
-triệu chứng khác nhau**. Đây chính là bảng tra dùng khi một server bắt đầu có vấn đề:
+Mỗi loại tài nguyên khi cạn gây ra **một kiểu triệu chứng riêng**, nên bảng dưới đây là bảng tra
+dùng khi một server bắt đầu có vấn đề:
 
 | Tài nguyên | Hết thì sao | Mức độ |
 |---|---|---|
 | **CPU** | công việc xếp hàng chờ | Chậm |
 | **RAM** | **kernel giết một process** | **Chết** |
-| **DISK** | không ghi được gì nữa | Lỗi rất lạ |
-| **NETWORK** | gói tin bị vứt bỏ | Timeout |
+| **Disk** | không ghi được gì nữa | Lỗi rất lạ |
+| **Network** | gói tin bị vứt bỏ | Timeout |
 
 Sự bất đối xứng giữa CPU và RAM là trọng tâm của bài. Hết CPU thì công việc chỉ phải chờ tới
 lượt, nên mọi thứ chậm đi nhưng vẫn chạy. Hết RAM thì không có "chờ" nào cả: dữ liệu phải có
@@ -115,17 +116,15 @@ Nối điều này với bảng "ai viết ra" của Bài 02, ta thấy hai mã 
 loại tài nguyên đã cạn:
 
 ```
-Hết CPU → app chậm    → Nginx hết kiên nhẫn  → 504
-Hết RAM → app bị giết → Nginx bị từ chối  → 502
+Hết CPU → app chậm    → Nginx hết thời gian chờ đã cấu hình → 504
+Hết RAM → app bị giết → Nginx bị từ chối                    → 502
 ```
-
-**502 và 504 không phải hai mã lỗi cần học thuộc: chúng là hai loại tài nguyên đã cạn.**
 
 ---
 
 ## Process
 
-Cần phân biệt thật rõ **chương trình** (một file nằm trên đĩa) với **process** (chương trình
+Cần phân biệt **chương trình** (một file nằm trên đĩa) với **process** (chương trình
 đó đang chạy). File `app.jar` không chiếm RAM, không giữ port và không ai gọi được; chỉ khi
 được chạy, nó mới trở thành một process có PID, có vùng RAM, và listen một port.
 
@@ -154,8 +153,8 @@ Process là đơn vị **cô lập** (mỗi process có vùng nhớ riêng), cò
 (nhiều thread cùng làm việc trong một vùng nhớ chung):
 
 ```
-PROCESS = một vùng nhớ riêng + các thuộc tính riêng
-THREAD  = một dòng thực thi BÊN TRONG process, chung vùng nhớ
+Process = một vùng nhớ riêng + các thuộc tính riêng
+Thread  = một dòng thực thi bên trong process, chung vùng nhớ
 ```
 
 Một ứng dụng Spring Boot là **1 process** chứa hàng trăm thread (mỗi request thường được một
@@ -173,11 +172,11 @@ này tồn tại vì an toàn: nếu mọi chương trình tự ý ghi vào đĩ
 trình lỗi có thể phá cả máy.
 
 ```
-USER SPACE   Spring Boot · Nginx · PostgreSQL · bash
+user space   Spring Boot · Nginx · PostgreSQL · bash
                         │  syscall
-KERNEL       độc quyền phần cứng
+kernel       độc quyền phần cứng
                         ▼
-             CPU   RAM   DISK   NETWORK
+             CPU   RAM   Disk   Network
 ```
 
 Khi app gọi `listen(8080)`, thực chất nó **xin kernel ghi nhận port 8080 thuộc về mình**: kernel
@@ -187,8 +186,8 @@ này:
 
 ```
 Address already in use  →  kernel tra bảng: 8080 đã thuộc process khác
-kill → refused          →  process chết, kernel XÓA dòng 8080 ngay
-port <1024 cần root     →  kernel kiểm tra quyền TRƯỚC khi ghi vào bảng
+kill → refused          →  process chết, kernel xóa dòng 8080 ngay
+port <1024 cần root     →  kernel kiểm tra quyền trước khi ghi vào bảng
 ```
 
 ---
@@ -210,22 +209,22 @@ Khác biệt giữa `SIGTERM` và `SIGKILL` nằm ở chỗ process có được
 thẳng, process không hề biết:
 
 ```
-SIGTERM  process ĐƯỢC báo trước  → @PreDestroy, đóng pool, flush log
-SIGKILL  process KHÔNG được báo  → connection treo, transaction dở, mất log cuối
+SIGTERM  process được báo trước  → @PreDestroy, đóng pool, flush log
+SIGKILL  process không được báo  → connection treo, transaction dở, mất log cuối
 ```
 
 ### OOM Killer
 
-Khi RAM cạn, kernel không có lựa chọn "chờ": nó **phải** giết một process để lấy lại chỗ. Nó
-chấm điểm từng process (`oom_score`), chủ yếu dựa trên lượng RAM đang chiếm, rồi giết process
-điểm cao nhất, và **trên một server chạy Spring Boot, đó gần như luôn là JVM**.
+Khi RAM cạn, chờ đợi không giải phóng được gì, nên kernel **phải** giết một process để lấy lại
+chỗ. Nó chấm điểm từng process (`oom_score`), chủ yếu dựa trên lượng RAM đang chiếm, rồi giết
+process điểm cao nhất; **trên một server chạy Spring Boot, đó thường là JVM**.
 
 ```
-Triệu chứng:  app BIẾN MẤT · log ứng dụng TRỐNG TRƠN · không ai đụng vào
+Triệu chứng:  app biến mất · log ứng dụng trống trơn · không ai đụng vào
 ```
 
-Log ứng dụng trống không phải vì không có gì xảy ra, mà vì app bị SIGKILL nên không kịp viết
-dòng nào. Dấu vết vì thế nằm ở một nơi khác: **log của kernel**.
+Log ứng dụng trống vì app bị SIGKILL nên không kịp viết dòng nào. Dấu vết nằm ở một nơi khác:
+**log của kernel**.
 
 ```bash
 dmesg | grep -i "killed process"
@@ -235,28 +234,28 @@ dmesg | grep -i "killed process"
 
 ## Chuỗi đầy đủ: từ RAM cạn tới 502
 
-Ghép tất cả các mảnh trên lại, ta có câu trả lời cho câu hỏi thứ ba của bài. Đây là một chuỗi
-nhân quả bảy bước, và điểm cần thấm là người dùng chỉ nhìn thấy bước cuối cùng:
+Ghép các mảnh trên lại, ta có câu trả lời cho câu hỏi vì sao app chết thì website sập. Đây là một
+chuỗi nhân quả bảy bước, và điều cần để ý là người dùng chỉ nhìn thấy bước cuối cùng:
 
 ```
 1 RAM cạn
 2 kernel chọn JVM (ăn RAM nhiều nhất)
 3 SIGKILL — process biến mất, không kịp log
-4 kernel XÓA dòng "8080 → PID 4123" khỏi bảng port
+4 kernel xóa dòng "8080 → PID 4123" khỏi bảng port
 5 Nginx xin kết nối tới 127.0.0.1:8080
 6 kernel: không ai listen 8080       ← Connection refused
 7 Nginx dịch cho người dùng:        502 Bad Gateway
 ```
 
-> Người dùng thấy **502**, nhưng nguyên nhân thật ở **bước 1** — sáu bước phía trước.
+> Người dùng thấy **502**, nhưng nguyên nhân thật là **RAM cạn**, sáu bước phía trước.
 
 ---
 
 ## Process vs Service
 
 Một process chết là hết: không ai dựng nó dậy, và nếu máy khởi động lại thì nó cũng không tự
-chạy. Trên laptop, người dựng dậy là bạn. Trên server không có ai, nên cần một chương trình
-khác đóng vai người trực — và process được trông như vậy gọi là **service**.
+chạy. Trên laptop, người dựng dậy là bạn. Trên server không có ai, nên cần một process khác
+trông coi nó, và process được trông coi như vậy gọi là **service**.
 
 | | Process | Service |
 |---|---|---|
@@ -270,7 +269,9 @@ Kubernetes  trông coi ứng dụng trên cả một cụm máy      → Bài 27
 ```
 
 Docker (công cụ đóng gói và chạy ứng dụng, học từ Bài 05) và Kubernetes (chạy ứng dụng trên nhiều
-máy, học từ Bài 26) là hai công cụ khác nhau, **cùng một ý tưởng**: thay thế người trực.
+máy, học từ Bài 26) làm cùng một việc trông coi ở hai phạm vi khác nhau: thấy process chết thì dựng
+nó dậy. Việc tự dựng dậy chữa triệu chứng chứ không chữa nguyên nhân: nếu thứ làm RAM cạn vẫn còn,
+app sẽ bị giết, được dựng dậy, rồi lại bị giết.
 
 ---
 
@@ -300,7 +301,7 @@ Chạy lệnh này **từ thư mục của bài**. Nếu gặp `Error: Cannot fi
 không mất: bạn đang đứng sai thư mục. Node tính đường dẫn tương đối từ **thư mục làm việc của
 process** chứ không từ chỗ file nằm — `java -jar` cũng vậy.
 
-### Lab 2 — đi ngược từ PORT, tới PID, tới tên chương trình (cửa sổ 2)
+### Lab 2 — đi ngược từ port, tới PID, tới tên chương trình (cửa sổ 2)
 
 ```bash
 curl http://localhost:8080
@@ -364,11 +365,11 @@ process đang listen, mà là dấu vết của kết nối cũ đang chờ đó
 
 Lần chạy thật: `curl: (7) … after 2030 ms`, `real 0m2.087s` — sát với 2,155 giây ở Bài 01.
 
-### Lab 5 — giết ÉP, so sánh
+### Lab 5 — giết ép, so sánh
 
 ```bash
 node lab/server.js            # chạy lại
-taskkill //F //PID <PID>      # cửa sổ tắt phụt, KHÔNG in gì
+taskkill //F //PID <PID>      # cửa sổ tắt phụt, không in gì
 ```
 
 `taskkill //F` là cách Windows giết ép một process, tương đương `SIGKILL` trên Linux. Kỳ vọng:
@@ -376,11 +377,11 @@ cửa sổ 1 dừng ngay lập tức mà **không in dòng `[SIGINT]` nào**, v�
 Đặt kết quả này cạnh Lab 4 là thấy được khác biệt cốt lõi của bài:
 
 ```
-Ctrl+C       →  "[SIGINT] duoc bao truoc, dang don dep..."   ← CÓ in dòng dọn dẹp
-taskkill /F  →  tắt phụt, không in gì                        ← KHÔNG kịp in gì
+Ctrl+C       →  "[SIGINT] duoc bao truoc, dang don dep..."   ← có in dòng dọn dẹp
+taskkill /F  →  tắt phụt, không in gì                        ← không kịp in gì
 ```
 
-Đó chính xác là khác biệt **SIGTERM vs SIGKILL** — và là lý do một app bị OOM killer giết để lại
+Đó chính là khác biệt **SIGTERM vs SIGKILL** — và là lý do một app bị OOM killer giết để lại
 log trống trơn. Nếu ở bước này bạn vẫn thấy dòng `[SIGINT]`, hãy kiểm tra lại xem PID truyền cho
 `taskkill` có đúng là PID của lần chạy mới không.
 
@@ -389,7 +390,7 @@ log trống trơn. Nếu ở bước này bạn vẫn thấy dòng `[SIGINT]`, h
 ```bash
 export BI_MAT="xin chao"
 echo $BI_MAT                  # → xin chao
-#   mở cửa sổ MỚI:
+#   mở cửa sổ mới:
 echo $BI_MAT                  # → (trống)
 ```
 
@@ -418,7 +419,7 @@ biến. Điều quyết định là **cha của nó là ai và nó được sinh
 ## Chỗ tôi từng hiểu sai
 
 Mỗi dòng là một chỗ chính tôi đã hiểu sai khi học bài này. Đọc trước khi đánh dấu danh sách tự kiểm
-tra; bản có giải thích đầy đủ nằm ở Bảng 10 trong `index.html`.
+tra; bản có giải thích đầy đủ nằm ở Bảng 9 trong `index.html`.
 
 | Tôi từng nghĩ | Thực tế |
 |---|---|
@@ -456,9 +457,9 @@ Chỉ đánh dấu khi trả lời được bằng lời của mình, không nh�
 ## Câu hỏi cho bài sau
 
 Mọi lab ở đây chạy trên Windows: Ctrl+C và `taskkill //F` chỉ *tương đương* SIGINT và SIGKILL, còn
-OOM killer, `dmesg` và systemd thì không quan sát được. Nhưng server thật chạy Linux, nên câu hỏi
-tiếp theo là: **Server thật chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy
-Linux thật ngay trên máy mình, để thấy process, signal và lỗi đúng như trên server?**
+OOM killer, `dmesg` và systemd thì không quan sát được. Câu hỏi tiếp theo vì vậy là: **server thật
+chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình,
+để thấy process, signal và lỗi đúng như trên server?**
 
 **Đọc thêm, không bắt buộc:** [phụ lục — vì sao có hệ điều hành và process](lich-su-he-dieu-hanh.html).
 

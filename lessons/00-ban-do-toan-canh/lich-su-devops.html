@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Lịch sử DevOps</title>
-<meta name="description" content="DevOps là gì và vì sao nó ra đời: hai đội phát triển và vận hành với hai thước đo ngược nhau, Agile năm 2001 tăng tốc một nửa, những năm 2006–2009 nhập hai nửa lại, và cách người ta đo DevOps ngày nay.">
+<meta name="description" content="DevOps là gì và vì sao nó ra đời: hai đội phát triển và vận hành với hai thước đo ngược nhau, Agile năm 2001 tăng tốc một nửa, những năm 2006–2009 nhập hai nửa lại, định nghĩa trong chuẩn IEEE 2675-2021, và cách người ta đo DevOps ngày nay.">
 <link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
@@ -44,13 +44,13 @@ không phải code của bạn thì ai lo? Trong phần lớn lịch sử ngành
 hai bộ phận. Bộ phận <strong>phát triển</strong> (<em>development</em>, gọi tắt là dev) viết tính năng
 mới. Bộ phận <strong>vận hành</strong> (<em>operations</em>, gọi tắt là ops) giữ cho hệ thống chạy: lắp
 và cấu hình máy chủ, giữ mạng và firewall, sao lưu dữ liệu, trực khi có sự cố lúc nửa đêm. Nói theo bản
-đồ chín chặng, dev lo chặng <span class="stg">8</span>, còn ops lo gần như mọi thứ quanh nó.</p>
+đồ chín chặng, dev lo ứng dụng, còn ops lo gần như mọi thứ quanh nó.</p>
 
 <figure class="fig photo">
   <img src="img/noc-iupui.webp" width="1200" height="800" loading="lazy" alt="Một phòng làm việc nhiều bàn, mỗi bàn hai ba màn hình, phía trước là một dải màn hình lớn hiện bản đồ mạng của nước Mỹ.">
   <figcaption><b>Ảnh 1</b> Trung tâm vận hành mạng (<em>network operations center</em>, NOC) của Đại học
   Indiana; một trong các màn hình lớn ghi tên Indiana University Internet2 Network Operations Center. Đây
-  là hình ảnh quen thuộc của nghề vận hành: một đội riêng, phòng riêng, dán mắt vào trạng thái của hệ thống.
+  là hình ảnh quen thuộc của nghề vận hành: một đội riêng, phòng riêng, theo dõi trạng thái của hệ thống.
   Bức ảnh chỉ cho thấy vận hành là một nghề có thật với chỗ ngồi riêng, không cho biết đội này làm việc với
   lập trình viên ra sao.</figcaption>
 </figure>
@@ -74,7 +74,7 @@ thay đổi là một rủi ro cần hạn chế; với dev, mỗi lần bị h�
 bản phát hành lớn, đưa lên production vài tháng một lần, vào một khung giờ ban đêm đã đặt lịch trước. Dev
 viết xong thì bàn giao một gói phần mềm kèm tài liệu hướng dẫn cài đặt; ops nhận gói ấy và tự cài lên
 server. Năm 2006, Werner Vogels, giám đốc công nghệ của Amazon, tả lại mô hình này trong một cuộc phỏng vấn
-với tạp chí ACM Queue bằng một câu đã thành kinh điển:</p>
+với tạp chí ACM Queue bằng câu sau:</p>
 
 <blockquote class="pull"><p>"The traditional model is that you take your software to the wall that
 separates development and operations, and throw it over and then forget about it."</p></blockquote>
@@ -86,7 +86,7 @@ giao một chiều.</p>
 <h3 id="nua-ban-do">Khi có sự cố: mỗi bên thấy nửa tấm bản đồ</h3>
 
 <p>Cái giá của bức tường lộ ra rõ nhất lúc có sự cố. Trở lại tình huống mở đầu Bài 00: web không vào được.
-Dev chỉ thấy chặng <span class="stg">8</span>, đọc code, thấy không có gì đổi, kết luận "lỗi ở server". Ops
+Dev chỉ thấy code của mình, đọc lại, thấy không có gì đổi, kết luận "lỗi ở server". Ops
 thấy server còn chạy, firewall đúng luật, kết luận "lỗi ở code". Mỗi bên đúng với nửa bản đồ mình nhìn thấy,
 và không bên nào nhìn được cả chín chặng. Thời gian trôi qua trong lúc hai bên chứng minh lỗi không phải
 của mình.</p>
@@ -96,7 +96,7 @@ của mình.</p>
   <p>Trước DevOps, phần mềm thường do hai đội làm: dev đo bằng số thay đổi, ops đo bằng sự ổn định. Hai
   thước đo ngược nhau dẫn tới những bản phát hành lớn, hiếm, bàn giao qua "bức tường"; và khi có sự cố,
   mỗi bên chỉ thấy nửa tấm bản đồ.</p>
-  <p>Lời giải đầu tiên lại không đến từ phía vận hành, mà từ phía những người viết code.</p>
+  <p>Bước cải cách đầu tiên đến từ phía những người viết code.</p>
 </div>
 
 </section>
@@ -105,7 +105,7 @@ của mình.</p>
 <section class="tab" id="t-agile" data-tab="Agile" data-note="2001: tăng tốc một nửa">
 
 <p class="panel-intro">Trước khi có ai nói tới DevOps, giới lập trình đã tự cải cách cách làm của mình.
-Cuộc cải cách ấy giải quyết được một nửa bài toán, và chính nửa còn lại là chỗ DevOps chen vào.</p>
+Cuộc cải cách ấy giải quyết được một nửa bài toán; nửa còn lại là chỗ DevOps ra đời.</p>
 
 <h2 id="agile">2001: Tuyên ngôn Agile</h2>
 
@@ -133,7 +133,8 @@ thay đổi nhanh hơn trước rất nhiều.</p>
 <p>Nhưng "làm xong" ở đây là xong trên phía dev. Mã nguồn sẵn sàng sau mỗi vòng hai tuần không có nghĩa là
 người dùng được dùng nó sau hai tuần, vì đường từ code xong tới production vẫn đi qua bức tường cũ: bàn giao,
 xếp lịch, cài tay. Ở nhiều tổ chức, dev đã chạy theo nhịp tuần trong khi production vẫn chỉ đổi theo nhịp
-quý. Thay đổi dồn lại phía trước bức tường, và mỗi lần deploy lại thành một lần lớn, đúng thứ ops sợ nhất.</p>
+quý. Thay đổi dồn lại phía trước bức tường, và mỗi lần deploy lại thành một lần lớn, đúng loại thay đổi
+mà ops muốn tránh nhất.</p>
 
 <p>Tám năm sau tuyên ngôn, câu hỏi vẫn còn nguyên. Phần giới thiệu của một bài nói ở hội nghị devopsdays đầu
 tiên năm 2009 (tab sau) mở đầu bằng đúng câu này: <em>"Software development teams have had Agile going for some time. But how
@@ -160,8 +161,8 @@ mốc giải quyết thêm một phần của vấn đề ở tab Hai đội.</p
 <p>Trong cùng cuộc phỏng vấn năm 2006 với ACM Queue, ngay sau câu về bức tường, Werner Vogels kể cách
 Amazon làm khác: <em>"Not at Amazon. You build it, you run it."</em> Đội nào viết một dịch vụ thì chính đội
 đó vận hành nó, kể cả trực sự cố. Theo Vogels, việc này đưa lập trình viên tiếp xúc hằng ngày với hoạt động
-thật của phần mềm mình viết, và với khách hàng của nó. Bức tường không bị dỡ bằng một quy trình bàn giao
-tốt hơn, mà bằng cách bỏ hẳn bàn giao: hai đầu của tấm bản đồ về chung một nhóm.</p>
+thật của phần mềm mình viết, và với khách hàng của nó. Amazon dỡ bức tường bằng cách bỏ hẳn bước bàn
+giao: hai đầu của tấm bản đồ về chung một nhóm.</p>
 
 <h2 id="agile-infra">2008: "Agile Infrastructure"</h2>
 
@@ -222,23 +223,49 @@ chủ như quản lý code, và người viết code đã muốn tự động ho
 <!-- ================================================================== -->
 <section class="tab" id="t-dinh-nghia" data-tab="Định nghĩa" data-note="là gì, đo thế nào">
 
-<p class="panel-intro">DevOps không có một văn bản chuẩn như RFC định nghĩa TCP. Thứ có được là một định
-nghĩa làm việc mà phần lớn người trong nghề đồng ý, và một bộ chỉ số được nghiên cứu nhiều năm để đo nó.</p>
+<p class="panel-intro">Mười hai năm sau hội nghị devopsdays đầu tiên, DevOps có một văn bản chuẩn: IEEE
+2675-2021, năm 2022 được chấp nhận thành chuẩn quốc tế ISO/IEC/IEEE 32675:2022. Bên cạnh định nghĩa trong
+chuẩn, nghề này còn có một bộ chỉ số được nghiên cứu nhiều năm để đo DevOps.</p>
 
-<h2 id="dinh-nghia">Một định nghĩa làm việc</h2>
+<h2 id="dinh-nghia">Định nghĩa trong chuẩn</h2>
 
 <div class="callout define">
-  <span class="label">Định nghĩa</span>
-  <p><strong>DevOps</strong> là cách tổ chức công việc trong đó một nhóm chịu trách nhiệm cho phần mềm từ
-  lúc viết tới lúc nó chạy ổn định trước người dùng, thay vì chia đôi trách nhiệm cho hai đội ngăn bằng
-  một lần bàn giao. Cách làm ấy dựa trên ba trụ: <em>chung trách nhiệm</em> (người viết cũng hiểu và cùng
-  vận hành), <em>tự động hoá</em> những bước lặp lại giữa code và production, và <em>đo lường</em> để biết
-  hệ thống và quy trình đang tốt lên hay xấu đi.</p>
+  <span class="label">Định nghĩa · IEEE 2675-2021, mục 3.1</span>
+  <p><strong>DevOps</strong> là tập hợp các nguyên tắc và cách làm giúp các bên liên quan giao tiếp và
+  cộng tác tốt hơn, nhằm đặc tả, phát triển và vận hành các sản phẩm và dịch vụ phần mềm và hệ thống, đồng
+  thời cải tiến liên tục mọi khía cạnh trong vòng đời của chúng.</p>
+  <p>Nguyên văn: <em>"DevOps: Set of principles and practices which enable better communication and
+  collaboration between relevant stakeholders for the purpose of specifying, developing, and operating
+  software and systems products and services, and continuous improvements in all aspects of the life
+  cycle."</em></p>
 </div>
 
-<p>Định nghĩa này là bản tóm tắt của phụ lục, không phải lời của một tổ chức chuẩn hoá nào. Nó khớp với ba
-mốc ở tab trước: chung trách nhiệm là "you build it, you run it"; tự động hoá là điều kiện để Flickr deploy
-mười lần một ngày; đo lường là phần mà tab này kể tiếp.</p>
+<p>Các bên liên quan (<em>stakeholders</em>) là những người có phần trong việc phần mềm được làm ra và
+chạy ra sao; trong câu chuyện của phụ lục, đó trước hết là hai đội ở tab Hai đội. Chính chuẩn cũng kể lại
+thuật ngữ ra đời từ đâu (mục 5.1), và lời kể ấy khớp với những gì tab đầu đã kể. Theo chuẩn, thuật ngữ DevOps hình
+thành khi đã có sẵn những công cụ tự động hoá hoàn toàn việc build, đóng gói và deploy ứng dụng, cùng với
+nhận thức rằng các tổ chức công nghệ thông tin chưa sẵn sàng dùng những công cụ ấy cho hiệu quả. Chuẩn viết
+tiếp rằng lập trình viên và người vận hành, theo truyền thống, có những góc nhìn khác nhau, có lúc mâu
+thuẫn nhau.</p>
+
+<p>Chuẩn cũng nêu bức tranh quen thuộc: lập trình viên muốn đi nhanh, còn đội vận hành lo giữ độ tin cậy
+và bảo đảm an ninh mạng. Nhưng chính chuẩn gọi bức tranh ấy là một mô tả cực đoan, đơn giản hoá quá mức
+(<em>"an extreme, oversimplified characterization"</em>). Vì vậy hai thước đo ngược nhau ở tab Hai đội
+nên được hiểu là một cách mô tả giúp thấy vì sao hai phía kéo về hai hướng, chưa phải mô tả chính xác cho
+mọi công ty.</p>
+
+<div class="callout">
+  <span class="label">Cách phụ lục này tóm lại</span>
+  <p>Để nối định nghĩa của chuẩn với các mốc ở tab trước, phụ lục dùng một cách nói ngắn hơn và hẹp hơn,
+  của riêng mình: DevOps là cách tổ chức để một nhóm chịu trách nhiệm cho phần mềm từ lúc viết tới lúc nó
+  chạy ổn định, dựa trên ba trụ là <em>chung trách nhiệm</em>, <em>tự động hoá</em> những bước lặp lại
+  giữa code và production, và <em>đo lường</em>.</p>
+</div>
+
+<p>Đây là lời của phụ lục, không trích từ chuẩn. Ba trụ ấy khớp với các mốc ở tab trước: chung trách
+nhiệm là "you build it, you run it"; tự động hoá là điều kiện để Flickr deploy mười lần một ngày; đo lường
+là cách biết có cải tiến liên tục hay không, điều mà định nghĩa của chuẩn nhắc tới, và là phần mà tab
+này kể tiếp.</p>
 
 <h2 id="dora">Đo DevOps: năm chỉ số của DORA</h2>
 
@@ -276,9 +303,10 @@ ops dễ dựng thêm một bức tường thứ hai, đúng điều phong trào
 
 <div class="callout ok">
   <span class="label">Chốt</span>
-  <p>DevOps là cách tổ chức để một nhóm chịu trách nhiệm cho phần mềm từ lúc viết tới lúc chạy ổn định, dựa
-  trên chung trách nhiệm, tự động hoá và đo lường. DORA đo nó bằng năm chỉ số tốc độ và độ ổn định, và
-  thấy hai thứ đi cùng chiều chứ không đánh đổi.</p>
+  <p>Chuẩn IEEE 2675-2021 định nghĩa DevOps là tập hợp nguyên tắc và cách làm giúp các bên liên quan cộng
+  tác tốt hơn suốt vòng đời phần mềm; phụ lục tóm lại thành ba trụ: chung trách nhiệm, tự động hoá và đo
+  lường. DORA đo DevOps bằng năm chỉ số tốc độ và độ ổn định, và thấy hai thứ đi cùng chiều chứ không đánh
+  đổi.</p>
   <p>Những ý tưởng của năm 2009 giờ nằm ở đâu trong công việc hằng ngày, và trong lộ trình này?</p>
 </div>
 
@@ -314,10 +342,10 @@ mình không biết nó hỏng trông ra sao.</p>
 
 <div class="callout">
   <span class="label">Điều phụ lục này muốn để lại</span>
-  <p>Câu "chỉ chặng <span class="stg">8</span> là code bạn viết" của Bài 00 từng là ranh giới giữa hai đội:
-  bên này tường là dev, bên kia là ops. DevOps không xoá ranh giới ấy khỏi bản đồ; chặng <span class="stg">8</span>
-  vẫn là code của bạn. Nó chỉ đổi người chịu trách nhiệm: cả chín chặng giờ là việc của một nhóm, và lộ
-  trình này dạy bạn đủ để là một người trong nhóm đó.</p>
+  <p>Câu "trong cả đường đi, chỉ ứng dụng là code bạn viết" của Bài 00 từng là ranh giới giữa hai đội:
+  bên này tường là dev, bên kia là ops. DevOps không xoá ranh giới ấy khỏi bản đồ; ứng dụng vẫn là code của
+  bạn. Nó chỉ đổi cách chịu trách nhiệm: cả chín chặng giờ là việc chung của những người cùng làm ra và
+  vận hành phần mềm, và lộ trình này dạy bạn đủ để góp phần vào việc chung ấy.</p>
 </div>
 
 <p>Quay lại <a href="index.html#devops">bài giảng Bài 00</a>, hoặc đi tiếp tới
@@ -332,7 +360,7 @@ mình không biết nó hỏng trông ra sao.</p>
   <li>Nói được Agile giải quyết được gì, và vì sao tốc độ của nó dừng lại ở bức tường</li>
   <li>Kể được ba ý ghép thành DevOps trong khoảng 2006–2009, mỗi ý gắn với một nơi</li>
   <li>Giải thích được vì sao deploy nhỏ và thường xuyên lại ổn định hơn deploy lớn và hiếm</li>
-  <li>Nêu được định nghĩa làm việc của DevOps và ba trụ của nó</li>
+  <li>Nói lại được định nghĩa DevOps trong chuẩn IEEE 2675-2021, và cách phụ lục tóm nó thành ba trụ</li>
   <li>Kể được hai nhóm chỉ số của DORA, và kết luận của DORA về tốc độ và độ ổn định</li>
   <li>Nói được một hiểu lầm hay gặp về DevOps, và vì sao nó sai</li>
 </ul>
@@ -357,6 +385,13 @@ mình không biết nó hỏng trông ra sao.</p>
   <a href="http://legacy.devopsdays.org/events/2009-ghent/program/">legacy.devopsdays.org/events/2009-ghent/program</a></li>
   <li>DORA — <em>DORA's software delivery performance metrics</em>.
   <a href="https://dora.dev/guides/dora-metrics/">dora.dev/guides/dora-metrics</a></li>
+  <li>IEEE 2675-2021 — <em>IEEE Standard for DevOps: Building Reliable and Secure Systems Including
+  Application Build, Package, and Deployment</em>. Nguồn của định nghĩa ở tab Định nghĩa; trang giới thiệu
+  chính thức, toàn văn phải trả phí.
+  <a href="https://standards.ieee.org/ieee/2675/6830/">standards.ieee.org/ieee/2675/6830</a></li>
+  <li>ISO/IEC/IEEE 32675:2022 — bản chuẩn quốc tế được chấp nhận từ IEEE 2675-2021; trang giới thiệu
+  chính thức, toàn văn phải trả phí.
+  <a href="https://www.iso.org/standard/83670.html">iso.org/standard/83670.html</a></li>
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>

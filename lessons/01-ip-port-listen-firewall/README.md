@@ -18,9 +18,10 @@ nằm trong [`notes.md`](notes.md).
 
 [Bài 00](../00-ban-do-toan-canh/) kết thúc ở câu hỏi này:
 
-**App chạy ngon khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu?**
+**App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu?**
 
-Bài tách chặng 3 của bản đồ (mở kết nối) thành bốn câu nhỏ. Hãy thử tự trả lời trước khi đọc:
+Bài đi sâu vào bước mở kết nối trên bản đồ và tách câu hỏi trên thành bốn câu nhỏ. Hãy thử tự trả lời
+trước khi đọc:
 
 1. Một máy có những địa chỉ IP nào, và vì sao `localhost` luôn trỏ về máy của chính người gõ nó?
 2. Trong một máy có hàng chục chương trình, kết nối được giao cho đúng chương trình bằng cách nào?
@@ -63,28 +64,30 @@ Bài tách chặng 3 của bản đồ (mở kết nối) thành bốn câu nh�
 Gói tin từ máy khác gặp ba điều kiện theo đúng thứ tự dưới đây. Thiếu điều kiện nào thì triệu chứng
 mang dấu của điều kiện đó.
 
-| # | Điều kiện | Thiếu thì thấy gì |
+| Điều kiện | Cụ thể là | Thiếu thì thấy gì |
 |---|---|---|
-| 1 | Gọi đúng địa chỉ: địa chỉ của máy bạn trong mạng chung, như `192.168.10.38:8080`, không phải `localhost` | `refused`, ở chính máy người gọi |
-| 2 | Firewall trên máy bạn cho gói tin từ ngoài vào port 8080 | `timeout` |
-| 3 | App listen trên địa chỉ được gọi tới hoặc trên `0.0.0.0`, không chỉ `127.0.0.1` | `refused` |
+| Gọi đúng địa chỉ | Gọi địa chỉ của máy bạn trong mạng chung, như `192.168.10.38:8080`, không phải `localhost` | `refused`, ở chính máy người gọi |
+| Firewall cho qua | Firewall trên máy bạn cho gói tin từ ngoài vào port 8080 | `timeout` |
+| Có chương trình listen đúng địa chỉ | App listen trên địa chỉ được gọi tới hoặc trên `0.0.0.0`, không chỉ `127.0.0.1` | `refused` |
 
 Hai hệ quả cần nhớ:
 
-- Thiếu điều kiện 1 và thiếu điều kiện 3 cho **cùng** triệu chứng `refused`, nên gặp `refused` thì kiểm cả hai.
+- Gọi sai địa chỉ và không có chương trình listen đúng địa chỉ cho cùng triệu chứng `refused`, nên gặp
+  `refused` thì kiểm cả hai.
 - **Sửa đúng một điều kiện thì triệu chứng đổi.** Mở firewall xong mà triệu chứng đổi từ `timeout` sang
-  `refused` nghĩa là firewall đã sửa đúng, giờ gói tin vấp ở điều kiện 3.
+  `refused` nghĩa là firewall đã sửa đúng, giờ gói tin dừng ở điều kiện kế tiếp: app chưa listen đúng địa
+  chỉ.
 
 ### Ẩn dụ hỗ trợ ghi nhớ: một tòa nhà
 
-Phép so sánh này **không phải định nghĩa**, chỉ giúp giữ bốn vai tách bạch:
+Phép so sánh này không phải định nghĩa, chỉ giúp giữ bốn vai tách bạch:
 
 ```
-địa chỉ IP           =  một LỐI VÀO của tòa nhà (tòa nhà có nhiều lối vào)
-port                 =  số PHÒNG bên trong tòa nhà
-chương trình listen  =  NGƯỜI ngồi trong phòng, tự chọn tiếp khách
+địa chỉ IP           =  một lối vào của tòa nhà (tòa nhà có nhiều lối vào)
+port                 =  số phòng bên trong tòa nhà
+chương trình listen  =  người ngồi trong phòng, tự chọn tiếp khách
                         đến từ lối vào nào (listen address)
-firewall             =  BẢO VỆ ở lối vào, lọc ai được đi vào
+firewall             =  bảo vệ ở lối vào, lọc ai được đi vào
 ```
 
 > **Giới hạn của ẩn dụ.** Không có căn phòng nào: port chỉ là con số 16 bit trong phần đầu gói tin, và
@@ -100,7 +103,7 @@ firewall             =  BẢO VỆ ở lối vào, lọc ai được đi vào
 | Ở tầng TCP | `SYN` đi, `RST` quay về | `SYN` đi, không gì quay về; bên gọi gửi lại `SYN` rồi bỏ cuộc |
 | Ai quyết định lúc dừng | Bên gọi dừng vì **nhận được câu trả lời** | Bên gọi dừng vì **ta bảo nó dừng** (`--max-time`) |
 | Máy đích | **Còn sống**: phải có hệ điều hành đang chạy mới gửi được `RST` | Có thể sống mà firewall vứt gói tin lặng lẽ, hoặc không có máy nào |
-| Thường chỉ về | Điều kiện 1 hoặc 3 | Điều kiện 2, hoặc địa chỉ không có máy |
+| Thường chỉ về | Gọi sai địa chỉ, hoặc không có chương trình listen đúng địa chỉ | Firewall không cho qua, hoặc địa chỉ không có máy |
 | `curl` | `(7)` `CURLE_COULDNT_CONNECT` | `(28)` `CURLE_OPERATION_TIMEDOUT` |
 
 Đừng phân biệt bằng tốc độ: trên Windows, một lần `refused` tới chính máy mình mất hơn hai giây.
@@ -110,8 +113,8 @@ Ngoại lệ cần biết: firewall cấu hình **từ chối** (thay vì vứt 
 
 ## Lab
 
-Tất cả chạy trong **Git Bash** trên Windows. Lab 1 và Lab 2 đo hai triệu chứng; Lab 3 tự gây lỗi ở
-điều kiện 3 rồi tự sửa.
+Tất cả chạy trong **Git Bash** trên Windows. Lab 1 và Lab 2 đo hai triệu chứng; Lab 3 tự gây lỗi listen
+sai địa chỉ rồi tự sửa.
 
 ### Lab 1 — tự gây `refused`, rồi tự gây `timeout`
 
@@ -144,7 +147,7 @@ time curl -4 -o /dev/null --max-time 15 http://127.0.0.1:9999
 Nếu lệnh thứ nhất dừng sớm với `No route to host`, nghĩa là mạng của bạn chủ động từ chối đường tới
 dải `10.x`: đó là một lời từ chối, không phải sự im lặng. Ghi lại vào `notes.md`.
 
-### Lab 3 — tự gây lỗi ở điều kiện 3: listen sai địa chỉ
+### Lab 3 — tự gây lỗi: app listen sai địa chỉ
 
 Tệp [`lab/nghe.js`](lab/nghe.js) là một server nhỏ chạy bằng Node, listen port 8080 trên địa chỉ bạn
 truyền vào. Trước hết tìm địa chỉ WiFi của máy bằng `ipconfig` (dòng `IPv4 Address` dưới mục card WiFi).
@@ -161,26 +164,28 @@ curl http://192.168.x.y:8080
 ```
 
 **Kỳ vọng:** `netstat` in `127.0.0.1:8080 … LISTENING`; gọi `127.0.0.1` nhận `xin chao tu 127.0.0.1`;
-gọi địa chỉ WiFi ra `curl: (7)`. App vẫn chạy ngon, chỉ là nó không nhận kết nối gọi tới địa chỉ WiFi.
+gọi địa chỉ WiFi ra `curl: (7)`. App vẫn chạy bình thường, chỉ là nó không nhận kết nối gọi tới địa chỉ
+WiFi: thiếu điều kiện có chương trình listen đúng địa chỉ.
 
 **Sửa:** Ctrl+C ở cửa sổ 1, chạy `node lab/nghe.js 0.0.0.0`, lặp lại ba lệnh. `netstat` đổi thành
 `0.0.0.0:8080`, cả hai `curl` đều nhận được câu trả lời.
 
 **Bước thêm, nếu có máy thứ hai hoặc điện thoại cùng WiFi:** mở `http://192.168.x.y:8080` từ đó. Quay
-lâu rồi báo lỗi là điều kiện 2: firewall đang vứt kết nối đi vào. Thêm luật ở mục dưới, thử lại, rồi gỡ:
+lâu rồi báo lỗi là thiếu điều kiện firewall cho qua: firewall đang vứt kết nối đi vào. Thêm luật ở mục
+dưới, thử lại, rồi gỡ:
 
 ```powershell
 Remove-NetFirewallRule -DisplayName "Spring Boot dev 8080"
 ```
 
 Gọi địa chỉ WiFi **từ chính máy mình** không kiểm được firewall, vì gói tin không thật sự đi ra mạng;
-muốn kiểm điều kiện 2, gói tin phải đến từ máy khác.
+muốn kiểm firewall, gói tin phải đến từ máy khác.
 
 ---
 
-## Thói quen phải bỏ từ hôm nay
+## Thói quen nên bỏ
 
-Gặp lỗi mạng, **đừng tắt firewall** cho nhanh. Mở **đúng một port, cho đúng nguồn cần thiết** (PowerShell,
+Gặp lỗi mạng, đừng tắt firewall cho nhanh. Mở **đúng một port, cho đúng nguồn cần thiết** (PowerShell,
 quyền quản trị):
 
 ```powershell
@@ -189,8 +194,8 @@ New-NetFirewallRule -DisplayName "Spring Boot dev 8080" `
   -RemoteAddress LocalSubnet -Action Allow
 ```
 
-Nguyên tắc đứng sau: **least privilege**, đặc quyền tối thiểu. Thói quen hình thành trên máy dev là thói
-quen người ta mang lên máy chủ thật.
+Nguyên tắc đứng sau là **least privilege** (đặc quyền tối thiểu): mỗi thành phần chỉ được cấp đúng phần
+quyền nó cần.
 
 ---
 
@@ -207,8 +212,8 @@ quen người ta mang lên máy chủ thật.
 
 ## Kết lại
 
-Muốn gọi tới được cần đủ ba điều kiện: đúng địa chỉ IP, có chương trình listen ở port đó trên đúng địa
-chỉ, và firewall cho đi qua. `refused` hay `timeout` cho biết điều kiện nào đang thiếu.
+Muốn gọi tới được cần đủ ba điều kiện, theo thứ tự gói tin gặp chúng: gọi đúng địa chỉ, firewall cho
+qua, có chương trình listen đúng địa chỉ. `refused` hay `timeout` cho biết điều kiện nào đang thiếu.
 
 ## Câu hỏi cho bài sau
 

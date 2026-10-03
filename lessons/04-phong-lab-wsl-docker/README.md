@@ -214,7 +214,8 @@ check if the path is correct and if the daemon is running: open
 Bản cũ hơn của client viết `Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the
 docker daemon running?`. Trong Ubuntu có thể là câu báo lệnh `docker` không có trong distro. Trả lời: ai
 viết ra thông báo, client có chạy không, đầu bên kia thiếu gì? **Sửa:** mở lại Docker Desktop, đợi
-engine chạy, chạy lại `docker version`.
+engine chạy, chạy lại `docker version`: phần `Server` quay về. Sửa đúng tầng daemon thì triệu chứng đổi,
+đúng nguyên tắc "sửa một tầng thì triệu chứng đổi" của Bài 02.
 
 ### Lab 7 — Phép đo đối chứng
 
@@ -225,8 +226,8 @@ time curl -4 -o /dev/null http://127.0.0.1:9999
 ```
 
 **Kỳ vọng (chưa đo):** `curl: (7) Failed to connect … after 0 ms`, `real` cỡ vài phần trăm giây. So với
-**2,155 giây** trên Windows: cùng lệnh, cùng máy, cùng port, khác kernel. Thiếu `curl` thì
-`sudo apt update && sudo apt install curl`.
+**2,155 giây** trên Windows: lệnh, máy và port như nhau, nên chênh lệch là chênh lệch giữa hai kernel.
+Thiếu `curl` thì `sudo apt update && sudo apt install curl`.
 
 ## Vốn lệnh tối thiểu
 

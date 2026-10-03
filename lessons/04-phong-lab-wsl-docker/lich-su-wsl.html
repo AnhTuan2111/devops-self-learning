@@ -33,10 +33,10 @@
 <!-- ================================================================== -->
 <section class="tab" id="t-van-de" data-tab="Vấn đề" data-note="chương trình Linux, kernel Windows">
 
-<p class="panel-intro">Phụ lục trả lời một câu nảy ra ở tab WSL2 của Bài 04: lịch sử đã thử ba lối thoát để chạy
-chương trình Linux trên Windows, vậy vì sao hai lối đầu không đủ, và WSL2 khác chúng ở đâu?</p>
+<p class="panel-intro">Phụ lục trả lời một câu nảy ra ở tab WSL2 của Bài 04: đã có ba cách được thử để chạy
+chương trình Linux trên Windows, vậy vì sao hai cách đầu không đủ, và WSL2 khác chúng ở đâu?</p>
 
-<h2 id="hai-the-gioi">Hai thế giới không nói cùng một thứ tiếng</h2>
+<h2 id="hai-the-gioi">Hai kernel, hai bộ syscall khác nhau</h2>
 
 <p>Vấn đề có từ lâu trước WSL. Phần lớn server chạy hệ điều hành kiểu Unix, ngày nay chủ yếu là Linux; công cụ
 của người làm hạ tầng, như bash, <code>grep</code>, <code>ssh</code> hay trình biên dịch C, sinh ra trong thế giới
@@ -59,7 +59,7 @@ Windows có định dạng tệp chạy được riêng và bộ lời gọi ri�
   phải, hoặc đưa một kernel Linux vào máy đang chạy Windows.</figcaption>
 </figure>
 
-<p>Có đúng ba hướng để gỡ, và lịch sử đi qua cả ba. Một là đặt một kernel Linux thật bên cạnh, trong máy ảo. Hai là
+<p>Có ba hướng để giải, và cả ba đều đã được thử. Một là đặt một kernel Linux thật bên cạnh, trong máy ảo. Hai là
 biên dịch lại chương trình Linux thành chương trình Windows, kèm một lớp thư viện bắt chước những gì Linux cung cấp.
 Ba là để chương trình Linux nguyên bản chạy, rồi dịch từng syscall của nó sang lời gọi của Windows. WSL2 cuối cùng
 quay về hướng thứ nhất, nhưng sửa đúng những điểm yếu đã khiến người ta phải tìm hai hướng kia.</p>
@@ -69,12 +69,12 @@ quay về hướng thứ nhất, nhưng sửa đúng những điểm yếu đã 
 <!-- ================================================================== -->
 <section class="tab" id="t-may-ao" data-tab="Máy ảo đầy đủ" data-note="chạy được, nhưng nặng">
 
-<p class="panel-intro">Cách giải đầu tiên cũng là cách hiển nhiên nhất: không bắt Windows hiểu Linux nữa, mà chạy
-hẳn một máy Linux bên trong máy ảo. Nó chạy được, nhưng chưa đủ.</p>
+<p class="panel-intro">Cách giải đầu tiên cũng là cách hiển nhiên nhất: chạy hẳn một máy Linux bên trong máy ảo.
+Nó chạy được, nhưng chưa đủ.</p>
 
 <h2 id="may-ao-truyen-thong">Máy ảo truyền thống</h2>
 
-<p>Cách thẳng nhất là không bắt Windows hiểu Linux, mà đặt hẳn một máy Linux bên cạnh. Có hai dạng. Dạng thứ nhất là
+<p>Cách thẳng nhất là đặt hẳn một máy Linux bên cạnh Windows. Có hai dạng. Dạng thứ nhất là
 cài song song hai hệ điều hành trên cùng ổ đĩa và chọn một trong hai mỗi lần bật máy, gọi là <em>dual boot</em>;
 cách này cho Linux thật trên phần cứng thật, nhưng muốn dùng Linux thì phải tắt Windows. Dạng thứ hai là máy ảo như
 Bài 04 đã định nghĩa: một phần mềm như VirtualBox hay VMware Workstation dựng một máy tính ảo, và bên trong nó chạy một
@@ -93,9 +93,9 @@ bản Linux đầy đủ với kernel của riêng nó.</p>
 <p>Về kỹ thuật, máy ảo giải quyết trọn vấn đề: chương trình Linux nói chuyện với kernel Linux thật, không có gì phải
 dịch. Giới hạn nằm ở chỗ khác, và tài liệu của Microsoft tóm tắt nó trong một câu: trải nghiệm máy ảo truyền thống
 "có thể khởi động chậm, bị cô lập, tốn nhiều tài nguyên, và đòi hỏi thời gian của bạn để quản lý nó". Cô lập ở đây
-nghĩa là hai thế giới khó dùng chung: tệp nằm trong ổ đĩa ảo, muốn mở bằng IDE trên Windows phải dựng thư mục chia sẻ;
+nghĩa là hai hệ thống khó dùng chung: tệp nằm trong ổ đĩa ảo, muốn mở bằng IDE trên Windows phải dựng thư mục chia sẻ;
 máy ảo có địa chỉ mạng riêng; RAM cấp cho máy ảo thường bị giữ chỗ dù không dùng tới. Với người chỉ cần gõ vài lệnh
-<code>grep</code> lên tệp của mình, cái giá đó quá đắt, nên người ta tìm cách nhẹ hơn.</p>
+<code>grep</code> lên tệp của mình, chi phí đó quá lớn, nên người ta tìm cách nhẹ hơn.</p>
 
 </section>
 
@@ -141,7 +141,7 @@ hàm của Windows.</p>
 
 <p>Git for Windows, theo trang kỹ thuật của chính nó, "về cơ bản là một tập con của MSYS2 với một bộ gói được cài
 sẵn". Git Bash bạn dùng từ Bài 00 chính là bash của MSYS2. Điều này giải thích hai chuyện lạ đã gặp. Ở
-<a href="../00-ban-do-toan-canh/phan-tich-output.html#t-curl-ket-noi">trang mổ băng output của Bài 00</a>,
+<a href="../00-ban-do-toan-canh/phan-tich-output.html#t-curl-ket-noi">trang phân tích output của Bài 00</a>,
 <code>which curl</code> trả về <code>/mingw64/bin/curl</code>: <code>curl</code> của Git Bash là chương trình Windows
 thuần trong môi trường MINGW64, được dựng với thư viện TLS của Windows, nên không in thông tin chứng chỉ như bản Linux.
 Bài 03 phải viết <code>taskkill //F</code> với hai dấu gạch: theo tài liệu của MSYS2, khi gọi một chương trình Windows
@@ -160,14 +160,14 @@ từ môi trường dựng trên Cygwin, mọi tham số "trông giống đườ
 <!-- ================================================================== -->
 <section class="tab" id="t-wsl1" data-tab="WSL 1" data-note="2016: dịch syscall">
 
-<p class="panel-intro">Hướng thứ ba táo bạo hơn: không biên dịch lại gì cả, mà dịch từng syscall ngay lúc chương
-trình chạy.</p>
+<p class="panel-intro">Hướng thứ ba không biên dịch lại gì cả: nó dịch từng syscall ngay lúc chương trình
+chạy.</p>
 
 <h2 id="wsl1-dich-syscall">WSL 1: chạy tệp ELF nguyên bản, dịch từng syscall</h2>
 
 <p>Năm 2016, Microsoft đưa vào Windows 10 một thành phần mới, Windows Subsystem for Linux, ra mắt cùng bản cập nhật
 Anniversary Update năm đó. Bài tổng quan trên blog của nhóm WSL, đăng ngày 22/04/2016, mô tả WSL là "một tập các thành
-phần cho phép tệp ELF64 Linux nguyên bản chạy trên Windows". Chữ "nguyên bản" là bước ngoặt so với Cygwin: không ai
+phần cho phép tệp ELF64 Linux nguyên bản chạy trên Windows". Chữ "nguyên bản" là điểm khác Cygwin: không ai
 phải biên dịch lại gì; bash của Ubuntu, nguyên tệp như trên server, chạy được trên Windows. Phần cốt lõi của nó là hai
 <strong>driver</strong>, tức chương trình được nạp vào chạy ngay bên trong kernel Windows, ở kernel mode.</p>
 
@@ -200,7 +200,7 @@ theo đúng cách kernel Linux sẽ trả. Chương trình không biết mình �
 
 <h2 id="gioi-han-wsl1">Giới hạn của việc dịch</h2>
 
-<p>Dịch là đuổi theo một mục tiêu luôn chạy. Linux có vài trăm syscall, mỗi cái có những trường hợp riêng, và kernel
+<p>Cách dịch phải theo kịp toàn bộ những gì kernel Linux cung cấp. Linux có vài trăm syscall, mỗi cái có những trường hợp riêng, và kernel
 Linux còn cung cấp những thứ không phải syscall đơn lẻ mà là cả một cơ chế. Syscall nào chưa được dịch, hoặc dịch chưa
 đúng từng chi tiết, thì chương trình cần nó hỏng. Bài công bố WSL 2 năm 2019 nói thẳng hai yêu cầu lớn nhất của người
 dùng WSL 1: tăng hiệu năng hệ thống tệp, và "làm nhiều ứng dụng chạy được hơn trong WSL", tức tương thích syscall tốt
@@ -213,8 +213,8 @@ thích syscall đầy đủ.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-wsl2" data-tab="WSL 2" data-note="2019: kernel Linux thật">
 
-<p class="panel-intro">Bước cuối nghe như đi lùi: quay về máy ảo. Nhưng đó là một máy ảo đã bỏ hết những điểm yếu
-của tab Máy ảo đầy đủ.</p>
+<p class="panel-intro">Bước cuối quay về máy ảo, nhưng là một máy ảo đã bỏ phần lớn những điểm yếu nêu ở tab
+Máy ảo đầy đủ.</p>
 
 <h2 id="wsl2-cong-bo">Ngày 6/5/2019: một kernel Linux thật trong Windows</h2>
 
@@ -232,20 +232,20 @@ hạn mới nhất của Linux lúc đó, được công bố mã nguồn đầy
   kernel Linux thật.</figcaption>
 </figure>
 
-<p>Điểm khôn ngoan của WSL 2 là chỗ nó khác máy ảo truyền thống. Máy ảo vẫn có, nhưng Windows tự bật, tự tắt và tự
+<p>WSL 2 khác máy ảo truyền thống ở cách máy ảo được quản lý. Máy ảo vẫn có, nhưng Windows tự bật, tự tắt và tự
 quản lý nó; theo tài liệu của Microsoft, WSL 2 "giữ trải nghiệm người dùng như WSL 1" và "không cần cấu hình hay quản
 lý máy ảo". Bạn không mở cửa sổ máy ảo nào, không cấp RAM cố định; bạn chỉ mở Ubuntu và gõ lệnh như trước. So với tab
 Máy ảo đầy đủ, ba điểm yếu "khởi động chậm, tốn tài nguyên, phải tự quản lý" đã được gỡ; điểm thứ tư, "cô lập", được
-làm mềm bằng cách cho hai thế giới gọi chương trình và đọc tệp của nhau.</p>
+làm mềm bằng cách cho Windows và Linux gọi chương trình và đọc tệp của nhau.</p>
 
 <p>WSL 2 phát hành chính thức cùng Windows 10 bản 2004, năm 2020. Bài thông báo của nhóm WSL ngày 13/03/2020 còn cho
 biết một thay đổi về cách phân phối: kernel Linux được tách khỏi bản cài Windows và gửi tới máy người dùng qua Windows
 Update, "giống như cách cài driver của bên thứ ba". Về sau, chính WSL cũng được tách thành một gói trên Microsoft Store
 để cập nhật nhanh hơn; lệnh <code>wsl --update</code> kéo bản mới nhất về.</p>
 
-<h2 id="wsl2-doi-gi">WSL 2 phải trả giá ở đâu</h2>
+<h2 id="wsl2-doi-gi">Giới hạn của WSL 2</h2>
 
-<p>Không có lời giải nào miễn phí. Vì tệp của Linux giờ nằm trong ổ đĩa ảo của máy ảo, việc đọc tệp qua lại giữa hai hệ
+<p>Vì tệp của Linux giờ nằm trong ổ đĩa ảo của máy ảo, việc đọc tệp qua lại giữa hai hệ
 điều hành chậm hơn WSL 1; bảng so sánh chính thức ghi đúng một hàng WSL 1 thắng, chính là hàng này, và Microsoft khuyên
 đặt tệp dự án cùng phía với công cụ dùng nó. Máy cũng phải hỗ trợ và bật ảo hoá phần cứng, điều WSL 1 không cần. Đổi
 lại, mọi thứ thuộc kernel Linux có mặt đầy đủ: signal thật, OOM killer, <code>dmesg</code>, và về sau cả systemd.</p>
@@ -273,7 +273,7 @@ chúng cạnh nhau theo ba câu hỏi đã dẫn đường cho cả phụ lục.
 </table>
 </div>
 
-<p>Dòng cuối là chỗ lịch sử này chạm vào lộ trình. Docker Desktop trên Windows không tự dựng máy ảo riêng như
+<p>Dòng cuối nối lịch sử này với lộ trình. Docker Desktop trên Windows không tự dựng máy ảo riêng như
 VirtualBox; theo tài liệu của Docker, nó chạy trong distro WSL riêng tên <code>docker-desktop</code>, tức dựa thẳng
 vào kernel Linux mà WSL 2 mang tới, chạy trong chính máy ảo nhẹ mà Windows tự quản.</p>
 
