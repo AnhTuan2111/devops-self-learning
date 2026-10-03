@@ -9,8 +9,8 @@
 
 File này là **vở bài tập** (workbook) của bài. Phần giảng vì sao, sơ đồ đầy đủ và ví dụ nằm
 trong `index.html`; ở đây chỉ giữ những mô hình đã chốt, bảng tra, các bước lab kèm lý do và
-kết quả kỳ vọng, cùng danh sách tự kiểm tra. Bài đang ở trạng thái **đang học**: output thật
-của từng lab sẽ được điền vào [`notes.md`](notes.md) trong buổi học, rồi mới bồi lại vào đây.
+kết quả kỳ vọng, cùng danh sách tự kiểm tra. Mỗi lab có kèm con số của một lần chạy thật; output
+đầy đủ nằm trong [`notes.md`](notes.md).
 
 ---
 
@@ -292,6 +292,10 @@ chính nó. Kỳ vọng thấy dòng `PID = <số> | dang giu phong 8080`. Nếu
 `EADDRINUSE`, nghĩa là phòng 8080 đã có người khác ngồi (có thể là một Spring Boot bạn quên
 tắt) — đó chính là `Address already in use` trong bảng ở trên, và Lab 2 sẽ giúp tìm ra ai.
 
+Chạy lệnh này **từ thư mục của bài**. Nếu gặp `Error: Cannot find module '…\lab\server.js'` thì file
+không mất: bạn đang đứng sai thư mục. Node tính đường dẫn tương đối từ **thư mục làm việc của
+process** chứ không từ chỗ file nằm — `java -jar` cũng vậy.
+
 ### Lab 2 — đi ngược từ PORT, tới PID, tới tên chương trình (cửa sổ 2)
 
 ```bash
@@ -307,6 +311,23 @@ sổ phòng của kernel; hãy tìm dòng trạng thái `LISTENING` (có thể l
 `node.exe`. PID trong `netstat` phải **khớp** với PID mà Node tự in ở Lab 1; nếu không khớp,
 nghĩa là có một process khác đang giữ phòng và Node của bạn đã không khởi động được.
 
+Lần chạy thật: hai dòng `LISTENING` (`0.0.0.0:8080` và `[::]:8080`) cùng PID 29140, khớp với PID Node
+in ra; `tasklist` cho `node.exe 29140 … 54,532 K`. Dòng `TIME_WAIT` với PID `0` là dấu vết kết nối
+của chính `curl` vừa đóng, không phải người ngồi trong phòng.
+
+**Tự gây lỗi thêm — hai process tranh một phòng.** Khi Node vẫn đang chạy, mở cửa sổ thứ ba và chạy
+lại `node lab/server.js`. Kỳ vọng:
+
+```
+Error: listen EADDRINUSE: address already in use :::8080
+  code: 'EADDRINUSE',
+  syscall: 'listen',
+```
+
+`syscall: 'listen'` là lời xin giữ phòng; `EADDRINUSE` là câu trả lời của kernel sau khi tra sổ.
+Process mới chết, process cũ không hề hấn gì: chạy thêm một process không bao giờ đẩy được process
+đang giữ phòng. Muốn chạy được thì trả phòng (tắt process cũ) hoặc đổi port.
+
 ### Lab 3 — file trên đĩa vs process trong RAM
 
 ```bash
@@ -319,6 +340,8 @@ trên đĩa chỉ khoảng 1 KB, nhưng dòng `Mem Usage` của process thườn
 lệch lớn như vậy vì process không chỉ chứa mấy dòng script, mà chứa cả runtime Node (bộ máy
 V8, thư viện chuẩn, bộ nhớ đệm) được nạp vào RAM để chạy nó — giống như JVM đứng sau mọi file
 `.jar`.
+
+Lần chạy thật: 1.188 byte trên đĩa so với 54.532 KB trong RAM, khoảng **47.000 lần**.
 
 ### Lab 4 — giết tử tế, xem phòng trống ngay
 
@@ -334,6 +357,8 @@ Ctrl+C gửi tín hiệu `SIGINT` — một lời báo trước, giống `SIGTER
 chết; hãy so con số `time` với **2,155s** đo được ở Bài 00. Trong `netstat` không còn dòng
 `LISTENING` nào ở 8080. Có thể vẫn thấy vài dòng `TIME_WAIT` với PID `0`: đó không phải người
 ngồi trong phòng, mà là dấu vết của kết nối cũ đang chờ đóng hẳn, và sẽ tự biến mất sau ít phút.
+
+Lần chạy thật: `curl: (7) … after 2030 ms`, `real 0m2.087s` — sát với 2,155 giây ở Bài 00.
 
 ### Lab 5 — giết ÉP, so sánh
 
@@ -369,6 +394,39 @@ chỉ ghi biến vào process bash của cửa sổ 1 (và các process con mà 
 mới là một process bash **khác**, không phải con của cửa sổ 1, nên nó không có biến đó. Kỳ vọng
 dòng cuối in ra trống. Đây cũng là nền tảng của cách đưa mật khẩu và cấu hình vào ứng dụng
 ở Bài 08.
+
+Kiểm chứng thêm ở cửa sổ 1 (`$$` là PID của bash đang chạy, `$PPID` là PID của cha nó):
+
+```bash
+echo $$                                      # 1227
+bash                                         # mỗi lệnh gõ vào bash là một process con, kể cả bash
+echo $$                                      # 1493
+echo $PPID                                   # 1227: cha chính là bash cửa sổ 1
+exit
+node -e "console.log(process.env.BI_MAT)"    # cửa sổ 1: xin chao   ·   cửa sổ 2: undefined
+```
+
+Hai process Node đều là "process khác", nhưng chỉ cái sinh ra từ bash cửa sổ 1, sau `export`, mới có
+biến. Điều quyết định là **cha của nó là ai và nó được sinh ra lúc nào**.
+
+---
+
+## Chỗ hay hiểu sai
+
+Đọc trước khi đánh dấu danh sách tự kiểm tra. Bản có giải thích đầy đủ nằm ở Bảng 9 trong `index.html`.
+
+| Người mới hay nghĩ | Thực tế |
+|---|---|
+| Hết RAM thì app không đủ chỗ khởi động | App **đang chạy** bị kernel giết; RAM thu hồi ngay, khởi động lại chỉ là tạo process mới |
+| App "nạp sẵn" biến môi trường nên đổi không ăn | Process giữ **bản sao riêng** từ lúc sinh; muốn giá trị mới phải tạo process mới |
+| Process khác thì không đọc được biến đặt ở terminal | Con sinh ra **sau** `export` có bản sao; chỉ process không phải con mới không có |
+| Chạy lại chương trình thì bản cũ tự nhường chỗ | Bản mới gặp `EADDRINUSE` và chết; bản cũ vẫn giữ phòng |
+| Viết bằng C là lách được kernel | Ranh giới do **CPU** cưỡng chế, không do ngôn ngữ |
+| Chạy bằng root là chạy trong kernel | root là **user**; kernel mode là **chế độ CPU**. Root vẫn ở user space |
+| Server mất điện thì thấy refused hoặc 502 | Thấy **timeout**: không còn kernel nào để từ chối |
+| `kill -9` làm object trong RAM không được dọn | RAM thu hồi hết; mất là thứ **ngoài process**: connection, transaction, log trong bộ đệm |
+| OOM killer giết process chiếm quá nửa RAM | Chủ yếu theo RAM, **so với các process khác** |
+| Có người trông coi thì 502 chỉ thoáng qua | Spring Boot cần 15–60 giây mới listen; nguyên nhân còn thì vòng lặp chết — dựng lại |
 
 ---
 

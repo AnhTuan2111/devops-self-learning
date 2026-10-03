@@ -1,4 +1,4 @@
-<a href="https://anhtuan2111.github.io/devops-self-learning/"><img src="assets/readme/banner.svg" width="100%" alt="DevOps từ số 0 — đã xong 1/39 bài"></a>
+<a href="https://anhtuan2111.github.io/devops-self-learning/"><img src="assets/readme/banner.svg" width="100%" alt="DevOps từ số 0 — đã xong 2/39 bài"></a>
 
 <img src="assets/readme/roadmap.svg" width="100%" alt="Bức tranh lộ trình: mỗi hàng một module, mỗi ô một bài; ô đã học được tô màu">
 
@@ -15,7 +15,7 @@
 | **Công cụ** | Spring Boot + PostgreSQL + Docker + GitLab CI + Kubernetes + Rancher |
 | **Môi trường** | Windows 11 + WSL2 Ubuntu + Docker Desktop |
 | **Quy mô** | 39 bài · 6 module · khoảng 162–264 giờ học |
-| **Tiến độ** | 1/39 bài đã xong |
+| **Tiến độ** | 2/39 bài đã xong |
 
 Mỗi bài đi từ một **vấn đề có thật**, tới **khái niệm**, rồi mới tới **công cụ**. Bài nào cũng có
 một lab chạy thật, với một bước cố tình gây lỗi rồi tự sửa.
@@ -31,7 +31,7 @@ một lab chạy thật, với một bước cố tình gây lỗi rồi tự s�
 | | # | Bài | Mục tiêu | Ước lượng | Đã học |
 |---|---|---|---|---|---|
 | xong | `00` | [Bản đồ toàn cảnh: một request đi từ browser tới code của bạn](lessons/00-ban-do-toan-canh/) | Vẽ lại được bằng trí nhớ toàn bộ đường đi của một HTTP request, và gọi tên được mọi thành phần trên đường đi đó. | 6–10 giờ | 24/09/2026 |
-| đang học | `01` | [Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì](lessons/01-may-tinh-va-he-dieu-hanh/) | Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy. | 5–8 giờ | 25/09/2026 |
+| xong | `01` | [Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì](lessons/01-may-tinh-va-he-dieu-hanh/) | Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy. | 5–8 giờ | 03/10/2026 |
 |  | `02` | [Phòng lab: WSL2, Docker Desktop và shell tối thiểu](lessons/02-phong-lab-wsl-docker/) | Có một máy Linux thật ngay trong Windows, Docker chạy được trong đó, và đủ vài lệnh shell để đi lại, đọc và sửa tệp. | 3–5 giờ | — |
 
 ### M1 · Docker — Đóng gói và chạy ứng dụng

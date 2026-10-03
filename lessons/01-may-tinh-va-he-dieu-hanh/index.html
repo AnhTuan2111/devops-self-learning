@@ -19,7 +19,7 @@
 <div class="wrap">
 
 <header class="hero">
-  <p class="eyebrow">Module 0 · Bài 01 · bắt đầu 25/09/2026</p>
+  <p class="eyebrow">Module 0 · Bài 01 · học ngày 25/09–03/10/2026</p>
   <h1>Máy tính, hệ điều hành, process: <span class="hl">"server" thật ra là cái gì</span></h1>
   <p class="lede">Bài 00 cho bạn một tấm bản đồ nhìn từ trên cao xuống: chín chặng mà một request
   đi qua. Bài này đi xuống thêm một tầng, chui vào <em>bên trong</em> cái hộp ở nửa dưới tấm bản đồ
@@ -27,7 +27,7 @@
   cho cùng đều chỉ là <strong>một process đang chạy</strong>, sống nhờ bốn loại tài nguyên và nằm
   dưới quyền cai quản tuyệt đối của phần lõi hệ điều hành, gọi là kernel.</p>
   <div class="meta">
-    <span class="chip yellow">Đang học</span>
+    <span class="chip lime">Đã xong</span>
     <span class="chip">5–8 giờ học</span>
     <span class="chip">Không cần WSL</span>
     <span class="chip">Lab: Node + Git Bash</span>
@@ -604,31 +604,21 @@ là hiểu được những lỗi mà không framework nào che giấu nổi.</p
 <!-- ================================================================== -->
 <section class="tab" id="khi-chet" data-tab="Process chết" data-note="từ RAM cạn tới 502">
 
-<h2 id="nam-cach">Năm cách chết, và chỉ ba cách kịp dọn dẹp</h2>
+<h2 id="nam-cach">Process chết: được báo trước, hay bị ép</h2>
 
 <p>Một process không sống mãi, và <em>cách</em> nó chết quyết định hệ thống còn lại trong trạng thái
 nào. Một ứng dụng Spring Boot đang chạy luôn giữ những thứ cần được trả lại tử tế: connection tới
 database, transaction đang dở, dữ liệu log còn nằm trong bộ đệm chưa kịp ghi xuống đĩa. Nếu nó được
-báo trước, nó có thể dọn dẹp những thứ đó; nếu không, chúng bị bỏ lại giữa chừng. Có năm con đường dẫn
-tới cái chết của một process, và điểm mấu chốt là phân biệt được con đường nào cho phép dọn dẹp.</p>
+báo trước, nó có thể dọn dẹp những thứ đó; nếu không, chúng bị bỏ lại giữa chừng. Vì vậy câu hỏi
+đầu tiên là: <em>báo trước bằng cách nào?</em> Process sống trong user space và không tự biết chuyện gì
+đang xảy ra bên ngoài nó, nên lời báo phải đi qua kernel — và kênh kernel dùng để báo cho một process
+gọi là <strong>signal</strong>.</p>
 
-<div class="table-scroll">
-<table>
-  <caption><b>Bảng 7</b> Năm cách một process kết thúc, và ai là người quyết định.</caption>
-  <thead><tr><th>Cách chết</th><th>Ai quyết định</th><th>Kịp dọn dẹp?</th></tr></thead>
-  <tbody>
-    <tr><td>Tự kết thúc bình thường</td><td>chính app</td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
-    <tr><td>Exception không bắt được</td><td>chính app</td><td><i class="ic ic-yes" role="img" aria-label="có"></i> shutdown hook vẫn chạy</td></tr>
-    <tr><td><code>SIGTERM</code> — <code>kill &lt;pid&gt;</code></td><td>người / hệ thống</td><td><i class="ic ic-yes" role="img" aria-label="có"></i> <strong>app được báo trước</strong></td></tr>
-    <tr><td><code>SIGKILL</code> — <code>kill -9</code></td><td>kernel, ép buộc</td><td><i class="ic ic-no" role="img" aria-label="không"></i> <strong>chết ngay lập tức</strong></td></tr>
-    <tr><td><strong>OOM killer</strong></td><td>kernel</td><td><i class="ic ic-no" role="img" aria-label="không"></i> như SIGKILL</td></tr>
-  </tbody>
-</table>
-</div>
 
 <dl class="terms">
   <dt>Signal <small>tín hiệu</small></dt>
-  <dd>Một thông báo không đồng bộ mà kernel gửi tới process, mang một con số và một ý nghĩa quy ước.
+  <dd>Một thông báo ngắn mà kernel gửi tới process vào bất kỳ lúc nào, không cần process hỏi; mỗi
+  signal mang một con số và một ý nghĩa quy ước.
   Process có thể đăng ký hàm xử lý (<em>handler</em>) cho phần lớn signal; nếu không đăng ký, mỗi
   signal có một hành vi mặc định — với SIGTERM và SIGINT, mặc định là kết thúc process.</dd>
   <dt>SIGINT <small>signal số 2</small></dt>
@@ -703,6 +693,25 @@ lần ra tay.</p>
   <p>Hệ quả phản trực giác: khi server hết RAM, process bị giết gần như luôn luôn là <strong>chính app
   của bạn</strong> — kể cả khi thủ phạm gây hết RAM là một process khác, chẳng hạn một script backup
   chạy lúc nửa đêm. Kernel không tìm kẻ có lỗi; nó tìm kẻ mà giết đi thì được nhiều chỗ nhất.</p>
+</div>
+
+<h3 id="tong-ket-cach-chet">Gom lại: năm cách một process kết thúc</h3>
+
+<p>Tới đây đã đủ khái niệm để xếp mọi cách chết vào một bảng. Cột đáng nhìn nhất là cột cuối:
+chỉ những cách chết mà process <em>được báo trước</em> mới cho nó cơ hội dọn dẹp, và hai cách do
+kernel ép buộc thì không.</p>
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 7</b> Năm cách một process kết thúc, và ai là người quyết định.</caption>
+  <thead><tr><th>Cách chết</th><th>Ai quyết định</th><th>Kịp dọn dẹp?</th></tr></thead>
+  <tbody>
+    <tr><td>Tự kết thúc bình thường</td><td>chính app</td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
+    <tr><td>Exception không bắt được</td><td>chính app</td><td><i class="ic ic-yes" role="img" aria-label="có"></i> các đoạn dọn dẹp đã đăng ký vẫn chạy</td></tr>
+    <tr><td><code>SIGTERM</code> — <code>kill &lt;pid&gt;</code></td><td>người / hệ thống</td><td><i class="ic ic-yes" role="img" aria-label="có"></i> <strong>app được báo trước</strong></td></tr>
+    <tr><td><code>SIGKILL</code> — <code>kill -9</code></td><td>kernel, ép buộc</td><td><i class="ic ic-no" role="img" aria-label="không"></i> <strong>chết ngay lập tức</strong></td></tr>
+    <tr><td><strong>OOM killer</strong></td><td>kernel</td><td><i class="ic ic-no" role="img" aria-label="không"></i> như SIGKILL</td></tr>
+  </tbody>
+</table>
 </div>
 
 <h3 id="dau-hieu-oom">Dấu hiệu nhận biết OOM — và vì sao nó khó tìm</h3>
@@ -837,6 +846,10 @@ sửa một dòng code nào — chỉ cần viết một file cấu hình cho ng
   lặp mà nhìn từ ngoài giống như website "chập chờn". Tự động dựng dậy giải quyết <em>triệu chứng</em>
   để người dùng ít bị ảnh hưởng; tìm ra bước <span class="stg">1</span> vẫn là việc của bạn, và đó là lý do ở Bài 35 và 36 ta sẽ học
   cách đo và cách tự báo động — để biết app đã phải dựng dậy bao nhiêu lần và vì sao.</p>
+  <p>Vòng lặp đó còn có một nạn nhân khó thấy hơn. Ngay sau khi được dựng lại, JVM thường còn nhỏ vì
+  chưa nạp hết mọi thứ. Nếu thủ phạm làm cạn RAM là một script sao lưu chạy ban đêm, lúc này chính
+  script mới là process lớn nhất — và OOM killer giết nó. App sống lại, nhưng bản sao lưu đêm đó thất
+  bại mà không ai hay, cho tới ngày cần khôi phục dữ liệu mới phát hiện ra.</p>
 </div>
 
 </section>
@@ -887,12 +900,24 @@ process.on('SIGINT', () => {
 <p>Để ý hai điểm trong đoạn code. Lời gọi <code>server.listen(8080)</code> chính là lúc Node xin
 kernel giữ phòng 8080 qua <code>bind()</code> và <code>listen()</code>. Còn khối
 <code>process.on('SIGINT', …)</code> là một signal handler: nó chỉ có cơ hội chạy nếu process được
-báo trước. Chạy server:</p>
+báo trước. Chạy server từ thư mục của bài (<code>lessons/01-may-tinh-va-he-dieu-hanh</code>):</p>
 
 <pre><code>node lab/server.js</code></pre>
 
 <p>Nó in ra PID của chính nó. <strong>Ghi lại con số đó</strong> vào <code>notes.md</code>; các lab
 sau đều cần nó.</p>
+
+<div class="callout warn">
+  <span class="label">Lỗi hay gặp ngay bước đầu: <code>Cannot find module</code></span>
+  <p>Gõ cùng lệnh đó khi đang đứng ở thư mục gốc của repo, Node báo:</p>
+<pre><code>Error: Cannot find module '…\devops_selfLearning\lab\server.js'
+  code: 'MODULE_NOT_FOUND'</code></pre>
+  <p>File không hề mất. Node tính đường dẫn tương đối <code>lab/server.js</code> từ <strong>thư mục
+  làm việc của process</strong> — dòng <code>cwd</code> trong Hình 6 — chứ không tính từ chỗ file nằm,
+  nên nó đi tìm một thư mục <code>lab</code> không có ở gốc repo. Ứng dụng Spring Boot cũng vậy:
+  <code>new File("config/app.yml")</code> tìm thấy hay không là tuỳ bạn gõ <code>java -jar</code> từ
+  thư mục nào. Sửa: <code>cd</code> vào thư mục của bài rồi chạy lại.</p>
+</div>
 
 <h3 id="lab-2">Lab 2 — Xác nhận "người trong phòng 8080" chính là process này</h3>
 
@@ -914,9 +939,56 @@ khi debug <code>Address already in use</code> ngoài đời thật: thay vì đo
 bạn đọc thẳng vào sổ phòng của kernel. (Dấu <code>//</code> trước <code>FI</code> là vì Git Bash hiểu
 một dấu <code>/</code> là đường dẫn; nhân đôi nó để truyền nguyên văn cho lệnh Windows.)</p>
 
+<p>Một lần chạy thật trên Windows cho ra:</p>
+
+<pre><code>$ curl http://localhost:8080
+con song
+
+$ netstat -ano | grep 8080
+  TCP    0.0.0.0:8080           0.0.0.0:0              LISTENING       29140
+  TCP    [::]:8080              [::]:0                 LISTENING       29140
+  TCP    [::1]:52835            [::1]:8080             TIME_WAIT       0
+
+$ tasklist //FI "PID eq 29140"
+Image Name                     PID Session Name        Session#    Mem Usage
+========================= ======== ================ =========== ============
+node.exe                     29140 Console                    1     54,532 K</code></pre>
+
+<p>Hai dòng <code>LISTENING</code> mang cùng PID 29140, khớp với PID mà Node tự in ra: một process
+giữ phòng 8080 ở cả cửa IPv4 (<code>0.0.0.0</code>) lẫn cửa IPv6 (<code>[::]</code>) — chuyện "listen ở
+cửa nào" của Bài 00. Dòng thứ ba, trạng thái <code>TIME_WAIT</code> với PID <code>0</code>, thì không phải
+người ngồi trong phòng: đó là dấu vết của chính kết nối mà <code>curl</code> vừa mở rồi đóng, đang chờ
+kernel dọn hẳn.</p>
+
+<h3 id="lab-2-tranh-phong">Tự gây lỗi: hai process tranh một phòng</h3>
+
+<p>Lúc process ở trên vẫn đang chạy, mở thêm một cửa sổ và chạy lại <code>node lab/server.js</code>.
+Trước khi chạy, hãy dự đoán bằng sổ phòng ở tab Kernel: process mới sẽ ra sao, và process cũ có bị
+ảnh hưởng gì không?</p>
+
+<pre><code>Error: listen EADDRINUSE: address already in use :::8080
+  code: 'EADDRINUSE',
+  syscall: 'listen',
+  address: '::',
+  port: 8080</code></pre>
+
+<p>Mấy dòng cuối đọc được bằng chính kiến thức của bài. <code>syscall: 'listen'</code> là lời process
+mới xin kernel giữ phòng 8080 — nhóm Mạng trong Bảng 6. <code>EADDRINUSE</code> là câu trả lời của
+kernel sau khi tra sổ và thấy phòng đã ghi tên người khác; <code>address already in use</code> chỉ là
+Node dịch mã đó sang chữ. Process mới không có code bắt lỗi này nên tự chết — cách chết "exception
+không bắt được" trong Bảng 7 — còn process cũ vẫn chạy như không có gì xảy ra.</p>
+
+<div class="callout ok">
+  <span class="label">Chạy thêm một process không bao giờ đẩy được process đang giữ phòng</span>
+  <p>Muốn process mới chạy được chỉ có hai đường: <strong>trả phòng</strong> (tắt process cũ) hoặc
+  <strong>xin phòng khác</strong> (đổi port — với Spring Boot là <code>server.port</code>). Trước khi
+  chọn đường nào, hãy dùng ba lệnh ở trên để biết chắc ai đang giữ phòng: process đó có khi là một ứng
+  dụng bạn đã bật từ trước rồi quên mất.</p>
+</div>
+
 <h3 id="lab-3">Lab 3 — Chứng minh process ăn RAM, còn file <code>.js</code> thì không</h3>
 
-<pre><code># File trên đĩa: vài trăm byte
+<pre><code># File trên đĩa: khoảng 1 KB
 ls -l lab/server.js
 
 # Process trong RAM: vài chục MB
@@ -925,6 +997,11 @@ tasklist //FI "PID eq &lt;PID&gt;" //FO LIST</code></pre>
 <p>So hai con số. <strong>Cùng một chương trình, khác nhau ở chỗ một cái đang sống.</strong> Phần
 chênh lệch không nằm trong file của bạn: nó là toàn bộ bộ máy JavaScript của Node được nạp lên mặt
 bàn để chạy vài dòng code đó — đúng như Hình 4 đã mô tả cho <code>app.jar</code>.</p>
+
+<p>Một lần chạy thật: <code>server.js</code> nặng 1.188 byte, còn process Node chạy nó chiếm 54.532 KB,
+gấp khoảng <strong>47.000 lần</strong>. Trên cùng máy lúc đó có một process <code>java.exe</code> chiếm
+732.832 KB, hơn 13 lần Node — một minh chứng nhỏ cho điều tab Process chết đã nói: JVM thường là
+process lớn nhất máy.</p>
 
 <h3 id="lab-4">Lab 4 — Giết process, và xem phòng trống ngay lập tức</h3>
 
@@ -935,8 +1012,17 @@ nói lời cuối trước khi thoát. Rồi ở cửa sổ kia:</p>
 <pre><code>time curl -4 http://localhost:8080
 netstat -ano | grep 8080</code></pre>
 
-<p>Bạn sẽ thấy <code>Connection refused</code>, và dòng của phòng 8080 <strong>biến mất khỏi
-sổ</strong>. So con số của <code>time</code> với 2,155 giây ở Bài 00 và ghi vào <code>notes.md</code>.</p>
+<p>Bạn sẽ thấy <code>curl</code> báo lỗi <code>(7)</code> — không kết nối được, tức là refused — và dòng
+của phòng 8080 <strong>biến mất khỏi sổ</strong>. So con số của <code>time</code> với 2,155 giây ở Bài 00
+và ghi vào <code>notes.md</code>. Một lần chạy thật:</p>
+
+<pre><code>$ time curl -4 http://localhost:8080
+curl: (7) Failed to connect to localhost port 8080 after 2030 ms: Could not connect to server
+
+real    0m2.087s</code></pre>
+
+<p>2,087 giây, sát với 2,155 giây ở Bài 00: cả hai đều đến từ cùng một hành vi thử lại của Windows khi
+bị từ chối kết nối, nên con số gần như không đổi giữa các lần đo.</p>
 
 <div class="callout ok">
   <span class="label">Bạn vừa tự tay dựng lại bước <span class="stg">4</span> <span class="stg">5</span> <span class="stg">6</span> của chuỗi bảy bước</span>
@@ -981,6 +1067,59 @@ echo $BI_MAT        # → (trống)</code></pre>
 đặt nó, và trong những process con mà bash đó sinh ra sau thời điểm <code>export</code>. Cửa sổ thứ
 hai là một process bash khác, với bản sao biến môi trường riêng của nó. Đây là nền tảng của toàn bộ
 cách quản lý cấu hình và secret sau này. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../08-cau-hinh-va-secret/">Bài 08</a>.</p>
+
+<p>Câu "những process con mà bash đó sinh ra sau thời điểm <code>export</code>" kiểm chứng được ngay.
+Mỗi lệnh gõ vào bash đều chạy thành một process con của nó — kể cả khi lệnh đó là chính
+<code>bash</code>. Trong các lệnh dưới đây, <code>$$</code> là PID của bash đang chạy, còn
+<code>$PPID</code> là PID của cha nó:</p>
+
+<pre><code># Cửa sổ 1, sau export
+$ echo $$
+1227
+$ bash          # sinh ra một bash con, vẫn trong cửa sổ này
+$ echo $$
+1493
+$ echo $PPID
+1227
+$ exit          # quay về bash cha
+
+# Cùng một dòng, chạy ở hai cửa sổ
+$ node -e "console.log(process.env.BI_MAT)"     # cửa sổ 1
+xin chao
+$ node -e "console.log(process.env.BI_MAT)"     # cửa sổ 2
+undefined</code></pre>
+
+<p>Bash con có PPID đúng bằng PID của bash cửa sổ 1: quan hệ cha–con nhìn thấy được bằng số. Hai
+process Node ở hai cửa sổ thì đều là "một process khác", nhưng chỉ process sinh ra từ bash của cửa sổ 1
+mới có <code>BI_MAT</code>. <strong>Điều quyết định không phải là khác process hay không, mà là cha của
+nó là ai, và nó được sinh ra trước hay sau dòng <code>export</code>.</strong> (<code>node -e "…"</code>
+chạy một dòng JavaScript viết ngay trên dòng lệnh; <code>process.env</code> tương đương
+<code>System.getenv()</code> của Java.)</p>
+
+<h2 id="hay-hieu-sai">Những chỗ hay hiểu sai</h2>
+
+<p>Trước khi đánh dấu danh sách tự kiểm tra, hãy đọc bảng dưới. Mỗi dòng là một cách hiểu nghe rất
+hợp lý — người mới học bài này thường nghĩ đúng như thế — nhưng sai ở một mắt xích cụ thể. Nếu bạn
+từng nghĩ như cột đầu, bấm "xem lại" để quay về đúng mục đã giảng.</p>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 9</b> Mười cách hiểu sai thường gặp, và mắt xích bị bỏ sót.</caption>
+  <thead><tr><th>Người mới hay nghĩ</th><th>Thực tế</th><th></th></tr></thead>
+  <tbody>
+    <tr><td>Hết RAM thì app không đủ chỗ để khởi động; muốn khởi động lại phải giết bớt process khác</td><td>App <strong>đang chạy</strong> thì bị kernel giết để lấy lại RAM. Phần RAM đó được thu hồi ngay, nên khởi động lại chỉ là tạo một process mới vào chỗ trống</td><td><a href="#can-kiet">xem lại</a></td></tr>
+    <tr><td>Đổi biến môi trường mà app không thấy, vì app đã "nạp sẵn" giá trị</td><td>Process giữ <strong>bản sao riêng</strong> từ lúc được sinh ra; đọc lại bao nhiêu lần vẫn là giá trị cũ. Muốn giá trị mới phải tạo process mới</td><td><a href="#so-huu">xem lại</a></td></tr>
+    <tr><td>Đã là process khác thì không đọc được biến môi trường đặt ở terminal</td><td>Process con sinh ra <strong>sau</strong> <code>export</code> nhận được bản sao; chỉ process không phải con (một cửa sổ khác) mới không có</td><td><a href="#lab-6">xem lại</a></td></tr>
+    <tr><td>Chạy lại chương trình thì bản đang chạy sẽ tự tắt để nhường chỗ</td><td>Process mới bị kernel từ chối (<code>EADDRINUSE</code>) và chết; process cũ vẫn giữ phòng</td><td><a href="#lab-2-tranh-phong">xem lại</a></td></tr>
+    <tr><td>Viết bằng C, chạy thẳng lệnh CPU là lách được kernel — vì kernel cũng viết bằng C</td><td>Ranh giới do <strong>CPU</strong> cưỡng chế, không do ngôn ngữ. Đoạn C đó vẫn là một process trong user space</td><td><a href="#vi-sao-kernel">xem lại</a></td></tr>
+    <tr><td>Process chạy bằng root thì chạy trong kernel, chạm thẳng được phần cứng</td><td>root là một <strong>user</strong>, kernel đọc nó để quyết định cho phép; kernel mode là một <strong>chế độ của CPU</strong>. Process root vẫn ở user space, vẫn phải xin qua syscall</td><td><a href="#vi-sao-kernel">xem lại</a></td></tr>
+    <tr><td>Server mất điện thì người dùng thấy refused, hoặc 502</td><td>Thấy <strong>timeout</strong>: không còn kernel nào để từ chối, Nginx cũng đã chết, nên không ai viết ra lỗi cả</td><td><a href="../00-ban-do-toan-canh/#refused-timeout">xem lại</a></td></tr>
+    <tr><td>Bị <code>kill -9</code> thì các object trong RAM không được dọn</td><td>RAM được kernel thu hồi hết. Thứ bị bỏ dở là những thứ <strong>ngoài process</strong>: connection treo ở database, transaction dở, log còn trong bộ đệm</td><td><a href="#term-vs-kill">xem lại</a></td></tr>
+    <tr><td>OOM killer giết process chiếm quá nửa RAM, và chắc chắn giết nó</td><td>Chấm điểm <strong>chủ yếu theo RAM</strong> và <strong>so với các process khác</strong>: lớn nhất thì nhiều khả năng bị chọn nhất</td><td><a href="#oom">xem lại</a></td></tr>
+    <tr><td>Có người trông coi dựng dậy ngay, nên 502 chỉ thoáng qua</td><td>Process mới đã chạy nhưng Spring Boot còn cần 15–60 giây mới listen 8080 — <strong>đang chạy chưa phải sẵn sàng</strong>. Nếu nguyên nhân còn đó thì app bị giết rồi dựng lại liên tục</td><td><a href="#process-vs-service">xem lại</a></td></tr>
+  </tbody>
+</table>
+</div>
 
 <h2 id="tu-kiem-tra">Tự kiểm tra</h2>
 

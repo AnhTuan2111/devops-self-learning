@@ -6,9 +6,9 @@
       "note": "Hoc theo doi thoai thay-tro. Sua duoc 9 cho hieu sai. Con treo: so sanh refused tren WSL Ubuntu (Bai 02)."
     },
     "01": {
-      "status": "doing",
-      "date": "2026-09-25",
-      "note": "Tai lieu viet truoc de doc, se boi dap them sau buoi doi thoai."
+      "status": "done",
+      "date": "2026-10-03",
+      "note": "Hoc theo doi thoai thay-tro, 6 phan + 6 lab. Sua duoc 11 cho hieu sai. Ghi them buoc tu gay loi EADDRINUSE va thi nghiem $$/$PPID."
     }
   }
 }

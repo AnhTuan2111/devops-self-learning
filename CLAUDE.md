@@ -434,9 +434,11 @@ phải; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền
 - **Bài 00: XONG** (21–24/09/2026). Có 3 trang: `index.html` (bài giảng),
   `phan-tich-output.html` (mổ băng output thật), `ipv4-vs-ipv6.html` (phụ lục).
   Dùng bộ ba trang này làm **khuôn mẫu** cho các bài sau.
-- **Bài 01: ĐANG HỌC.** Lượt ① đã xong — `index.html`, `README.md`, `notes.md`, `lab/server.js`
-  đã viết đầy đủ để người học đọc trước. **Còn phải làm lượt ③** (bồi đắp sau buổi đối thoại):
-  chỗ hiểu sai, output lab thật, câu hỏi ngoài kịch bản.
+- **Bài 01: XONG** (25/09–03/10/2026), đã qua lượt ③: Bảng 9 "Những chỗ hay hiểu sai" ở tab cuối,
+  output lab thật trong từng lab, thêm bước tự gây lỗi `EADDRINUSE` (hai process tranh một phòng) và
+  thí nghiệm `$$`/`$PPID` + `node -e` ở Lab 6 — cả hai sinh ra từ chính buổi lab.
+- **Chờ người học quyết** (hỏi lại khi tới Module 2): server cho Bài 14–18 là VPS thuê hay máy ảo trên
+  máy mình; giữ hay bỏ nhánh lab "CA nội bộ" ở Bài 18.
 - Kế tiếp: **Bài 02** — Phòng lab: WSL2, Docker Desktop và shell tối thiểu; rồi vào Docker từ Bài 03.
 - **28/09/2026: đổi giọng văn sang học thuật + chia tab mọi trang; giao diện qua hai lượt** —
   neo-brutalism "Sổ thép" rồi chốt **Bauhaus** (một kiểu duy nhất). Bài 00 (3 trang), Bài 01,
