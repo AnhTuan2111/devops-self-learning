@@ -428,6 +428,17 @@ request, Nginx mở một kết nối mới tới ứng dụng, thường là <c
 thứ hai này phải thoả đúng ba điều kiện của Bài 01 và có thể thất bại theo đúng những cách Bài 01 đã mô tả;
 chỉ khác là bên gặp thất bại giờ là Nginx, và Nginx báo lại cho người dùng bằng một mã trạng thái.</p>
 
+<p>Ảnh 4 vẽ hai kết nối ấy: một từ Internet tới bên đứng giữa, một từ bên đứng giữa vào máy chủ phía trong.</p>
+
+<figure class="fig photo">
+  <img src="img/reverse-proxy.webp" width="1600" height="600" loading="lazy" alt="Sơ đồ: đám mây Internet ở bên trái; bên phải là một khung nét đứt ghi Internal network, chứa ô Proxy và ô Web server, phía trên ghi example.com. Một cặp mũi tên đi và về nối Internet với Proxy, một cặp nữa nối Proxy với Web server.">
+  <figcaption><b>Ảnh 4</b> Một reverse proxy và máy chủ phía sau nó. Từ Internet, tên miền <code>example.com</code> chỉ
+  dẫn tới proxy; máy chủ web nằm trong mạng nội bộ, chỉ proxy gọi tới được. Trong kiến trúc của ta, ô Proxy là Nginx,
+  ô Web server là Spring Boot, và hai ô thường nằm trên cùng một máy. Mỗi cặp mũi tên là một kết nối riêng, có
+  request đi và response về: cặp bên trái là kết nối của người dùng, cặp bên phải là kết nối mà Nginx là bên đi
+  gọi.</figcaption>
+</figure>
+
 <dl class="terms">
   <dt>Phía sau <small>upstream</small></dt>
   <dd>Máy chủ mà một reverse proxy chuyển request tới. Với kiến trúc của ta, phía sau của Nginx là ứng dụng
@@ -650,6 +661,17 @@ dụng báo "đã sẵn sàng" rồi mới chuyển request vào, việc sẽ h�
   <p>Cuối tuần không ai cập nhật gì. Sáng thứ Hai website không vào được, trình duyệt báo
   <code>ERR_CERT_DATE_INVALID</code>. Vì sao nó hỏng đúng lúc không ai làm gì cả?</p>
 </div>
+
+<p>Ảnh 5 là trang mà người dùng nhìn thấy trong tình huống ấy.</p>
+
+<figure class="fig photo shot">
+  <img src="img/chung-chi-het-han.webp" width="1512" height="820" loading="lazy" alt="Trang cảnh báo của trình duyệt Edge: một tam giác đỏ có dấu chấm than, tiêu đề Your connection isn't private, dòng Attackers might be trying to steal your information from expired.badssl.com, mã NET::ERR_CERT_DATE_INVALID, và hai nút Advanced, Go back.">
+  <figcaption><b>Ảnh 5</b> Trang cảnh báo Edge tự vẽ khi chứng chỉ của máy chủ đã hết hạn. Tôi chụp ngày 04/10/2026
+  tại <code>expired.badssl.com</code>, một trang thử công khai có chứng chỉ hết hạn từ ngày 12/04/2015. Trang không
+  có mã trạng thái HTTP nào; dòng xám <code>NET::ERR_CERT_DATE_INVALID</code> là mã lỗi của trình duyệt, cùng loại
+  với hai trang ở Ảnh 1. Bắt tay TLS dừng ở bước kiểm tra chứng chỉ, nên request HTTP chưa hề được gửi
+  đi.</figcaption>
+</figure>
 
 <p>Áp nguyên tắc triệu chứng chứng minh các bước trước: lỗi nằm ở bước kiểm tra chứng chỉ, nên DNS và kết
 nối đều đã chạy tốt. Còn lại câu hỏi vì sao bước ấy hỏng khi không ai đụng vào nó. Câu trả lời là
@@ -883,12 +905,14 @@ ra là khoanh được chặng hỏng, vì triệu chứng luôn chứng minh c�
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Mọi ảnh trong bài là ảnh chụp màn hình do tôi tự chụp, từ trình duyệt và
-từ phần mềm chạy thật.</p>
+<p class="photo-credits-note">Ảnh 4 là sơ đồ lấy từ Wikimedia Commons, đã chuyển sang đen trắng. Các ảnh còn lại
+là ảnh chụp màn hình do tôi tự chụp, từ trình duyệt và từ phần mềm chạy thật.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b>Trang lỗi của trình duyệt Edge khi bị từ chối và khi tên miền không tồn tại — chụp màn hình Edge trên máy tôi, 03/10/2026.</li>
   <li><b>Ảnh 2</b>Trang lỗi 404, 502 và 504 của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy tôi, 30/09/2026.</li>
   <li><b>Ảnh 3</b>Trang lỗi Whitelabel 404 và 500 của Spring Boot — chụp màn hình một ứng dụng Spring Boot 4.1 tôi dựng để thử, 03/10/2026; cắt bớt khoảng trắng bên dưới.</li>
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Reverse_proxy_h2g2bob.svg">Reverse proxy</a> — H2g2bob, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
+  <li><b>Ảnh 5</b>Trang cảnh báo của Edge khi chứng chỉ hết hạn — chụp màn hình Edge trên máy tôi tại <a href="https://expired.badssl.com/">expired.badssl.com</a>, 04/10/2026; cắt sát vùng nội dung.</li>
 </ol>
 
 </section>

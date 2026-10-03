@@ -449,14 +449,24 @@ văn bản chuẩn, sổ đăng ký, giao diện thật). Hai thứ cần tránh
 
 Khung đánh dấu đỏ/lam/vàng trên các ảnh dẫn chứng còn lại thì **giữ**. Khi người học chê một ảnh, sửa đúng
 ảnh đó và hỏi cho rõ lý do trước khi áp dụng rộng (04/10/2026: đã từng suy rộng thành "bỏ mọi ảnh chụp
-chữ", đổi 20 ảnh, và người học phải hoàn tác). Sau lần thay trên, Bài 02, Bài 04 và phụ lục WSL đang ít
-ảnh hơn số tối thiểu; có thêm ảnh đồ vật hay dẫn chứng không là việc người học quyết. Quy trình bắt buộc:
+chữ", đổi 20 ảnh, và người học phải hoàn tác).
 
-1. **Nguồn** — chỉ hai loại: (a) Wikimedia Commons, giấy phép CC0 / public domain / CC BY /
+**Nhiều ảnh hơn, kể cả sơ đồ và ảnh vui** (người học 04/10/2026: "nhiều ảnh sẽ khiến người học gợi hình trong
+đầu hơn, có thể thêm cả ảnh sơ đồ flow bạn tìm trên mạng"; "có thể vào Pinterest để tìm ảnh, đôi khi có những
+ảnh khá là hài"). Sơ đồ có sẵn trên mạng dùng được khi nó vẽ đúng cơ chế bài đang giảng; đánh số "Ảnh N" và
+ghi nguồn như ảnh chụp. Ảnh vui dùng được khi nó nói đúng cơ chế của mục chứa nó, mỗi trang nhiều nhất một
+hai ảnh, và chú thích phải nói ảnh bỏ qua điều gì của cơ chế thật (như truyện xkcd về sudo ở Bài 04).
+Pinterest chặn kết quả tìm kiếm bằng tường đăng nhập, nên không tự lấy được ảnh ở đó; ảnh người học tự gửi từ
+Pinterest thì dùng, ghi đường dẫn pin vào `NGUON.md`, giấy phép ghi "không rõ". Quy trình bắt buộc:
+
+1. **Nguồn** — ba loại: (a) Wikimedia Commons, giấy phép CC0 / public domain / CC BY /
    CC BY-SA (`node scripts/anh/commons.mjs tim "…"` rồi `lay "File:…"` — lưu kèm giấy phép);
    (b) **tự chụp màn hình** từ trang công khai (RFC, man7.org, IANA, crt.sh…) hoặc từ **phần
-   mềm chạy thật trên máy** (như trang lỗi Nginx ở Bài 02 — chạy Nginx thật để lấy 404/502/504).
-   Không dùng ảnh không rõ giấy phép. Trang chặn bot (403) thì **không vượt**, tìm bản khác.
+   mềm chạy thật trên máy** (như trang lỗi Nginx ở Bài 02 — chạy Nginx thật để lấy 404/502/504);
+   (c) truyện tranh **xkcd**, giấy phép CC BY-NC 2.5 (dùng được vì trang không thu tiền; ghi tên
+   tác giả và link về xkcd.com). Ảnh tự tìm mà không rõ giấy phép thì không dùng, và đọc trang tệp trên
+   Commons trước khi tin nhãn giấy phép (ảnh báo chí do người khác tải lên, không kèm bằng chứng cho phép,
+   coi là không rõ). Trang chặn bot (403) hoặc bắt đăng nhập thì **không vượt**, tìm bản khác.
 2. **Tùy biến theo phong cách bài** (`python scripts/anh/hau-ky.py`): ảnh chụp thật chuyển hai
    tông mực `#151515` / **mặt đọc `#fffdf8`** — tông sáng phải trùng `--surface` của khung tab, nơi
    mọi ảnh nằm, **không phải** `--paper` `#f3eee4` của nền trang (dùng `--paper` thì nền ảnh thành ô

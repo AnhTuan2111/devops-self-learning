@@ -213,6 +213,18 @@ theo đúng cách kernel Linux sẽ trả. Chương trình không biết mình �
   <figcaption><b>Hình 5</b> Cách của WSL 1. Không có kernel Linux nào; hai driver đứng giữa, đóng vai kernel Linux.</figcaption>
 </figure>
 
+<p>Ảnh 1 là một phiên Bash trên Windows 10 chụp tháng 1/2017, hơn hai năm trước khi WSL 2 được công bố, tức là lúc chỉ
+có WSL 1.</p>
+
+<figure class="fig photo shot">
+  <img src="img/bash-tren-windows-2017.webp" width="931" height="563" loading="lazy" alt="Cửa sổ dòng lệnh nền vàng nhạt trên Windows 10. Lệnh uname -a in ra Linux HAL4000 3.4.0+; tiếp theo là ls, cat hello.c, cc hello.c, chạy ./a.out in Hello, world!, và lệnh cal in lịch tháng 1 năm 2017.">
+  <figcaption><b>Ảnh 1</b> Bash chạy trên Windows 10 qua WSL 1, tháng 1/2017. Người dùng biên dịch một chương trình C bằng
+  <code>cc</code> rồi chạy nó; <code>cc</code>, <code>ls</code>, <code>cal</code> đều là tệp ELF của Linux, không ai
+  biên dịch lại cho Windows. Dòng đầu đáng nhìn nhất: <code>uname -a</code>, lệnh hỏi kernel tên và phiên bản của nó,
+  nhận được câu trả lời <code>Linux … 3.4.0+</code>, dù trên máy không có kernel Linux nào. Câu trả lời ấy do lớp
+  dịch viết ra, đúng vai "giả lập kernel Linux" trong Hình 4.</figcaption>
+</figure>
+
 <h2 id="gioi-han-wsl1">Giới hạn của việc dịch</h2>
 
 <p>Cách dịch phải theo kịp toàn bộ những gì kernel Linux cung cấp. Linux có vài trăm syscall, mỗi cái có những trường hợp riêng, và kernel
@@ -268,6 +280,16 @@ quản lý nó; theo tài liệu của Microsoft, WSL 2 "giữ trải nghiệm n
 lý máy ảo". Bạn không mở cửa sổ máy ảo nào, không cấp RAM cố định; bạn chỉ mở Ubuntu và gõ lệnh như trước. So với tab
 Máy ảo đầy đủ, ba điểm yếu "khởi động chậm, tốn tài nguyên, phải tự quản lý" đã được gỡ; điểm thứ tư, "cô lập", được
 làm mềm bằng cách cho Windows và Linux gọi chương trình và đọc tệp của nhau.</p>
+
+<p>Ảnh 2 chụp đúng cảnh đó, hơn sáu năm sau Ảnh 1; dòng chào của Ubuntu cho thấy thứ đã đổi ở bên dưới.</p>
+
+<figure class="fig photo shot">
+  <img src="img/ubuntu-wsl2-2023.webp" width="952" height="652" loading="lazy" alt="Cửa sổ Windows Terminal nền tím sẫm, một tab Ubuntu. Dòng chào: Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.90.1-microsoft-standard-WSL2 x86_64), rồi tới dấu nhắc lệnh.">
+  <figcaption><b>Ảnh 2</b> Ubuntu 22.04 trên Windows 11 qua WSL 2, tháng 5/2023, do cùng một người chụp với Ảnh 1. Với
+  người dùng, mọi thứ vẫn là một cửa sổ có dấu nhắc lệnh. Khác biệt nằm trong ngoặc ở dòng chào:
+  <code>5.15.90.1-microsoft-standard-WSL2</code> là phiên bản của một kernel Linux thật do Microsoft biên dịch, thay
+  cho câu trả lời <code>3.4.0+</code> của lớp dịch ở Ảnh 1.</figcaption>
+</figure>
 
 <p>WSL 2 phát hành chính thức cùng Windows 10 bản 2004, năm 2020. Bài thông báo của nhóm WSL ngày 13/03/2020 còn cho
 biết một thay đổi về cách phân phối: kernel Linux được tách khỏi bản cài Windows và gửi tới máy người dùng qua Windows
@@ -339,6 +361,14 @@ chỉ WSL 2 cho bạn kernel Linux, và mọi thứ Bài 03 muốn quan sát đ�
   <a href="https://gitforwindows.org/technical-overview">gitforwindows.org</a></li>
   <li>Docker Docs — <em>WSL 2 backend on Windows</em>.
   <a href="https://docs.docker.com/desktop/features/wsl/">docs.docker.com/…/wsl</a></li>
+</ol>
+
+<h2 id="nguon-anh">Nguồn ảnh</h2>
+<p class="photo-credits-note">Hai ảnh chụp màn hình lấy từ Wikimedia Commons theo giấy phép ghi ở từng dòng; giữ nguyên
+màu và kích thước, chỉ đổi định dạng tệp.</p>
+<ol class="photo-credits">
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Linux_on_Windows_10.png">Linux on Windows 10</a> — François-Dominique, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Ubuntu_on_Windows.png">Ubuntu on Windows</a> — François-Dominique, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
 </ol>
 
 </section>

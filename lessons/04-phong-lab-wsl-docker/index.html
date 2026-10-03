@@ -161,9 +161,20 @@ kernel độc quyền phần của mình, hypervisor độc quyền việc chia.
 hypervisor, cạnh các máy ảo.</p>
 
 <p>Bạn đã gặp máy ảo mà chưa gọi tên: chiếc VPS ở <a href="../03-may-tinh-va-he-dieu-hanh/#tai-nguyen">Bài 03</a>
-thường là một máy ảo cắt ra từ một server lớn. Trên máy cá nhân, VirtualBox hay VMware cho bạn tự dựng máy ảo, nhưng
-theo tài liệu của Microsoft, máy ảo truyền thống khởi động chậm, tốn tài nguyên và đòi bạn tự quản lý. WSL2 được thiết
-kế để bỏ đúng những điểm yếu này.</p>
+thường là một máy ảo cắt ra từ một server lớn. Trên máy cá nhân, VirtualBox hay VMware cho bạn tự dựng máy ảo.
+VirtualBox đặt hypervisor ở một chỗ khác với Hyper-V, và Ảnh 1 vẽ hai chỗ đó cạnh nhau.</p>
+
+<figure class="fig photo">
+  <img src="img/hypervisor-hai-kieu.webp" width="1600" height="967" loading="lazy" alt="Sơ đồ hai kiểu hypervisor. Bên trái, type 1: phần cứng ở dưới, hypervisor ở giữa, các hệ điều hành ở trên. Bên phải, type 2: phần cứng, rồi một hệ điều hành, rồi hypervisor chạy trên hệ điều hành đó, rồi các hệ điều hành khách ở trên cùng.">
+  <figcaption><b>Ảnh 1</b> Hai chỗ đặt hypervisor. Trái, kiểu 1 (<em>native</em>, còn gọi <em>bare metal</em>):
+  hypervisor nằm ngay trên phần cứng, mọi hệ điều hành chạy bên trên nó. Microsoft xếp Hyper-V vào kiểu này, nên khi
+  nó bật, Windows cũng là một hệ điều hành chạy trên hypervisor. Phải, kiểu 2 (<em>hosted</em>): hypervisor là một
+  chương trình chạy trên một hệ điều hành có sẵn, và các hệ điều hành khách chạy bên trên chương trình đó. Tài liệu
+  của VirtualBox tự xếp nó vào kiểu 2.</figcaption>
+</figure>
+
+<p>Theo tài liệu của Microsoft, máy ảo truyền thống khởi động chậm, tốn tài nguyên và đòi bạn tự quản lý. WSL2 được
+thiết kế để bỏ đúng những điểm yếu này.</p>
 
 <h2 id="wsl2-la-gi">WSL2: một máy ảo nhẹ do Windows tự quản</h2>
 
@@ -290,14 +301,14 @@ và bản sao biến môi trường riêng.</p>
   <dd>Shell của dự án GNU, mặc định trên Ubuntu và hầu hết server Linux. Git Bash là bash đưa sang Windows.</dd>
 </dl>
 
-<p>Hai chương trình tách nhau vì ngày xưa chúng nằm ở hai nơi khác nhau, như Ảnh 1 cho thấy.</p>
+<p>Hai chương trình tách nhau vì ngày xưa chúng nằm ở hai nơi khác nhau, như Ảnh 2 cho thấy.</p>
 
 <figure class="fig photo">
   <div class="photo-row">
     <figure><img src="img/teletype-33.webp" width="800" height="800" loading="lazy" alt="Máy Teletype Model 33 ASR đặt trên chân đế kim loại, gồm bàn phím và bộ phận in giấy."><div class="lbl">teletype <small>1968 · in ra giấy</small></div></figure>
     <figure><img src="img/vt100.webp" width="800" height="800" loading="lazy" alt="Terminal DEC VT100 với màn hình chữ phía trên và bàn phím rời phía dưới."><div class="lbl">vt100 <small>màn hình chữ</small></div></figure>
   </div>
-  <figcaption><b>Ảnh 1</b> Hai thế hệ terminal. Trái: máy Teletype Model 33 ASR sản xuất năm 1968, bàn phím cộng máy
+  <figcaption><b>Ảnh 2</b> Hai thế hệ terminal. Trái: máy Teletype Model 33 ASR sản xuất năm 1968, bàn phím cộng máy
   in, mọi output in ra giấy. Phải: terminal DEC VT100, thay giấy bằng màn hình chữ. Cả hai chỉ là thiết bị nhập và
   xuất, nối dây tới một máy tính ở chỗ khác; shell chạy trên máy tính đó. Linux vẫn gọi thiết bị terminal là
   <code>tty</code>, viết tắt của <em>teletypewriter</em>.</figcaption>
@@ -420,6 +431,15 @@ sinh process con chạy lệnh với user root: <code>sudo ls /root</code>. Theo
 WSL dùng được <code>sudo</code>; lúc gõ mật khẩu màn hình không hiện gì. Giới hạn thì Bài 03 đã nêu: process root có
 lỗi thì lỗi đó có quyền với cả máy, nên chỉ thêm <code>sudo</code> vào đúng lệnh cần nó.</p>
 
+<p>Truyện tranh ở Ảnh 3 kể lại đúng cơ chế này.</p>
+
+<figure class="fig photo small">
+  <img src="img/xkcd-sandwich.webp" width="1080" height="897" loading="lazy" alt="Truyện tranh một khung, hai người que. Người ngồi ghế bành nói: Make me a sandwich. Người đứng đáp: What? Make it yourself. Người ngồi nói lại: Sudo make me a sandwich. Người đứng đáp: Okay.">
+  <figcaption><b>Ảnh 3</b> Truyện tranh <em>Sandwich</em> của xkcd, số 149, năm 2006. Cùng một câu lệnh, lần đầu bị từ
+  chối, lần sau có <code>sudo</code> đứng trước thì được làm: lệnh không đổi, chỉ user chạy nó đổi thành root. Truyện
+  bỏ qua một bước của sudo thật, là kiểm tra bạn có được phép không và hỏi mật khẩu trước khi làm.</figcaption>
+</figure>
+
 <div class="callout ok">
   <span class="label">Chốt</span>
   <p>Terminal hiện chữ và chuyển phím; bash đọc dòng lệnh, tách thành tên lệnh và tham số, tìm chương trình
@@ -477,6 +497,16 @@ cần số ấy. "File" hiểu rộng: tệp trên đĩa, terminal hay kết n�
   <a href="https://man7.org/linux/man-pages/man3/stdin.3.html">man7.org, stdin(3)</a>, đọc ngày 03/10/2026.</figcaption>
 </figure>
 
+<p>Ảnh 4 vẽ trường hợp mà trang hướng dẫn gọi là thông thường: cả ba luồng gắn vào terminal của người dùng.</p>
+
+<figure class="fig photo">
+  <img src="img/ba-luong-chuan.webp" width="1400" height="830" loading="lazy" alt="Sơ đồ: một process ở bên trái, một ô Text terminal ở bên phải chứa Keyboard và Display. Mũi tên số 0 stdin đi từ Keyboard tới process; mũi tên số 1 stdout và số 2 stderr đi từ process tới Display.">
+  <figcaption><b>Ảnh 4</b> Ba luồng chuẩn của một process chạy trong terminal. Số 0 (stdin) nhận phím gõ từ bàn phím;
+  số 1 (stdout) và số 2 (stderr) cùng đi ra màn hình, nên nhìn trên màn hình không phân biệt được dòng nào là kết
+  quả, dòng nào là lỗi. Ô xám là terminal: bàn phím và màn hình là hai nửa của cùng một thiết bị, như hai máy ở
+  Ảnh 2.</figcaption>
+</figure>
+
 <p>Chương trình không tự mở ba số này; nó thừa kế. Khi bash fork, process con nhận bản sao danh sách file đang mở
 của bash, và exec giữ nguyên danh sách đó. Số 0, 1, 2 của bash trỏ vào terminal, nên của mọi lệnh bạn gõ cũng vậy.
 Trên Linux, bạn thấy điều này qua <code>/proc/&lt;PID&gt;/fd</code> mà Bài 03 đã giới thiệu, với <code>$$</code> là
@@ -493,7 +523,7 @@ lrwx------ 1 ten ten 64 … 255 -&gt; /dev/pts/0</code></pre>
 </figure>
 
 <p><code>pts</code> là <em>pseudo-terminal</em>, terminal giả lập, cùng loại thiết bị terminal với <code>tty</code> ở
-Ảnh 1. Java cũng đi qua ba số này: <code>System.in</code>, <code>System.out</code>, <code>System.err</code> là 0, 1, 2,
+Ảnh 2. Java cũng đi qua ba số này: <code>System.in</code>, <code>System.out</code>, <code>System.err</code> là 0, 1, 2,
 và log Spring Boot in ra console mặc định vào stdout. Cần hai luồng ra vì kết quả có thể được chuyển vào tệp hay sang
 chương trình khác, trong khi lỗi vẫn phải hiện ra cho người đọc.</p>
 
@@ -559,7 +589,15 @@ phép đo cần. Ở Bài 00, <code>2&gt;/dev/null</code> vứt mọi thứ <cod
 
 <p>Chuyển hướng nối một số với một tệp; <strong>pipe</strong>, viết bằng <code>|</code>, nối hai process. Kernel tạo
 một vùng đệm có đầu ghi và đầu đọc; bash sinh hai process cùng lúc, trỏ số 1 của lệnh trái vào đầu ghi và số 0 của
-lệnh phải vào đầu đọc, không qua tệp nào trên đĩa. Chỉ stdout đi qua pipe; stderr của lệnh trái vẫn ra terminal.</p>
+lệnh phải vào đầu đọc, không qua tệp nào trên đĩa. Chỉ stdout đi qua pipe; stderr của lệnh trái vẫn ra terminal
+(Ảnh 5).</p>
+
+<figure class="fig photo">
+  <img src="img/pipeline.webp" width="1200" height="1139" loading="lazy" alt="Sơ đồ ba chương trình xếp dọc, nối nhau bằng mũi tên stdout/stdin. Keyboard nối vào stdin của Program 1; stdout của Program 3 đi tới Display; stderr của cả ba chương trình đi thẳng tới Display.">
+  <figcaption><b>Ảnh 5</b> Ba chương trình nối bằng hai pipe. Chỉ chương trình đầu đọc bàn phím; stdout của mỗi chương
+  trình thành stdin của chương trình kế, và chỉ stdout của chương trình cuối ra màn hình. stderr của cả ba vẫn đi
+  thẳng ra màn hình, không qua pipe nào.</figcaption>
+</figure>
 
 <p>Bên phải pipe hay là <code>grep</code>: chương trình đọc từng dòng từ stdin và chỉ in dòng chứa một mẫu chữ, như
 <code>netstat -ano | grep 8080</code> ở Bài 03. Lệnh dài nhất của Bài 00 giờ tách được như Hình 10.</p>
@@ -707,11 +745,11 @@ running?". Trong Ubuntu, nếu Docker Desktop tắt hoặc WSL Integration chưa
 <h2 id="hello-world">docker run hello-world: bốn bước, hai bước thuộc bài này</h2>
 
 <p>Khi daemon đã chạy, lệnh thử đầu tiên là <code>docker run hello-world</code>. Chương trình hello-world in ra lời
-giải thích về chính nó; Ảnh 2 là đoạn đó trên trang chính thức.</p>
+giải thích về chính nó; Ảnh 6 là đoạn đó trên trang chính thức.</p>
 
 <figure class="fig photo shot">
   <img src="img/hello-world-bon-buoc.webp" width="1400" height="532" loading="lazy" alt="Output của hello-world trên Docker Hub, liệt kê bốn bước Docker đã làm; bước 1 được khoanh đỏ, bước 4 được khoanh lam.">
-  <figcaption><b>Ảnh 2</b> Lời tự giải thích của hello-world trên Docker Hub.
+  <figcaption><b>Ảnh 6</b> Lời tự giải thích của hello-world trên Docker Hub.
   <span class="kw"><i class="key k-red" aria-hidden="true"></i>Bước 1:</span> client liên lạc với daemon.
   <span class="kw"><i class="key k-blue" aria-hidden="true"></i>Bước 4:</span> daemon truyền output về client, client
   gửi nó ra terminal. Hai bước giữa nói về image và container, đề tài của Bài 05.</figcaption>
@@ -865,7 +903,7 @@ chỉ có <code>Killed</code>. SIGKILL không bắt được, đúng như Bài 0
 </ol>
 
 <p>Kỳ vọng: <code>docker version</code> in cả <code>Client</code> lẫn <code>Server</code>; hello-world in vài dòng tải
-image ở lần đầu, rồi đúng đoạn chữ ở Ảnh 2. Chạy lại lần hai: dòng nào không còn? Trong PowerShell,
+image ở lần đầu, rồi đúng đoạn chữ ở Ảnh 6. Chạy lại lần hai: dòng nào không còn? Trong PowerShell,
 <code>wsl -l -v</code> giờ cho <code>docker-desktop</code> ở trạng thái <code>Running</code>.</p>
 
 <h2 id="lab-6">Lab 6 — Tự gây lỗi: tắt daemon, rồi sửa</h2>
@@ -985,6 +1023,10 @@ signal thật. Docker Desktop dùng chính máy Linux đó để chạy daemon, 
   <a href="https://learn.microsoft.com/en-us/windows/wsl/install">learn.microsoft.com/…/install</a></li>
   <li>Microsoft Learn — <em>Comparing WSL Versions</em>.
   <a href="https://learn.microsoft.com/en-us/windows/wsl/compare-versions">learn.microsoft.com</a></li>
+  <li>Microsoft Learn — <em>Hyper-V architecture</em> (câu "Hyper-V features a Type 1 hypervisor-based architecture").
+  <a href="https://learn.microsoft.com/en-us/windows-server/administration/performance-tuning/role/hyper-v-server/architecture">learn.microsoft.com</a></li>
+  <li>Oracle VirtualBox — <em>User Guide</em>, mục Features (VirtualBox là "hosted hypervisor", còn gọi "type 2").
+  <a href="https://www.virtualbox.org/manual/topics/Introduction.html">virtualbox.org/manual</a></li>
   <li>Microsoft Learn — <em>Basic commands for WSL</em>.
   <a href="https://learn.microsoft.com/en-us/windows/wsl/basic-commands">learn.microsoft.com</a></li>
   <li>Microsoft Learn — <em>Set up a WSL development environment</em>.
@@ -1011,13 +1053,18 @@ signal thật. Docker Desktop dùng chính máy Linux đó để chạy daemon, 
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons theo giấy phép ghi ở từng dòng; ảnh đã được chuyển
-sang đen trắng, tách khỏi nền cũ và đặt vào khung vuông. Ảnh chụp màn hình do tôi tự chụp ngày 03/10/2026; khung
-màu là phần đánh dấu thêm.</p>
+<p class="photo-credits-note">Ảnh chụp và sơ đồ lấy từ Wikimedia Commons theo giấy phép ghi ở từng dòng; tất cả đã được
+chuyển sang đen trắng, riêng hai ảnh chụp ở Ảnh 2 còn được tách khỏi nền cũ và đặt vào khung vuông. Truyện tranh của
+xkcd dùng theo giấy phép phi thương mại của tác giả, đã phóng to và chuyển sang đen trắng. Ảnh chụp màn hình do tôi tự
+chụp ngày 03/10/2026; khung màu là phần đánh dấu thêm.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Teletype_Model_33_ASR_(1968)_(14689737122).png">Teletype Model 33 ASR (1968)</a> — Dennis van Zuijlekom, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
-  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:DEC_VT100_terminal.jpg">DEC VT100 terminal</a> — Jason Scott, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>.</li>
-  <li><b>Ảnh 2</b>Output của hello-world — chụp màn hình <a href="https://hub.docker.com/_/hello-world">hub.docker.com</a>; bỏ ngắt dòng tự động của khung code.</li>
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Hyperviseur.svg">Hai kiểu hypervisor</a> — Scsami, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Teletype_Model_33_ASR_(1968)_(14689737122).png">Teletype Model 33 ASR (1968)</a> — Dennis van Zuijlekom, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:DEC_VT100_terminal.jpg">DEC VT100 terminal</a> — Jason Scott, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://xkcd.com/149/">Sandwich</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Stdstreams-notitle.svg">Ba luồng chuẩn</a> — Danielpr85, theo bản vẽ gốc của TuukkaH, Wikimedia Commons, public domain.</li>
+  <li><b>Ảnh 5</b><a href="https://commons.wikimedia.org/wiki/File:Pipeline.svg">Pipeline</a> — XcepticZP, theo bản vẽ gốc của TuukkaH, Wikimedia Commons, public domain.</li>
+  <li><b>Ảnh 6</b>Output của hello-world — chụp màn hình <a href="https://hub.docker.com/_/hello-world">hub.docker.com</a>; bỏ ngắt dòng tự động của khung code.</li>
 </ol>
 
 </section>

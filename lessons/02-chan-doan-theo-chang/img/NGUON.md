@@ -1,7 +1,7 @@
 # Nguồn ảnh minh hoạ
 
-Mọi ảnh của bài này là ảnh chụp màn hình do người viết tự chụp, từ trình duyệt và từ phần mềm chạy
-thật; ảnh chụp màn hình giữ màu, lưu WebP lossless, không đánh dấu thêm.
+Trừ sơ đồ reverse proxy lấy từ Wikimedia Commons, ảnh của bài này là ảnh chụp màn hình do người viết tự
+chụp, từ trình duyệt và từ phần mềm chạy thật; ảnh chụp màn hình giữ màu, lưu WebP lossless, không đánh dấu thêm.
 
 | Tệp | Nguồn | Tác giả | Giấy phép | Đã chỉnh |
 |---|---|---|---|---|
@@ -12,3 +12,5 @@ thật; ảnh chụp màn hình giữ màu, lưu WebP lossless, không đánh d�
 | `img/nginx-504.webp` | tự chụp | — | — | như trên, 30/09/2026 |
 | `img/whitelabel-404.webp` | tự chụp | — | — | trang Whitelabel Error Page của một ứng dụng Spring Boot 4.1.1 chạy thật (tạo từ start.spring.io, chỉ có starter web, port 8099), gọi một đường dẫn không có controller; chụp trong Edge, mật độ 2×, 03/10/2026; cắt bớt khoảng trắng bên dưới và bên phải |
 | `img/whitelabel-500.webp` | tự chụp | — | — | như trên, gọi `/users/42` tới một controller cố tình ném `IllegalStateException` |
+| `img/reverse-proxy.webp` | [File:Reverse proxy h2g2bob.svg](https://commons.wikimedia.org/wiki/File:Reverse_proxy_h2g2bob.svg) | H2g2bob | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | sơ đồ; bản PNG do Commons dựng từ SVG, thu về 1600px, chuyển hai tông mực/mặt đọc (ô Proxy màu đỏ thành xám đậm) — `hau-ky.py --max 1600` |
+| `img/chung-chi-het-han.webp` | tự chụp | — | — | trang cảnh báo của Microsoft Edge khi mở `https://expired.badssl.com/` (chứng chỉ hết hạn 12/04/2015, đọc bằng `openssl x509 -noout -dates`), chụp bằng Playwright ngày 04/10/2026, giao diện tiếng Anh, khung 1000px, mật độ 2×; cắt sát vùng nội dung 1512×820 như hai trang lỗi ở Ảnh 1 |
