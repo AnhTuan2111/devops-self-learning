@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 01 — IP, port, listen, firewall: vì sao gọi không tới</title>
 <meta name="description" content="Vì sao app gọi được bằng localhost mà người khác gọi vào thì không: địa chỉ IP, port, listen address, firewall, và cách đọc refused với timeout.">
-<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01">
@@ -67,7 +67,12 @@ dựa vào.</figcaption>
   máy bạn. Vậy cái gì đang sai?</p>
 </div>
 
-<p>Lúc ấy dễ thử đủ cách mà không theo thứ tự nào: tắt firewall, đổi port, khởi động lại máy, và nếu may thì một cách có
+<figure class="fig photo">
+  <img src="img/xkcd-networking-problems.webp" width="1170" height="964" loading="lazy" alt="Một trục ngang: Types of computer problems by how much debugging them makes your brain stop working, từ None tới A lot. Normal problems nằm ở nửa trái; Networking problems đứng riêng ở đầu A lot. Bên dưới, một người ngồi giữa đống thiết bị mạng nói: trước buổi trưa các gói tin số lẻ bị chậm, sau buổi trưa tới lượt gói số chẵn, ngược hẳn hôm qua. Người kia hỏi: Are you sure you're okay? Người ngồi đáp: I'm fine and I believe in ghosts now!">
+  <figcaption><b>Ảnh 1</b> Truyện <em>Networking Problems</em> của xkcd, số 2259, năm 2020. Trục ngang xếp các loại lỗi máy tính theo mức độ chúng làm người gỡ lỗi mất tỉnh táo; lỗi mạng đứng riêng ở đầu "rất nhiều", và nhân vật trong truyện đã đi tới chỗ tin là có ma. Bài này đi đường khác: bước mở kết nối chỉ cần ba điều kiện, và mỗi triệu chứng chỉ ra điều kiện nào đang thiếu.</figcaption>
+</figure>
+
+<p>Lúc ấy dễ rơi vào cảnh của Ảnh 1 và thử đủ cách mà không theo thứ tự nào: tắt firewall, đổi port, khởi động lại máy, và nếu may thì một cách có
 tác dụng mà không ai biết vì sao. Cách thử ấy bỏ qua một sự thật: hai lần thất bại ở trên có hai triệu
 chứng khác nhau (một lần báo lỗi ngay, một lần chờ lâu), và hai triệu chứng khác nhau thường có hai
 nguyên nhân khác nhau. Muốn đọc được triệu chứng, cần biết chính xác bước mở kết nối gồm những gì. Câu
@@ -137,7 +142,7 @@ giả định này, nên trước hết cần định nghĩa chính xác địa 
 
 <figure class="fig photo side">
   <img src="img/card-mang-hai-cong.webp" width="900" height="620" loading="lazy" alt="Một card mạng máy chủ có tản nhiệt lớn và hai cổng cắm cáp mạng ở mặt gắn vỏ máy.">
-  <figcaption><b>Ảnh 1</b> Card mạng máy chủ Intel X540-T2 với hai cổng cắm cáp mạng. Hệ điều hành thấy đây là hai giao diện mạng riêng biệt, và mỗi giao diện mang một địa chỉ IP riêng: địa chỉ gắn với giao diện, không gắn với cả cái máy.</figcaption>
+  <figcaption><b>Ảnh 2</b> Card mạng máy chủ Intel X540-T2 với hai cổng cắm cáp mạng. Hệ điều hành thấy đây là hai giao diện mạng riêng biệt, và mỗi giao diện mang một địa chỉ IP riêng: địa chỉ gắn với giao diện, không gắn với cả cái máy.</figcaption>
 </figure>
 
 <p>Vì địa chỉ IP gắn với từng giao diện mạng chứ không gắn với cả cái máy, một chiếc laptop bình thường
@@ -199,7 +204,7 @@ in ra địa chỉ của router.</p>
 
 <figure class="fig photo shot">
   <img src="img/iana-ipv4.webp" width="928" height="1046" loading="lazy" alt="Bảng sổ đăng ký IPv4 của IANA, mỗi dòng một khối địa chỉ; hai dòng 010/8 Private Use và 127/8 Loopback được khoanh màu.">
-  <figcaption><b>Ảnh 2</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA, tổ chức quản lý số hiệu của Internet. Mỗi dòng là một khối có chung 8 bit đầu, gồm khoảng 16,7 triệu địa chỉ; cách ghi <code>/8</code> chính là "8 bit đầu cố định". Hai dòng khoanh là hai dải vừa gặp: <span class="kw"><i class="key k-red" aria-hidden="true"></i><code>10.0.0.0/8</code></span> dành cho mạng riêng và <span class="kw"><i class="key k-blue" aria-hidden="true"></i><code>127.0.0.0/8</code></span> dành cho loopback. Cả khối 127 đều là loopback, dù máy thường chỉ dùng một địa chỉ trong đó là <code>127.0.0.1</code>.</figcaption>
+  <figcaption><b>Ảnh 3</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA, tổ chức quản lý số hiệu của Internet. Mỗi dòng là một khối có chung 8 bit đầu, gồm khoảng 16,7 triệu địa chỉ; cách ghi <code>/8</code> chính là "8 bit đầu cố định". Hai dòng khoanh là hai dải vừa gặp: <span class="kw"><i class="key k-red" aria-hidden="true"></i><code>10.0.0.0/8</code></span> dành cho mạng riêng và <span class="kw"><i class="key k-blue" aria-hidden="true"></i><code>127.0.0.0/8</code></span> dành cho loopback. Cả khối 127 đều là loopback, dù máy thường chỉ dùng một địa chỉ trong đó là <code>127.0.0.1</code>.</figcaption>
 </figure>
 
 <p>Việc các dải mạng riêng không ra Internet có một hệ quả lớn. Đồng nghiệp cùng WiFi gọi được tới
@@ -286,7 +291,7 @@ biết giao nó cho ai.</p>
 
 <figure class="fig photo shot">
   <img src="img/rfc9293-tcp-header.webp" width="1148" height="738" loading="lazy" alt="Sơ đồ phần đầu gói tin TCP trong RFC 9293 vẽ bằng ký tự, hàng đầu tiên gồm hai ô Source Port và Destination Port được khoanh đỏ.">
-  <figcaption><b>Ảnh 3</b> Phần đầu của một gói tin TCP, trong văn bản chuẩn RFC 9293. Mỗi hàng rộng 32 bit; <span class="kw"><i class="key k-red" aria-hidden="true"></i>hàng</span> đầu tiên được chia đôi cho hai con số 16 bit: <em>Source Port</em> (port của bên gửi) và <em>Destination Port</em> (port của bên nhận). Port không phải một thứ có sẵn trong máy; nó chỉ là con số nằm ở đây, trong từng gói tin.</figcaption>
+  <figcaption><b>Ảnh 4</b> Phần đầu của một gói tin TCP, trong văn bản chuẩn RFC 9293. Mỗi hàng rộng 32 bit; <span class="kw"><i class="key k-red" aria-hidden="true"></i>hàng</span> đầu tiên được chia đôi cho hai con số 16 bit: <em>Source Port</em> (port của bên gửi) và <em>Destination Port</em> (port của bên nhận). Port không phải một thứ có sẵn trong máy; nó chỉ là con số nằm ở đây, trong từng gói tin.</figcaption>
 </figure>
 
 <p>Vì chỉ là một trường số 16 bit, port không thể lớn hơn 65535. Một vài con số được quy ước dùng cho những dịch vụ quen thuộc: 80 cho HTTP, 443 cho HTTPS, 5432 cho PostgreSQL.
@@ -403,7 +408,7 @@ lần thử thứ hai trong tình huống mở bài phải chờ lâu.</p>
 
 <figure class="fig photo">
   <img src="img/firewall-hai-phia.webp" width="1000" height="330" loading="lazy" alt="Mặt trước một thiết bị firewall Netgear với đèn báo của hai cổng WAN và bốn cổng LAN.">
-  <figcaption><b>Ảnh 4</b> Một firewall dạng thiết bị riêng, Netgear FVS336G. Mặt trước chia rõ hai phía: hai cổng WAN nối ra Internet và bốn cổng LAN nối vào mạng bên trong; mọi gói tin đi giữa hai phía phải qua bộ luật của nó. Firewall trên laptop làm đúng việc đó, chỉ khác là nó là phần mềm và đứng giữa mạng với các chương trình trong máy.</figcaption>
+  <figcaption><b>Ảnh 5</b> Một firewall dạng thiết bị riêng, Netgear FVS336G. Mặt trước chia rõ hai phía: hai cổng WAN nối ra Internet và bốn cổng LAN nối vào mạng bên trong; mọi gói tin đi giữa hai phía phải qua bộ luật của nó. Firewall trên laptop làm đúng việc đó, chỉ khác là nó là phần mềm và đứng giữa mạng với các chương trình trong máy.</figcaption>
 </figure>
 
 <p>Một firewall có hai cách chặn một gói tin, và hai cách này để lại hai triệu chứng khác nhau ở phía
@@ -494,7 +499,7 @@ riêng.</figcaption>
 <div class="callout warn">
   <span class="label">Giới hạn của ẩn dụ này</span>
   <p>Chữ "phòng" gợi ý port là một không gian có sẵn trong máy. Thực tế không có căn phòng nào: port chỉ
-  là con số 16 bit trong phần đầu gói tin, như Ảnh 3 cho thấy, và hệ điều hành dùng con số đó để tra bảng
+  là con số 16 bit trong phần đầu gói tin, như Ảnh 4 cho thấy, và hệ điều hành dùng con số đó để tra bảng
   listen. "Lối vào" cũng gợi ý một thứ vật lý, trong khi một máy có thể tạo ra hàng chục giao diện mạng ảo
   bằng phần mềm. Khi ẩn dụ và định nghĩa mâu thuẫn, <strong>định nghĩa thắng</strong>.</p>
 </div>
@@ -536,7 +541,14 @@ kiểu khác nhau.</p>
 
 <figure class="fig photo shot">
   <img src="img/rfc9293-bat-tay.webp" width="1172" height="330" loading="lazy" alt="Hình bắt tay ba bước trong RFC 9293: dòng 2 gửi SYN, dòng 3 trả SYN,ACK, dòng 4 gửi ACK, ba dòng được khoanh đỏ, vàng, lam.">
-  <figcaption><b>Ảnh 5</b> Bắt tay ba bước trong văn bản chuẩn RFC 9293 của TCP. Bên A gọi, bên B đang listen: <span class="kw"><i class="key k-red" aria-hidden="true"></i>A</span> gửi <code>SYN</code>, <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>B</span> trả <code>SYN,ACK</code>, <span class="kw"><i class="key k-blue" aria-hidden="true"></i>A</span> đáp <code>ACK</code>, và cả hai sang trạng thái <code>ESTABLISHED</code>, tức kết nối đã mở. Chữ <code>LISTEN</code> ở đầu cột B chính là trạng thái listen của tab Port &amp; listen.</figcaption>
+  <figcaption><b>Ảnh 6</b> Bắt tay ba bước trong văn bản chuẩn RFC 9293 của TCP. Bên A gọi, bên B đang listen: <span class="kw"><i class="key k-red" aria-hidden="true"></i>A</span> gửi <code>SYN</code>, <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>B</span> trả <code>SYN,ACK</code>, <span class="kw"><i class="key k-blue" aria-hidden="true"></i>A</span> đáp <code>ACK</code>, và cả hai sang trạng thái <code>ESTABLISHED</code>, tức kết nối đã mở. Chữ <code>LISTEN</code> ở đầu cột B chính là trạng thái listen của tab Port &amp; listen.</figcaption>
+</figure>
+
+<p>Ảnh 7 vẽ lại đúng ba gói tin ấy bằng hai cái lon nối dây.</p>
+
+<figure class="fig photo small">
+  <img src="img/truyen-tcp-buddies.webp" width="653" height="705" loading="lazy" alt="Truyện chín khung. Một người đóng đinh vào đáy lon, nối dây: I am here, just building, my layer 1. Anh ném một lon cho bạn và nói SYN; người bạn bắt lấy, đáp SYN-ACK; anh đáp ACK. Hai người cười: We are so geeks. Totally.">
+  <figcaption><b>Ảnh 7</b> Truyện <em>TCP Buddies</em> của Daniel Stori, turnoff.us, năm 2015. Hai người dựng điện thoại ống bơ: người thứ nhất nói SYN, người thứ hai đáp SYN-ACK, người thứ nhất đáp ACK, rồi mới nói chuyện, đúng thứ tự của Ảnh 6. "Layer 1" ở hàng đầu là cách gọi phần vật lý của mạng, ở đây là sợi dây. Điều truyện không vẽ: nếu đầu kia không ai cầm lon, tức không có chương trình nào listen, thì không có SYN-ACK nào quay về.</figcaption>
 </figure>
 
 <p>Một kết nối đã mở được nhận diện bằng bốn con số: địa chỉ và port của bên gọi, địa chỉ và port của
@@ -871,13 +883,15 @@ lời nào, thường vì firewall vứt gói tin lặng lẽ.</p>
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào. Truyện tranh của xkcd và của turnoff.us dùng theo giấy phép phi thương mại ghi ở từng dòng; đã đổi cỡ và chuyển sang đen trắng.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg">Card mạng Intel X540-T2</a> — Dmitry Nosachev, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
-  <li><b>Ảnh 2</b>Sổ đăng ký không gian địa chỉ IPv4 — chụp màn hình <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org</a>, 30/09/2026; đã ẩn các khối 015/8 tới 123/8 và ba cột WHOIS, RDAP, Note.</li>
-  <li><b>Ảnh 3</b>Khuôn phần đầu gói tin TCP, RFC 9293 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc9293.html">rfc-editor.org</a>, 03/10/2026.</li>
-  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Netgear_ProSafe_Dual_WAN_VPN_Gigabit_Firewall_FVS336G_front.jpeg">Firewall Netgear FVS336G, mặt trước</a> — Zuzu, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>.</li>
-  <li><b>Ảnh 5</b>Bắt tay ba bước, RFC 9293, Hình 6 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc9293.html">rfc-editor.org</a>, 03/10/2026.</li>
+  <li><b>Ảnh 1</b><a href="https://xkcd.com/2259/">Networking Problems</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg">Card mạng Intel X540-T2</a> — Dmitry Nosachev, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 3</b>Sổ đăng ký không gian địa chỉ IPv4 — chụp màn hình <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org</a>, 30/09/2026; đã ẩn các khối 015/8 tới 123/8 và ba cột WHOIS, RDAP, Note.</li>
+  <li><b>Ảnh 4</b>Khuôn phần đầu gói tin TCP, RFC 9293 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc9293.html">rfc-editor.org</a>, 03/10/2026.</li>
+  <li><b>Ảnh 5</b><a href="https://commons.wikimedia.org/wiki/File:Netgear_ProSafe_Dual_WAN_VPN_Gigabit_Firewall_FVS336G_front.jpeg">Firewall Netgear FVS336G, mặt trước</a> — Zuzu, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>.</li>
+  <li><b>Ảnh 6</b>Bắt tay ba bước, RFC 9293, Hình 6 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc9293.html">rfc-editor.org</a>, 03/10/2026.</li>
+  <li><b>Ảnh 7</b><a href="https://turnoff.us/geek/tcp-buddies/">TCP Buddies</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
 </ol>
 
 </section>
@@ -901,6 +915,6 @@ lời nào, thường vì firewall vứt gói tin lặng lẽ.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c39f51f4"></script>
+<script src="../../assets/app.js?v=fd81593b"></script>
 </body>
 </html>

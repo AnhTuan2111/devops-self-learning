@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 04 — Phòng lab: WSL2, Docker Desktop và shell tối thiểu</title>
 <meta name="description" content="Dựng một máy Linux thật ngay trong Windows bằng WSL2, điều khiển nó bằng bash, hiểu output và lỗi của một lệnh đi đâu, rồi để Docker Desktop chạy lệnh docker run hello-world đầu tiên.">
-<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="04">
@@ -643,6 +643,13 @@ A required privilege is not held by the client.</code></pre>
 <p>Bản thân lệnh không sai: một câu đúng cú pháp bash đã bị đọc theo cú pháp của cmd.exe. Mọi lệnh trong lộ trình
 đều viết cho bash.</p>
 
+<p>Trước khi sang Docker, Ảnh 6 gom những thứ đã gọi tên từ Bài 01 tới đây vào một bức tranh.</p>
+
+<figure class="fig photo wide">
+  <a href="img/truyen-inside-linux-kernel.webp"><img src="img/truyen-inside-linux-kernel.webp" width="1772" height="1786" loading="lazy" alt="Tranh vẽ một toà nhà cắt lớp, tiêu đề Inside the Linux Kernel. Các chim cánh cụt đeo số trên ngực đi lại trên sàn. Tầng trên là các màn hình ghi tty, chú thích terminals and terminal processes. Giữa nhà có một chồng ống ghi pipes. Một con đứng ở cửa số 80, chú thích httpd process; một con ở cửa số 22, chú thích ssh daemon. Một nhóm ngồi quanh bàn, chú thích process table. Dưới sàn là các tủ hồ sơ, chú thích filesystem. Còn có cron, wine process và mấy con chó watchdog."></a>
+  <figcaption><b>Ảnh 6</b> <em>Inside the Linux Kernel</em> của Daniel Stori, turnoff.us, năm 2016 (bấm vào ảnh để xem cỡ lớn). Mỗi chim cánh cụt là một process, số trên ngực là PID. Những thứ đã học: các terminal (tty) ở tầng trên, nơi process đọc và ghi; chồng ống ở giữa nhà là pipe; con đứng ở cửa số 80 là một web server đang listen port 80, con ở cửa 22 là chương trình nhận kết nối SSH. Cái bàn có nhãn <em>process table</em> là một trò chơi chữ: table vừa là bàn, vừa là bảng process mà kernel giữ. Tranh đặt mọi process vào trong kernel cho dễ nhìn; thật ra process chạy ở user space, còn kernel là bên giữ bảng, cửa và đường ống. Các nhãn còn lại (cron, watchdog, filesystem) thuộc những bài sau.</figcaption>
+</figure>
+
 <div class="callout ok">
   <span class="label">Chốt</span>
   <p>Mỗi process khởi đầu với ba file descriptor, 0 stdin, 1 stdout, 2 stderr, thừa kế từ bash và mặc định trỏ
@@ -745,11 +752,11 @@ running?". Trong Ubuntu, nếu Docker Desktop tắt hoặc WSL Integration chưa
 <h2 id="hello-world">docker run hello-world: bốn bước, hai bước thuộc bài này</h2>
 
 <p>Khi daemon đã chạy, lệnh thử đầu tiên là <code>docker run hello-world</code>. Chương trình hello-world in ra lời
-giải thích về chính nó; Ảnh 6 là đoạn đó trên trang chính thức.</p>
+giải thích về chính nó; Ảnh 7 là đoạn đó trên trang chính thức.</p>
 
 <figure class="fig photo shot">
   <img src="img/hello-world-bon-buoc.webp" width="1400" height="532" loading="lazy" alt="Output của hello-world trên Docker Hub, liệt kê bốn bước Docker đã làm; bước 1 được khoanh đỏ, bước 4 được khoanh lam.">
-  <figcaption><b>Ảnh 6</b> Lời tự giải thích của hello-world trên Docker Hub.
+  <figcaption><b>Ảnh 7</b> Lời tự giải thích của hello-world trên Docker Hub.
   <span class="kw"><i class="key k-red" aria-hidden="true"></i>Bước 1:</span> client liên lạc với daemon.
   <span class="kw"><i class="key k-blue" aria-hidden="true"></i>Bước 4:</span> daemon truyền output về client, client
   gửi nó ra terminal. Hai bước giữa nói về image và container, đề tài của Bài 05.</figcaption>
@@ -810,6 +817,13 @@ sudo dmesg | less</code></pre>
 thông báo của kernel (cần <code>sudo</code> vì trên nhiều bản Ubuntu chỉ root được đọc). Dòng đầu thường có dạng
 <code>[    0.000000] Linux version …</code>, con số trong ngoặc là số giây từ lúc kernel khởi động. Bấm <code>q</code>
 để thoát.</p>
+
+<p>Lệnh <code>sudo</code> đầu tiên hỏi mật khẩu, và như mục sudo đã nói, màn hình không hiện gì khi bạn gõ. Gõ nhầm thì xoá thật nhiều rồi gõ lại từ đầu, như Ảnh 8.</p>
+
+<figure class="fig photo small">
+  <img src="img/truyen-go-mat-khau.webp" width="775" height="600" loading="lazy" alt="Truyện một khung: Typing a password in the terminal when you realize you made a mistake. Một người mặt căng thẳng gõ bàn phím, nói: It is not enough yet! Bên cạnh là một chuỗi chữ BACKSPACE xếp thành cột.">
+  <figcaption><b>Ảnh 8</b> Truyện <em>Terminal password typing</em> của Daniel Stori, turnoff.us, năm 2018. Gõ mật khẩu trong terminal, nhận ra mình gõ nhầm, và vì không thấy đã gõ bao nhiêu ký tự nên bấm Backspace liên tục: "vẫn chưa đủ đâu". Bấm thừa không sao; xoá hết rồi gõ lại là cách chắc nhất.</figcaption>
+</figure>
 
 <h2 id="lab-2">Lab 2 — Đi lại, đọc và sửa tệp</h2>
 
@@ -876,6 +890,13 @@ echo $?</code></pre>
 143 là 128 cộng 15 (SIGTERM), 137 là 128 cộng 9 (SIGKILL). Thấy exit status 137 là biết process bị SIGKILL, và
 Bài 03 đã nói một bên hay gửi SIGKILL: OOM killer.</p>
 
+<p>Tên lệnh <code>kill</code> dễ gây hiểu nhầm: việc của nó là gửi signal, còn chuyện gì xảy ra thì tuỳ signal được gửi (Ảnh 9).</p>
+
+<figure class="fig photo small">
+  <img src="img/truyen-signals.webp" width="834" height="1083" loading="lazy" alt="Truyện hai khung. Khung trên: một chim cánh cụt nhe răng chĩa khẩu súng ghi chữ KILL vào một chim cánh cụt khác đang toát mồ hôi. Khung dưới: súng bắn ra một lá cờ nhỏ ghi SIGCONT, kèm tiếng plop; con bị chĩa súng thở phào.">
+  <figcaption><b>Ảnh 9</b> Truyện <em>Signals</em> của Daniel Stori, turnoff.us, năm 2020. Khẩu súng ghi KILL bắn ra một lá cờ SIGCONT, signal bảo một process đang tạm dừng chạy tiếp, nên không ai chết cả. <code>kill</code> không ghi gì thì gửi SIGTERM, <code>kill -9</code> gửi SIGKILL, còn <code>kill -CONT</code> gửi đúng lá cờ trong truyện.</figcaption>
+</figure>
+
 <p><code>sleep</code> không có handler. Muốn thấy "được báo trước" như Spring Boot, tạo script dưới đây bằng
 <code>nano ~/lab04/nghe-signal.sh</code> (bản sao ở <code>lab/nghe-signal.sh</code>); <code>trap</code> là builtin
 của bash dùng để đăng ký handler cho một signal.</p>
@@ -903,7 +924,7 @@ chỉ có <code>Killed</code>. SIGKILL không bắt được, đúng như Bài 0
 </ol>
 
 <p>Kỳ vọng: <code>docker version</code> in cả <code>Client</code> lẫn <code>Server</code>; hello-world in vài dòng tải
-image ở lần đầu, rồi đúng đoạn chữ ở Ảnh 6. Chạy lại lần hai: dòng nào không còn? Trong PowerShell,
+image ở lần đầu, rồi đúng đoạn chữ ở Ảnh 7. Chạy lại lần hai: dòng nào không còn? Trong PowerShell,
 <code>wsl -l -v</code> giờ cho <code>docker-desktop</code> ở trạng thái <code>Running</code>.</p>
 
 <h2 id="lab-6">Lab 6 — Tự gây lỗi: tắt daemon, rồi sửa</h2>
@@ -1054,8 +1075,7 @@ signal thật. Docker Desktop dùng chính máy Linux đó để chạy daemon, 
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
 <p class="photo-credits-note">Ảnh chụp và sơ đồ lấy từ Wikimedia Commons theo giấy phép ghi ở từng dòng; tất cả đã được
-chuyển sang đen trắng, riêng hai ảnh chụp ở Ảnh 2 còn được tách khỏi nền cũ và đặt vào khung vuông. Truyện tranh của
-xkcd dùng theo giấy phép phi thương mại của tác giả, đã phóng to và chuyển sang đen trắng. Ảnh chụp màn hình do tôi tự
+chuyển sang đen trắng, riêng hai ảnh chụp ở Ảnh 2 còn được tách khỏi nền cũ và đặt vào khung vuông. Truyện tranh của xkcd và của turnoff.us dùng theo giấy phép phi thương mại ghi ở từng dòng; đã đổi cỡ và chuyển sang đen trắng. Ảnh chụp màn hình do tôi tự
 chụp ngày 03/10/2026; khung màu là phần đánh dấu thêm.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Hyperviseur.svg">Hai kiểu hypervisor</a> — Scsami, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
@@ -1064,7 +1084,10 @@ chụp ngày 03/10/2026; khung màu là phần đánh dấu thêm.</p>
   <li><b>Ảnh 3</b><a href="https://xkcd.com/149/">Sandwich</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
   <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Stdstreams-notitle.svg">Ba luồng chuẩn</a> — Danielpr85, theo bản vẽ gốc của TuukkaH, Wikimedia Commons, public domain.</li>
   <li><b>Ảnh 5</b><a href="https://commons.wikimedia.org/wiki/File:Pipeline.svg">Pipeline</a> — XcepticZP, theo bản vẽ gốc của TuukkaH, Wikimedia Commons, public domain.</li>
-  <li><b>Ảnh 6</b>Output của hello-world — chụp màn hình <a href="https://hub.docker.com/_/hello-world">hub.docker.com</a>; bỏ ngắt dòng tự động của khung code.</li>
+  <li><b>Ảnh 6</b><a href="https://turnoff.us/geek/inside-the-linux-kernel/">Inside the Linux Kernel</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 7</b>Output của hello-world — chụp màn hình <a href="https://hub.docker.com/_/hello-world">hub.docker.com</a>; bỏ ngắt dòng tự động của khung code.</li>
+  <li><b>Ảnh 8</b><a href="https://turnoff.us/geek/terminal-password-typing/">Terminal password typing</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 9</b><a href="https://turnoff.us/geek/signals/">Signals</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
 </ol>
 
 </section>
@@ -1088,6 +1111,6 @@ chụp ngày 03/10/2026; khung màu là phần đánh dấu thêm.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c39f51f4"></script>
+<script src="../../assets/app.js?v=fd81593b"></script>
 </body>
 </html>

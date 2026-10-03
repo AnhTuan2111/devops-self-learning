@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Lịch sử WSL</title>
 <meta name="description" content="Vì sao Windows chạy được Linux: máy ảo đầy đủ, Cygwin và MSYS2, WSL 1 dịch syscall, rồi WSL 2 với kernel Linux thật — mỗi bước giải quyết vấn đề gì mà bước trước chưa giải quyết được.">
-<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="04-wsl">
@@ -94,7 +94,16 @@ bản Linux đầy đủ với kernel của riêng nó.</p>
 dịch. Giới hạn nằm ở chỗ khác, và tài liệu của Microsoft tóm tắt nó trong một câu: trải nghiệm máy ảo truyền thống
 "có thể khởi động chậm, bị cô lập, tốn nhiều tài nguyên, và đòi hỏi thời gian của bạn để quản lý nó". Cô lập ở đây
 nghĩa là hai hệ thống khó dùng chung: tệp nằm trong ổ đĩa ảo, muốn mở bằng IDE trên Windows phải dựng thư mục chia sẻ;
-máy ảo có địa chỉ mạng riêng; RAM cấp cho máy ảo thường bị giữ chỗ dù không dùng tới. Với người chỉ cần gõ vài lệnh
+máy ảo có địa chỉ mạng riêng; RAM cấp cho máy ảo thường bị giữ chỗ dù không dùng tới.</p>
+
+<p>Tính cô lập ấy cũng là lý do nhiều người khác cần máy ảo. Ảnh 1 là một ví dụ được đẩy tới mức buồn cười.</p>
+
+<figure class="fig photo wide">
+  <a href="img/xkcd-network.webp"><img src="img/xkcd-network.webp" width="1480" height="828" loading="lazy" alt="Truyện năm khung. Một màn hình lớn hiện nhiều ô vuông nối nhau bằng đường kẻ. Pretty, isn't it? What is it? I've got a bunch of virtual Windows machines networked together, hooked up to an incoming pipe from the net. They execute email attachments, share files, and have no security patches. Between them they have practically every virus. There are mail trojans, Warhol worms, and all sorts of exotic polymorphics. A monitoring system adds and wipes machines at random. The display shows the viruses as they move through the network, growing and struggling. You know, normal people just have aquariums. Good morning, Blaster. Are you and W32.Welchia getting along? Who's a good virus? You are! Yes, you are!"></a>
+  <figcaption><b>Ảnh 1</b> Truyện <em>Network</em> của xkcd, số 350, năm 2007. Một người nối nhiều máy ảo Windows không vá lỗi với nhau, mở cho chúng nhận mọi thứ từ Internet, rồi ngắm virus lây qua lại trên màn hình như người ta ngắm bể cá. Trò này chỉ làm được vì máy ảo cô lập: thứ chạy bên trong không chạm được vào máy thật.</figcaption>
+</figure>
+
+<p>Nhưng với người chỉ cần gõ vài lệnh
 <code>grep</code> lên tệp của mình, chi phí đó quá lớn, nên người ta tìm cách nhẹ hơn.</p>
 
 </section>
@@ -168,7 +177,16 @@ chạy.</p>
 <p>Năm 2016, Microsoft đưa vào Windows 10 một thành phần mới, Windows Subsystem for Linux, ra mắt cùng bản cập nhật
 Anniversary Update năm đó. Bài tổng quan trên blog của nhóm WSL, đăng ngày 22/04/2016, mô tả WSL là "một tập các thành
 phần cho phép tệp ELF64 Linux nguyên bản chạy trên Windows". Chữ "nguyên bản" là điểm khác Cygwin: không ai
-phải biên dịch lại gì; bash của Ubuntu, nguyên tệp như trên server, chạy được trên Windows. Phần cốt lõi của nó là hai
+phải biên dịch lại gì; bash của Ubuntu, nguyên tệp như trên server, chạy được trên Windows.</p>
+
+<p>Microsoft công bố việc này tại hội nghị Build ngày 30/03/2016; truyện ở Ảnh 2 ra ngay hôm sau.</p>
+
+<figure class="fig photo">
+  <img src="img/truyen-bash-on-windows.webp" width="1200" height="1000" loading="lazy" alt="Truyện ba khung. When I was little and refused to eat, my mom used to put a cherry on top of the food, and it worked! Forty years later, I can see Microsoft and Mom have something in common. Khung cuối: một người đứng trên sân khấu, màn hình sau lưng vẽ logo Windows, dấu bằng và một ngôi nhà, dòng chữ Bash coming to Windows.">
+  <figcaption><b>Ảnh 2</b> Truyện <em>Bash on Windows</em> của Daniel Stori, turnoff.us, ngày 31/03/2016. Hồi bé không chịu ăn thì mẹ đặt một quả anh đào lên đĩa; bốn mươi năm sau, người vẽ thấy Microsoft làm y như vậy với "Bash coming to Windows". Đó là cách nhìn của một người dùng Linux lúc ấy: Bash là thứ đặt thêm lên để lập trình viên chịu ở lại với Windows. Phần còn lại của tab này cho thấy thứ đặt thêm ấy được làm ra thế nào.</figcaption>
+</figure>
+
+<p>Phần cốt lõi của WSL thế hệ đầu là hai
 <strong>driver</strong>, tức chương trình được nạp vào chạy ngay bên trong kernel Windows, ở kernel mode.</p>
 
 <figure class="fig">
@@ -213,12 +231,12 @@ theo đúng cách kernel Linux sẽ trả. Chương trình không biết mình �
   <figcaption><b>Hình 5</b> Cách của WSL 1. Không có kernel Linux nào; hai driver đứng giữa, đóng vai kernel Linux.</figcaption>
 </figure>
 
-<p>Ảnh 1 là một phiên Bash trên Windows 10 chụp tháng 1/2017, hơn hai năm trước khi WSL 2 được công bố, tức là lúc chỉ
+<p>Ảnh 3 là một phiên Bash trên Windows 10 chụp tháng 1/2017, hơn hai năm trước khi WSL 2 được công bố, tức là lúc chỉ
 có WSL 1.</p>
 
 <figure class="fig photo shot">
   <img src="img/bash-tren-windows-2017.webp" width="931" height="563" loading="lazy" alt="Cửa sổ dòng lệnh nền vàng nhạt trên Windows 10. Lệnh uname -a in ra Linux HAL4000 3.4.0+; tiếp theo là ls, cat hello.c, cc hello.c, chạy ./a.out in Hello, world!, và lệnh cal in lịch tháng 1 năm 2017.">
-  <figcaption><b>Ảnh 1</b> Bash chạy trên Windows 10 qua WSL 1, tháng 1/2017. Người dùng biên dịch một chương trình C bằng
+  <figcaption><b>Ảnh 3</b> Bash chạy trên Windows 10 qua WSL 1, tháng 1/2017. Người dùng biên dịch một chương trình C bằng
   <code>cc</code> rồi chạy nó; <code>cc</code>, <code>ls</code>, <code>cal</code> đều là tệp ELF của Linux, không ai
   biên dịch lại cho Windows. Dòng đầu đáng nhìn nhất: <code>uname -a</code>, lệnh hỏi kernel tên và phiên bản của nó,
   nhận được câu trả lời <code>Linux … 3.4.0+</code>, dù trên máy không có kernel Linux nào. Câu trả lời ấy do lớp
@@ -281,14 +299,14 @@ lý máy ảo". Bạn không mở cửa sổ máy ảo nào, không cấp RAM c�
 Máy ảo đầy đủ, ba điểm yếu "khởi động chậm, tốn tài nguyên, phải tự quản lý" đã được gỡ; điểm thứ tư, "cô lập", được
 làm mềm bằng cách cho Windows và Linux gọi chương trình và đọc tệp của nhau.</p>
 
-<p>Ảnh 2 chụp đúng cảnh đó, hơn sáu năm sau Ảnh 1; dòng chào của Ubuntu cho thấy thứ đã đổi ở bên dưới.</p>
+<p>Ảnh 4 chụp đúng cảnh đó, hơn sáu năm sau Ảnh 3; dòng chào của Ubuntu cho thấy thứ đã đổi ở bên dưới.</p>
 
 <figure class="fig photo shot">
   <img src="img/ubuntu-wsl2-2023.webp" width="952" height="652" loading="lazy" alt="Cửa sổ Windows Terminal nền tím sẫm, một tab Ubuntu. Dòng chào: Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.90.1-microsoft-standard-WSL2 x86_64), rồi tới dấu nhắc lệnh.">
-  <figcaption><b>Ảnh 2</b> Ubuntu 22.04 trên Windows 11 qua WSL 2, tháng 5/2023, do cùng một người chụp với Ảnh 1. Với
+  <figcaption><b>Ảnh 4</b> Ubuntu 22.04 trên Windows 11 qua WSL 2, tháng 5/2023, do cùng một người chụp với Ảnh 3. Với
   người dùng, mọi thứ vẫn là một cửa sổ có dấu nhắc lệnh. Khác biệt nằm trong ngoặc ở dòng chào:
   <code>5.15.90.1-microsoft-standard-WSL2</code> là phiên bản của một kernel Linux thật do Microsoft biên dịch, thay
-  cho câu trả lời <code>3.4.0+</code> của lớp dịch ở Ảnh 1.</figcaption>
+  cho câu trả lời <code>3.4.0+</code> của lớp dịch ở Ảnh 3.</figcaption>
 </figure>
 
 <p>WSL 2 phát hành chính thức cùng Windows 10 bản 2004, năm 2020. Bài thông báo của nhóm WSL ngày 13/03/2020 còn cho
@@ -341,6 +359,8 @@ chỉ WSL 2 cho bạn kernel Linux, và mọi thứ Bài 03 muốn quan sát đ�
 <h2 id="nguon">Nguồn đọc thêm</h2>
 
 <ol class="refs">
+  <li>Windows Developer Blog — <em>Run Bash on Ubuntu on Windows</em> (30/03/2016), bài công bố ở hội nghị Build 2016.
+  <a href="https://blogs.windows.com/windowsdeveloper/2016/03/30/run-bash-on-ubuntu-on-windows/">blogs.windows.com</a></li>
   <li>Microsoft — <em>Windows Subsystem for Linux Overview</em> (22/04/2016), kho lưu trữ blog.
   <a href="https://learn.microsoft.com/en-us/archive/blogs/wsl/windows-subsystem-for-linux-overview">learn.microsoft.com</a></li>
   <li>Microsoft Command Line blog — <em>Announcing WSL 2</em> (06/05/2019).
@@ -365,10 +385,12 @@ chỉ WSL 2 cho bạn kernel Linux, và mọi thứ Bài 03 muốn quan sát đ�
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
 <p class="photo-credits-note">Hai ảnh chụp màn hình lấy từ Wikimedia Commons theo giấy phép ghi ở từng dòng; giữ nguyên
-màu và kích thước, chỉ đổi định dạng tệp.</p>
+màu và kích thước, chỉ đổi định dạng tệp. Hai truyện tranh, của xkcd và của turnoff.us, dùng theo giấy phép phi thương mại ghi ở từng dòng; đã đổi cỡ và chuyển sang đen trắng.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Linux_on_Windows_10.png">Linux on Windows 10</a> — François-Dominique, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Ubuntu_on_Windows.png">Ubuntu on Windows</a> — François-Dominique, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 1</b><a href="https://xkcd.com/350/">Network</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://turnoff.us/geek/bash-on-windows/">Bash on Windows</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Linux_on_Windows_10.png">Linux on Windows 10</a> — François-Dominique, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Ubuntu_on_Windows.png">Ubuntu on Windows</a> — François-Dominique, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
 </ol>
 
 </section>
@@ -392,6 +414,6 @@ màu và kích thước, chỉ đổi định dạng tệp.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c39f51f4"></script>
+<script src="../../assets/app.js?v=fd81593b"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Vì sao có hệ điều hành và process</title>
 <meta name="description" content="Vì sao mọi chương trình phải xin kernel, và vì sao app là một process: chạy theo lô, đa chương trình, time-sharing, Unix và Linux; mỗi bước giải quyết đúng vấn đề mà bước trước để lại.">
-<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="03-lich-su">
@@ -89,6 +89,13 @@ khí chậm hơn CPU nhiều bậc), thì CPU lại ngồi không. Thứ hai, ng
 xong, thường phải đợi hàng giờ, có khi tới hôm sau, mới nhận được bản in kết quả. Gõ sai một dấu phẩy
 nghĩa là thêm một vòng chờ nữa.</p>
 
+<p>Cảnh chờ ấy về sau thành chuyện để kể, và để nói quá, như ở Ảnh 2.</p>
+
+<figure class="fig photo">
+  <img src="img/xkcd-old-days.webp" width="1060" height="982" loading="lazy" alt="Truyện sáu khung. Một người hỏi: What were things like in the old days? I hear you had to compile things for different processors? Người kia: Yeah. To compile your code, you had to mail it to IBM. Took 4-6 weeks. Before garbage collection, data would pile up until the computer got full and you had to throw it away. Early compilers could handle code fine, but comments had to be written in assembly. C could only be written on punch cards. You had to pick a compact font, or you'd only fit a few characters per card. C++ was big because it supported floppy disks. It still just punched holes in them, but it was a start. Người hỏi: Wow.">
+  <figcaption><b>Ảnh 2</b> Truyện <em>Old Days</em> của xkcd, số 1755, năm 2016. Một người hỏi ngày xưa lập trình thế nào; người được hỏi trả lời toàn chuyện bịa: muốn biên dịch phải gửi code qua bưu điện tới IBM và đợi 4 tới 6 tuần, ngôn ngữ C chỉ viết được trên thẻ đục lỗ. Người hỏi tin cả, vì cái nền là thật: thời chạy theo lô, người lập trình đúng là nộp một chồng thẻ rồi chờ, có điều chờ hàng giờ chứ không phải hàng tuần.</figcaption>
+</figure>
+
 <h3 id="da-chuong-trinh">Đa chương trình: giữ nhiều job trong bộ nhớ cùng lúc</h3>
 
 <p>Lời giải cho khoảng trống thứ nhất là <strong>đa chương trình</strong> (<em>multiprogramming</em>):
@@ -141,7 +148,7 @@ khoảng trống thứ hai ấy cũng chính là nơi khái niệm process thàn
 
 <figure class="fig photo side">
   <img src="img/teletype-asr33.webp" width="720" height="960" loading="lazy" alt="Một máy teletype đứng trên chân sắt: bàn phím, khoang in giấy cuộn phía trên, bộ đọc băng giấy bên trái.">
-  <figcaption><b>Ảnh 2</b> Teletype Model 33 ASR sản xuất năm 1968, ở một bảo tàng máy tính. Loại máy
+  <figcaption><b>Ảnh 3</b> Teletype Model 33 ASR sản xuất năm 1968, ở một bảo tàng máy tính. Loại máy
   này là terminal phổ biến của các hệ time-sharing; chữ <code>tty</code> mà Linux vẫn dùng để gọi
   terminal là viết tắt của teletype.</figcaption>
 </figure>
@@ -205,7 +212,7 @@ Unix, ở Bell Labs, năm 1969.</p>
 
 <figure class="fig photo side narrow">
   <img src="img/thompson-ritchie.webp" width="620" height="402" loading="lazy" alt="Ảnh đen trắng hai người đàn ông để râu: Ken Thompson bên trái, Dennis Ritchie bên phải.">
-  <figcaption><b>Ảnh 3</b> Ken Thompson (trái) và Dennis Ritchie, hai người tạo ra Unix ở Bell Labs.
+  <figcaption><b>Ảnh 4</b> Ken Thompson (trái) và Dennis Ritchie, hai người tạo ra Unix ở Bell Labs.
   Ảnh chụp năm 1973, năm kernel Unix được viết lại bằng C.</figcaption>
 </figure>
 
@@ -329,7 +336,7 @@ bạn đã gõ ở Bài 03.</p>
 
 <figure class="fig photo shot">
   <img src="img/unix-v7-kernel.webp" width="836" height="832" loading="lazy" alt="Cửa sổ terminal nền đen chữ trắng liệt kê tệp của Unix bản 7: các tệp hệ thống trong đó có init, sáu tệp kernel tên kết thúc bằng unix, và tệp /bin/sh.">
-  <figcaption><b>Ảnh 4</b> Unix bản 7 (1979) chạy lại trong trình giả lập SIMH.
+  <figcaption><b>Ảnh 5</b> Unix bản 7 (1979) chạy lại trong trình giả lập SIMH.
   <span class="kw"><i class="key k-red" aria-hidden="true"></i>sáu tệp kernel</span>, mỗi tệp khoảng
   50 KB: kernel là một tệp chương trình trên đĩa như mọi chương trình khác, chỉ khác ở chỗ được nạp
   đầu tiên và chạy ở chế độ đặc quyền.
@@ -339,12 +346,12 @@ bạn đã gõ ở Bài 03.</p>
   chạy làm PID 1 của Unix; trên nhiều bản Linux hôm nay vai trò đó thuộc về systemd.</figcaption>
 </figure>
 
-<p>Ảnh 4 cho thấy cả hệ thống nhỏ tới mức nào, và cũng cho thấy những cái tên vẫn còn được dùng. Ngoài
+<p>Ảnh 5 cho thấy cả hệ thống nhỏ tới mức nào, và cũng cho thấy những cái tên vẫn còn được dùng. Ngoài
 <code>init</code> và <code>sh</code>, nhiều dấu vết khác vẫn nằm ngay trong những lệnh bạn gõ ở Bài 03.
 Con số 9 trong <code>kill -9</code> là số hiệu của SIGKILL từ các bản Unix đời đầu, được Linux giữ nguyên.
 Man page vẫn chia theo những phần đánh số của sổ tay Unix: phần 2 là syscall, nên mới có
 <code>fork(2)</code>, <code>bind(2)</code>; phần 7 là các trang tổng quan, nên có <code>signal(7)</code>.
-Còn chữ <code>tty</code> trong tên thiết bị terminal của Linux nhắc lại chiếc teletype ở Ảnh 2.</p>
+Còn chữ <code>tty</code> trong tên thiết bị terminal của Linux nhắc lại chiếc teletype ở Ảnh 3.</p>
 
 <div class="table-scroll">
 <table>
@@ -398,8 +405,7 @@ Còn chữ <code>tty</code> trong tên thiết bị terminal của Linux nhắc 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
 
 <p>Ảnh chụp thật đã được chuyển sang hai tông đen trắng và cắt khung cho khớp trang; ảnh bộ thẻ và
-teletype được tách khỏi nền cũ; ảnh chụp màn hình Unix bản 7 được cắt bớt nền trống, phóng to hai lần và vẽ
-thêm khung đánh dấu.</p>
+teletype được tách khỏi nền cũ; ảnh chụp màn hình Unix bản 7 được cắt bớt nền trống, phóng to hai lần và vẽ thêm khung đánh dấu. Truyện tranh của xkcd dùng theo giấy phép phi thương mại ghi ở từng dòng; đã phóng to và chuyển sang đen trắng.</p>
 
 <ol class="photo-credits">
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:IBM_7090_computer.jpg">Máy IBM 7090</a>
@@ -407,12 +413,13 @@ thêm khung đánh dấu.</p>
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Punched_card_program_deck.agr.jpg">Bộ
   thẻ đục lỗ của một chương trình</a> — ArnoldReinhold, Wikimedia Commons,
   <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Teletype_Model_33_ASR_(1968)_(14689737122).png">Teletype
+  <li><b>Ảnh 2</b><a href="https://xkcd.com/1755/">Old Days</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Teletype_Model_33_ASR_(1968)_(14689737122).png">Teletype
   Model 33 ASR (1968)</a> — Dennis van Zuijlekom, Wikimedia Commons,
   <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
-  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Ken_Thompson_and_Dennis_Ritchie--1973.jpg">Ken
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Ken_Thompson_and_Dennis_Ritchie--1973.jpg">Ken
   Thompson và Dennis Ritchie</a> — không rõ tác giả, Wikimedia Commons, public domain.</li>
-  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Version_7_UNIX_SIMH_PDP11_Kernels_Shell.png">Unix
+  <li><b>Ảnh 5</b><a href="https://commons.wikimedia.org/wiki/File:Version_7_UNIX_SIMH_PDP11_Kernels_Shell.png">Unix
   bản 7 trong trình giả lập SIMH</a> — Huihermit, Wikimedia Commons,
   <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
 </ol>
@@ -438,6 +445,6 @@ thêm khung đánh dấu.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c39f51f4"></script>
+<script src="../../assets/app.js?v=fd81593b"></script>
 </body>
 </html>

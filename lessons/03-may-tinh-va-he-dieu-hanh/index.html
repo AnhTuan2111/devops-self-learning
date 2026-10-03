@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 03 — Máy tính, hệ điều hành, process</title>
 <meta name="description" content="502 nghĩa là phía sau Nginx không còn ai trả lời. Bài này cho thấy app thật ra là một process do kernel quản lý, vì sao nó bị giết khi hết RAM, vì sao nó chết thì website sập, và vì sao phải biến nó thành service.">
-<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="03">
@@ -113,7 +113,15 @@ cầu và trả lời (Nginx là một HTTP server, PostgreSQL là một databas
 cứng</em>, server là cái máy mà những chương trình đó chạy trên. Ở đây ta nói về nghĩa thứ hai, và kết
 luận rất đơn giản: <strong>một server là một máy tính bình thường</strong>, có CPU, RAM, ổ đĩa, card
 mạng, y hệt chiếc laptop bạn đang dùng, kể cả khi nó là một máy ảo cắt ra từ một máy lớn hơn, phần
-mềm bên trong vẫn thấy một máy tính đầy đủ. Khác biệt giữa server và laptop nằm ở <em>hoàn cảnh sử
+mềm bên trong vẫn thấy một máy tính đầy đủ. Truyện ở Ảnh 2 nói cùng điều đó về "cloud", từ người ta
+dùng khi thuê máy chủ của người khác qua mạng.</p>
+
+<figure class="fig photo wide">
+  <a href="img/xkcd-the-cloud.webp"><img src="img/xkcd-the-cloud.webp" width="1480" height="472" loading="lazy" alt="Truyện năm khung. Một người thấy một thùng máy tính có dây nối đi, hỏi: What's this? Đáp: The Cloud. Người kia: Huh? I always thought the Cloud was a huge, amorphous network of servers somewhere. Người đội mũ ngồi bên máy tính: Yeah, but everyone buys server time from everyone else. In the end, they're all getting it here. Rồi họ nói về sợi dây căng ngang phòng: What if someone trips on it?"></a>
+  <figcaption><b>Ảnh 2</b> Truyện <em>The Cloud</em> của xkcd, số 908, năm 2011. "Tôi cứ tưởng đám mây là một mạng máy chủ khổng lồ ở đâu đó." Trong truyện, nó là một cái máy cắm dây ở góc phòng, và ai đó có thể vấp phải dây. Truyện nói quá về quy mô, nhưng đúng ở điểm bài này cần: "cloud" hay "server" rốt cuộc là những máy tính thật, cắm điện, đặt ở một chỗ cụ thể.</figcaption>
+</figure>
+
+<p>Khác biệt giữa server và laptop nằm ở <em>hoàn cảnh sử
 dụng</em>, và hoàn cảnh đó khác nhau đúng ba điểm.</p>
 
 <div class="table-scroll">
@@ -180,7 +188,7 @@ sẽ cho thấy vì sao phải có nó.</p>
     <figure><img src="img/o-cung-nvme.webp" width="800" height="600" loading="lazy" alt="Một ổ SSD NVMe dạng thanh M.2, dán nhãn WD_BLACK SN850X."><div class="lbl">disk <small>lưu bền vững</small></div></figure>
     <figure><img src="img/card-mang-pci.webp" width="800" height="600" loading="lazy" alt="Một card mạng Ethernet cắm khe PCI, có một cổng RJ45 để cắm cáp mạng."><div class="lbl">network <small>dữ liệu ra/vào</small></div></figure>
   </div>
-  <figcaption><b>Ảnh 2</b> Bốn tài nguyên của Hình 2, nhìn bằng mắt thường: con chip CPU (AMD Ryzen 9 9950X), một thanh RAM DDR4, một ổ SSD NVMe (WD SN850X) và một card mạng Ethernet. Mọi máy chủ, kể cả VPS, đều chỉ là tổ hợp của bốn loại linh kiện này, khác nhau ở số lượng và tốc độ.</figcaption>
+  <figcaption><b>Ảnh 3</b> Bốn tài nguyên của Hình 2, nhìn bằng mắt thường: con chip CPU (AMD Ryzen 9 9950X), một thanh RAM DDR4, một ổ SSD NVMe (WD SN850X) và một card mạng Ethernet. Mọi máy chủ, kể cả VPS, đều chỉ là tổ hợp của bốn loại linh kiện này, khác nhau ở số lượng và tốc độ.</figcaption>
 </figure>
 
 
@@ -406,6 +414,13 @@ trên máy tạo thành một <strong>cây</strong>.</p>
     │     └── PID 903  nginx (worker)
     └── PID 1024  postgres</code></pre>
   <figcaption><b>Hình 5</b> Một cây process tiêu biểu trên server Linux. Các con số PID chỉ là minh hoạ.</figcaption>
+</figure>
+
+<p>Gốc cây là PID 1, và Ảnh 4 tả công việc của nó trong một khung tranh.</p>
+
+<figure class="fig photo small">
+  <img src="img/truyen-pid1.webp" width="1100" height="1062" loading="lazy" alt="Truyện một khung: To be PID 1 on Linux is like. Một chim cánh cụt bấm nút và nói: Let the party begin. Nửa dưới khung tranh kín chữ fork lặp đi lặp lại.">
+  <figcaption><b>Ảnh 4</b> Truyện <em>PID 1</em> của Daniel Stori, turnoff.us, năm 2024. "Làm PID 1 trên Linux là thế này: bắt đầu thôi", rồi cả màn hình là chữ fork. Mọi chương trình bạn chạy đều là con cháu của PID 1, sinh ra qua một chuỗi fork bắt đầu từ nó, nên cây ở Hình 5 chỉ có một gốc.</figcaption>
 </figure>
 
 <p>Nhánh thứ nhất có một cái tên chưa gặp. Vì server không có màn hình, người ta điều khiển nó từ xa
@@ -656,7 +671,7 @@ user space và không tự biết chuyện bên ngoài nó, nên lời báo ph�
 
 <figure class="fig photo shot">
   <img src="img/man-signal7.webp" width="1313" height="1293" loading="lazy" alt="Bảng tín hiệu chuẩn trong man page signal(7), ba dòng SIGINT, SIGKILL và SIGTERM được khoanh màu.">
-  <figcaption><b>Ảnh 3</b> Bảng tín hiệu chuẩn trong man page <code>signal(7)</code> (man page là trang hướng dẫn chính thức đi kèm Linux, mỗi lệnh hay khái niệm một trang), với ba dòng khoanh: <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>SIGINT,</span> tín hiệu mà phím Ctrl+C gửi tới; <span class="kw"><i class="key k-red" aria-hidden="true"></i>SIGKILL,</span> tín hiệu của <code>kill -9</code>; và <span class="kw"><i class="key k-blue" aria-hidden="true"></i>SIGTERM,</span> tín hiệu mặc định của lệnh <code>kill</code>. Cả ba có hành động mặc định <code>Term</code>, tức kết thúc process, nhưng chỉ SIGKILL là không bắt được, nên app không có cơ hội dọn dẹp.</figcaption>
+  <figcaption><b>Ảnh 5</b> Bảng tín hiệu chuẩn trong man page <code>signal(7)</code> (man page là trang hướng dẫn chính thức đi kèm Linux, mỗi lệnh hay khái niệm một trang), với ba dòng khoanh: <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>SIGINT,</span> tín hiệu mà phím Ctrl+C gửi tới; <span class="kw"><i class="key k-red" aria-hidden="true"></i>SIGKILL,</span> tín hiệu của <code>kill -9</code>; và <span class="kw"><i class="key k-blue" aria-hidden="true"></i>SIGTERM,</span> tín hiệu mặc định của lệnh <code>kill</code>. Cả ba có hành động mặc định <code>Term</code>, tức kết thúc process, nhưng chỉ SIGKILL là không bắt được, nên app không có cơ hội dọn dẹp.</figcaption>
 </figure>
 
 
@@ -680,6 +695,13 @@ thu hồi toàn bộ tài nguyên của nó.</p>
             → dòng log cuối cùng mất</code></pre>
   <figcaption><b>Hình 10</b> Cả hai signal đều kết thúc process, nhưng những thứ process đang giữ
   được xử lý theo hai cách khác nhau.</figcaption>
+</figure>
+
+<p>Ảnh 6 kể cùng sự khác biệt đó từ phía process.</p>
+
+<figure class="fig photo small">
+  <img src="img/truyen-sigkill.webp" width="1100" height="1991" loading="lazy" alt="Truyện nhiều khung. This is Bob. Bob is a Linux process. Like any process, Bob has his threads, with whom he shares context, memories, and love. And like all processes, inevitably, he will be killed. When we gracefully kill a process with a soft SIGTERM, we give him the chance to talk with his kids about it, so the kids finish their tasks and say goodbye to each other. On the other hand, when we brutally kill a process with a SIGKILL, we prevent it from finishing its job and saying goodbye. So please, don't use SIGKILL. Let the kids exit the kernel gracefully. Be nice.">
+  <figcaption><b>Ảnh 6</b> Truyện <em>The real reason not to use SIGKILL</em> của Daniel Stori, turnoff.us, năm 2024. Bob là một process có các thread, những "đứa con" dùng chung bộ nhớ với nó. Nhận SIGTERM, Bob kịp cho các thread làm xong việc rồi mới thoát; nhận SIGKILL, không ai kịp làm gì. Truyện vẽ người gửi signal là một quản trị viên; trong chuỗi sự cố của bài này, bên gửi SIGKILL là OOM killer, ở mục ngay sau.</figcaption>
 </figure>
 
 <h3 id="oom">OOM killer: kernel chọn process để giết khi hết RAM</h3>
@@ -818,7 +840,7 @@ không có cơ chế nào khiến nó tự khởi động khi máy bật lên. �
 
 <figure class="fig photo shot">
   <img src="img/systemd-restart.webp" width="1118" height="892" loading="lazy" alt="Bảng 1 trong man page systemd.service: hàng là các kiểu process chết, cột là các giá trị Restart=, dấu X cho biết systemd có khởi động lại hay không.">
-  <figcaption><b>Ảnh 4</b> Bảng 1 trong man page <code>systemd.service(5)</code>: với từng kiểu chết (hàng) và từng giá trị <code>Restart=</code> (cột), dấu X cho biết systemd có dựng process dậy lại hay không. <span class="kw"><i class="key k-red" aria-hidden="true"></i>Dòng</span> khoanh đỏ là trường hợp của <code>kill -9</code>, một tín hiệu "không sạch"; <span class="kw"><i class="key k-blue" aria-hidden="true"></i>dòng</span> khoanh lam là OOM killer. Cả hai đều được <code>Restart=on-failure</code> khởi động lại; đó chính là chính sách trông coi biến một process thành một service.</figcaption>
+  <figcaption><b>Ảnh 7</b> Bảng 1 trong man page <code>systemd.service(5)</code>: với từng kiểu chết (hàng) và từng giá trị <code>Restart=</code> (cột), dấu X cho biết systemd có dựng process dậy lại hay không. <span class="kw"><i class="key k-red" aria-hidden="true"></i>Dòng</span> khoanh đỏ là trường hợp của <code>kill -9</code>, một tín hiệu "không sạch"; <span class="kw"><i class="key k-blue" aria-hidden="true"></i>dòng</span> khoanh lam là OOM killer. Cả hai đều được <code>Restart=on-failure</code> khởi động lại; đó chính là chính sách trông coi biến một process thành một service.</figcaption>
 </figure>
 
 
@@ -880,6 +902,13 @@ sửa một dòng code nào; chỉ cần viết một file cấu hình cho ngư�
   process lớn nhất, và OOM killer giết nó. App sống lại, nhưng bản sao lưu đêm đó thất
   bại mà không ai hay, cho tới ngày cần khôi phục dữ liệu mới phát hiện ra.</p>
 </div>
+
+<p>Ảnh 8 là giới hạn ấy trong một câu đùa.</p>
+
+<figure class="fig photo">
+  <img src="img/xkcd-hard-reboot.webp" width="930" height="452" loading="lazy" alt="Hai ô. Ô trái: Figuring out why my home server keeps running out of swap space and crashing: 1-10 hours. Ô phải, hình một ổ cắm hẹn giờ: Plugging it into a light timer so it reboots every 24 hours: 5 minutes. Dòng dưới: Why everything I have is broken.">
+  <figcaption><b>Ảnh 8</b> Truyện <em>Hard Reboot</em> của xkcd, số 1495, năm 2015. Tìm ra vì sao server ở nhà cứ hết bộ nhớ rồi treo: từ một tới mười giờ. Cắm nó vào ổ hẹn giờ để cứ 24 giờ lại khởi động lại: năm phút. (Swap trong truyện là phần ổ đĩa hệ điều hành dùng thêm khi RAM đầy.) Dòng cuối, "vì sao mọi thứ tôi có đều hỏng", là cái giá: khởi động lại định kỳ che triệu chứng, còn nguyên nhân vẫn ở đó, giống một service cứ chết rồi lại được dựng dậy.</figcaption>
+</figure>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
@@ -1241,21 +1270,25 @@ một process sống nhờ RAM và CPU, được kernel cấp PID và port, và 
   <li><a href="https://nodejs.org/api/process.html#signal-events">Node.js — Signal events</a> — cách
   Node xử lý SIGINT, SIGTERM, SIGKILL, kể cả trên Windows.</li>
   <li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html">systemd.service</a>
-  — tuỳ chọn <code>Restart=</code>, chính sách dựng process dậy của systemd trong Ảnh 4.</li>
+  — tuỳ chọn <code>Restart=</code>, chính sách dựng process dậy của systemd trong Ảnh 7.</li>
 </ol>
 
 
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào. Truyện tranh của xkcd và của turnoff.us dùng theo giấy phép phi thương mại ghi ở từng dòng; đã đổi cỡ và chuyển sang đen trắng.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg">Tủ máy chủ ở trung tâm dữ liệu NERSC</a> — Derrick Coetzee, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:AMD_Ryzen_9_9950X.jpg">CPU AMD Ryzen 9 9950X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png">Thanh RAM DDR4</a> — PantheraLeo1359531, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Western_Digital_SN850X_NVME_solid_state_drive_8TB_front_side.jpg">Ổ SSD NVMe WD SN850X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg">Card mạng Ethernet PCI</a> — afrank99, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
-  <li><b>Ảnh 3</b>Bảng tín hiệu chuẩn, signal(7) — chụp màn hình <a href="https://man7.org/linux/man-pages/man7/signal.7.html">man7.org</a>, 30/09/2026.</li>
-  <li><b>Ảnh 4</b>Bảng 1, systemd.service(5) — chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a>, 30/09/2026; đã ẩn ba cột on-abnormal, on-abort, on-watchdog.</li>
+  <li><b>Ảnh 2</b><a href="https://xkcd.com/908/">The Cloud</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:AMD_Ryzen_9_9950X.jpg">CPU AMD Ryzen 9 9950X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png">Thanh RAM DDR4</a> — PantheraLeo1359531, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Western_Digital_SN850X_NVME_solid_state_drive_8TB_front_side.jpg">Ổ SSD NVMe WD SN850X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg">Card mạng Ethernet PCI</a> — afrank99, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
+  <li><b>Ảnh 4</b><a href="https://turnoff.us/geek/pid1/">PID 1</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 5</b>Bảng tín hiệu chuẩn, signal(7) — chụp màn hình <a href="https://man7.org/linux/man-pages/man7/signal.7.html">man7.org</a>, 30/09/2026.</li>
+  <li><b>Ảnh 6</b><a href="https://turnoff.us/geek/the-real-reason-not-to-use-sigkill/">The real reason not to use SIGKILL</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 7</b>Bảng 1, systemd.service(5) — chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a>, 30/09/2026; đã ẩn ba cột on-abnormal, on-abort, on-watchdog.</li>
+  <li><b>Ảnh 8</b><a href="https://xkcd.com/1495/">Hard Reboot</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
 </ol>
 </section>
 
@@ -1278,6 +1311,6 @@ một process sống nhờ RAM và CPU, được kernel cấp PID và port, và 
 
 </div>
 
-<script src="../../assets/app.js?v=c39f51f4"></script>
+<script src="../../assets/app.js?v=fd81593b"></script>
 </body>
 </html>

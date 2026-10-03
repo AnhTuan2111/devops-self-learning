@@ -451,11 +451,28 @@ Khung đánh dấu đỏ/lam/vàng trên các ảnh dẫn chứng còn lại th�
 ảnh đó và hỏi cho rõ lý do trước khi áp dụng rộng (04/10/2026: đã từng suy rộng thành "bỏ mọi ảnh chụp
 chữ", đổi 20 ảnh, và người học phải hoàn tác).
 
-**Nhiều ảnh hơn, kể cả sơ đồ và ảnh vui** (người học 04/10/2026: "nhiều ảnh sẽ khiến người học gợi hình trong
-đầu hơn, có thể thêm cả ảnh sơ đồ flow bạn tìm trên mạng"; "có thể vào Pinterest để tìm ảnh, đôi khi có những
-ảnh khá là hài"). Sơ đồ có sẵn trên mạng dùng được khi nó vẽ đúng cơ chế bài đang giảng; đánh số "Ảnh N" và
-ghi nguồn như ảnh chụp. Ảnh vui dùng được khi nó nói đúng cơ chế của mục chứa nó, mỗi trang nhiều nhất một
-hai ảnh, và chú thích phải nói ảnh bỏ qua điều gì của cơ chế thật (như truyện xkcd về sudo ở Bài 04).
+**Nhiều ảnh hơn, kể cả sơ đồ và truyện tranh** (người học 04/10/2026: "nhiều ảnh sẽ khiến người học gợi hình
+trong đầu hơn, có thể thêm cả ảnh sơ đồ flow bạn tìm trên mạng"; "có thể vào Pinterest để tìm ảnh, đôi khi có
+những ảnh khá là hài"; rồi khi thấy truyện xkcd về sudo: "ảnh này hay thế, tìm những ảnh như này nhiều vào").
+Sơ đồ có sẵn trên mạng dùng được khi nó vẽ đúng cơ chế bài đang giảng; đánh số "Ảnh N" và ghi nguồn như ảnh
+chụp. **Truyện tranh** (xkcd, turnoff.us) được dùng nhiều, với bốn điều kiện:
+
+- Truyện phải nói đúng cơ chế của **mục chứa nó** (luật không lạc đề vẫn áp dụng); không có mục hợp thì để
+  dành cho bài sau, đừng đặt cho vui.
+- Chú thích ghi tên truyện, tác giả, số hoặc năm; kể lại lời thoại bằng tiếng Việt cho người chưa đọc được
+  tiếng Anh; nối về cơ chế vừa giảng; và nói truyện **nói quá hay bỏ qua điều gì** của cơ chế thật.
+- Thuật ngữ lạ trong truyện (swap, SSL, layer 1) phải được giải nghĩa ngay trong chú thích, mỗi truyện tối
+  đa một từ.
+- Xem tận mắt trước khi dùng, và **loại** truyện có hình vẽ rập khuôn về một sắc tộc (nhân vật "Apache" đội
+  lông chim ở turnoff.us: các truyện OOM killer, Who killed MySQL, The war for port 80), cảnh máu me hay bạo
+  lực (xkcd 293, 705), và truyện mà phần lớn diện tích là chữ.
+
+Truyện đã xem và hợp cho các bài chưa viết: xkcd 1988 Containers, 2044 Sandboxing Cycle, 1987 Python
+Environment và turnoff.us `linux-containers`, `kernel-economics` (Docker, Bài 05–15); xkcd 838 Incident, 1200
+Authorization, 1168 tar, 1553 Public Key, 538 Security, 936 Password Strength (SSH và Linux trên server, Bài
+16–17); turnoff.us `tail-no-grep` (log); xkcd 1597 Git, 303 Compiling, 1319 Automation, 1205 Is It Worth the
+Time (CI/CD, Bài 21–25); xkcd 1728 Cron Mail (CronJob, Bài 34).
+
 Pinterest chặn kết quả tìm kiếm bằng tường đăng nhập, nên không tự lấy được ảnh ở đó; ảnh người học tự gửi từ
 Pinterest thì dùng, ghi đường dẫn pin vào `NGUON.md`, giấy phép ghi "không rõ". Quy trình bắt buộc:
 
@@ -463,8 +480,10 @@ Pinterest thì dùng, ghi đường dẫn pin vào `NGUON.md`, giấy phép ghi 
    CC BY-SA (`node scripts/anh/commons.mjs tim "…"` rồi `lay "File:…"` — lưu kèm giấy phép);
    (b) **tự chụp màn hình** từ trang công khai (RFC, man7.org, IANA, crt.sh…) hoặc từ **phần
    mềm chạy thật trên máy** (như trang lỗi Nginx ở Bài 02 — chạy Nginx thật để lấy 404/502/504);
-   (c) truyện tranh **xkcd**, giấy phép CC BY-NC 2.5 (dùng được vì trang không thu tiền; ghi tên
-   tác giả và link về xkcd.com). Ảnh tự tìm mà không rõ giấy phép thì không dùng, và đọc trang tệp trên
+   (c) truyện tranh **xkcd** (Randall Munroe, CC BY-NC 2.5; `https://xkcd.com/N/info.0.json` cho tiêu đề,
+   năm, lời thoại) và **turnoff.us** (Daniel Stori, CC BY-NC-SA 4.0). Cả hai chỉ cho dùng phi thương mại:
+   dùng được vì trang không thu tiền, phải ghi tên tác giả và link về trang gốc; bản đã chỉnh của truyện
+   turnoff.us chia sẻ lại theo đúng giấy phép ấy. Ảnh tự tìm mà không rõ giấy phép thì không dùng, và đọc trang tệp trên
    Commons trước khi tin nhãn giấy phép (ảnh báo chí do người khác tải lên, không kèm bằng chứng cho phép,
    coi là không rõ). Trang chặn bot (403) hoặc bắt đăng nhập thì **không vượt**, tìm bản khác.
 2. **Tùy biến theo phong cách bài** (`python scripts/anh/hau-ky.py`): ảnh chụp thật chuyển hai
@@ -516,8 +535,13 @@ Pinterest thì dùng, ghi đường dẫn pin vào `NGUON.md`, giấy phép ghi 
 
 Markup: `<figure class="fig photo">` (ảnh 2/3 + chú thích 1/3) · thêm `side` (ảnh phụ, lệch
 phải; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền) · `small` (ảnh nhỏ cố định
-360px, chú thích chiếm phần còn lại) · nhiều ảnh: `<div class="photo-row n3|n4 [shots]">` với mỗi
-ô `<figure>` + `<div class="lbl">`, rồi một `<figcaption>` chung cho cả khối.
+360px, chú thích chiếm phần còn lại; thêm `narrow` cho truyện tranh dọc hẹp, 230px) · `wide` (ảnh rộng hết cột, chú
+thích xuống dưới: chỉ cho dải truyện tranh ngang nhiều khung và tranh nhiều chi tiết, khi ở 2/3 chữ trong ảnh không
+đọc được) · nhiều ảnh: `<div class="photo-row n3|n4 [shots]">` với mỗi
+ô `<figure>` + `<div class="lbl">`, rồi một `<figcaption>` chung cho cả khối. Ảnh nhiều chi tiết nhỏ (như tranh
+*Inside the Linux Kernel* ở Bài 04) thì bọc `<img>` trong `<a href="img/…">` để bấm vào mở cỡ đầy đủ, và nói
+điều đó trong chú thích. Chèn ảnh vào giữa trang thì đánh lại **mọi** "Ảnh N" của trang đó (chú thích, câu
+nhắc tới, mục Nguồn ảnh, `NGUON.md`) và mọi chỗ trang khác trỏ tới (Bài 02 nhắc "Bài 00 (Ảnh 5)").
 
 ### Nguồn thiết kế (đã tải được, dùng khi cần trích)
 

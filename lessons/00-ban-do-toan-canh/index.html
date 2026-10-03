@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00 — Bản đồ toàn cảnh</title>
 <meta name="description" content="Chín chặng một request đi qua, từ lúc gõ địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy: URL gồm những phần nào, chặng nào chạy trên máy người dùng, chặng nào trên server, và vì sao trong cả đường đi chỉ ứng dụng là code bạn viết.">
-<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00">
@@ -433,6 +433,13 @@ phải một máy mạo danh. Việc thứ hai là <em>mã hoá</em>: biến m�
 giữa không đọc được. Thứ tự này có lý do: nếu máy ở đầu kia là máy mạo danh thì mã hoá kỹ đến đâu, dữ
 liệu vẫn tới đúng tay máy mạo danh ấy.</p>
 
+<p>Truyện ở Ảnh 3 nói về việc thứ hai, mã hoá, bằng một tình huống ngoài đời.</p>
+
+<figure class="fig photo small">
+  <img src="img/truyen-ssl.webp" width="850" height="825" loading="lazy" alt="Truyện tranh một khung. Một người đứng trước quầy nói: Chào buổi sáng, tôi muốn xem các đơn hàng mới nhất của cửa hàng. Người bán đáp: Anh điên à, đó là thông tin mật. Người kia nói: Xin lỗi, vì trang web của anh không dùng SSL nên tôi tưởng anh không quan tâm tới bí mật.">
+  <figcaption><b>Ảnh 3</b> Truyện <em>We need to talk about SSL</em> của Daniel Stori, turnoff.us, năm 2017. Một người lạ hỏi xem đơn hàng của cửa hàng; chủ cửa hàng bảo đó là thông tin mật; người kia đáp rằng trang web của cửa hàng không dùng SSL nên anh tưởng cửa hàng không quan tâm tới bí mật. SSL là giao thức đời trước của TLS, và nhiều người vẫn gọi TLS bằng tên ấy. Truyện đúng với cơ chế: không có lớp mã hoá thì mọi máy đứng giữa đường đi đều đọc được dữ liệu.</figcaption>
+</figure>
+
 <p>Để chứng minh danh tính, server trình ra một <strong>chứng chỉ</strong> (certificate): một tài liệu
 điện tử ghi rằng nó thuộc về tên miền nào và còn hiệu lực tới khi nào.</p>
 
@@ -506,7 +513,7 @@ quyết định được là hai đầu: request được gửi đi đúng cách
 
 <figure class="fig photo">
   <img src="img/cap-quang-bien.webp" width="1200" height="803" loading="lazy" alt="Bốn mẫu cáp quang biển cắt ngang đặt cạnh nhau, có nhãn chú thích từng lớp: lõi sợi quang, dây đồng cấp điện, lớp giáp thép.">
-  <figcaption><b>Ảnh 3</b> Phần Internet giữa các châu lục có hình hài vật lý thật: phần lớn lưu lượng đi
+  <figcaption><b>Ảnh 4</b> Phần Internet giữa các châu lục có hình hài vật lý thật: phần lớn lưu lượng đi
   qua cáp quang biển. Đây là mẫu cắt ngang bốn loại vỏ cáp: sợi quang nằm ở lõi, bọc bởi dây đồng cấp điện
   cho các bộ khuếch đại dọc tuyến, rồi tới các lớp giáp thép dày dần cho những đoạn gần bờ, nơi cáp dễ bị
   neo tàu kéo đứt.</figcaption>
@@ -535,7 +542,7 @@ người dùng không bao giờ phải biết con số 8080 tồn tại.</p>
 
 <figure class="fig photo shot">
   <img src="img/nginx-welcome.webp" width="1280" height="600" loading="lazy" alt="Trang trắng với tiêu đề lớn Welcome to nginx! và vài dòng hướng dẫn, kết thúc bằng Thank you for using nginx.">
-  <figcaption><b>Ảnh 4</b> Trang chào mặc định của Nginx, chụp từ Nginx 1.30.5 tôi cài và chạy thật trên
+  <figcaption><b>Ảnh 5</b> Trang chào mặc định của Nginx, chụp từ Nginx 1.30.5 tôi cài và chạy thật trên
   máy mình. Ngay sau khi cài, Nginx đã nhận request và tự trả lời bằng một trang có sẵn, chưa chuyển gì vào ứng
   dụng nào. Vì vậy Nginx tự trả lời được một số request mà không cần tới ứng dụng.</figcaption>
 </figure>
@@ -563,6 +570,13 @@ lại là hạ tầng: chương trình của người khác, cấu hình của n
 Mỗi chặng ấy có thể hỏng mà code của bạn không đổi một dòng. Vì vậy khi nhận tin nhắn "web không vào
 được" mà code không đổi dòng nào từ hôm qua, cần nghi tám chặng hạ tầng trước, rồi mới tới phần code bạn
 quen nhất.</p>
+
+<p>Truyện ở Ảnh 6 vẽ cùng ý đó: phần của bạn nằm trên rất nhiều phần của người khác.</p>
+
+<figure class="fig photo small">
+  <img src="img/xkcd-dependency.webp" width="770" height="978" loading="lazy" alt="Một chồng khối xếp cao, chú thích All modern digital infrastructure. Gần đáy có một khối nhỏ xíu đỡ cả chồng, mũi tên chỉ vào ghi: A project some random person in Nebraska has been thanklessly maintaining since 2003.">
+  <figcaption><b>Ảnh 6</b> Truyện <em>Dependency</em> của xkcd, số 2347, năm 2020. Cả khối "hạ tầng số hiện đại" đứng trên một mảnh nhỏ do một người nào đó lặng lẽ duy trì từ năm 2003. Truyện nói quá, nhưng trùng với kết luận của mục này: phần lớn những gì request đi qua là chương trình của người khác, và code của bạn dựa vào chúng.</figcaption>
+</figure>
 
 <h2 id="devops">DevOps: ai lo cho tám chặng còn lại</h2>
 
@@ -797,12 +811,14 @@ ngay; dùng chúng để tra cứu khi một bài sau đi sâu vào chặng tư�
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp.</p>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp. Truyện tranh của xkcd và của turnoff.us dùng theo giấy phép phi thương mại ghi ở từng dòng; đã đổi cỡ và chuyển sang đen trắng.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b>Ví dụ thành phần URI, RFC 3986 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc3986.html">rfc-editor.org</a>, 30/09/2026.</li>
   <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Router gia đình Linksys WRT54G</a> — Evan-Amos, Wikimedia Commons, public domain.</li>
-  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg">Mẫu cáp quang biển</a> — Lonnie Hagadorn, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
-  <li><b>Ảnh 4</b>Trang chào mặc định của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy tôi, 30/09/2026.</li>
+  <li><b>Ảnh 3</b><a href="https://turnoff.us/geek/we-need-to-talk-about-ssl/">We need to talk about SSL</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg">Mẫu cáp quang biển</a> — Lonnie Hagadorn, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 5</b>Trang chào mặc định của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy tôi, 30/09/2026.</li>
+  <li><b>Ảnh 6</b><a href="https://xkcd.com/2347/">Dependency</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
 </ol>
 
 </section>
@@ -826,6 +842,6 @@ ngay; dùng chúng để tra cứu khi một bài sau đi sâu vào chặng tư�
 
 </div>
 
-<script src="../../assets/app.js?v=c39f51f4"></script>
+<script src="../../assets/app.js?v=fd81593b"></script>
 </body>
 </html>

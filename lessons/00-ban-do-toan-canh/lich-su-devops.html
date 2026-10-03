@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Lịch sử DevOps</title>
 <meta name="description" content="DevOps là gì và vì sao nó ra đời: hai đội phát triển và vận hành với hai thước đo ngược nhau, Agile năm 2001 tăng tốc một nửa, những năm 2006–2009 nhập hai nửa lại, định nghĩa trong chuẩn IEEE 2675-2021, và cách người ta đo DevOps ngày nay.">
-<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00-devops">
@@ -60,6 +60,13 @@ và cấu hình máy chủ, giữ mạng và firewall, sao lưu dữ liệu, tr�
 tức là bằng <em>số thay đổi</em>. Ops được đánh giá bằng việc hệ thống không sập, mà như Bài 00 đã lập
 luận, một hệ thống đang chạy tốt chỉ hỏng khi có thứ gì đó thay đổi. Hệ quả rất tự nhiên: với ops, mỗi
 thay đổi là một rủi ro cần hạn chế; với dev, mỗi lần bị hạn chế là một tính năng chậm ra mắt.</p>
+
+<p>Nỗi lo của ops có cơ sở, và Ảnh 2 kể nó bằng một ví dụ cố ý vô lý.</p>
+
+<figure class="fig photo small">
+  <img src="img/xkcd-workflow.webp" width="556" height="772" loading="lazy" alt="Ghi chú phát hành của một phần mềm: Changes in version 10.17: The CPU no longer overheats when you hold down spacebar. Bên dưới là bình luận của LongtimeUser4: bản cập nhật làm hỏng cách làm việc của tôi, tôi vẫn giữ phím cách thay cho phím Control. Admin đáp: That's horrifying. Dòng cuối: Every change breaks someone's workflow.">
+  <figcaption><b>Ảnh 2</b> Truyện <em>Workflow</em> của xkcd, số 1172, năm 2013. Bản 10.17 sửa một lỗi: CPU không còn nóng lên khi giữ phím cách. Một người dùng lâu năm phản đối, vì anh đã quen giữ phím cách thay cho phím Control, nhờ một cấu hình đọc nhiệt độ CPU. Dòng dưới cùng nói gọn nỗi lo của ops: <em>every change breaks someone's workflow</em>, thay đổi nào cũng làm hỏng cách làm việc của một ai đó.</figcaption>
+</figure>
 
 <dl class="terms">
   <dt>Deploy <small>triển khai</small></dt>
@@ -116,7 +123,7 @@ for Agile Software Development</em>, tuyên ngôn phát triển phần mềm lin
 
 <figure class="fig photo shot">
   <img src="img/agile-manifesto.webp" width="1280" height="816" loading="lazy" alt="Trang agilemanifesto.org: tiêu đề Manifesto for Agile Software Development và bốn dòng giá trị, hai dòng Working software và Responding to change được khoanh màu.">
-  <figcaption><b>Ảnh 2</b> Bốn giá trị của Tuyên ngôn Agile, nguyên văn trên agilemanifesto.org (bản ghi năm
+  <figcaption><b>Ảnh 3</b> Bốn giá trị của Tuyên ngôn Agile, nguyên văn trên agilemanifesto.org (bản ghi năm
   2001). Hai giá trị khoanh màu gần nhất với câu chuyện của phụ lục: khung
   <span class="kw"><i class="key k-red" aria-hidden="true"></i>đỏ</span>, phần mềm chạy được quan trọng hơn
   tài liệu đầy đủ; khung <span class="kw"><i class="key k-blue" aria-hidden="true"></i>lam</span>, thích ứng
@@ -185,6 +192,13 @@ dễ gỡ ra. Deploy thường xuyên vì vậy không làm hệ thống kém �
 một màn hình khi có sự cố. Mâu thuẫn "dev muốn thay đổi, ops muốn ổn định" ở tab đầu hoá ra là mâu thuẫn
 của những thay đổi <em>lớn</em>.</p>
 
+<p>Ảnh 4 cho thấy đi nhanh mà thiếu hai điều kiện ấy thì ra sao.</p>
+
+<figure class="fig photo small narrow">
+  <img src="img/xkcd-move-fast.webp" width="483" height="1290" loading="lazy" alt="Một người đi phỏng vấn nói: My motto is move fast and break things. Bên dưới là danh sách Jobs I've been fired from: FedEx driver, crane operator, surgeon, air traffic controller, pharmacist, museum curator, waiter, dog walker, oil tanker captain, violinist, Mars rover driver, massage therapist.">
+  <figcaption><b>Ảnh 4</b> Truyện <em>Move Fast and Break Things</em> của xkcd, số 1428, năm 2014. Người đi phỏng vấn khoe phương châm "đi nhanh và làm vỡ đồ"; bên dưới là danh sách những việc anh đã bị đuổi: tài xế giao hàng, người lái cần cẩu, bác sĩ phẫu thuật, kiểm soát viên không lưu. Ở những nghề ấy không có cách gỡ một thay đổi vừa gây lỗi. Flickr deploy mười lần một ngày được vì mỗi thay đổi nhỏ, kiểm tra được và gỡ ra được.</figcaption>
+</figure>
+
 <h2 id="ghent">Tháng 10 năm 2009: devopsdays ở Ghent</h2>
 
 <p>Patrick Debois không đi được tới Velocity và xem bài nói của Flickr qua video. Được nhiều người trên mạng
@@ -194,7 +208,7 @@ tên gọi chung cho cách làm mà hội nghị bàn tới, và devopsdays về
 
 <figure class="fig photo shot">
   <img src="img/devopsdays-ghent-2009.webp" width="1400" height="1215" loading="lazy" alt="Trang chương trình devopsdays Ghent 2009: dòng khẩu hiệu The conference that brings development and operations together ở đầu trang và sáu ô tên bài nói, ba ô được khoanh màu.">
-  <figcaption><b>Ảnh 3</b> Trang chương trình của devopsdays Ghent 2009, vẫn còn trên trang lưu trữ
+  <figcaption><b>Ảnh 5</b> Trang chương trình của devopsdays Ghent 2009, vẫn còn trên trang lưu trữ
   legacy.devopsdays.org. <span class="kw"><i class="key k-red" aria-hidden="true"></i>Khẩu hiệu</span> nói
   thẳng mục đích: hội nghị đưa phát triển và vận hành lại với nhau. Các bài nói cho thấy hai phía mượn
   cách làm của nhau: hai ô <span class="kw"><i class="key k-blue" aria-hidden="true"></i>lam</span> là dựng
@@ -203,7 +217,7 @@ tên gọi chung cho cách làm mà hội nghị bàn tới, và devopsdays về
   code tới production.</figcaption>
 </figure>
 
-<p>Hai cái tên trong Ảnh 3 cần một câu giải thích. Puppet là một công cụ cho phép mô tả cấu hình của máy
+<p>Hai cái tên trong Ảnh 5 cần một câu giải thích. Puppet là một công cụ cho phép mô tả cấu hình của máy
 chủ trong các tệp văn bản, để máy cấu hình đúng như mô tả thay vì do người gõ tay từng lệnh. Kanban là một
 cách sắp việc trên một bảng chung để cả nhóm nhìn thấy việc nào đang làm, việc nào đang chờ. Bản thân hai
 công cụ không quan trọng với phụ lục này; điều đáng chú ý là ở năm 2009, người vận hành đã muốn quản lý máy
@@ -417,11 +431,13 @@ mình không biết nó hỏng trông ra sao.</p>
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở dòng của nó; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở dòng của nó; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào. Truyện tranh của xkcd dùng theo giấy phép phi thương mại ghi ở từng dòng; đã phóng to và chuyển sang đen trắng.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:NOC-IUPUI.jpg">Trung tâm vận hành mạng của Đại học Indiana</a> — Alan Levine, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>.</li>
-  <li><b>Ảnh 2</b>Bốn giá trị của Tuyên ngôn Agile — chụp màn hình <a href="https://agilemanifesto.org/">agilemanifesto.org</a>, 03/10/2026; đã bỏ ảnh nền phía sau chữ và cắt bớt khoảng trống dưới tiêu đề.</li>
-  <li><b>Ảnh 3</b>Chương trình devopsdays Ghent 2009 — chụp màn hình <a href="http://legacy.devopsdays.org/events/2009-ghent/program/">legacy.devopsdays.org</a>, 03/10/2026.</li>
+  <li><b>Ảnh 2</b><a href="https://xkcd.com/1172/">Workflow</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 3</b>Bốn giá trị của Tuyên ngôn Agile — chụp màn hình <a href="https://agilemanifesto.org/">agilemanifesto.org</a>, 03/10/2026; đã bỏ ảnh nền phía sau chữ và cắt bớt khoảng trống dưới tiêu đề.</li>
+  <li><b>Ảnh 4</b><a href="https://xkcd.com/1428/">Move Fast and Break Things</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 5</b>Chương trình devopsdays Ghent 2009 — chụp màn hình <a href="http://legacy.devopsdays.org/events/2009-ghent/program/">legacy.devopsdays.org</a>, 03/10/2026.</li>
 </ol>
 
 </section>
@@ -445,6 +461,6 @@ mình không biết nó hỏng trông ra sao.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c39f51f4"></script>
+<script src="../../assets/app.js?v=fd81593b"></script>
 </body>
 </html>

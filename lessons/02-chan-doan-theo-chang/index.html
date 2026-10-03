@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 02 — Chẩn đoán theo chặng</title>
 <meta name="description" content="Kết nối tới được rồi mà trang vẫn báo lỗi: đọc mã trạng thái HTTP, nhận ra ai đã viết ra trang lỗi, phân biệt 502, 504 với 500, và dùng ba nguyên tắc để khoanh vùng chặng hỏng, kể cả khi không ai đụng vào hệ thống.">
-<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="02">
@@ -277,7 +277,7 @@ chứng chỉ, tự từ chối và tự viết trang báo lỗi.</p>
 
 <p>Nginx làm nhiều hơn việc chuyển request vào trong: bản thân nó là một chương trình HTTP đầy đủ, tự
 trả lời được mà không cần ứng dụng nào phía sau. Trang chào mặc định ở
-<a href="../00-ban-do-toan-canh/#chang-7">Bài 00</a> (Ảnh 4) đã cho thấy điều đó: ngay sau khi cài, chưa
+<a href="../00-ban-do-toan-canh/#chang-7">Bài 00</a> (Ảnh 5) đã cho thấy điều đó: ngay sau khi cài, chưa
 có ứng dụng nào phía sau, trình duyệt vẫn nhận được một response hợp lệ kèm mã 200, vì Nginx tự đọc
 request và tự viết câu trả lời.</p>
 
@@ -531,6 +531,13 @@ dẫn tới hai hành động chẩn đoán ngược nhau.</p>
 </table>
 </div>
 
+<p>Chữ "gặp exception" ở hàng 500 có một mặt ít được để ý: thông báo lỗi ấy cũng do một người viết sẵn, cho tình huống mà họ nghĩ sẽ không xảy ra (Ảnh 5).</p>
+
+<figure class="fig photo small">
+  <img src="img/xkcd-unreachable-state.webp" width="710" height="930" loading="lazy" alt="Một hộp thoại lỗi: ERROR. If you're seeing this, the code is in what I thought was an unreachable state. I could give you advice for what to do. But honestly, why should you trust me? I clearly screwed this up. I'm writing a message that should never appear, yet I know it will probably appear someday. On a deep level, I know I'm not up to this task. I'm so sorry. Bên dưới, một người ngồi gõ máy. Dòng chú thích: Never write error messages tired.">
+  <figcaption><b>Ảnh 5</b> Truyện <em>Unreachable State</em> của xkcd, số 2200, năm 2019. Thông báo lỗi tự thú: "nếu bạn đọc được dòng này thì code đang ở một trạng thái tôi tưởng không thể tới". Đó cũng là nghĩa của 500 trong Hình 5: máy chủ gặp một tình huống không lường trước. Mã 500 vì vậy chỉ về code của ứng dụng, nơi có một trường hợp chưa ai nghĩ tới.</figcaption>
+</figure>
+
 <figure class="fig">
 <pre class="diagram"><code>  502  →  Chưa cần mở code: code chưa chạy dòng nào.
           Đi xem: ứng dụng còn chạy không? còn listen 8080 không?
@@ -629,6 +636,13 @@ tra chứng chỉ.</p>
 <p>Hệ quả thực hành của nguyên tắc này là <strong>sửa từng thứ một</strong>: đổi năm cấu hình cùng lúc thì
 không biết cái nào có tác dụng; sửa từng thứ thì mỗi lần sửa là một phép thí nghiệm đọc được kết quả.</p>
 
+<p>Sửa nhiều thứ cùng lúc còn có một kết cục tệ hơn, là Ảnh 6.</p>
+
+<figure class="fig photo small">
+  <img src="img/xkcd-fixing-problems.webp" width="624" height="614" loading="lazy" alt="Một người ngồi trước laptop. Hỏi: What are you working on? Đáp: Trying to fix the problems I created when I tried to fix the problems I created when I tried to fix the problems I created when…">
+  <figcaption><b>Ảnh 6</b> Truyện <em>Fixing Problems</em> của xkcd, số 1739, năm 2016. "Đang làm gì đấy?" "Đang sửa những lỗi tôi gây ra khi sửa những lỗi tôi gây ra khi sửa những lỗi…" Mỗi lần sửa mà không đọc triệu chứng mới là một lần có thể thêm lỗi mà không hay. Sửa từng thứ rồi đọc kết quả thì biết ngay lần sửa nào gây ra lỗi mới.</figcaption>
+</figure>
+
 <h2 id="da-chay-chua-san-sang">Đã chạy chưa phải đã sẵn sàng</h2>
 
 <p>Ba nguyên tắc trên giả định hệ thống đứng yên trong lúc ta quan sát. Thực tế có những sự cố sinh ra từ
@@ -662,11 +676,11 @@ dụng báo "đã sẵn sàng" rồi mới chuyển request vào, việc sẽ h�
   <code>ERR_CERT_DATE_INVALID</code>. Vì sao nó hỏng đúng lúc không ai làm gì cả?</p>
 </div>
 
-<p>Ảnh 5 là trang mà người dùng nhìn thấy trong tình huống ấy.</p>
+<p>Ảnh 7 là trang mà người dùng nhìn thấy trong tình huống ấy.</p>
 
 <figure class="fig photo shot">
   <img src="img/chung-chi-het-han.webp" width="1512" height="820" loading="lazy" alt="Trang cảnh báo của trình duyệt Edge: một tam giác đỏ có dấu chấm than, tiêu đề Your connection isn't private, dòng Attackers might be trying to steal your information from expired.badssl.com, mã NET::ERR_CERT_DATE_INVALID, và hai nút Advanced, Go back.">
-  <figcaption><b>Ảnh 5</b> Trang cảnh báo Edge tự vẽ khi chứng chỉ của máy chủ đã hết hạn. Tôi chụp ngày 04/10/2026
+  <figcaption><b>Ảnh 7</b> Trang cảnh báo Edge tự vẽ khi chứng chỉ của máy chủ đã hết hạn. Tôi chụp ngày 04/10/2026
   tại <code>expired.badssl.com</code>, một trang thử công khai có chứng chỉ hết hạn từ ngày 12/04/2015. Trang không
   có mã trạng thái HTTP nào; dòng xám <code>NET::ERR_CERT_DATE_INVALID</code> là mã lỗi của trình duyệt, cùng loại
   với hai trang ở Ảnh 1. Bắt tay TLS dừng ở bước kiểm tra chứng chỉ, nên request HTTP chưa hề được gửi
@@ -905,14 +919,17 @@ ra là khoanh được chặng hỏng, vì triệu chứng luôn chứng minh c�
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh 4 là sơ đồ lấy từ Wikimedia Commons, đã chuyển sang đen trắng. Các ảnh còn lại
-là ảnh chụp màn hình do tôi tự chụp, từ trình duyệt và từ phần mềm chạy thật.</p>
+<p class="photo-credits-note">Ảnh 4 là sơ đồ lấy từ Wikimedia Commons, đã chuyển sang đen trắng. Hai truyện tranh của
+xkcd dùng theo giấy phép phi thương mại ghi ở từng dòng; đã phóng to và chuyển sang đen trắng. Các ảnh còn lại là
+ảnh chụp màn hình do tôi tự chụp, từ trình duyệt và từ phần mềm chạy thật.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b>Trang lỗi của trình duyệt Edge khi bị từ chối và khi tên miền không tồn tại — chụp màn hình Edge trên máy tôi, 03/10/2026.</li>
   <li><b>Ảnh 2</b>Trang lỗi 404, 502 và 504 của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy tôi, 30/09/2026.</li>
   <li><b>Ảnh 3</b>Trang lỗi Whitelabel 404 và 500 của Spring Boot — chụp màn hình một ứng dụng Spring Boot 4.1 tôi dựng để thử, 03/10/2026; cắt bớt khoảng trắng bên dưới.</li>
   <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Reverse_proxy_h2g2bob.svg">Reverse proxy</a> — H2g2bob, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
-  <li><b>Ảnh 5</b>Trang cảnh báo của Edge khi chứng chỉ hết hạn — chụp màn hình Edge trên máy tôi tại <a href="https://expired.badssl.com/">expired.badssl.com</a>, 04/10/2026; cắt sát vùng nội dung.</li>
+  <li><b>Ảnh 5</b><a href="https://xkcd.com/2200/">Unreachable State</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 6</b><a href="https://xkcd.com/1739/">Fixing Problems</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 7</b>Trang cảnh báo của Edge khi chứng chỉ hết hạn — chụp màn hình Edge trên máy tôi tại <a href="https://expired.badssl.com/">expired.badssl.com</a>, 04/10/2026; cắt sát vùng nội dung.</li>
 </ol>
 
 </section>
@@ -936,6 +953,6 @@ là ảnh chụp màn hình do tôi tự chụp, từ trình duyệt và từ ph
 
 </div>
 
-<script src="../../assets/app.js?v=c39f51f4"></script>
+<script src="../../assets/app.js?v=fd81593b"></script>
 </body>
 </html>

@@ -17,6 +17,11 @@ giấy phép đó.
 | `img/bash-tren-windows-2017.webp` | [File:Linux on Windows 10.png](https://commons.wikimedia.org/wiki/File:Linux_on_Windows_10.png) | François-Dominique | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | ảnh chụp màn hình ngày 19/01/2017; giữ nguyên màu và kích thước, chỉ đổi sang WebP — `hau-ky.py --giu-mau`. Dùng ở phụ lục `lich-su-wsl.html` |
 | `img/ubuntu-wsl2-2023.webp` | [File:Ubuntu on Windows.png](https://commons.wikimedia.org/wiki/File:Ubuntu_on_Windows.png) | François-Dominique | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | ảnh chụp màn hình ngày 06/05/2023 (Windows 11, WSL 2); giữ nguyên màu và kích thước — `hau-ky.py --giu-mau`. Dùng ở phụ lục `lich-su-wsl.html` |
 | `img/hello-world-bon-buoc.webp` | tự chụp | — | — | chụp màn hình [hub.docker.com/_/hello-world](https://hub.docker.com/_/hello-world), khối output mẫu từ "Hello from Docker!" tới hết bước 4; tắt ngắt dòng tự động của khung code để chữ không gãy; khung đỏ bước 1, khung lam bước 4 |
+| `img/truyen-go-mat-khau.webp` | [turnoff.us, Terminal password typing (2018)](https://turnoff.us/geek/terminal-password-typing/) | Daniel Stori | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | truyện tranh; giữ cỡ 775×600, chuyển hai tông (chữ terminal tô lục thành xám) |
+| `img/truyen-signals.webp` | [turnoff.us, Signals (2020)](https://turnoff.us/geek/signals/) | Daniel Stori | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | truyện tranh; giữ cỡ 834×1083, chuyển hai tông |
+| `img/truyen-inside-linux-kernel.webp` | [turnoff.us, Inside the Linux Kernel (2016)](https://turnoff.us/geek/inside-the-linux-kernel/) | Daniel Stori | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | truyện tranh; giữ cỡ 1772×1786, chuyển hai tông; trên trang, bấm vào ảnh mở đúng tệp này ở cỡ đầy đủ |
+| `img/xkcd-network.webp` | [xkcd 350, Network (2007)](https://xkcd.com/350/) | Randall Munroe | [CC BY-NC 2.5](https://creativecommons.org/licenses/by-nc/2.5/) | truyện tranh; phóng 2 lần, chuyển hai tông (các ô đỏ, lục thành hai sắc xám). Dùng ở `lich-su-wsl.html` |
+| `img/truyen-bash-on-windows.webp` | [turnoff.us, Bash on Windows (31/03/2016)](https://turnoff.us/geek/bash-on-windows/) | Daniel Stori | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | truyện tranh; giữ cỡ 1200×1000, chuyển hai tông. Dùng ở `lich-su-wsl.html` |
 
 Ảnh `teletype-33.webp` dùng cùng tệp gốc trên Commons với ảnh Teletype ở phụ lục của Bài 03, nhưng được
 xử lý riêng cho khung vuông của dải hai ảnh.
@@ -29,3 +34,7 @@ có trong bảng này.
 Commons) ghi CC BY-SA 4.0 nhưng nguồn là trang báo chí của Microsoft và không có bằng chứng cho phép, nên coi là
 không rõ giấy phép. Pinterest (người học gợi ý 04/10/2026) chặn kết quả tìm kiếm bằng tường đăng nhập, nên không
 lấy ảnh từ đó.
+
+Truyện tranh của xkcd (CC BY-NC 2.5) và turnoff.us (CC BY-NC-SA 4.0) chỉ được dùng phi thương mại; trang này
+không thu tiền nên dùng được, và phải giữ tên tác giả cùng link về trang gốc. Bản đã chuyển hai tông của truyện
+turnoff.us là ảnh phái sinh, chia sẻ lại theo đúng giấy phép CC BY-NC-SA 4.0.

@@ -18,7 +18,7 @@ chia sẻ lại theo cùng giấy phép đó.
 
 ## Phụ lục `lich-su-he-dieu-hanh.html`
 
-`img/thompson-ritchie.webp` ở trên chỉ dùng ở phụ lục (Ảnh 3 của `lich-su-he-dieu-hanh.html`); bài giảng chính không dùng nó, để hai trang không lặp một ảnh.
+`img/thompson-ritchie.webp` ở trên chỉ dùng ở phụ lục (Ảnh 4 của `lich-su-he-dieu-hanh.html`); bài giảng chính không dùng nó, để hai trang không lặp một ảnh.
 
 | Tệp | Nguồn | Tác giả | Giấy phép | Đã chỉnh |
 |---|---|---|---|---|
@@ -26,3 +26,12 @@ chia sẻ lại theo cùng giấy phép đó.
 | `img/bo-the-dut-lo.webp` | [File:Punched card program deck.agr.jpg](https://commons.wikimedia.org/wiki/File:Punched_card_program_deck.agr.jpg) | ArnoldReinhold | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | tách nền đen bằng mô hình rembg (isnet-general-use) — `tach-nen.py --cach mo-hinh`; chuyển hai tông mực/mặt đọc, đặt vào khung 4:3 đệm màu mặt đọc — `hau-ky.py --fit 800x600 --dem 0.05` |
 | `img/teletype-asr33.webp` | [File:Teletype Model 33 ASR (1968) (14689737122).png](https://commons.wikimedia.org/wiki/File:Teletype_Model_33_ASR_(1968)_(14689737122).png) | Dennis van Zuijlekom from Ermelo, The Netherlands | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | tách nền phòng bảo tàng bằng mô hình rembg (isnet-general-use) — `tach-nen.py --cach mo-hinh`; chuyển hai tông mực/mặt đọc, đặt vào khung dọc 3:4 đệm màu mặt đọc — `hau-ky.py --fit 720x960 --dem 0.05` |
 | `img/unix-v7-kernel.webp` | [File:Version 7 UNIX SIMH PDP11 Kernels Shell.png](https://commons.wikimedia.org/wiki/File:Version_7_UNIX_SIMH_PDP11_Kernels_Shell.png) | Huihermit | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | giữ màu (ảnh chụp màn hình); cắt bỏ phần nền đen trống bên phải (giữ 418 px đầu của bề ngang); phóng 2 lần kiểu điểm ảnh gần nhất cho chữ còn nét; vẽ thêm ba khung đánh dấu đỏ (sáu tệp kernel), lam (`/bin/sh`), vàng (`init`), không nhãn chữ; lưu WebP lossless |
+| `img/xkcd-the-cloud.webp` | [xkcd 908, The Cloud (2011)](https://xkcd.com/908/) | Randall Munroe | [CC BY-NC 2.5](https://creativecommons.org/licenses/by-nc/2.5/) | truyện tranh; phóng 2 lần, chuyển hai tông — `hau-ky.py --phong-to 2` |
+| `img/truyen-pid1.webp` | [turnoff.us, PID 1 (2024)](https://turnoff.us/geek/pid1/) | Daniel Stori | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | truyện tranh; thu về 1100px, chuyển hai tông (chữ fork màu lục thành xám sáng) — `hau-ky.py --max 1100` |
+| `img/truyen-sigkill.webp` | [turnoff.us, The real reason not to use SIGKILL (2024)](https://turnoff.us/geek/the-real-reason-not-to-use-sigkill/) | Daniel Stori | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | truyện tranh; thu về 1100px, chuyển hai tông |
+| `img/xkcd-hard-reboot.webp` | [xkcd 1495, Hard Reboot (2015)](https://xkcd.com/1495/) | Randall Munroe | [CC BY-NC 2.5](https://creativecommons.org/licenses/by-nc/2.5/) | truyện tranh; phóng 2 lần, chuyển hai tông |
+| `img/xkcd-old-days.webp` | [xkcd 1755, Old Days (2016)](https://xkcd.com/1755/) | Randall Munroe | [CC BY-NC 2.5](https://creativecommons.org/licenses/by-nc/2.5/) | truyện tranh; phóng 2 lần, chuyển hai tông. Dùng ở `lich-su-he-dieu-hanh.html` |
+
+Truyện tranh của xkcd (CC BY-NC 2.5) và turnoff.us (CC BY-NC-SA 4.0) chỉ được dùng phi thương mại; trang này
+không thu tiền nên dùng được, và phải giữ tên tác giả cùng link về trang gốc. Bản đã chuyển hai tông của truyện
+turnoff.us là ảnh phái sinh, chia sẻ lại theo đúng giấy phép CC BY-NC-SA 4.0.

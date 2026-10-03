@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Lịch sử địa chỉ IP</title>
 <meta name="description" content="Vì sao Internet có dải địa chỉ mạng riêng và vì sao server không đặt ở nhà: IPv4 năm 1981, chia lớp, CIDR, NAT, cái giá của NAT, và IPv6 — mỗi bước giải quyết vấn đề gì mà bước trước chưa giải quyết được.">
-<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01-ipv6">
@@ -322,6 +322,13 @@ tới vậy.</p>
 </table>
 </div>
 
+<p>Con số 3,4 × 10³⁸ lớn tới mức khó hình dung; Ảnh 4 thử hình dung nó.</p>
+
+<figure class="fig photo wide">
+  <a href="img/xkcd-nanobots.webp"><img src="img/xkcd-nanobots.webp" width="1480" height="502" loading="lazy" alt="Truyện bốn khung trên trạm vũ trụ. Nhà khoa học: Commander, come quick! It's the nanobots, they've stopped! They devoured 40% of the Earth, and then just quit. Chỉ huy hỏi thể tích mỗi nanobot; đáp: a few cubic microns. Chỉ huy: I think the year 1998 just bought us some time. Khung cuối, trong bầy nanobot: What do you mean, run out of addresses? Look, we should've migrated away from IPv6 ages ago."></a>
+  <figcaption><b>Ảnh 4</b> Truyện <em>Nanobots</em> của xkcd, số 865, năm 2011. Một bầy robot siêu nhỏ tự nhân bản đã nuốt 40% Trái Đất rồi đứng lại: mỗi con cần một địa chỉ IPv6, và bầy đã dùng hết địa chỉ. "Năm 1998" là năm của RFC 2460 nêu ở trên. Phép tính của truyện đúng về bậc độ lớn: 3,4 × 10³⁸ robot, mỗi con một micromet khối, chiếm khoảng một phần ba thể tích Trái Đất.</figcaption>
+</figure>
+
 <p>Một địa chỉ IPv6 gồm 8 nhóm, mỗi nhóm 16 bit viết bằng 4 chữ số thập lục phân. Viết đầy đủ thì rất dài,
 nên chuẩn cho phép hai cách rút gọn: bỏ các số 0 ở đầu mỗi nhóm, và thay <em>một</em> chuỗi liên tiếp các
 nhóm toàn số 0 bằng hai dấu hai chấm. Chỉ được thay một lần, vì người đọc phải tự suy ra
@@ -466,11 +473,12 @@ miền.</p>
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào. Truyện tranh của xkcd dùng theo giấy phép phi thương mại ghi ở từng dòng; đã phóng to và chuyển sang đen trắng.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Interface_Message_Processor_-_BBN_Arpanet_Router_-_Computer_History_Museum_(2007-11-10_23.06.56_by_Carlo_Nardone).jpg">Interface Message Processor của ARPANET</a> — Carlo Nardone, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
   <li><b>Ảnh 2</b>Khuôn phần đầu gói tin IPv4, RFC 791 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc791.html">rfc-editor.org</a>, 30/09/2026.</li>
   <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Router gia đình Linksys WRT54G</a> — Evan-Amos, Wikimedia Commons, public domain.</li>
+  <li><b>Ảnh 4</b><a href="https://xkcd.com/865/">Nanobots</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
 </ol>
 
 </section>
@@ -494,6 +502,6 @@ miền.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c39f51f4"></script>
+<script src="../../assets/app.js?v=fd81593b"></script>
 </body>
 </html>
