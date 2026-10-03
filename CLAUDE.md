@@ -532,8 +532,12 @@ phải; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền
   các trang khung đều theo hệ này.
 - **README cũng theo Bauhaus** (người học yêu cầu "sửa cả readme cho khớp"): không nhúng card
   neo-brutalism của repo profile nữa. `scripts/readme-art.mjs` (gọi từ `generate.mjs`) vẽ vào
-  `assets/readme/`: `banner.svg` (tiêu đề + ba hình số liệu), `roadmap.svg` (bức tranh lộ trình tự
-  tô màu theo `progress.json`) và `glyph/NN.svg` (ấn ký từng bài, gắn dưới H1 của README bài).
+  `assets/readme/`: `card.svg` và `glyph/NN.svg` (ấn ký từng bài, gắn dưới H1 của README bài).
+  **`card.svg` là thứ duy nhất ở đầu README** (người học yêu cầu 03/10/2026): một tấm thẻ bấm vào là sang
+  bản web, cố ý **khác** trang chủ của bản web (ấn ký bài đang học, một dải 41 ô tiến độ, dải đen "mở bản
+  web đầy đủ"). Hai ảnh cũ `banner.svg` và `roadmap.svg` đã bỏ vì chúng chép lại hero và bức tranh lộ trình
+  của trang chủ; đừng đưa ảnh nào lặp lại bản web vào README. Bảng mục lục trong README không có cột trạng
+  thái riêng ở đầu (cột trống làm GitHub vẽ thừa một cột ở các module chưa học); trạng thái nằm ở cột cuối.
   Ảnh SVG qua `<img>` không tải được web font, nên font League Spartan được **nhúng base64** từ
   `assets/fonts/` (giấy phép OFL, file `OFL-LeagueSpartan.txt` đi kèm). Giao diện trang profile
   GitHub là việc của repo `AnhTuan2111` (neo-brutalism, không đổi sang Bauhaus); nhưng **nội dung**

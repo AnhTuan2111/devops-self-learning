@@ -75,7 +75,6 @@ const dirOf = (l) => `lessons/${l.id}-${l.slug}`;
 const STT = (k) => `<i class="stt stt-${k}" aria-hidden="true"></i>`;
 const STATUS_LABEL = { done: `${STT('done')}Xong`, doing: `${STT('doing')}Đang học`, todo: `${STT('todo')}Chưa học` };
 const STATUS_CHIP = { done: 'lime', doing: 'yellow', todo: '' };
-const STATUS_MARK = { done: 'xong', doing: 'đang học', todo: '' };   // README: chữ, không emoji
 
 const doneCount = allLessons.filter((l) => statusOf(l.id) === 'done').length;
 const current = allLessons.find((l) => statusOf(l.id) === 'doing') ?? allLessons.find((l) => statusOf(l.id) === 'todo');
@@ -342,15 +341,23 @@ writeFileSync(join(ROOT, 'index.html'), indexHtml, 'utf8');
 /* README.md                                                           */
 /* ------------------------------------------------------------------ */
 
-// Ảnh Bauhaus cho README (GitHub không cho CSS): tiêu đề, bức tranh lộ trình, ấn ký từng bài.
-// Vẽ bằng chính bộ sinh hình của bản web, nên README và trang web luôn khớp nhau.
+// Ảnh Bauhaus cho README (GitHub không cho CSS): một thẻ dẫn sang bản web, và ấn ký từng bài.
+// Thẻ cố ý khác trang chủ của bản web, để README không lặp lại thứ bấm vào là thấy.
+const currentLesson =
+  allLessons.find((l) => statusOf(l.id) === 'doing') ?? allLessons.find((l) => statusOf(l.id) === 'todo');
 const artCount = makeArt(ROOT, Bauhaus).write({
-  stats: { done: doneCount, total: allLessons.length, hours: totalHours, modules: curriculum.modules.length },
-  rows: moduleStats.map((s) => ({
-    name: shortTitle(s.m).toLocaleLowerCase('vi'),
-    done: s.done,
-    lessons: s.m.lessons.map((l) => ({ id: l.id, status: statusOf(l.id) })),
-  })),
+  cardData: {
+    done: doneCount,
+    total: allLessons.length,
+    modules: curriculum.modules.length,
+    hoursRange: `${hoursLo}–${hoursHi}`,
+    current: currentLesson && {
+      id: currentLesson.id,
+      status: statusOf(currentLesson.id),
+      title: currentLesson.title.toLocaleLowerCase('vi'),
+    },
+    strip: curriculum.modules.map((m) => m.lessons.map((l) => statusOf(l.id))),
+  },
   lessonIds: allLessons.map((l) => l.id),
 });
 
@@ -360,24 +367,21 @@ const readmeModules = curriculum.modules
       .map((l) => {
         const st = statusOf(l.id);
         const d = dateOf(l.id);
-        return `| ${STATUS_MARK[st]} | \`${l.id}\` | [${l.title}](${dirOf(l)}/) | ${l.question} | ${hrs(l)} | ${d ? viDate(d) : '—'} |`;
+        const state = st === 'done' ? `xong ${viDate(d)}` : st === 'doing' ? 'đang học' : '—';
+        return `| \`${l.id}\` | [${l.title}](${dirOf(l)}/) | ${l.question} | ${hrs(l)} | ${state} |`;
       })
       .join('\n');
     return `### ${m.id} · ${m.title}
 
 > ${m.why}
 
-| | # | Bài | Câu hỏi của bài | Ước lượng | Đã học |
-|---|---|---|---|---|---|
+| # | Bài | Câu hỏi của bài | Ước lượng | Trạng thái |
+|---|---|---|---|---|
 ${rows}`;
   })
   .join('\n\n');
 
-const readme = `<a href="${SITE}"><img src="assets/readme/banner.svg" width="100%" alt="DevOps từ số 0 — đã xong ${doneCount}/${allLessons.length} bài"></a>
-
-<img src="assets/readme/roadmap.svg" width="100%" alt="Bức tranh lộ trình: mỗi hàng một module, mỗi ô một bài; ô đã học được tô màu">
-
-**[Đọc bản web đầy đủ](${SITE})**
+const readme = `<a href="${SITE}"><img src="assets/readme/card.svg" width="100%" alt="DevOps từ số 0: đã xong ${doneCount}/${allLessons.length} bài. Bấm để mở bản web đầy đủ."></a>
 
 # ${meta.title}
 
