@@ -6,7 +6,7 @@
 
 **Bài giảng đầy đủ:** [`index.html`](index.html) —
 [bản online](https://anhtuan2111.github.io/devops-self-learning/lessons/04-phong-lab-wsl-docker/) ·
-**Phụ lục lịch sử:** [`lich-su-wsl.html`](lich-su-wsl.html)
+**Phụ lục Lịch sử WSL:** [`lich-su-wsl.html`](lich-su-wsl.html)
 
 File này là **vở bài tập** của bài: bảng tra, các bước lab kèm lý do và kết quả kỳ vọng, danh sách tự
 kiểm tra. Phần giảng vì sao, sơ đồ và ảnh nằm trong `index.html`; output thật của bạn ghi vào

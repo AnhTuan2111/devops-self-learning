@@ -17,7 +17,7 @@ của bạn, và ai lo phần còn lại.
 |---|---|
 | **[index.html](index.html)** | Bài giảng chính: URL, bản đồ chín chặng, từng chặng trên máy người dùng và trên server, lab |
 | **[phan-tich-output.html](phan-tich-output.html)** | Đọc output thật: output của ba lab, giải thích từng dòng một (đọc thêm) |
-| **[lich-su-devops.html](lich-su-devops.html)** | Phụ lục: DevOps ra đời từ đâu, vì sao hai đội phát triển và vận hành phải nhập lại (đọc thêm) |
+| **[lich-su-devops.html](lich-su-devops.html)** | Phụ lục Lịch sử DevOps: DevOps ra đời từ đâu, vì sao hai đội phát triển và vận hành phải nhập lại (đọc thêm) |
 
 File này là **vở bài tập**: nó không giảng lại, chỉ giữ những gì cần có trong tay khi tự làm lab và tự
 chấm. Phần giải thích vì sao, kèm sơ đồ, nằm trong `index.html`; nên đọc trang đó trước một lượt.

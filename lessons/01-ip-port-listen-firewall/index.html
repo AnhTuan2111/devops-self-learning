@@ -13,7 +13,7 @@
 <nav class="topbar"><div class="topbar-inner">
   <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-01</span>
   <span class="spacer"></span>
-  <a class="nav" href="ipv4-vs-ipv6.html">Phụ lục lịch sử</a>
+  <a class="nav" href="ipv4-vs-ipv6.html">Lịch sử địa chỉ IP</a>
 </div></nav>
 
 <div class="wrap">
@@ -195,7 +195,7 @@ gặp nhiều nhất khác nhau ở phạm vi mà chúng có nghĩa.</p>
 <p>Dòng thứ hai của Hình 3 viết theo một kiểu khác hẳn, vì nó là địa chỉ IPv6: thế hệ địa chỉ mới dài
 128 bit, viết bằng các nhóm số thập lục phân ngăn cách bởi dấu hai chấm. Bài này chỉ cần biết rằng IPv6 cũng
 có loopback, viết là <code>::1</code> và tương đương <code>127.0.0.1</code>. Vì sao lại có hai thế hệ địa chỉ
-song song thì <a href="ipv4-vs-ipv6.html">phụ lục lịch sử</a> kể lại đầy đủ.</p>
+song song thì phụ lục <a href="ipv4-vs-ipv6.html">Lịch sử địa chỉ IP</a> kể lại đầy đủ.</p>
 
 <p>Địa chỉ IPv6 thứ hai cần nhận ra là các địa chỉ bắt đầu bằng <code>fe80</code>, gọi là địa chỉ
 <em>link-local</em>: chúng chỉ có nghĩa giữa các thiết bị nối trực tiếp với nhau, chẳng hạn giữa laptop và
@@ -212,8 +212,8 @@ in ra địa chỉ của router.</p>
 không router nào trên đường đi chịu chuyển gói tin tới một địa chỉ mạng riêng. Đó là lý do một server thật
 phải đặt ở nơi có địa chỉ IP công khai, như một máy chủ thuê trong trung tâm dữ liệu, chứ không chạy trên
 laptop ở nhà. Lịch sử dẫn tới tình trạng này, tức chuyện địa
-chỉ IPv4 cạn kiệt và cách router gia đình cho cả nhà dùng chung một địa chỉ, nằm ở
-<a href="ipv4-vs-ipv6.html#t-gia-nat">phụ lục</a>.</p>
+chỉ IPv4 cạn kiệt và cách router gia đình cho cả nhà dùng chung một địa chỉ, nằm ở phụ lục
+<a href="ipv4-vs-ipv6.html#t-gia-nat">Lịch sử địa chỉ IP</a>.</p>
 
 <div class="callout deep">
   <span class="label">Đào sâu · các dải này được quy định ở đâu</span>
@@ -820,7 +820,7 @@ giảng.</p>
   <thead><tr><th>Tôi từng nghĩ</th><th>Thực tế</th><th>Xem lại</th></tr></thead>
   <tbody>
     <tr><td><code>127.0.0.1</code> là địa chỉ IPv4 mặc định của máy</td><td>Đó là địa chỉ loopback, một trong nhiều địa chỉ của máy, và chỉ gọi tới được từ trong máy</td><td><a href="#mot-may-nhieu-ip">Một máy có nhiều địa chỉ</a></td></tr>
-    <tr><td>Dải <code>127.0.0.0/8</code> có 127⁴ địa chỉ</td><td><code>/8</code> đếm bit: khối có 2²⁴, khoảng 16,7 triệu địa chỉ, dù máy thường chỉ dùng <code>127.0.0.1</code></td><td><a href="ipv4-vs-ipv6.html#cidr">Phụ lục, CIDR</a></td></tr>
+    <tr><td>Dải <code>127.0.0.0/8</code> có 127⁴ địa chỉ</td><td><code>/8</code> đếm bit: khối có 2²⁴, khoảng 16,7 triệu địa chỉ, dù máy thường chỉ dùng <code>127.0.0.1</code></td><td><a href="ipv4-vs-ipv6.html#cidr">Lịch sử địa chỉ IP, tab CIDR</a></td></tr>
     <tr><td>"Chưa mở cổng 8080" là một khái niệm</td><td>Đó là hai khái niệm khác nhau: có chương trình listen hay không, và firewall có cho qua hay không. Hai thứ cho hai triệu chứng khác nhau</td><td><a href="#ba-dieu-kien">Ba điều kiện</a></td></tr>
     <tr><td>Máy chủ còn sống thì không thể bị <code>refused</code></td><td>Ngược lại: <code>refused</code> chỉ xảy ra khi máy còn sống, vì phải có hệ điều hành đang chạy mới gửi được gói <code>RST</code></td><td><a href="#refused">Refused</a></td></tr>
     <tr><td>Mở firewall xong là người khác vào được</td><td>Chưa chắc. Nếu app chỉ listen <code>127.0.0.1</code>, triệu chứng chỉ đổi từ <code>timeout</code> sang <code>refused</code>; triệu chứng đổi nghĩa là firewall đã sửa đúng</td><td><a href="#ba-dieu-kien">Ba điều kiện</a></td></tr>

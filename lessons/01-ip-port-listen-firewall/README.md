@@ -6,7 +6,7 @@
 
 **Bài giảng đầy đủ:** [`index.html`](index.html) —
 [bản online](https://anhtuan2111.github.io/devops-self-learning/lessons/01-ip-port-listen-firewall/) ·
-**Phụ lục lịch sử:** [`ipv4-vs-ipv6.html`](ipv4-vs-ipv6.html)
+**Phụ lục Lịch sử địa chỉ IP:** [`ipv4-vs-ipv6.html`](ipv4-vs-ipv6.html)
 
 File này là **vở bài tập** của bài: bảng tra, các bước lab kèm lý do và kết quả kỳ vọng, danh sách tự
 kiểm tra. Phần giảng vì sao, sơ đồ và ảnh nằm trong `index.html`; output đầy đủ của các lần chạy thật

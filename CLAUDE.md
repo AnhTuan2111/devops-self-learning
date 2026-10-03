@@ -73,8 +73,19 @@ theo vì có ba câu hỏi đầu bài và các tab đi theo một chuỗi nhân
 
 **Phụ lục lịch sử** (người học gợi ý 03/10/2026, "đôi khi"): một trang phụ cho công nghệ có lý do ra
 đời đáng kể — vấn đề trước khi có nó → các cách giải trước và giới hạn → nó giải quyết đúng điều gì →
-dấu vết còn lại tới nay → nối về bài chính. Hero ghi "Phụ lục · đọc thêm, không bắt buộc". Đã có:
-`00/lich-su-devops.html`, `01/ipv4-vs-ipv6.html`, `03/lich-su-he-dieu-hanh.html`, `04/lich-su-wsl.html`.
+dấu vết còn lại tới nay → nối về bài chính. Hero ghi "Phụ lục · đọc thêm, không bắt buộc".
+
+**Mỗi phụ lục có tên riêng, và mọi chỗ đều gọi nó bằng tên ấy** (người học 04/10/2026: "những phụ lục lịch sử
+nên có tên rõ ràng thay vì chỉ viết là phụ lục lịch sử"). Không ghi trống "Phụ lục lịch sử" hay "phụ lục" ở link
+trên thanh đầu trang, ô nhãn đầu trang, link trong bài, README, chân trang. Tên là "Lịch sử …", tiêu đề trang là
+"Lịch sử …: <ý chính>". Đã có:
+
+| Tệp | Tên |
+|---|---|
+| `00/lich-su-devops.html` | Lịch sử DevOps |
+| `01/ipv4-vs-ipv6.html` | Lịch sử địa chỉ IP |
+| `03/lich-su-he-dieu-hanh.html` | Lịch sử hệ điều hành |
+| `04/lich-su-wsl.html` | Lịch sử WSL |
 
 **Mục "Tự kiểm tra" chỉ có ở trang bài chính** (người học 04/10/2026: "các mục Tự kiểm tra chỉ nên có trong các
 bài học chứ phần đọc thêm hoặc phụ lục mổ output đâu có cần"). Trang phụ và phụ lục (lịch sử, phân tích output,
@@ -283,7 +294,7 @@ gì, và với góc nhìn của con người". Lượt đọc ấy tìm ra nhữ
 nay **sau mỗi lần sửa một bài, đọc lại bài đó bằng đúng hai góc nhìn này** trước khi báo xong:
 
 1. **Người mông lung:** tên khoá học (DevOps) phải được định nghĩa ngay bài đầu, bằng lời thường (đã
-   làm: Bài 00 tab Phía server `#devops` + phụ lục lịch sử). Bài "bản đồ" phải nhẹ; chi tiết sâu chuyển
+   làm: Bài 00 tab Phía server `#devops` + phụ lục Lịch sử DevOps). Bài "bản đồ" phải nhẹ; chi tiết sâu chuyển
    về bài có nó (SNI, các loại máy chủ DNS → Bài 20). Con số sẽ lệch theo thời gian (hạn chứng chỉ…) phải
    nói rõ là của ngày đo.
 2. **Con người:**

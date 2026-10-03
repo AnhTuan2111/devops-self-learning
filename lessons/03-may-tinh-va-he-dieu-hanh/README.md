@@ -461,7 +461,7 @@ OOM killer, `dmesg` và systemd thì không quan sát được. Câu hỏi tiế
 chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình,
 để thấy process, signal và lỗi đúng như trên server?**
 
-**Đọc thêm, không bắt buộc:** [phụ lục — vì sao có hệ điều hành và process](lich-su-he-dieu-hanh.html).
+**Đọc thêm, không bắt buộc:** [phụ lục Lịch sử hệ điều hành](lich-su-he-dieu-hanh.html), kể vì sao có hệ điều hành và process.
 
 **Bài trước:** [02 — Chẩn đoán theo chặng](../02-chan-doan-theo-chang/)
 **Bài tiếp:** [04 — Phòng lab: WSL2, Docker Desktop và shell tối thiểu](../04-phong-lab-wsl-docker/)
