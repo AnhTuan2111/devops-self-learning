@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Lịch sử WSL</title>
 <meta name="description" content="Vì sao Windows chạy được Linux: máy ảo đầy đủ, Cygwin và MSYS2, WSL 1 dịch syscall, rồi WSL 2 với kernel Linux thật — mỗi bước giải quyết vấn đề gì mà bước trước chưa giải quyết được.">
-<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
+<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="04-wsl">
@@ -171,15 +171,30 @@ phần cho phép tệp ELF64 Linux nguyên bản chạy trên Windows". Chữ "n
 phải biên dịch lại gì; bash của Ubuntu, nguyên tệp như trên server, chạy được trên Windows. Phần cốt lõi của nó là hai
 <strong>driver</strong>, tức chương trình được nạp vào chạy ngay bên trong kernel Windows, ở kernel mode.</p>
 
-<figure class="fig photo shot">
-  <img src="img/wsl1-tong-quan-2016.webp" width="1428" height="800" loading="lazy" alt="Đoạn đầu mục Windows Subsystem for Linux trong bài tổng quan năm 2016, liệt kê ba thành phần; dòng về driver lxss.sys và lxcore.sys khoanh đỏ, đoạn nói driver dịch system call của Linux sang NT API khoanh lam.">
-  <figcaption><b>Ảnh 1</b> Bài tổng quan WSL năm 2016, nay lưu trong kho lưu trữ blog của Microsoft. Ba thành phần của
-  WSL 1, trong đó dòng <span class="kw"><i class="key k-red" aria-hidden="true"></i>đỏ</span> về driver lxss.sys và lxcore.sys
-  "giả lập một kernel Linux bằng cách dịch syscall Linux", và <span class="kw"><i class="key k-blue" aria-hidden="true"></i>đoạn
-  giải thích</span>: các driver này dịch system call của Linux sang NT API.</figcaption>
+<figure class="fig">
+  <blockquote class="src" lang="en">
+    <p>WSL is a collection of components that enables native Linux ELF64 binaries to run on Windows. It contains both
+    user mode and kernel mode components. It is primarily comprised of:</p>
+    <ol>
+      <li>User mode session manager service that handles the Linux instance life cycle</li>
+      <li>Pico provider drivers (lxss.sys, lxcore.sys) that emulate a Linux kernel by translating Linux syscalls</li>
+      <li>Pico processes that host the unmodified user mode Linux (e.g. /bin/bash)</li>
+    </ol>
+    <p>It is the space between the user mode Linux binaries and the Windows kernel components where the magic happens.
+    By placing unmodified Linux binaries in Pico processes we enable Linux system calls to be directed into the Windows
+    kernel. <strong>The lxss.sys and lxcore.sys drivers translate the Linux system calls into NT APIs and emulate the
+    Linux kernel.</strong></p>
+  </blockquote>
+  <figcaption><b>Hình 4</b> Đoạn đầu mục <em>Windows Subsystem for Linux</em> trong bài tổng quan năm 2016, nay nằm
+  trong kho lưu trữ blog của Microsoft. Tạm dịch: WSL gồm ba thành phần chính, một service ở user mode lo vòng đời của
+  phiên bản Linux đang chạy, hai driver <code>lxss.sys</code> và <code>lxcore.sys</code> giả lập kernel Linux bằng cách dịch syscall
+  Linux, và các Pico process chứa chương trình Linux không sửa đổi như <code>/bin/bash</code>. Câu in đậm là cơ chế:
+  hai driver dịch system call của Linux sang NT API và giả lập kernel Linux. Trích nguyên văn
+  <a href="https://learn.microsoft.com/en-us/archive/blogs/wsl/windows-subsystem-for-linux-overview">Windows Subsystem
+  for Linux Overview</a>, đọc ngày 03/10/2026.</figcaption>
 </figure>
 
-<p>Cơ chế được mô tả đúng như Ảnh 1. Chương trình Linux chạy trong một loại process đặc biệt của Windows gọi là
+<p>Cơ chế trong Hình 4 diễn ra như sau. Chương trình Linux chạy trong một loại process đặc biệt của Windows gọi là
 <em>Pico process</em>, một process gần như trống, không mang theo những thứ một process Windows thường có. Mỗi khi
 chương trình gọi một syscall Linux, kernel Windows chuyển lời gọi đó tới hai driver <code>lxss.sys</code> và
 <code>lxcore.sys</code>; hai driver này đóng vai kernel Linux, tìm lời gọi Windows tương ứng, thực hiện, rồi trả kết quả
@@ -195,7 +210,7 @@ theo đúng cách kernel Linux sẽ trả. Chương trình không biết mình �
        │ NT API
        ▼
   kernel Windows</code></pre>
-  <figcaption><b>Hình 4</b> Cách của WSL 1. Không có kernel Linux nào; hai driver đứng giữa, đóng vai kernel Linux.</figcaption>
+  <figcaption><b>Hình 5</b> Cách của WSL 1. Không có kernel Linux nào; hai driver đứng giữa, đóng vai kernel Linux.</figcaption>
 </figure>
 
 <h2 id="gioi-han-wsl1">Giới hạn của việc dịch</h2>
@@ -218,18 +233,34 @@ Máy ảo đầy đủ.</p>
 
 <h2 id="wsl2-cong-bo">Ngày 6/5/2019: một kernel Linux thật trong Windows</h2>
 
-<p>Ngày 6/5/2019, nhóm WSL công bố WSL 2 với một câu kết luận gọn: "WSL 2 dùng một kiến trúc hoàn toàn mới, dùng một kernel
+<p>Ngày 6/5/2019, nhóm WSL công bố WSL 2 với một câu kết luận gọn (Hình 6): "WSL 2 dùng một kiến trúc hoàn toàn mới, dùng một kernel
 Linux thật". Cùng ngày, một bài khác của nhóm, <em>Shipping a Linux Kernel with Windows</em>, nói rằng đây là "lần đầu
 tiên kernel Linux được đưa vào như một thành phần của Windows". Kernel ấy ban đầu dựa trên bản 4.19, bản ổn định dài
 hạn mới nhất của Linux lúc đó, được công bố mã nguồn đầy đủ, và tinh chỉnh để khởi động nhanh, tốn ít bộ nhớ.</p>
 
-<figure class="fig photo shot small">
-  <img src="img/wsl2-cong-bo-2019.webp" width="980" height="1544" loading="lazy" alt="Phần đầu bài Announcing WSL 2 ngày 6 tháng 5 năm 2019; đoạn giới thiệu nhắc tới Docker khoanh lam, đoạn kết luận về kernel Linux thật khoanh đỏ.">
-  <figcaption><b>Ảnh 2</b> Bài công bố WSL 2 trên blog Windows Command Line, ngày 6/5/2019.
-  <span class="kw"><i class="key k-blue" aria-hidden="true"></i>Đoạn mở đầu</span> hứa hai điều: hệ thống tệp nhanh hơn
-  nhiều, và tương thích syscall đầy đủ, "nghĩa là bạn chạy được nhiều ứng dụng Linux hơn trong WSL 2, chẳng hạn Docker".
-  <span class="kw"><i class="key k-red" aria-hidden="true"></i>Đoạn khoanh đỏ</span> là lời giải: một kiến trúc mới dùng
-  kernel Linux thật.</figcaption>
+<figure class="fig">
+  <blockquote class="src" lang="en">
+    <p>Today we’re unveiling the newest architecture for the Windows Subsystem for Linux: WSL 2! Changes in this new
+    architecture will allow for: dramatic file system performance increases, and <strong>full system call
+    compatibility, meaning you can run more Linux apps in WSL 2 such as Docker</strong>.</p>
+    <p>[…]</p>
+    <p>Our top requests from the WSL community have been to increase the file system performance, and make more apps
+    work inside of WSL (i.e: introduce better system call compatibility). We have heard your feedback, and are glad to
+    announce that WSL 2 helps solve these issues.</p>
+    <p>WSL 2 is a new version of the architecture that powers the Windows Subsystem for Linux to run ELF64 Linux
+    binaries on Windows. This new architecture changes how these Linux binaries interact with Windows and your
+    computer’s hardware, but still provides the same user experience as in WSL 1 (the current widely available
+    version). Individual Linux distros can be run either as a WSL 1 distro, or as a WSL 2 distro, can be upgraded or
+    downgraded at any time, and you can run WSL 1 and WSL 2 distros side by side. <strong>WSL 2 uses an entirely new
+    architecture that uses a real Linux kernel.</strong></p>
+  </blockquote>
+  <figcaption><b>Hình 6</b> Ba đoạn đầu bài <em>Announcing WSL 2</em> trên blog Windows Command Line, đăng ngày
+  6/5/2019; bỏ dòng tiêu đề mục <em>What exactly is WSL 2?</em> giữa đoạn một và đoạn hai. Đoạn mở đầu hứa hai điều:
+  hiệu năng hệ thống tệp tăng mạnh, và, ở phần in đậm thứ nhất, tương thích system call đầy đủ, "nghĩa là bạn chạy
+  được nhiều ứng dụng Linux hơn trong WSL 2, chẳng hạn Docker". Đoạn hai cho biết đó là hai yêu cầu hàng đầu của cộng
+  đồng WSL. Phần in đậm thứ hai là lời giải: WSL 2 dùng một kiến trúc hoàn toàn mới, dùng một kernel Linux thật. Trích
+  nguyên văn <a href="https://devblogs.microsoft.com/commandline/announcing-wsl-2/">Announcing WSL 2</a> trên
+  devblogs.microsoft.com, đọc ngày 03/10/2026.</figcaption>
 </figure>
 
 <p>WSL 2 khác máy ảo truyền thống ở cách máy ảo được quản lý. Máy ảo vẫn có, nhưng Windows tự bật, tự tắt và tự
@@ -246,9 +277,9 @@ Update, "giống như cách cài driver của bên thứ ba". Về sau, chính W
 <h2 id="wsl2-doi-gi">Giới hạn của WSL 2</h2>
 
 <p>Vì tệp của Linux giờ nằm trong ổ đĩa ảo của máy ảo, việc đọc tệp qua lại giữa hai hệ
-điều hành chậm hơn WSL 1; bảng so sánh chính thức ghi đúng một hàng WSL 1 thắng, chính là hàng này, và Microsoft khuyên
-đặt tệp dự án cùng phía với công cụ dùng nó. Máy cũng phải hỗ trợ và bật ảo hoá phần cứng, điều WSL 1 không cần. Đổi
-lại, mọi thứ thuộc kernel Linux có mặt đầy đủ: signal thật, OOM killer, <code>dmesg</code>, và về sau cả systemd.</p>
+điều hành chậm hơn WSL 1. Ngay dưới bảng so sánh chính thức, Microsoft viết rằng WSL 2 hơn WSL 1 ở nhiều mặt, trừ
+hiệu năng đọc tệp giữa hai hệ điều hành, và khuyên đặt tệp dự án cùng phía với công cụ dùng nó. Máy cũng phải hỗ
+trợ và bật ảo hoá phần cứng, điều WSL 1 không cần. Đổi lại, mọi thứ thuộc kernel Linux có mặt đầy đủ: signal thật, OOM killer, <code>dmesg</code>, và về sau cả systemd.</p>
 
 </section>
 
@@ -310,14 +341,6 @@ chỉ WSL 2 cho bạn kernel Linux, và mọi thứ Bài 03 muốn quan sát đ�
   <a href="https://docs.docker.com/desktop/features/wsl/">docs.docker.com/…/wsl</a></li>
 </ol>
 
-<h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Cả hai ảnh là ảnh chụp màn hình do tôi tự chụp ngày 03/10/2026 từ trang công
-khai của Microsoft; các khung màu là phần đánh dấu thêm vào.</p>
-<ol class="photo-credits">
-  <li><b>Ảnh 1</b>Mục Windows Subsystem for Linux trong bài tổng quan năm 2016 — chụp màn hình <a href="https://learn.microsoft.com/en-us/archive/blogs/wsl/windows-subsystem-for-linux-overview">learn.microsoft.com</a>; cắt bỏ mép thanh điều hướng bên trái.</li>
-  <li><b>Ảnh 2</b>Phần đầu bài Announcing WSL 2 — chụp màn hình <a href="https://devblogs.microsoft.com/commandline/announcing-wsl-2/">devblogs.microsoft.com</a>; xoá nút đếm lượt tương tác cạnh ngày đăng, cắt bỏ dòng tên và ảnh đại diện của tác giả.</li>
-</ol>
-
 </section>
 
 </main>
@@ -339,6 +362,6 @@ khai của Microsoft; các khung màu là phần đánh dấu thêm vào.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=2b4e881a"></script>
+<script src="../../assets/app.js?v=c39f51f4"></script>
 </body>
 </html>

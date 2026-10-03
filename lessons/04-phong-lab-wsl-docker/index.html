@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 04 — Phòng lab: WSL2, Docker Desktop và shell tối thiểu</title>
 <meta name="description" content="Dựng một máy Linux thật ngay trong Windows bằng WSL2, điều khiển nó bằng bash, hiểu output và lỗi của một lệnh đi đâu, rồi để Docker Desktop chạy lệnh docker run hello-world đầu tiên.">
-<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
+<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="04">
@@ -178,17 +178,36 @@ kế để bỏ đúng những điểm yếu này.</p>
 <p>Kernel đó là kernel Linux thật, Microsoft biên dịch từ mã nguồn trên kernel.org và cập nhật qua Windows Update;
 syscall Linux được kernel Linux trả lời trực tiếp. Thế hệ trước, <strong>WSL 1</strong>, không có kernel Linux: nó đón
 từng syscall Linux rồi dịch sang lời gọi của kernel Windows, nên syscall nào chưa được dịch thì chương trình cần nó
-không chạy. Ảnh 1 so sánh hai thế hệ.</p>
+không chạy. Bảng 2 chép bảng so sánh hai thế hệ trong tài liệu của Microsoft.</p>
 
-<figure class="fig photo shot">
-  <img src="img/wsl1-wsl2-so-sanh.webp" width="1218" height="870" loading="lazy" alt="Bảng so sánh tính năng WSL 1 và WSL 2 trên trang tài liệu của Microsoft, ba hàng được khoanh màu: Full Linux Kernel, Full system call compatibility và Performance across OS file systems.">
-  <figcaption><b>Ảnh 1</b> Bảng so sánh WSL 1 và WSL 2 trên Microsoft Learn.
-  Hàng <span class="kw"><i class="key k-red" aria-hidden="true"></i>đỏ</span> <em>Full Linux Kernel:</em> lý do bài này chọn WSL2.
-  Hàng <span class="kw"><i class="key k-blue" aria-hidden="true"></i>lam</span> <em>Full system call compatibility:</em> lý do Docker
-  chạy được trong WSL2 mà không chạy được trong WSL 1.
-  Hàng <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>vàng</span> <em>Performance across OS file systems:</em> hàng
-  duy nhất WSL 1 thắng, vì đọc tệp của Windows từ trong Linux thì WSL2 chậm hơn.</figcaption>
-</figure>
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 2</b> So sánh tính năng của WSL 1 và WSL 2, chép đủ mười hàng của bảng <em>Comparing features</em>;
+  tên tính năng giữ nguyên tiếng Anh. Nguồn: <a href="https://learn.microsoft.com/en-us/windows/wsl/compare-versions">Microsoft
+  Learn, <em>Comparing WSL Versions</em></a>, đọc ngày 03/10/2026.</caption>
+  <thead><tr><th>Feature</th><th>WSL 1</th><th>WSL 2</th></tr></thead>
+  <tbody>
+    <tr><td>Integration between Windows and Linux</td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
+    <tr><td>Fast boot times</td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
+    <tr><td>Small resource foot print compared to traditional Virtual Machines</td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
+    <tr><td>Runs with current versions of VMware and VirtualBox</td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td><td><i class="ic ic-no" role="img" aria-label="không"></i></td></tr>
+    <tr><td>Managed VM</td><td><i class="ic ic-no" role="img" aria-label="không"></i></td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
+    <tr><td><strong>Full Linux Kernel</strong></td><td><i class="ic ic-no" role="img" aria-label="không"></i></td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
+    <tr><td><strong>Full system call compatibility</strong></td><td><i class="ic ic-no" role="img" aria-label="không"></i></td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
+    <tr><td><strong>Performance across OS file systems</strong></td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td><td><i class="ic ic-no" role="img" aria-label="không"></i></td></tr>
+    <tr><td>systemd support</td><td><i class="ic ic-no" role="img" aria-label="không"></i></td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
+    <tr><td>IPv6 support</td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td><td><i class="ic ic-yes" role="img" aria-label="có"></i></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Ba hàng in đậm là ba hàng bài này dựa vào. Hàng <em>Full Linux Kernel</em> là lý do bài này chọn WSL2: những gì lab
+của Bài 03 chỉ thấy bản tương đương trong Bảng 1 đều là việc của kernel Linux. Hàng <em>Full system call
+compatibility</em> là lý do Docker chạy được trong WSL2 mà không chạy được trong WSL 1, vì Docker cần những tính năng
+của kernel Linux mà lớp dịch của WSL 1 không có. Hàng <em>Performance across OS file systems</em> là chỗ WSL 1 hơn: đọc
+tệp của Windows từ trong Linux thì WSL2 chậm hơn. Ngay dưới bảng, Microsoft khuyên đặt tệp dự án cùng phía với công cụ
+dùng nó. Hàng <em>Managed VM</em> ứng với câu cuối của định nghĩa ở trên: Windows tự khởi động và quản lý máy ảo.
+Hàng <em>systemd support</em> sẽ hiện ra ở Hình 3, nơi systemd là process số 1 của Ubuntu.</p>
 
 <p>Một kernel chưa đủ để dùng, vì kernel không có chương trình nào để bạn gõ lệnh. Phần còn lại đến từ một
 <strong>distro</strong> (<em>Linux distribution</em>, bản phân phối Linux): kernel Linux cộng một bộ chương trình đi
@@ -233,7 +252,8 @@ $ ps -p 1 -o pid,comm
 <h3 id="gioi-han-wsl2">Giới hạn của WSL2</h3>
 
 <p>CPU phải hỗ trợ ảo hoá, và ảo hoá phải được bật trong phần cài đặt khởi động của máy (BIOS hoặc UEFI); thiếu
-thì cài đặt dừng ở lỗi <code>0x80370102</code>. Như hàng vàng của Ảnh 1, tệp lab nên đặt trong thư mục của Linux.
+thì cài đặt dừng ở lỗi <code>0x80370102</code>. Vì hàng <em>Performance across OS file systems</em> của Bảng 2,
+tệp lab nên đặt trong thư mục của Linux.
 Và WSL2 là phòng lab chứ không phải server: tài liệu của Microsoft ghi rõ ngay cả service do systemd quản lý cũng
 không giữ máy ảo sống. Trên bản đồ của <a href="../00-ban-do-toan-canh/#phia-server">Bài 00</a>, WSL2 là chỗ dựng
 lại nửa phía server: từ Bài 05, Nginx, ứng dụng và database sẽ chạy trong máy ảo này, trước khi lên server thật ở
@@ -270,14 +290,14 @@ và bản sao biến môi trường riêng.</p>
   <dd>Shell của dự án GNU, mặc định trên Ubuntu và hầu hết server Linux. Git Bash là bash đưa sang Windows.</dd>
 </dl>
 
-<p>Hai chương trình tách nhau vì ngày xưa chúng nằm ở hai nơi khác nhau, như Ảnh 2 cho thấy.</p>
+<p>Hai chương trình tách nhau vì ngày xưa chúng nằm ở hai nơi khác nhau, như Ảnh 1 cho thấy.</p>
 
 <figure class="fig photo">
   <div class="photo-row">
     <figure><img src="img/teletype-33.webp" width="800" height="800" loading="lazy" alt="Máy Teletype Model 33 ASR đặt trên chân đế kim loại, gồm bàn phím và bộ phận in giấy."><div class="lbl">teletype <small>1968 · in ra giấy</small></div></figure>
     <figure><img src="img/vt100.webp" width="800" height="800" loading="lazy" alt="Terminal DEC VT100 với màn hình chữ phía trên và bàn phím rời phía dưới."><div class="lbl">vt100 <small>màn hình chữ</small></div></figure>
   </div>
-  <figcaption><b>Ảnh 2</b> Hai thế hệ terminal. Trái: máy Teletype Model 33 ASR sản xuất năm 1968, bàn phím cộng máy
+  <figcaption><b>Ảnh 1</b> Hai thế hệ terminal. Trái: máy Teletype Model 33 ASR sản xuất năm 1968, bàn phím cộng máy
   in, mọi output in ra giấy. Phải: terminal DEC VT100, thay giấy bằng màn hình chữ. Cả hai chỉ là thiết bị nhập và
   xuất, nối dây tới một máy tính ở chỗ khác; shell chạy trên máy tính đó. Linux vẫn gọi thiết bị terminal là
   <code>tty</code>, viết tắt của <em>teletypewriter</em>.</figcaption>
@@ -367,11 +387,11 @@ không phải <code>\</code>, và phân biệt hoa thường: <code>/etc</code> 
 
 <p>Đây là dòng "đường dẫn tương đối tính từ đây" trong Hình 6 của Bài 03. Cùng lệnh <code>cat ghi-chu.txt</code>:
 đứng ở <code>/home/ten</code> thì mở <code>/home/ten/ghi-chu.txt</code>; sau <code>cd /etc</code> thì nhận <code>No such
-file or directory</code>. Bảng 2 là vốn lệnh tối thiểu mà các bài Docker cần.</p>
+file or directory</code>. Bảng 3 là vốn lệnh tối thiểu mà các bài Docker cần.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 2</b> Vốn lệnh tối thiểu.</caption>
+  <caption><b>Bảng 3</b> Vốn lệnh tối thiểu.</caption>
   <thead><tr><th>Lệnh</th><th>Làm gì</th><th>Thường dùng</th></tr></thead>
   <tbody>
     <tr><td><code>pwd</code></td><td>In thư mục làm việc của bash</td><td><code>pwd</code></td></tr>
@@ -433,12 +453,28 @@ cần số ấy. "File" hiểu rộng: tệp trên đĩa, terminal hay kết n�
   <strong>2 là stderr</strong> (nơi in lỗi và chẩn đoán).</p>
 </div>
 
-<figure class="fig photo shot">
-  <img src="img/man-stdin.webp" width="1313" height="963" loading="lazy" alt="Trang hướng dẫn stdin(3) trên man7.org, đoạn nói ba luồng stdin, stdout, stderr ứng với file descriptor 0, 1 và 2 được khoanh đỏ.">
-  <figcaption><b>Ảnh 3</b> Trang hướng dẫn <code>stdin(3)</code> của Linux trên man7.org. Các đoạn đầu giải thích vì
-  sao có ba luồng: một để đọc vào, một để in kết quả, một để in lỗi, cả ba thường nối vào terminal.
-  <span class="kw"><i class="key k-red" aria-hidden="true"></i>Đoạn khoanh</span> là câu định nghĩa: ba luồng ứng
-  với file descriptor 0, 1 và 2.</figcaption>
+<p>Trang hướng dẫn <code>stdin(3)</code> của Linux viết định nghĩa này như sau.</p>
+
+<figure class="fig">
+  <blockquote class="src" lang="en">
+    <p>Under normal circumstances every UNIX program has three streams opened for it when it starts up, one for
+    input, one for output, and one for printing diagnostic or error messages. These are typically attached to the
+    user's terminal (see tty(4)) but might instead refer to files or other devices, depending on what the parent
+    process chose to set up. (See also the "Redirections" section of sh(1).)</p>
+    <p>The input stream is referred to as "standard input"; the output stream is referred to as "standard output";
+    and the error stream is referred to as "standard error". These terms are abbreviated to form the symbols used
+    to refer to these files, namely <em>stdin</em>, <em>stdout</em>, and <em>stderr</em>.</p>
+    <p>[…]</p>
+    <p><strong>On program startup, the integer file descriptors associated with the streams <em>stdin</em>,
+    <em>stdout</em>, and <em>stderr</em> are 0, 1, and 2, respectively.</strong></p>
+  </blockquote>
+  <figcaption><b>Hình 6</b> Ba đoạn trong mục DESCRIPTION của <code>stdin(3)</code>, rút gọn: bỏ hai đoạn giữa nói về
+  kiểu <code>FILE</code> của thư viện C, và phần sau câu in đậm. Tạm dịch: mọi chương trình UNIX khi khởi động có sẵn ba
+  luồng, một để đọc vào, một để in ra, một để in thông báo chẩn đoán hay lỗi; chúng thường gắn vào terminal của người
+  dùng, nhưng cũng có thể trỏ tới tệp hay thiết bị khác, tuỳ process cha đã sắp đặt thế nào. Ba luồng có tên
+  "standard input", "standard output", "standard error", viết tắt là stdin, stdout, stderr. Câu in đậm là định nghĩa:
+  lúc chương trình khởi động, file descriptor của stdin, stdout, stderr lần lượt là 0, 1 và 2. Trích nguyên văn
+  <a href="https://man7.org/linux/man-pages/man3/stdin.3.html">man7.org, stdin(3)</a>, đọc ngày 03/10/2026.</figcaption>
 </figure>
 
 <p>Chương trình không tự mở ba số này; nó thừa kế. Khi bash fork, process con nhận bản sao danh sách file đang mở
@@ -452,12 +488,12 @@ lrwx------ 1 ten ten 64 … 0 -&gt; /dev/pts/0
 lrwx------ 1 ten ten 64 … 1 -&gt; /dev/pts/0
 lrwx------ 1 ten ten 64 … 2 -&gt; /dev/pts/0
 lrwx------ 1 ten ten 64 … 255 -&gt; /dev/pts/0</code></pre>
-  <figcaption><b>Hình 6</b> Danh sách file đang mở của bash (output kỳ vọng). <code>/dev/pts/0</code> là terminal
+  <figcaption><b>Hình 7</b> Danh sách file đang mở của bash (output kỳ vọng). <code>/dev/pts/0</code> là terminal
   bash đang chạy trong đó; số 255 là bản bash tự giữ thêm.</figcaption>
 </figure>
 
 <p><code>pts</code> là <em>pseudo-terminal</em>, terminal giả lập, cùng loại thiết bị terminal với <code>tty</code> ở
-Ảnh 2. Java cũng đi qua ba số này: <code>System.in</code>, <code>System.out</code>, <code>System.err</code> là 0, 1, 2,
+Ảnh 1. Java cũng đi qua ba số này: <code>System.in</code>, <code>System.out</code>, <code>System.err</code> là 0, 1, 2,
 và log Spring Boot in ra console mặc định vào stdout. Cần hai luồng ra vì kết quả có thể được chuyển vào tệp hay sang
 chương trình khác, trong khi lỗi vẫn phải hiện ra cho người đọc.</p>
 
@@ -470,7 +506,7 @@ tệp.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 3</b> Ký hiệu chuyển hướng của bash. Số đứng trước <code>&gt;</code> là file descriptor; không ghi thì là 1.</caption>
+  <caption><b>Bảng 4</b> Ký hiệu chuyển hướng của bash. Số đứng trước <code>&gt;</code> là file descriptor; không ghi thì là 1.</caption>
   <thead><tr><th>Viết</th><th>Nghĩa</th></tr></thead>
   <tbody>
     <tr><td><code>&gt; tep</code></td><td>Số 1 vào <code>tep</code>; xoá nội dung cũ nếu có</td></tr>
@@ -482,7 +518,7 @@ tệp.</p>
 </table>
 </div>
 
-<p>Hình 7 cho thấy stdout và stderr là hai luồng tách biệt: <code>ls</code> được hỏi một đường dẫn có thật và một
+<p>Hình 8 cho thấy stdout và stderr là hai luồng tách biệt: <code>ls</code> được hỏi một đường dẫn có thật và một
 không, nên có cùng lúc một dòng kết quả và một dòng lỗi.</p>
 
 <figure class="fig">
@@ -497,7 +533,7 @@ $ cat ketqua.txt
 
 $ ls /etc/hostname /khong-co 2&gt; /dev/null
 /etc/hostname</code></pre>
-  <figcaption><b>Hình 7</b> Một lệnh, hai luồng ra (output kỳ vọng). Chuyển số 1 vào tệp thì lỗi vẫn hiện, vì số 2 vẫn
+  <figcaption><b>Hình 8</b> Một lệnh, hai luồng ra (output kỳ vọng). Chuyển số 1 vào tệp thì lỗi vẫn hiện, vì số 2 vẫn
   trỏ vào terminal; chuyển số 2 đi thì chỉ còn kết quả.</figcaption>
 </figure>
 
@@ -510,7 +546,7 @@ $ ls /etc/hostname /khong-co 2&gt; /dev/null
   │ 1  stdout  ──┼──►  ketqua.txt     bash đổi trước khi exec
   │ 2  stderr  ──┼──►  /dev/pts/0     terminal: lỗi vẫn hiện
   └──────────────┘</code></pre>
-  <figcaption><b>Hình 8</b> Danh sách file đang mở của <code>ls</code> trong lệnh thứ hai của Hình 7. Chỉ số 1 đổi đích.</figcaption>
+  <figcaption><b>Hình 9</b> Danh sách file đang mở của <code>ls</code> trong lệnh thứ hai của Hình 8. Chỉ số 1 đổi đích.</figcaption>
 </figure>
 
 <p>Lệnh thứ ba dùng <code>/dev/null</code>, tệp thiết bị của kernel vứt bỏ mọi thứ ghi vào (trang hướng dẫn
@@ -526,7 +562,7 @@ một vùng đệm có đầu ghi và đầu đọc; bash sinh hai process cùng
 lệnh phải vào đầu đọc, không qua tệp nào trên đĩa. Chỉ stdout đi qua pipe; stderr của lệnh trái vẫn ra terminal.</p>
 
 <p>Bên phải pipe hay là <code>grep</code>: chương trình đọc từng dòng từ stdin và chỉ in dòng chứa một mẫu chữ, như
-<code>netstat -ano | grep 8080</code> ở Bài 03. Lệnh dài nhất của Bài 00 giờ tách được như Hình 9.</p>
+<code>netstat -ano | grep 8080</code> ở Bài 03. Lệnh dài nhất của Bài 00 giờ tách được như Hình 10.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  echo                        in một dòng trống rồi thoát
@@ -542,7 +578,7 @@ lệnh phải vào đầu đọc, không qua tệp nào trên đĩa. Chỉ stdou
     │ 1
     ▼
   terminal</code></pre>
-  <figcaption><b>Hình 9</b> Lệnh đọc chứng chỉ ở Lab 3 của Bài 00, tách theo file descriptor. Hai dấu <code>|</code>
+  <figcaption><b>Hình 10</b> Lệnh đọc chứng chỉ ở Lab 3 của Bài 00, tách theo file descriptor. Hai dấu <code>|</code>
   tạo hai pipe; <code>2&gt;/dev/null</code> chỉ đổi số 2 của process ở giữa.</figcaption>
 </figure>
 
@@ -562,7 +598,7 @@ vào cmd.exe:</p>
 The system cannot accept the time entered.
 Enter the new time: 2
 A required privilege is not held by the client.</code></pre>
-  <figcaption><b>Hình 10</b> Đúng lệnh, sai shell (output thật trên máy tôi, chạy trong cmd.exe). cmd.exe hiểu phần còn lại là một
+  <figcaption><b>Hình 11</b> Đúng lệnh, sai shell (output thật trên máy tôi, chạy trong cmd.exe). cmd.exe hiểu phần còn lại là một
   giờ mới, từ chối, hỏi lại, rồi báo thiếu quyền vì đặt giờ hệ thống cần quyền quản trị.</figcaption>
 </figure>
 
@@ -617,7 +653,7 @@ giống Bài 01: không ai listen thì bên kết nối bị từ chối.</p>
 
 <p>Tài liệu của Docker ghi rằng Docker Desktop chạy trong distro WSL riêng tên <code>docker-desktop</code>, cô lập với
 các distro khác. Vì vậy máy đã cài Docker Desktop luôn thấy dòng <code>docker-desktop</code> trong
-<code>wsl -l -v</code>, kể cả khi chưa tự cài distro nào. Client tới được daemon theo hai đường của Hình 11.</p>
+<code>wsl -l -v</code>, kể cả khi chưa tự cài distro nào. Client tới được daemon theo hai đường của Hình 12.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  Windows                         │  Máy ảo WSL2 (một kernel Linux)
@@ -628,7 +664,7 @@ các distro khác. Vì vậy máy đã cài Docker Desktop luôn thấy dòng <c
       dockerDesktopLinuxEngine    │  distro Ubuntu                  │
                                   │    docker (client) ─────────────┘
                                   │      /var/run/docker.sock</code></pre>
-  <figcaption><b>Hình 11</b> Một daemon, hai client. Client trên Windows đi qua một <em>named pipe</em>, điểm nối kiểu
+  <figcaption><b>Hình 12</b> Một daemon, hai client. Client trên Windows đi qua một <em>named pipe</em>, điểm nối kiểu
   tệp của Windows dùng trong một máy; client trong Ubuntu đi qua Unix socket, nhờ đường nối Docker Desktop dựng khi
   bạn bật WSL Integration.</figcaption>
 </figure>
@@ -654,7 +690,7 @@ Client:
 failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine;
 check if the path is correct and if the daemon is running: open
 //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.</code></pre>
-  <figcaption><b>Hình 12</b> Output thật khi Docker Desktop tắt; dòng lỗi dài đã ngắt cho vừa khung. Phần
+  <figcaption><b>Hình 13</b> Output thật khi Docker Desktop tắt; dòng lỗi dài đã ngắt cho vừa khung. Phần
   <code>Client</code> in đủ; phần lẽ ra là <code>Server</code> bị thay bằng một lỗi kết nối.</figcaption>
 </figure>
 
@@ -671,11 +707,11 @@ running?". Trong Ubuntu, nếu Docker Desktop tắt hoặc WSL Integration chưa
 <h2 id="hello-world">docker run hello-world: bốn bước, hai bước thuộc bài này</h2>
 
 <p>Khi daemon đã chạy, lệnh thử đầu tiên là <code>docker run hello-world</code>. Chương trình hello-world in ra lời
-giải thích về chính nó; Ảnh 4 là đoạn đó trên trang chính thức.</p>
+giải thích về chính nó; Ảnh 2 là đoạn đó trên trang chính thức.</p>
 
 <figure class="fig photo shot">
   <img src="img/hello-world-bon-buoc.webp" width="1400" height="532" loading="lazy" alt="Output của hello-world trên Docker Hub, liệt kê bốn bước Docker đã làm; bước 1 được khoanh đỏ, bước 4 được khoanh lam.">
-  <figcaption><b>Ảnh 4</b> Lời tự giải thích của hello-world trên Docker Hub.
+  <figcaption><b>Ảnh 2</b> Lời tự giải thích của hello-world trên Docker Hub.
   <span class="kw"><i class="key k-red" aria-hidden="true"></i>Bước 1:</span> client liên lạc với daemon.
   <span class="kw"><i class="key k-blue" aria-hidden="true"></i>Bước 4:</span> daemon truyền output về client, client
   gửi nó ra terminal. Hai bước giữa nói về image và container, đề tài của Bài 05.</figcaption>
@@ -772,7 +808,7 @@ ls /etc/hostname /khong-co 2&gt; /dev/null
 ls -l /proc/$$/fd
 ls /etc | grep host</code></pre>
 
-<p>Bốn lệnh đầu tái hiện Hình 7, lệnh thứ năm tái hiện Hình 6, lệnh cuối lọc bằng pipe. Rồi chạy lệnh của Bài 00 hai
+<p>Bốn lệnh đầu tái hiện Hình 8, lệnh thứ năm tái hiện Hình 7, lệnh cuối lọc bằng pipe. Rồi chạy lệnh của Bài 00 hai
 lần, lần đầu không có <code>2&gt;/dev/null</code>:</p>
 
 <pre><code>echo | openssl s_client -connect example.com:443 -servername example.com | openssl x509 -noout -subject -issuer -dates
@@ -829,13 +865,13 @@ chỉ có <code>Killed</code>. SIGKILL không bắt được, đúng như Bài 0
 </ol>
 
 <p>Kỳ vọng: <code>docker version</code> in cả <code>Client</code> lẫn <code>Server</code>; hello-world in vài dòng tải
-image ở lần đầu, rồi đúng đoạn chữ của Ảnh 4. Chạy lại lần hai: dòng nào không còn? Trong PowerShell,
+image ở lần đầu, rồi đúng đoạn chữ ở Ảnh 2. Chạy lại lần hai: dòng nào không còn? Trong PowerShell,
 <code>wsl -l -v</code> giờ cho <code>docker-desktop</code> ở trạng thái <code>Running</code>.</p>
 
 <h2 id="lab-6">Lab 6 — Tự gây lỗi: tắt daemon, rồi sửa</h2>
 
 <p>Chuột phải vào biểu tượng Docker ở khay hệ thống, chọn <em>Quit Docker Desktop</em>. Chạy
-<code>docker version</code> trong Git Bash, rồi trong Ubuntu. Git Bash sẽ cho lại Hình 12. Ubuntu có thể cho lỗi không
+<code>docker version</code> trong Git Bash, rồi trong Ubuntu. Git Bash sẽ cho lại Hình 13. Ubuntu có thể cho lỗi không
 kết nối được tới daemon, hoặc báo lệnh <code>docker</code> không có trong distro. Chép nguyên văn cả hai vào
 <code>notes.md</code> và trả lời: ai viết ra thông báo, client có đang chạy không, đầu bên kia thiếu gì?</p>
 
@@ -866,7 +902,7 @@ nhau, nên chênh lệch là chênh lệch giữa hai kernel.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 4</b> Triệu chứng, ai viết ra, nguyên nhân, cách sửa.</caption>
+  <caption><b>Bảng 5</b> Triệu chứng, ai viết ra, nguyên nhân, cách sửa.</caption>
   <thead><tr><th>Thấy gì</th><th>Ai viết</th><th>Nguyên nhân</th><th>Sửa</th></tr></thead>
   <tbody>
     <tr><td><code>command not found</code></td><td>bash</td><td>Không thư mục nào trong PATH có chương trình tên đó</td><td>Kiểm tên; <code>sudo apt install</code>; <code>echo $PATH</code></td></tr>
@@ -906,7 +942,7 @@ nhau, nên chênh lệch là chênh lệch giữa hai kernel.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 5</b> Những cách hiểu nghe hợp lý nhưng sai khi dựng phòng lab.</caption>
+  <caption><b>Bảng 6</b> Những cách hiểu nghe hợp lý nhưng sai khi dựng phòng lab.</caption>
   <thead><tr><th>Dễ nghĩ là</th><th>Thực tế</th><th>Xem lại</th></tr></thead>
   <tbody>
     <tr><td>WSL2 là trình giả lập Linux</td><td>WSL2 chạy kernel Linux thật trong máy ảo; dịch syscall là cách của WSL 1</td><td><a href="#wsl2-la-gi">WSL2</a></td></tr>
@@ -962,6 +998,8 @@ signal thật. Docker Desktop dùng chính máy Linux đó để chạy daemon, 
   <li>man7.org — <a href="https://man7.org/linux/man-pages/man3/stdin.3.html">stdin(3)</a> ·
   <a href="https://man7.org/linux/man-pages/man4/null.4.html">null(4)</a> ·
   <a href="https://man7.org/linux/man-pages/man7/unix.7.html">unix(7)</a></li>
+  <li>Docker Hub — <em>hello-world</em>, mục Example output.
+  <a href="https://hub.docker.com/_/hello-world">hub.docker.com/_/hello-world</a></li>
   <li>Docker Docs — <em>Docker overview</em>, kiến trúc client và daemon.
   <a href="https://docs.docker.com/get-started/docker-overview/">docs.docker.com</a></li>
   <li>Docker Docs — <em>WSL 2 backend on Windows</em>.
@@ -977,11 +1015,9 @@ signal thật. Docker Desktop dùng chính máy Linux đó để chạy daemon, 
 sang đen trắng, tách khỏi nền cũ và đặt vào khung vuông. Ảnh chụp màn hình do tôi tự chụp ngày 03/10/2026; khung
 màu là phần đánh dấu thêm.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b>Bảng so sánh WSL 1 và WSL 2 — chụp màn hình <a href="https://learn.microsoft.com/en-us/windows/wsl/compare-versions">learn.microsoft.com</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Teletype_Model_33_ASR_(1968)_(14689737122).png">Teletype Model 33 ASR (1968)</a> — Dennis van Zuijlekom, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:DEC_VT100_terminal.jpg">DEC VT100 terminal</a> — Jason Scott, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>.</li>
-  <li><b>Ảnh 3</b>Trang hướng dẫn stdin(3) — chụp màn hình <a href="https://man7.org/linux/man-pages/man3/stdin.3.html">man7.org</a>, cắt tới câu về file descriptor 0, 1, 2.</li>
-  <li><b>Ảnh 4</b>Output của hello-world — chụp màn hình <a href="https://hub.docker.com/_/hello-world">hub.docker.com</a>; bỏ ngắt dòng tự động của khung code.</li>
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Teletype_Model_33_ASR_(1968)_(14689737122).png">Teletype Model 33 ASR (1968)</a> — Dennis van Zuijlekom, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:DEC_VT100_terminal.jpg">DEC VT100 terminal</a> — Jason Scott, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>.</li>
+  <li><b>Ảnh 2</b>Output của hello-world — chụp màn hình <a href="https://hub.docker.com/_/hello-world">hub.docker.com</a>; bỏ ngắt dòng tự động của khung code.</li>
 </ol>
 
 </section>
@@ -1005,6 +1041,6 @@ màu là phần đánh dấu thêm.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=2b4e881a"></script>
+<script src="../../assets/app.js?v=c39f51f4"></script>
 </body>
 </html>

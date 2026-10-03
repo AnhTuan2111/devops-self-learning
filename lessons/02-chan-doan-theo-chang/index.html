@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 02 — Chẩn đoán theo chặng</title>
 <meta name="description" content="Kết nối tới được rồi mà trang vẫn báo lỗi: đọc mã trạng thái HTTP, nhận ra ai đã viết ra trang lỗi, phân biệt 502, 504 với 500, và dùng ba nguyên tắc để khoanh vùng chặng hỏng, kể cả khi không ai đụng vào hệ thống.">
-<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
+<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="02">
@@ -448,23 +448,33 @@ chỉ khác là bên gặp thất bại giờ là Nginx, và Nginx báo lại ch
   lại sau một lúc.</dd>
 </dl>
 
-<p>Các định nghĩa trên bám sát văn bản chuẩn. Ảnh 4 là chính đoạn định nghĩa trong RFC 9110: hai mã 502 và
-504 đều được định nghĩa bằng cụm từ <em>"while acting as a gateway or proxy"</em>, tức chính chuẩn đã xếp
-chúng là lời của <strong>bên đứng giữa</strong>, còn 500 là lời của máy chủ đang xử lý request.</p>
+<p>Các định nghĩa trên bám sát văn bản chuẩn. Hình 5 là chính đoạn định nghĩa trong RFC 9110: hai mã 502 và
+504 đều được định nghĩa bằng cụm từ <em>"while acting as a gateway or proxy"</em> (trong lúc đóng vai
+gateway hoặc proxy), tức chính chuẩn đã xếp chúng là lời của <strong>bên đứng giữa</strong>, còn 500 là lời
+của máy chủ đang xử lý request.</p>
 
-<figure class="fig photo shot">
-  <img src="img/rfc9110-5xx.webp" width="1100" height="714" loading="lazy" alt="Đoạn định nghĩa các mã 500, 502 và 504 trong RFC 9110 dạng văn bản; đoạn 500 có khung lam, hai đoạn 502 và 504 có khung đỏ.">
-  <figcaption><b>Ảnh 4</b> Định nghĩa ba mã trong RFC 9110 (mục 15.6), chụp từ rfc-editor.org ngày 03/10/2026,
-  lược bớt hai mục chen giữa là 501 và 503. <span class="kw"><i class="key k-red" aria-hidden="true"></i>Khung
-  đỏ</span>: 502 và 504, cả hai bắt đầu bằng "while acting as a gateway or proxy", tức mã của bên đứng giữa.
-  <span class="kw"><i class="key k-blue" aria-hidden="true"></i>Khung lam</span>: 500, "the server encountered
-  an unexpected condition", tức mã của chính máy chủ đang xử lý request.</figcaption>
+<figure class="fig">
+<blockquote class="src" lang="en">
+<p>The 500 (Internal Server Error) status code indicates that the server encountered an unexpected
+condition that prevented it from fulfilling the request.</p>
+<p>The 502 (Bad Gateway) status code indicates that the server, <strong>while acting as a gateway or
+proxy</strong>, received an invalid response from an inbound server it accessed while attempting to fulfill
+the request.</p>
+<p>The 504 (Gateway Timeout) status code indicates that the server, <strong>while acting as a gateway or
+proxy</strong>, did not receive a timely response from an upstream server it needed to access in order to
+complete the request.</p>
+</blockquote>
+<figcaption><b>Hình 5</b> Định nghĩa ba mã 500, 502 và 504. Cụm in đậm chỉ có ở 502 và 504; đoạn 500 chỉ
+nói "the server encountered an unexpected condition", tức mã của chính máy chủ đang xử lý request. Phía sau
+được gọi là <em>inbound server</em> ở đoạn 502 và <em>upstream server</em> ở đoạn 504, hai tên đã gặp
+trong định nghĩa "phía sau" ở trên. Trích nguyên văn <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.6">RFC 9110</a>, mục
+15.6.1, 15.6.3 và 15.6.5 (bỏ tên mục và hai mục 501, 503 nằm giữa), đọc ngày 03/10/2026.</figcaption>
 </figure>
 
 <h2 id="ba-ket-cuc">Ba kết cục khi Nginx gọi vào trong</h2>
 
 <p>Ghép cơ chế "Nginx là bên đi gọi" với các định nghĩa, ta có đúng ba kết cục, và mỗi kết cục sinh ra một
-mã khác nhau. Hình 5 đặt chúng cạnh nhau.</p>
+mã khác nhau. Hình 6 đặt chúng cạnh nhau.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  Nginx mở kết nối tới ứng dụng ở 127.0.0.1:8080
@@ -477,7 +487,7 @@ mã khác nhau. Hình 5 đặt chúng cạnh nhau.</p>
 
   c) ứng dụng trả lời, kể cả bằng một trang lỗi 500
      → Nginx chuyển nguyên vẹn câu trả lời ra ngoài</code></pre>
-<figcaption><b>Hình 5</b> Ba kết cục của kết nối thứ hai, từ Nginx vào ứng dụng. Chỉ ở kết cục c thì người
+<figcaption><b>Hình 6</b> Ba kết cục của kết nối thứ hai, từ Nginx vào ứng dụng. Chỉ ở kết cục c thì người
 dùng mới thấy một trang do ứng dụng viết.</figcaption>
 </figure>
 
@@ -517,7 +527,7 @@ dẫn tới hai hành động chẩn đoán ngược nhau.</p>
 
   500  →  Lúc này mới mở code: ứng dụng đã chạy và tự ném exception.
           Đi xem: log ứng dụng, stack trace.</code></pre>
-<figcaption><b>Hình 6</b> Hai mã lỗi, hai hướng điều tra. Với 502, mở code là phí thời gian; với 500, code
+<figcaption><b>Hình 7</b> Hai mã lỗi, hai hướng điều tra. Với 502, mở code là phí thời gian; với 500, code
 và log chính là nơi cần tìm.</figcaption>
 </figure>
 
@@ -577,7 +587,7 @@ những sự cố xảy ra khi không ai đụng vào gì. Câu hỏi con thứ 
 
   Không có mã          →  chưa có cuộc trao đổi HTTP nào
                           → soi các bước trước Nginx: DNS, TCP, TLS, firewall</code></pre>
-<figcaption><b>Hình 7</b> Một câu hỏi có hoặc không (có thấy mã trạng thái hay không) chia đôi vùng nghi
+<figcaption><b>Hình 8</b> Một câu hỏi có hoặc không (có thấy mã trạng thái hay không) chia đôi vùng nghi
 ngờ trên bản đồ.</figcaption>
 </figure>
 
@@ -623,7 +633,7 @@ suốt khoảng ấy, ứng dụng đã chạy nhưng chưa có ai listen ở 80
              │  chưa ai listen 8080 → Nginx bị từ chối → người dùng thấy 502
              │
   t = 30 s   ứng dụng listen 8080 → từ đây mọi thứ bình thường</code></pre>
-<figcaption><b>Hình 8</b> Cửa sổ 502 sau mỗi lần bật ứng dụng: chương trình đã chạy nhưng chưa sẵn sàng nhận
+<figcaption><b>Hình 9</b> Cửa sổ 502 sau mỗi lần bật ứng dụng: chương trình đã chạy nhưng chưa sẵn sàng nhận
 request.</figcaption>
 </figure>
 
@@ -661,7 +671,7 @@ hạn cả tháng, và việc gia hạn sớm ấy là thứ ngăn sự cố nà
   Bộ nhớ rò rỉ tích tụ             ← vài tuần                Spring Boot
   Khoá API hoặc token hết hạn      ← tuỳ nhà cung cấp        Spring Boot
   Bảng database phình tới ngưỡng   ← khi đủ dữ liệu          PostgreSQL</code></pre>
-<figcaption><b>Hình 9</b> Sáu loại sự cố do thời gian gây ra, kèm chu kỳ điển hình và chặng mà mỗi loại làm
+<figcaption><b>Hình 10</b> Sáu loại sự cố do thời gian gây ra, kèm chu kỳ điển hình và chặng mà mỗi loại làm
 hỏng (cột cuối).</figcaption>
 </figure>
 
@@ -874,12 +884,11 @@ ra là khoanh được chặng hỏng, vì triệu chứng luôn chứng minh c�
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
 <p class="photo-credits-note">Mọi ảnh trong bài là ảnh chụp màn hình do tôi tự chụp, từ trình duyệt và
-từ phần mềm chạy thật; các khung màu là phần đánh dấu thêm vào.</p>
+từ phần mềm chạy thật.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b>Trang lỗi của trình duyệt Edge khi bị từ chối và khi tên miền không tồn tại — chụp màn hình Edge trên máy tôi, 03/10/2026.</li>
   <li><b>Ảnh 2</b>Trang lỗi 404, 502 và 504 của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy tôi, 30/09/2026.</li>
   <li><b>Ảnh 3</b>Trang lỗi Whitelabel 404 và 500 của Spring Boot — chụp màn hình một ứng dụng Spring Boot 4.1 tôi dựng để thử, 03/10/2026; cắt bớt khoảng trắng bên dưới.</li>
-  <li><b>Ảnh 4</b>Định nghĩa mã 500, 502, 504 trong RFC 9110 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc9110.txt">rfc-editor.org</a>, 03/10/2026; đã lược bớt mục 501 và 503.</li>
 </ol>
 
 </section>
@@ -903,6 +912,6 @@ từ phần mềm chạy thật; các khung màu là phần đánh dấu thêm v
 
 </div>
 
-<script src="../../assets/app.js?v=2b4e881a"></script>
+<script src="../../assets/app.js?v=c39f51f4"></script>
 </body>
 </html>

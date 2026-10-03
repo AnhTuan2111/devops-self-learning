@@ -436,7 +436,21 @@ người học báo giao diện lạ ngay sau một lần deploy, hỏi họ t�
 ### Ảnh minh hoạ (người học yêu cầu 30/09/2026)
 
 **Mỗi bài phải có nhiều ảnh minh hoạ hoặc ảnh tham chiếu**, không chỉ chữ và sơ đồ ASCII:
-trang bài giảng chính tối thiểu **4 khối ảnh**, mỗi trang phụ tối thiểu **2**. Quy trình bắt buộc:
+trang bài giảng chính tối thiểu **4 khối ảnh**, mỗi trang phụ tối thiểu **2**.
+
+**Loại ảnh người học muốn** (nói rõ 04/10/2026): ảnh **đồ vật** và ảnh **dẫn chứng** (hình và bảng trong
+văn bản chuẩn, sổ đăng ký, giao diện thật). Hai thứ cần tránh:
+- **Ảnh mà bên trong là cả đoạn văn**: hạn chế. Mấy câu cần dẫn thì trích thành chữ thật
+  (`<figure class="fig"><blockquote class="src" lang="en">…</blockquote><figcaption>…nguồn, ngày đọc…`),
+  bảng thì dựng bằng bảng HTML. Đã thay theo cách này: trang DORA (phụ lục Bài 00), định nghĩa 5xx của
+  RFC 9110 (Bài 02), man page stdin(3) (Bài 04), hai bài viết về WSL năm 2016 và 2019 (phụ lục Bài 04).
+- **Ảnh có dấu tick, dấu chéo kiểu emoji** (người học gọi ảnh bảng so sánh WSL 1 và WSL 2 là "AI slop",
+  03/10/2026): dựng lại thành bảng HTML với icon vẽ `ic-yes` / `ic-no`.
+
+Khung đánh dấu đỏ/lam/vàng trên các ảnh dẫn chứng còn lại thì **giữ**. Khi người học chê một ảnh, sửa đúng
+ảnh đó và hỏi cho rõ lý do trước khi áp dụng rộng (04/10/2026: đã từng suy rộng thành "bỏ mọi ảnh chụp
+chữ", đổi 20 ảnh, và người học phải hoàn tác). Sau lần thay trên, Bài 02, Bài 04 và phụ lục WSL đang ít
+ảnh hơn số tối thiểu; có thêm ảnh đồ vật hay dẫn chứng không là việc người học quyết. Quy trình bắt buộc:
 
 1. **Nguồn** — chỉ hai loại: (a) Wikimedia Commons, giấy phép CC0 / public domain / CC BY /
    CC BY-SA (`node scripts/anh/commons.mjs tim "…"` rồi `lay "File:…"` — lưu kèm giấy phép);

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Lịch sử DevOps</title>
 <meta name="description" content="DevOps là gì và vì sao nó ra đời: hai đội phát triển và vận hành với hai thước đo ngược nhau, Agile năm 2001 tăng tốc một nửa, những năm 2006–2009 nhập hai nửa lại, định nghĩa trong chuẩn IEEE 2675-2021, và cách người ta đo DevOps ngày nay.">
-<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
+<link rel="stylesheet" href="../../assets/style.css?v=c39f51f4">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00-devops">
@@ -273,20 +273,42 @@ này kể tiếp.</p>
 <strong>DORA</strong> (<em>DevOps Research and Assessment</em>), nay do Google Cloud điều hành, nhiều năm
 khảo sát các nhóm phần mềm và rút ra một bộ chỉ số đo <em>hiệu quả giao phần mềm</em>. Bộ hiện hành gồm năm
 chỉ số, chia hai nhóm: nhóm <em>throughput</em> đo tốc độ thay đổi đi tới production, nhóm
-<em>instability</em> đo mức thay đổi gây ra rắc rối.</p>
+<em>instability</em> đo mức thay đổi gây ra rắc rối (Bảng 1).</p>
 
-<figure class="fig photo shot">
-  <img src="img/dora-metrics.webp" width="1600" height="1360" loading="lazy" alt="Trang hướng dẫn chỉ số của DORA: hai nhóm Throughput và Instability với năm chỉ số được khoanh màu, và câu trong mục Key insights được khoanh đỏ.">
-  <figcaption><b>Ảnh 4</b> Năm chỉ số trên trang hướng dẫn chính thức của DORA, dora.dev.
-  Ba chỉ số tốc độ, khung <span class="kw"><i class="key k-blue" aria-hidden="true"></i>lam</span>: thời gian từ
-  lúc một thay đổi được lưu vào kho mã tới lúc lên production; số lần deploy trong một khoảng thời gian; thời
-  gian khôi phục sau một lần deploy hỏng. Hai chỉ số bất ổn, khung
-  <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>vàng</span>: tỉ lệ lần deploy phải can thiệp gấp ngay sau đó; tỉ lệ lần deploy ngoài kế hoạch vì
-  một sự cố. Câu khoanh <span class="kw"><i class="key k-red" aria-hidden="true"></i>đỏ</span> là kết luận
-  của chính DORA: tốc độ và độ ổn định không phải hai thứ đánh đổi nhau.</figcaption>
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 1</b> Năm chỉ số của DORA, chia hai nhóm: ba chỉ số đo tốc độ, hai chỉ số đo mức bất
+  ổn. Cột định nghĩa trích nguyên văn, cột cuối là nghĩa tiếng Việt. Nguồn:
+  <a href="https://dora.dev/guides/dora-metrics/">DORA, <em>DORA’s software delivery performance
+  metrics</em></a>, mục Throughput and instability, đọc ngày 03/10/2026.</caption>
+  <thead><tr><th>Nhóm</th><th>Chỉ số</th><th>Định nghĩa của DORA</th><th>Nghĩa</th></tr></thead>
+  <tbody>
+    <tr><td rowspan="3">Throughput (tốc độ)</td><td lang="en">Change lead time</td><td lang="en">The amount of time it takes for a change to go from committed to version control to deployed in production.</td><td>Thời gian từ lúc một thay đổi được lưu vào kho mã tới lúc lên production.</td></tr>
+    <tr><td lang="en">Deployment frequency</td><td lang="en">The number of deployments over a given period or the time between deployments.</td><td>Số lần deploy trong một khoảng thời gian, hoặc khoảng cách giữa hai lần deploy.</td></tr>
+    <tr><td lang="en">Failed deployment recovery time</td><td lang="en">The time it takes to recover from a deployment that fails and requires immediate intervention.</td><td>Thời gian khôi phục sau một lần deploy hỏng, phải can thiệp ngay.</td></tr>
+  </tbody>
+  <tbody>
+    <tr><td rowspan="2">Instability (bất ổn)</td><td lang="en">Change fail rate</td><td lang="en">The ratio of deployments that require immediate intervention following a deployment. Likely resulting in a rollback of the changes or a “hotfix” to quickly remediate any issues.</td><td>Tỉ lệ lần deploy phải can thiệp gấp ngay sau đó, thường bằng cách gỡ thay đổi ra hoặc sửa gấp.</td></tr>
+    <tr><td lang="en">Deployment rework rate</td><td lang="en">The ratio of deployments that are unplanned but happen as a result of an incident in production.</td><td>Tỉ lệ lần deploy ngoài kế hoạch, phát sinh vì một sự cố trên production.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Đặt năm chỉ số cạnh nhau, DORA rút ra một kết luận về quan hệ giữa hai nhóm.</p>
+
+<figure class="fig">
+<blockquote class="src" lang="en">
+<p>DORA’s research has repeatedly demonstrated that speed and stability are not tradeoffs. In fact, we see
+that the metrics are correlated for most teams. Top performers do well across all five metrics, and low
+performers do poorly.</p>
+</blockquote>
+<figcaption><b>Hình 1</b> Kết luận của chính DORA: nghiên cứu của họ nhiều lần cho thấy tốc độ và độ ổn
+định không phải hai thứ đánh đổi nhau. Trích nguyên văn
+<a href="https://dora.dev/guides/dora-metrics/">dora.dev</a>, mục Key insights, đọc ngày
+03/10/2026.</figcaption>
 </figure>
 
-<p>Câu khoanh đỏ trong Ảnh 4 trả lời thẳng mâu thuẫn ở tab Hai đội. Thước đo của dev (thay đổi nhiều, nhanh)
+<p>Kết luận ở Hình 1 trả lời thẳng mâu thuẫn ở tab Hai đội. Thước đo của dev (thay đổi nhiều, nhanh)
 và thước đo của ops (ít sự cố, khôi phục nhanh) được đặt chung trong một bảng điểm, và dữ liệu của DORA cho
 thấy ở phần lớn các nhóm, hai nhóm chỉ số đi cùng chiều: nhóm làm tốt thường tốt ở cả năm, nhóm làm kém
 thường kém ở cả năm. Một nhóm DevOps vì vậy không chọn giữa nhanh và ổn định; nó được đo trên cả hai.</p>
@@ -322,7 +344,7 @@ của lộ trình bạn đang học. Bảng dưới đây nối chúng lại.</p
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 1</b> Vấn đề của mô hình hai đội, lời giải DevOps đưa ra, và nơi lộ trình dạy lời giải đó.</caption>
+  <caption><b>Bảng 2</b> Vấn đề của mô hình hai đội, lời giải DevOps đưa ra, và nơi lộ trình dạy lời giải đó.</caption>
   <thead><tr><th>Vấn đề cũ</th><th>Lời giải</th><th>Trong lộ trình</th></tr></thead>
   <tbody>
     <tr><td>Mỗi bên chỉ thấy nửa tấm bản đồ khi có sự cố</td><td>Người viết ứng dụng hiểu cả chín chặng và đọc được triệu chứng của từng chặng</td><td>Bài 00–04</td></tr>
@@ -333,7 +355,7 @@ của lộ trình bạn đang học. Bảng dưới đây nối chúng lại.</p
 </table>
 </div>
 
-<p>Dòng đầu của Bảng 1 giải thích vì sao lộ trình mở đầu bằng một tấm bản đồ và cách đọc lỗi, chứ không
+<p>Dòng đầu của Bảng 2 giải thích vì sao lộ trình mở đầu bằng một tấm bản đồ và cách đọc lỗi, chứ không
 bằng một công cụ. Mọi lời giải ở các dòng sau đều giả định rằng người làm đã nhìn được cả chín chặng: không
 thể tự động hoá việc deploy lên một server mà mình không hiểu, và không thể chịu trách nhiệm cho một chặng mà
 mình không biết nó hỏng trông ra sao.</p>
@@ -400,7 +422,6 @@ mình không biết nó hỏng trông ra sao.</p>
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:NOC-IUPUI.jpg">Trung tâm vận hành mạng của Đại học Indiana</a> — Alan Levine, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>.</li>
   <li><b>Ảnh 2</b>Bốn giá trị của Tuyên ngôn Agile — chụp màn hình <a href="https://agilemanifesto.org/">agilemanifesto.org</a>, 03/10/2026; đã bỏ ảnh nền phía sau chữ và cắt bớt khoảng trống dưới tiêu đề.</li>
   <li><b>Ảnh 3</b>Chương trình devopsdays Ghent 2009 — chụp màn hình <a href="http://legacy.devopsdays.org/events/2009-ghent/program/">legacy.devopsdays.org</a>, 03/10/2026.</li>
-  <li><b>Ảnh 4</b>Năm chỉ số của DORA — chụp màn hình <a href="https://dora.dev/guides/dora-metrics/">dora.dev</a>, 03/10/2026.</li>
 </ol>
 
 </section>
@@ -424,6 +445,6 @@ mình không biết nó hỏng trông ra sao.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=2b4e881a"></script>
+<script src="../../assets/app.js?v=c39f51f4"></script>
 </body>
 </html>

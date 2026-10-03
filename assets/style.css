@@ -598,6 +598,14 @@ blockquote.pull p::before {
   background: var(--red); vertical-align: .06em;
 }
 
+/* Trích nguyên văn một văn bản gốc (RFC, man page, tài liệu chính thức), dùng thay cho ảnh chụp mà bên
+   trong là cả đoạn văn. Một thanh kẻ đen bên trái; nguồn và ngày đọc ghi ở figcaption ngay dưới. */
+figure.fig blockquote.src { margin: 0; padding: 2px 0 2px 18px; border-left: var(--rule-m) solid var(--ink); }
+blockquote.src p { margin: .55em 0; color: var(--ink-2); }
+blockquote.src p:first-child { margin-top: 0; }
+blockquote.src p:last-child { margin-bottom: 0; }
+blockquote.src ul, blockquote.src ol { margin: .4em 0; color: var(--ink-2); }
+
 /* Dải nhiều ảnh cùng hàng: 2 cột ở điện thoại, n cột ở màn rộng */
 .photo-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .photo-row.n3, .photo-row.n2 { grid-template-columns: minmax(0, 1fr); }
