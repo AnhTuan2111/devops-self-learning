@@ -4,14 +4,13 @@
 //
 // Nó listen port 8080 và in ra PID của chính mình.
 // Mục đích: có một process thật đang listen một port để quan sát.
-// (Chuỗi "dang giu phong 8080" in ra được giữ nguyên để khớp output đã ghi trong notes.md.)
 
 const http = require('http');
 
 const server = http.createServer((req, res) => res.end('con song\n'));
 
 server.listen(8080, () => {
-  console.log('PID = ' + process.pid + '  |  dang giu phong 8080');
+  console.log('PID = ' + process.pid + '  |  dang listen port 8080');
   console.log('Ctrl+C de tat tu te  ·  taskkill //F //PID ' + process.pid + ' de giet ep');
 });
 

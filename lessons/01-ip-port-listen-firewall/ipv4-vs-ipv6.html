@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Lịch sử địa chỉ IP</title>
 <meta name="description" content="Vì sao Internet có dải địa chỉ mạng riêng và vì sao server không đặt ở nhà: IPv4 năm 1981, chia lớp, CIDR, NAT, cái giá của NAT, và IPv6 — mỗi bước giải quyết vấn đề gì mà bước trước chưa giải quyết được.">
-<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01-ipv6">
@@ -110,8 +110,8 @@ dấu vết của thời kỳ này: nhiều khối lớn ghi tên một tổ ch�
 <!-- ================================================================== -->
 <section class="tab" id="t-cidr" data-tab="CIDR" data-note="1993: bỏ chia lớp">
 
-<p class="panel-intro">Tab này kể công nghệ đầu tiên ra đời để vá IPv4: nó giải quyết vấn đề chia
-phung phí của tab trước, và một vấn đề thứ hai mà chia lớp sinh ra.</p>
+<p class="panel-intro">Mười năm sau RFC 791, hai vấn đề ở tab trước bắt đầu thành khủng hoảng. Lời giải
+đầu tiên không thay IPv4 mà vá nó: chia địa chỉ khéo hơn.</p>
 
 <h2 id="bao-dong">Đầu thập niên 1990: hai cuộc khủng hoảng cùng tới</h2>
 
@@ -142,7 +142,7 @@ sổ đăng ký của IANA.</p>
 </figure>
 
 <p>Con số sau dấu gạch chéo đếm <em>bit</em>, không liên quan gì tới các con số trong địa chỉ. Dải
-loopback <code>127.0.0.0/8</code> vì vậy không chứa 127⁴ địa chỉ như người mới hay đoán, mà chứa
+loopback <code>127.0.0.0/8</code> vì vậy không chứa 127⁴ địa chỉ như rất dễ đoán, mà chứa
 2²⁴, khoảng 16,7 triệu địa chỉ, dù mặc định máy chỉ dùng đúng một địa chỉ trong đó là
 <code>127.0.0.1</code>.</p>
 
@@ -172,8 +172,8 @@ router, nên danh sách ấy ngừng phình to.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-nat" data-tab="NAT" data-note="1994: dùng chung một địa chỉ">
 
-<p class="panel-intro">Tab này kể công nghệ thứ hai: nó giải quyết đúng vấn đề CIDR không giải được,
-là tổng số địa chỉ, bằng cách cho cả một mạng dùng chung một địa chỉ.</p>
+<p class="panel-intro">CIDR chia khéo hơn, nhưng không đẻ thêm được địa chỉ nào. Lời giải thứ hai đi
+thẳng vào tổng số: cho cả một mạng dùng chung một địa chỉ công khai.</p>
 
 <h2 id="nat">NAT (1994): cả một mạng, một địa chỉ công khai</h2>
 
@@ -243,8 +243,8 @@ chuyển sang cấp phát nhỏ giọt khối cuối cùng của mình.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-gia-nat" data-tab="Giá của NAT" data-note="vì sao server không đặt ở nhà">
 
-<p class="panel-intro">Tab này trả lời phần sau của câu hỏi phụ lục: vì sao một máy ở nhà không ai trên
-Internet gọi tới được. Câu trả lời là cái giá của chính công nghệ ở tab trước.</p>
+<p class="panel-intro">NAT cứu được IPv4, nhưng phải trả giá. Cái giá ấy chính là phần sau của câu hỏi
+phụ lục: vì sao một máy ở nhà không ai trên Internet gọi tới được.</p>
 
 <h2 id="gia-cua-nat">Cái giá của NAT: kết nối chỉ được khởi tạo từ bên trong</h2>
 
@@ -297,8 +297,9 @@ chặn ở tầng NAT của nhà mạng, trước khi tới được router củ
 <!-- ================================================================== -->
 <section class="tab" id="t-ipv6" data-tab="IPv6" data-note="lời giải gốc">
 
-<p class="panel-intro">Tab này kể lời giải gốc mà IETF bắt đầu thiết kế từ năm 1992: một thế hệ địa
-chỉ đủ lớn để không cần NAT, và lý do nó phổ cập chậm tới vậy.</p>
+<p class="panel-intro">Trong khi CIDR và NAT vá IPv4, IETF thiết kế lời giải gốc từ năm 1992: một thế hệ
+địa chỉ đủ lớn để không cần NAT. Lời giải ấy đã có từ lâu; câu chuyện thú vị là vì sao nó phổ cập chậm tới
+vậy.</p>
 
 <h2 id="ipv6">IPv6: 128 bit, đủ cho mọi máy</h2>
 
@@ -355,7 +356,7 @@ cập Google qua IPv6; con số đã vượt 40% từ vài năm trước, và b�
 *   Trying [2606:4700:10::ac42:93f3]:443...   ← curl thử IPv6 trước
 *   Trying 104.20.23.154:443...               ← rồi thử IPv4
 * Established connection ... 104.20.23.154    ← IPv4 thắng</code></pre>
-<figcaption><b>Hình 7</b> Trích output <code>curl -v</code> chạy trên máy người học ngày 24/09/2026, có
+<figcaption><b>Hình 7</b> Trích output <code>curl -v</code> ở lab Bài 00, chạy trên máy tôi ngày 24/09/2026, có
 chú thích bên phải.</figcaption>
 </figure>
 
@@ -387,8 +388,8 @@ này không phải lời giải cho con số 2,155 giây ở lab Bài 01, vì l�
 <!-- ================================================================== -->
 <section class="tab" id="t-hom-nay" data-tab="Dấu vết" data-note="hôm nay, và câu hỏi của Bài 01">
 
-<p class="panel-intro">Tab cuối gom lại những gì của lịch sử này còn ở lại trong công việc hằng ngày,
-và nối về câu hỏi của Bài 01.</p>
+<p class="panel-intro">Bốn công nghệ trên không nằm yên trong sách sử. Chúng để lại dấu vết trong công
+việc hằng ngày, và thêm một tầng cho câu trả lời của Bài 01.</p>
 
 <h2 id="dau-vet">Bốn dấu vết còn lại hôm nay</h2>
 
@@ -464,7 +465,7 @@ miền.</p>
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do người viết tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Interface_Message_Processor_-_BBN_Arpanet_Router_-_Computer_History_Museum_(2007-11-10_23.06.56_by_Carlo_Nardone).jpg">Interface Message Processor của ARPANET</a> — Carlo Nardone, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
   <li><b>Ảnh 2</b>Khuôn phần đầu gói tin IPv4, RFC 791 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc791.html">rfc-editor.org</a>, 30/09/2026.</li>
@@ -492,6 +493,6 @@ miền.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c4b75b55"></script>
+<script src="../../assets/app.js?v=2b4e881a"></script>
 </body>
 </html>

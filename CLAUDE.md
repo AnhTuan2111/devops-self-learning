@@ -13,6 +13,11 @@ Claude đóng vai người dạy kèm: mỗi phiên dạy một bài, rồi ghi 
 - **Viết cho bất kỳ ai đọc** (người học yêu cầu 30/09/2026): tài liệu phải dùng được cho mọi người
   mới bắt đầu, không phải nhật ký riêng. Xưng "bạn" để nói với người đọc thì được, nhưng không gán
   cho người đọc hoàn cảnh riêng của một người cụ thể.
+- **Người viết xưng "tôi"** (người học cho phép 03/10/2026: "coi như là tôi tự viết ra những dòng đó"):
+  "tôi" là chủ repo, "bạn" là người đọc. Dùng ở chỗ nói về output thật ("trên máy tôi ngày …"), ảnh tự
+  chụp ("do tôi tự chụp"), giả thuyết và chỗ hiểu sai **đã thật sự xảy ra** (có trong `notes.md`,
+  `progress.json` hoặc buổi học). **Không bịa trải nghiệm ngôi thứ nhất.** Bảng hiểu sai chỉ đặt cột
+  "Tôi từng nghĩ" khi mọi dòng đều là chỗ đã hiểu sai thật; bảng trộn thì dùng "Dễ nghĩ là".
 - Nhịp học: linh hoạt. Không ép theo lịch — học được tới đâu ghi tiến độ tới đó.
 - Ngôn ngữ: **viết mọi tài liệu bằng tiếng Việt.** Giữ nguyên thuật ngữ kỹ thuật
   tiếng Anh (reverse proxy, container, volume…) vì đó là từ sẽ gặp trong tài liệu thật.
@@ -68,7 +73,7 @@ theo vì có ba câu hỏi đầu bài và các tab đi theo một chuỗi nhân
 **Phụ lục lịch sử** (người học gợi ý 03/10/2026, "đôi khi"): một trang phụ cho công nghệ có lý do ra
 đời đáng kể — vấn đề trước khi có nó → các cách giải trước và giới hạn → nó giải quyết đúng điều gì →
 dấu vết còn lại tới nay → nối về bài chính. Hero ghi "Phụ lục · đọc thêm, không bắt buộc". Đã có:
-`01/ipv4-vs-ipv6.html`, `03/lich-su-he-dieu-hanh.html`, `04/lich-su-wsl.html`.
+`00/lich-su-devops.html`, `01/ipv4-vs-ipv6.html`, `03/lich-su-he-dieu-hanh.html`, `04/lich-su-wsl.html`.
 
 **Trang bìa ít chữ** (người học phản ánh 30/09/2026: người mới đọc bìa thấy dài và rối thì nản):
 trang chủ, README của repo, trang khung của bài, câu giới thiệu module — mỗi chỗ một hai câu, không
@@ -257,6 +262,30 @@ Người học phản ánh: các trang cũ "bụp một phát ẩn dụ luôn" �
    sử, số hiệu RFC chỉ viết khi chắc chắn — không chắc thì bỏ, đừng bịa cho có vẻ học thuật.
 6. Vẫn xưng **"bạn"**. Học thuật không có nghĩa là bỏ ví dụ: mỗi ý trừu tượng đi kèm một ví dụ kỹ thuật thật.
 
+### Đọc như một con người, không chỉ như máy soát lỗi (03/10/2026)
+
+Người học bảo đọc lại Bài 00–03 "với góc nhìn của một người đang mông lung, chưa bao giờ hiểu DevOps là
+gì, và với góc nhìn của con người". Lượt đọc ấy tìm ra những lỗi mà mọi script kiểm tra đều bỏ qua; từ
+nay **sau mỗi lần sửa một bài, đọc lại bài đó bằng đúng hai góc nhìn này** trước khi báo xong:
+
+1. **Người mông lung:** tên khoá học (DevOps) phải được định nghĩa ngay bài đầu, bằng lời thường (đã
+   làm: Bài 00 tab Phía server `#devops` + phụ lục lịch sử). Bài "bản đồ" phải nhẹ; chi tiết sâu chuyển
+   về bài có nó (SNI, các loại máy chủ DNS → Bài 20). Con số sẽ lệch theo thời gian (hạn chứng chỉ…) phải
+   nói rõ là của ngày đo.
+2. **Con người:**
+   - **Không để lộ khung xương.** Cấm câu mở tab rập khuôn "Tab này trả lời câu N…" và nhãn "Còn treo:".
+     Vẫn nói tab trả lời câu hỏi nào, nhưng mỗi tab mở một kiểu: một câu hỏi, một chi tiết của tình
+     huống, một câu gọi lại bài trước. Cuối khối Chốt là một câu hỏi tự nhiên, không nhãn.
+   - **Không phán xét người đọc.** Cấm "người mới hay…", "người thiếu kinh nghiệm…", "phần lớn lập trình
+     viên…". Viết "rất dễ nghĩ…", "cách nghĩ này nghe hợp lý vì…, nhưng…". Cột bảng hiểu sai: "Dễ nghĩ
+     là" (hoặc "Tôi từng nghĩ", xem trên).
+   - **Không nhân vật nhật ký.** Không "người học", "máy người viết", "trong buổi học" trên trang bài;
+     dùng "tôi" như trên. Đầu trang không ghi ngày học.
+   - **Không lặp nguyên văn giữa các bài**: cùng một dòng hiểu sai, cùng một ảnh, chỉ ở một bài (bài sau
+     link về). Câu trích nổi (`blockquote.pull`) không đặt sát câu gốc của nó.
+   - **Văn phong đều tay giữa các bài:** dấu gạch dài dùng dè dặt (ưu tiên dấu phẩy, ngoặc, hai chấm);
+     không nhấn mạnh bằng CHỮ IN HOA trong văn xuôi (dùng `<strong>`).
+
 Trong **chat** vẫn giữ nhịp đối thoại (chia phần, hỏi, đợi) — nhưng phần giảng trước câu hỏi
 cũng theo năm nhịp trên, không giảng cụt.
 
@@ -344,15 +373,16 @@ tròn đặc = xong · tam giác = đang học · vòng rỗng = chưa học.
 <body data-lesson="NN">
 <nav class="topbar"><div class="topbar-inner">
   <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-NN</span>
-  <span class="spacer"></span> <a class="nav" href="…">…</a>
+  <span class="spacer"></span> <a class="nav" href="…">…</a>   ← chỉ link trang phụ/phụ lục của bài
 </div></nav>
 <div class="wrap">
   <header class="hero">
-    <p class="eyebrow">Module X · Bài NN · ngày</p>
+    <p class="eyebrow">Module X · Bài NN</p>
     <h1>Phần đầu tiêu đề: <span class="hl">phần được tô vàng</span></h1>
     <p class="lede">…</p>
     <div class="meta"><span class="chip yellow"><i class="stt stt-doing" aria-hidden="true"></i>Đang học</span>
-      <a class="chip" href="…"><i class="ic ic-r" aria-hidden="true"></i> …</a></div>
+      <span class="chip">3–5 giờ học</span> <span class="chip">Lab: Git Bash</span>
+      <a class="chip" href="…"><i class="ic ic-r" aria-hidden="true"></i> Phụ lục: …</a></div>
   </header>
   <main class="tabs" data-tabs="Các phần của Bài NN">
     <section class="tab" id="van-de" data-tab="Vấn đề" data-note="ghi chú ngắn">…</section>

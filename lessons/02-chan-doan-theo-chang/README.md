@@ -3,7 +3,7 @@
 <img src="../../assets/readme/glyph/02.svg" width="132" align="right" alt="Ấn ký của Bài 02">
 
 > **Module M0** · Nền tảng tối thiểu — Request, process và phòng lab
-> Học ngày **21–24/09/2026** · 3–5 giờ học · 4 lab, chỉ cần Git Bash và `curl`
+> 3–5 giờ học · 4 lab, chỉ cần Git Bash và `curl`
 
 File này là **vở bài tập** của bài. Phần giảng giải vì sao, kèm hình, ảnh chụp và ví dụ đầy đủ,
 nằm trong [`index.html`](index.html). Ở đây chỉ giữ những gì cần có trong tay khi tự làm lab và
@@ -101,6 +101,10 @@ cột cuối.
 Nginx:   "404 Not Found / nginx/1.30.5"   ← có ký tên: request dừng ở chặng 7
 Spring:  "Whitelabel Error Page" / JSON    ← ứng dụng có nhận: request tới chặng 8
 ```
+
+Spring Boot không ký tên trong header `Server`, và dòng trạng thái của nó chỉ có con số
+(`HTTP/1.1 500`, không câu mô tả). Nhận ra nó bằng khuôn trang Whitelabel hoặc khuôn JSON
+`{"status":…, "error":…, "path":…}`.
 
 ---
 
@@ -214,10 +218,9 @@ chữ ký `nginx` nào: chính ứng dụng đã chọn gửi con số 502.
 
 ## Những chỗ hay hiểu sai
 
-| Người mới hay nghĩ | Thực tế |
+| Dễ nghĩ là | Thực tế |
 |---|---|
 | Lỗi chứng chỉ chắc do DNS không dịch được tên | Lỗi ở chặng 4 **chứng minh** DNS và kết nối đã chạy tốt |
-| Mở firewall xong mà vẫn lỗi, tức là sửa sai | Timeout đổi thành refused là bằng chứng firewall **đã đúng** |
 | Thấy 502 thì mở code ra đọc | Ứng dụng không nhận request; log trống. Xem ứng dụng còn chạy và listen không |
 | Thấy 500 là Nginx hỏng | 500 do **ứng dụng** viết; Nginx chỉ chuyển ra |
 | Mã 502 thì chắc chắn do Nginx viết | Con số ai cũng gửi được; xem chữ ký |

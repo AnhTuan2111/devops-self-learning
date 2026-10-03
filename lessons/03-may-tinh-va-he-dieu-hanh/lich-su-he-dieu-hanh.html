@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Vì sao có hệ điều hành và process</title>
-<meta name="description" content="Vì sao mọi chương trình phải xin kernel, và vì sao app là một process: chạy theo lô, đa chương trình, time-sharing, Unix và Linux — mỗi bước giải quyết đúng vấn đề mà bước trước để lại.">
-<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<meta name="description" content="Vì sao mọi chương trình phải xin kernel, và vì sao app là một process: chạy theo lô, đa chương trình, time-sharing, Unix và Linux; mỗi bước giải quyết đúng vấn đề mà bước trước để lại.">
+<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="03-lich-su">
@@ -42,13 +42,13 @@ và vấn đề đầu tiên là chuyện tiền.</p>
 <h2 id="truoc-he-dieu-hanh">Trước khi có hệ điều hành: máy chờ người</h2>
 
 <p>Những máy tính điện tử thương mại đầu tiên, vào thập niên 1950, đắt tới mức chỉ viện nghiên cứu,
-cơ quan nhà nước và công ty lớn mua nổi — và chúng không có hệ điều hành. Người dùng đăng ký một khung
+cơ quan nhà nước và công ty lớn mua nổi, và chúng không có hệ điều hành. Người dùng đăng ký một khung
 giờ, tự mang chương trình tới, tự nạp vào máy, chạy, lấy kết quả rồi nhường máy cho người sau. Chương
 trình thường được đưa vào máy dưới dạng <strong>thẻ đục lỗ</strong> (<em>punched card</em>): những tấm
 thẻ giấy cứng, mỗi thẻ thường chứa một dòng lệnh, mã hoá bằng vị trí các lỗ đục.</p>
 
-<p>Cách làm này lãng phí đúng thứ đắt nhất. Trong lúc con người thao tác — đặt bộ thẻ, lắp cuộn băng,
-gạt công tắc, đọc kết quả — CPU không làm gì cả. Vấn đề đầu tiên mà hệ điều hành ra đời để giải quyết
+<p>Cách làm này lãng phí đúng thứ đắt nhất. Trong lúc con người thao tác (đặt bộ thẻ, lắp cuộn băng,
+gạt công tắc, đọc kết quả), CPU không làm gì cả. Vấn đề đầu tiên mà hệ điều hành ra đời để giải quyết
 vì vậy không phải bảo mật hay nhiều người dùng, mà là kinh tế: thời gian của máy đắt hơn thời gian của
 người, nên phải bỏ con người ra khỏi khoảng trống giữa hai chương trình.</p>
 
@@ -65,7 +65,7 @@ người, nên phải bỏ con người ra khỏi khoảng trống giữa hai ch
 
 <p>Cơ chế rất đơn giản. Người lập trình nộp bộ thẻ cho nhân viên vận hành; bộ thẻ của nhiều người được
 xếp nối nhau, thường được chép trước lên băng từ để máy đọc nhanh hơn. Chương trình giám sát lần lượt
-nạp và chạy từng job. Khi một job kết thúc — hoặc chạy quá thời gian cho phép — quyền điều khiển quay
+nạp và chạy từng job. Khi một job kết thúc, hoặc chạy quá thời gian cho phép, quyền điều khiển quay
 về chương trình giám sát, và nó nạp job tiếp theo. Đây là mầm mống đầu tiên của thứ Bài 03 gọi là
 kernel: một chương trình đứng giữa máy và chương trình của người dùng, quyết định chương trình nào
 được chạy tiếp theo.</p>
@@ -84,8 +84,8 @@ kernel: một chương trình đứng giữa máy và chương trình của ngư
 <h3 id="gioi-han-lo">Giới hạn: CPU vẫn chờ, người vẫn chờ</h3>
 
 <p>Chạy theo lô giải quyết được khoảng trống giữa hai job, nhưng để lại hai khoảng trống khác. Thứ nhất,
-mỗi lúc chỉ có một job trong bộ nhớ, nên khi job đó phải chờ băng từ hay máy in — những thiết bị cơ
-khí chậm hơn CPU nhiều bậc — thì CPU lại ngồi không. Thứ hai, người lập trình phải chờ: nộp bộ thẻ
+mỗi lúc chỉ có một job trong bộ nhớ, nên khi job đó phải chờ băng từ hay máy in (những thiết bị cơ
+khí chậm hơn CPU nhiều bậc), thì CPU lại ngồi không. Thứ hai, người lập trình phải chờ: nộp bộ thẻ
 xong, thường phải đợi hàng giờ, có khi tới hôm sau, mới nhận được bản in kết quả. Gõ sai một dấu phẩy
 nghĩa là thêm một vòng chờ nữa.</p>
 
@@ -125,8 +125,8 @@ thiết bị và đổi vùng bảo vệ.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-time-sharing" data-tab="Time-sharing" data-note="nhiều người, một máy">
 
-<p class="panel-intro">Đa chương trình làm máy bận rộn, nhưng người lập trình vẫn chờ hàng giờ. Tab này
-kể lời giải cho khoảng trống thứ hai, và cho thấy khái niệm process thành hình ở đâu.</p>
+<p class="panel-intro">Đa chương trình làm máy bận rộn, nhưng người lập trình vẫn chờ hàng giờ. Lời giải cho
+khoảng trống thứ hai ấy cũng chính là nơi khái niệm process thành hình.</p>
 
 <h2 id="time-sharing">Time-sharing: nhiều người dùng chung một máy, cùng lúc</h2>
 
@@ -162,7 +162,7 @@ vì sau vài giờ.</p>
 </figure>
 
 <p>Một trong những hệ time-sharing đầu tiên là CTSS (<em>Compatible Time-Sharing System</em>) ở MIT,
-đầu thập niên 1960, chạy trên một máy IBM 7094 đã được sửa đổi — đời sau của chiếc 7090 ở Ảnh 1. Từ
+đầu thập niên 1960, chạy trên một máy IBM 7094 đã được sửa đổi, đời sau của chiếc 7090 ở Ảnh 1. Từ
 đó, ý tưởng một máy tính phục vụ nhiều người qua terminal trở thành hướng đi chính của các hệ điều
 hành.</p>
 
@@ -173,12 +173,12 @@ chạy tiếp được đúng từ chỗ đó ở lượt sau, như chưa từng
 hệ điều hành phải giữ lại một bộ trạng thái: lệnh tiếp theo cần chạy, các giá trị đang tính dở trong
 CPU, vùng bộ nhớ của nó, các file nó đang mở, và nó thuộc người dùng nào. Chương trình đang chạy cùng
 bộ trạng thái đó là thứ ta gọi là <strong>process</strong>. Danh sách ấy gần như trùng khớp với Hình 6
-của Bài 03 — <a href="index.html#so-huu">các thuộc tính riêng của một process</a>; chúng tồn tại vì
+của Bài 03, <a href="index.html#so-huu">các thuộc tính riêng của một process</a>; chúng tồn tại vì
 nhiều chương trình phải chia nhau một CPU mà không giẫm lên nhau.</p>
 
 <h3 id="multics">Multics: tham vọng lớn, và Bell Labs rút lui</h3>
 
-<p>Giữa thập niên 1960, MIT, Bell Labs — phòng nghiên cứu của công ty điện thoại AT&amp;T — và hãng
+<p>Giữa thập niên 1960, MIT, Bell Labs (phòng nghiên cứu của công ty điện thoại AT&amp;T) và hãng
 General Electric cùng làm <strong>Multics</strong>, một hệ time-sharing rất tham vọng, nhắm tới việc
 phục vụ rất nhiều người cùng lúc như một tiện ích công cộng. Tham vọng đó kéo theo độ phức tạp. Theo hồi
 ký của Dennis Ritchie, một người của Bell Labs trong dự án, tới khoảng 1968–1969 Multics vẫn chưa cho ra
@@ -189,7 +189,7 @@ vì thế mất một môi trường làm việc mà họ đã quen.</p>
   <span class="label">Nối về Bài 03</span>
   <p>Bộ lập lịch của kernel trong tab <a href="index.html#tai-nguyen">Bốn tài nguyên</a> là hậu duệ trực
   tiếp của time-sharing: CPU được chia theo lượt, nên khi có quá nhiều process thì không ai bị huỷ, chỉ
-  phải chờ lâu hơn tới lượt mình — đó là lý do hết CPU thì app chậm chứ không chết.</p>
+  phải chờ lâu hơn tới lượt mình. Đó là lý do hết CPU thì app chậm chứ không chết.</p>
 </div>
 
 </section>
@@ -197,8 +197,9 @@ vì thế mất một môi trường làm việc mà họ đã quen.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-unix" data-tab="Unix" data-note="1969, Bell Labs">
 
-<p class="panel-intro">Tab này trả lời vì sao process trên server của bạn được sinh ra bằng
-<code>fork()</code> rồi <code>execve()</code>, và vì sao shell chỉ là một process như mọi process khác.</p>
+<p class="panel-intro">Process trên server của bạn được sinh ra bằng <code>fork()</code> rồi
+<code>execve()</code>, và shell chỉ là một process như mọi process khác. Cả hai điều ấy có một năm sinh và
+một nơi sinh cụ thể.</p>
 
 <h2 id="unix-1969">Unix (1969): một hệ thống nhỏ, xây quanh process và file</h2>
 
@@ -210,7 +211,7 @@ vì thế mất một môi trường làm việc mà họ đã quen.</p>
 
 <p>Sau khi Bell Labs rút khỏi Multics, Ken Thompson tìm được một máy tính nhỏ loại PDP-7 ít người dùng
 và bắt đầu viết trên đó một hệ thống nhỏ hơn Multics rất nhiều; Dennis Ritchie cùng làm. Ritchie ghi
-năm ra đời của Unix là 1969. Phiên bản đầu được viết bằng hợp ngữ (<em>assembly</em>) — ngôn ngữ gần với
+năm ra đời của Unix là 1969. Phiên bản đầu được viết bằng hợp ngữ (<em>assembly</em>), ngôn ngữ gần với
 lệnh máy, gắn chặt với một loại CPU cụ thể. Theo chính Ritchie, những thứ đầu tiên được dựng là hệ thống
 file, khái niệm process, rồi một bộ công cụ nhỏ để chép, in, xoá, sửa file, và một trình thông dịch lệnh
 đơn giản: shell.</p>
@@ -242,13 +243,13 @@ file, khái niệm process, rồi một bộ công cụ nhỏ để chép, in, x
 
 <p>Hệ quả của thiết kế này lớn hơn vẻ ngoài của nó. Shell không nằm trong kernel và không có đặc quyền
 gì: nó chạy trong user space, dùng đúng những syscall mà mọi chương trình khác dùng. Vì vậy ai cũng có
-thể viết một shell khác — <code>bash</code> là một trong số đó — mà không phải sửa kernel. Và vì mọi lệnh
+thể viết một shell khác (<code>bash</code> là một trong số đó) mà không phải sửa kernel. Và vì mọi lệnh
 đều được sinh ra bằng <code>fork()</code> từ một process có sẵn, mọi process trên máy xếp thành một cây
 có gốc chung. Đó chính là cây ở Hình 5 của Bài 03, nơi <code>java</code> là con của <code>bash</code>.</p>
 
 <h3 id="viet-lai-bang-c">1973: viết lại kernel bằng C</h3>
 
-<p>Ritchie phát triển ngôn ngữ <strong>C</strong> — ngôn ngữ đủ gần phần cứng để viết hệ điều hành,
+<p>Ritchie phát triển ngôn ngữ <strong>C</strong>, ngôn ngữ đủ gần phần cứng để viết hệ điều hành
 nhưng không gắn với một loại CPU như hợp ngữ. Năm 1973, kernel Unix được viết lại bằng C. Ritchie gọi đó
 là bước ngoặt quan trọng nhất: từ đây hệ thống có hình hài hiện đại, và cũng là lúc Unix có đa chương
 trình. Hệ quả lâu dài là tính khả chuyển: đưa Unix sang một loại máy khác chủ yếu là biên dịch lại mã
@@ -257,13 +258,13 @@ C, chỉ phải viết lại phần nhỏ phụ thuộc phần cứng.</p>
 <p>Unix lan rộng sang các trường đại học và hãng máy tính, và mỗi nơi phát triển một nhánh riêng. Tới
 thập niên 1980 đã có nhiều bản Unix khác nhau, một chương trình viết cho bản này chưa chắc chạy được trên
 bản kia. Lời giải là một chuẩn chung: <strong>POSIX</strong>, bản đầu tiên công bố năm 1988, quy định
-giao diện mà một hệ kiểu Unix phải cung cấp — trong đó có <code>fork()</code>, <code>exec</code>, signal.
+giao diện mà một hệ kiểu Unix phải cung cấp, trong đó có <code>fork()</code>, <code>exec</code>, signal.
 Các man page ở Bài 03 vẫn ghi rõ mỗi syscall, mỗi signal thuộc phiên bản POSIX nào.</p>
 
 <div class="callout">
   <span class="label">Nối về Bài 03</span>
   <p>Ba thứ Bài 03 dùng hằng ngày đến thẳng từ Unix: process sinh ra bằng fork rồi exec, shell là một
-  process trong user space, và mọi process xếp thành cây từ một gốc chung — PID 1.</p>
+  process trong user space, và mọi process xếp thành cây từ một gốc chung: PID 1.</p>
 </div>
 
 </section>
@@ -272,7 +273,7 @@ Các man page ở Bài 03 vẫn ghi rõ mỗi syscall, mỗi signal thuộc phi�
 <section class="tab" id="t-linux" data-tab="Linux" data-note="1991, một kernel tự do">
 
 <p class="panel-intro">Unix giải quyết bài toán kỹ thuật, nhưng để lại một bài toán khác: ai được dùng
-và sửa nó. Tab này cho thấy kernel trên server của bạn ra đời từ đâu.</p>
+và sửa nó. Lời giải cho bài toán ấy chính là kernel đang chạy trên server của bạn.</p>
 
 <h2 id="unix-khong-tu-do">Vấn đề cuối thập niên 1980: Unix không tự do, máy PC thì rẻ</h2>
 
@@ -282,7 +283,7 @@ chạy một hệ thống kiểu Unix, nhưng không có sẵn một hệ như v
 
 <p>Từ năm 1983, Richard Stallman công bố <strong>dự án GNU</strong>: viết lại từ đầu một hệ thống kiểu
 Unix mà ai cũng được dùng, sửa và chia sẻ. Tới đầu thập niên 1990, GNU đã có trình biên dịch, shell
-<code>bash</code> và rất nhiều công cụ dòng lệnh — tức gần đủ phần user space — nhưng chưa có kernel
+<code>bash</code> và rất nhiều công cụ dòng lệnh, tức gần đủ phần user space, nhưng chưa có kernel
 hoàn chỉnh.</p>
 
 <h2 id="linux-1991">Linux (1991): mảnh còn thiếu là một kernel</h2>
@@ -302,11 +303,11 @@ lại sự ghép nối đó bằng chính sơ đồ phân tầng của Bài 03.<
   dự án GNU và các dự án khác.</figcaption>
 </figure>
 
-<p>Theo nghĩa hẹp, <strong>Linux</strong> chỉ là kernel — đúng thứ mà Bài 03 gọi là kernel. Thứ người ta
+<p>Theo nghĩa hẹp, <strong>Linux</strong> chỉ là kernel, đúng thứ mà Bài 03 gọi là kernel. Thứ người ta
 cài lên server, như Ubuntu hay Debian, là kernel Linux cộng rất nhiều chương trình user space đã chọn
 sẵn và đóng gói cùng nhau, gọi là một <strong>bản phân phối</strong> (<em>distribution</em>). Vì Linux đi
-theo các giao diện của POSIX, phần lớn chương trình và khái niệm của Unix — process, fork rồi exec,
-signal, PID 1 — chạy trên Linux gần như nguyên vẹn.</p>
+theo các giao diện của POSIX, phần lớn chương trình và khái niệm của Unix (process, fork rồi exec,
+signal, PID 1) chạy trên Linux gần như nguyên vẹn.</p>
 
 <div class="callout">
   <span class="label">Nối về Bài 03 và Bài 04</span>
@@ -321,8 +322,8 @@ signal, PID 1 — chạy trên Linux gần như nguyên vẹn.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-dau-vet" data-tab="Dấu vết" data-note="còn lại tới hôm nay">
 
-<p class="panel-intro">Tab cuối gom lại những gì của năm bước trên còn nằm trên server hôm nay, và nối
-từng bước về đúng khái niệm của Bài 03.</p>
+<p class="panel-intro">Năm bước trên không chỉ nằm trong sách sử. Mỗi bước còn để lại dấu vết trên
+server hôm nay, ngay trong những lệnh bạn đã gõ ở Bài 03.</p>
 
 <h2 id="con-lai">Những gì còn lại tới hôm nay</h2>
 
@@ -366,7 +367,7 @@ Còn chữ <code>tty</code> trong tên thiết bị terminal của Linux nhắc 
 
 <div class="callout ok">
   <span class="label">Điều phụ lục này muốn để lại</span>
-  <p>Kernel, process, syscall, bộ lập lịch, fork rồi exec — những khái niệm của Bài 03 không phải quy ước
+  <p>Kernel, process, syscall, bộ lập lịch, fork rồi exec: những khái niệm của Bài 03 không phải quy ước
   tuỳ tiện. Mỗi khái niệm là lời giải cho một vấn đề có thật: máy đắt phải bận, nhiều chương trình phải
   chung một bộ nhớ mà không phá nhau, nhiều người phải chung một CPU mà không ai chờ quá lâu. Khi một app
   chết vì hết RAM ở <a href="index.html#khi-chet">tab Process chết</a>, bạn đang thấy đúng cơ chế đã ra
@@ -437,6 +438,6 @@ thêm khung đánh dấu.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c4b75b55"></script>
+<script src="../../assets/app.js?v=2b4e881a"></script>
 </body>
 </html>

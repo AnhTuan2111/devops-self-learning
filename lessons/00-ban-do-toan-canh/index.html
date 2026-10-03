@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00 — Bản đồ toàn cảnh</title>
 <meta name="description" content="Chín chặng một request đi qua, từ lúc gõ địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy: URL gồm những phần nào, chặng nào chạy trên máy người dùng, chặng nào trên server, và vì sao chỉ chặng 8 là code bạn viết.">
-<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00">
@@ -14,18 +14,22 @@
   <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-00</span>
   <span class="spacer"></span>
   <a class="nav" href="phan-tich-output.html">Mổ băng output</a>
+  <a class="nav" href="lich-su-devops.html">Lịch sử DevOps</a>
 </div></nav>
 
 <div class="wrap">
 
 <header class="hero">
-  <p class="eyebrow">Module 0 · Bài 00 · học ngày 21–24/09/2026</p>
+  <p class="eyebrow">Module 0 · Bài 00</p>
   <h1>Bản đồ toàn cảnh: <span class="hl">một request đi qua chín chặng</span></h1>
   <p class="lede">Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request
   đi qua chín chặng. Bài này vẽ tấm bản đồ ấy, và chỉ ra chặng nào thật sự là code của bạn.</p>
   <div class="meta">
     <span class="chip lime"><i class="stt stt-done" aria-hidden="true"></i>Đã xong</span>
+    <span class="chip">3–5 giờ học</span>
+    <span class="chip">Lab: Git Bash</span>
     <a class="chip" href="phan-tich-output.html"><i class="ic ic-r" aria-hidden="true"></i> Mổ băng output thật</a>
+    <a class="chip" href="lich-su-devops.html"><i class="ic ic-r" aria-hidden="true"></i> Phụ lục: lịch sử DevOps</a>
   </div>
 </header>
 
@@ -45,18 +49,17 @@
   đâu đó.</p>
 </div>
 
-<p>Phản xạ tự nhiên của phần lớn lập trình viên backend lúc này là mở IDE ra và đọc lại code. Phản xạ
-ấy dễ hiểu, bởi vì code là thứ duy nhất họ trực tiếp viết ra, hiểu rõ từng dòng và kiểm soát hoàn toàn.
+<p>Phản xạ đầu tiên rất dễ hiểu là mở IDE ra đọc lại code, bởi vì code là thứ ta trực tiếp viết ra,
+hiểu rõ từng dòng và kiểm soát hoàn toàn.
 Thế nhưng nếu code không đổi một dòng nào kể từ hôm qua, mà hôm qua web vẫn chạy, thì một lập luận loại
 trừ rất đơn giản cho thấy nguyên nhân gần như chắc chắn không nằm trong code. Một hệ thống đang chạy tốt
 chỉ hỏng khi <em>có thứ gì đó thay đổi</em>; thứ bạn viết không đổi, vậy thứ đã đổi phải nằm ở chỗ khác.</p>
 
 <p>"Chỗ khác" ấy có một tên gọi chung: <strong>hạ tầng</strong> (infrastructure), tức mọi thứ nằm giữa
 người dùng và code của bạn, gồm đường mạng, những máy chủ, và các chương trình chạy trước hoặc sau ứng
-dụng. Khó khăn là với một người chỉ quen viết code, phần hạ tầng này là một vùng trống. Trong đầu không
-có hình dung nào về những gì một lời yêu cầu phải đi qua trước khi chạm tới controller, nên khi có sự cố
-người ta chỉ biết tìm ở nơi duy nhất mình thuộc đường. Vấn đề vì vậy không phải là năng lực, mà là
-thiếu một tấm bản đồ.</p>
+dụng. Với người quen viết code, phần hạ tầng này thường là một vùng trống: trong đầu chưa có hình dung
+nào về những gì một lời yêu cầu phải đi qua trước khi chạm tới controller, nên khi có sự cố, ta chỉ biết
+tìm ở nơi mình thuộc đường. Vấn đề vì vậy không phải là năng lực, mà là thiếu một tấm bản đồ.</p>
 
 <p>Lời yêu cầu nói ở trên có tên chuẩn là <strong>request</strong>: thông điệp mà trình duyệt gửi đi để
 xin một thứ gì đó, chẳng hạn "cho tôi dữ liệu của người dùng số 42". Bạn đã viết code xử lý request
@@ -73,6 +76,15 @@ dùng. Mỗi bước request phải đi qua, ta gọi là một <strong>chặng<
 <figcaption><b>Hình 1</b> Hai đầu bạn đã biết, và khoảng giữa bài này sẽ lấp đầy.</figcaption>
 </figure>
 
+<div class="callout" id="chu-devops">
+  <span class="label">Chữ DevOps trong tên khoá học</span>
+  <p>Nhìn được trọn khoảng giữa ấy, hiểu cả code lẫn những gì nằm quanh nó, chính là điều cái tên
+  <strong>DevOps</strong> muốn nói: người viết phần mềm (development) và người giữ cho nó chạy
+  (operations) không còn là hai thế giới tách rời. Định nghĩa đầy đủ nằm ở tab
+  <a href="#devops">Phía server</a>, khi bản đồ đã vẽ xong và bạn thấy rõ phần nào không phải code của
+  mình.</p>
+</div>
+
 <h2 id="cau-hoi-bai">Câu hỏi của bài</h2>
 
 <p class="lede">Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi
@@ -84,7 +96,8 @@ qua những chặng nào, và chặng nào thật sự là code của bạn?</p>
   <li><strong>Một URL nói gì</strong>, phần nào dành cho hạ tầng, phần nào dành cho code?</li>
   <li><strong>Request đi qua những chặng nào</strong>, chặng nào chạy trên máy người dùng, chặng nào
   chạy trên server?</li>
-  <li><strong>Chặng nào là code của bạn</strong>, và vì sao điều đó quyết định chỗ đi tìm khi có sự cố?</li>
+  <li><strong>Chặng nào là code của bạn</strong>, vì sao điều đó quyết định chỗ đi tìm khi có sự cố, và
+  ai lo phần còn lại?</li>
 </ol>
 
 <div class="table-scroll">
@@ -94,7 +107,7 @@ qua những chặng nào, và chặng nào thật sự là code của bạn?</p>
   <tbody>
     <tr><td>1. Một URL nói gì</td><td><a href="#url">URL</a></td></tr>
     <tr><td>2. Request đi qua những chặng nào</td><td><a href="#ban-do">Bản đồ</a> (toàn cảnh), rồi <a href="#may-nguoi-dung">Máy người dùng</a> và <a href="#phia-server">Phía server</a> (từng chặng)</td></tr>
-    <tr><td>3. Chặng nào là code của bạn</td><td><a href="#phia-server">Phía server</a></td></tr>
+    <tr><td>3. Chặng nào là code của bạn, ai lo phần còn lại</td><td><a href="#phia-server">Phía server</a></td></tr>
     <tr><td>Nhìn tận mắt các chặng bằng output thật</td><td><a href="#lab">Lab</a></td></tr>
   </tbody>
 </table>
@@ -104,8 +117,9 @@ qua những chặng nào, và chặng nào thật sự là code của bạn?</p>
 
 <p>Đây là bài đầu tiên, nên chỉ cần biết viết và chạy một ứng dụng Spring Boot trên máy mình: viết
 được một controller có <code>@GetMapping</code>, chạy ứng dụng, rồi mở
-<code>http://localhost:8080</code> trong trình duyệt để xem kết quả. Mọi thuật ngữ hạ tầng khác được
-giới thiệu ngay trong bài, đúng chỗ chúng xuất hiện lần đầu.</p>
+<code>http://localhost:8080</code> trong trình duyệt để xem kết quả. Tôi bắt đầu khoá học này với đúng
+chừng ấy: viết Spring Boot hằng ngày, nhưng chưa biết gì về những thứ nằm ngoài code. Mọi thuật ngữ hạ tầng
+khác được giới thiệu ngay trong bài, đúng chỗ chúng xuất hiện lần đầu.</p>
 
 </section>
 
@@ -114,8 +128,8 @@ giới thiệu ngay trong bài, đúng chỗ chúng xuất hiện lần đầu.<
      ===================================================================== -->
 <section class="tab" id="url" data-tab="URL" data-note="phần nào cho hạ tầng, phần nào cho code">
 
-<p>Tab này trả lời câu hỏi thứ nhất: một URL nói gì. Mọi hành trình của request bắt đầu từ chuỗi ký tự
-người dùng gõ hoặc bấm vào, nên đó cũng là chỗ bắt đầu của tấm bản đồ.</p>
+<p>Mọi hành trình của request bắt đầu từ chuỗi ký tự người dùng gõ vào thanh địa chỉ, nên tấm bản đồ
+cũng bắt đầu từ đó, với câu hỏi thứ nhất: một URL nói gì, và phần nào của nó là việc của bạn?</p>
 
 <h2 id="client-server">Hai đầu của một request: client và server</h2>
 
@@ -218,8 +232,8 @@ ngang qua chính giữa URL: ba phần đầu là việc của hạ tầng, hai 
   <p>Một URL gồm năm phần. <strong>Scheme, host và port là việc của hạ tầng</strong>: chúng quyết định
   request được mã hoá hay không, đi tới máy nào, và chương trình nào trên máy đó nhận. <strong>Path và
   query là việc của code bạn.</strong></p>
-  <p>Còn treo: hạ tầng xử lý ba phần đầu qua những bước nào, theo thứ tự nào? Tab Bản đồ vẽ toàn bộ các
-  bước ấy trên một hình.</p>
+  <p>Ba phần đầu là việc của hạ tầng, nhưng hạ tầng xử lý chúng qua những bước nào, theo thứ tự nào?
+  Tab Bản đồ vẽ các bước ấy trên một hình.</p>
 </div>
 
 </section>
@@ -229,9 +243,9 @@ ngang qua chính giữa URL: ba phần đầu là việc của hạ tầng, hai 
      ===================================================================== -->
 <section class="tab" id="ban-do" data-tab="Bản đồ" data-note="chín chặng, hai nửa">
 
-<p>Tab này trả lời câu hỏi thứ hai ở mức toàn cảnh: request đi qua những chặng nào. Hình 4 dưới đây là
-xương sống của cả bài, và của cả lộ trình: mọi bài sau đều gắn vào một hoặc vài chặng trên hình này. Hai
-tab tiếp theo đi lần lượt từng chặng.</p>
+<p>Biết URL nói gì rồi, giờ hãy theo request đi một vòng: từ lúc trình duyệt tách xong URL tới lúc
+controller của bạn chạy, nó ghé qua những đâu? Hình 4 dưới đây trả lời ở mức toàn cảnh. Bạn sẽ còn gặp lại
+hình này ở gần như mọi bài sau, vì mỗi công cụ của lộ trình gắn vào một hoặc vài chặng trên nó.</p>
 
 <h2 id="vi-sao-chin-chang">Vì sao trên máy bạn chỉ thấy vài bước, còn ngoài đời có chín</h2>
 
@@ -323,16 +337,15 @@ của request, kể cả cookie đăng nhập, đi qua Internet ở dạng đã 
 
 <p>Cách tổ chức này có tên chuyên môn là <strong>phân tầng</strong> (layering): mỗi tầng chỉ dựa vào
 dịch vụ của tầng ngay bên dưới, nên có thể sửa hoặc thay một tầng mà không phải viết lại các tầng khác.
-Mỗi chặng trên bản đồ vì vậy được định nghĩa bởi một chuẩn riêng, viết độc lập với nhau: DNS ở RFC 1034
-và 1035, TCP ở RFC 9293, TLS 1.3 ở RFC 8446, ngữ nghĩa của HTTP ở RFC 9110.</p>
+Mỗi chặng trên bản đồ vì vậy được định nghĩa bởi một văn bản chuẩn riêng, viết độc lập với nhau; số hiệu
+của từng văn bản nằm ở mục Nguồn đọc thêm cuối bài.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
   <p>Request đi qua <strong>chín chặng</strong>. Năm chặng đầu chạy trên máy người dùng, bốn chặng sau
   chạy trên server, và ở giữa là Internet. Bốn trong chín chặng (DNS, TLS, firewall, Nginx) chỉ xuất hiện
   khi ứng dụng rời máy dev để lên một server thật.</p>
-  <p>Còn treo: mỗi chặng thật sự làm gì, và hỏng thì trông ra sao? Tab Máy người dùng đi qua năm chặng
-  đầu.</p>
+  <p>Mỗi chặng thật sự làm gì, và khi hỏng thì trông ra sao? Tab Máy người dùng đi qua năm chặng đầu.</p>
 </div>
 
 </section>
@@ -342,9 +355,9 @@ và 1035, TCP ở RFC 9293, TLS 1.3 ở RFC 8446, ngữ nghĩa của HTTP ở RF
      ===================================================================== -->
 <section class="tab" id="may-nguoi-dung" data-tab="Máy người dùng" data-note="chặng 1–5">
 
-<p>Tab này đi qua nửa trên của Hình 4, chặng <span class="stg">1</span> tới <span class="stg">5</span>: những việc diễn ra trên máy người dùng,
-trước khi một byte nào của request tới được server. Mục tiêu không phải học hết từng chặng, mà hiểu mỗi
-chặng làm gì để nhận ra nó khi nó hỏng.</p>
+<p>Nửa trên của Hình 4, chặng <span class="stg">1</span> tới <span class="stg">5</span>, diễn ra trên chính máy người dùng, trước khi một byte nào của
+request tới được server. Hãy đi chậm qua năm chặng ấy. Mục tiêu không phải học hết từng chặng, mà nhận ra
+mỗi chặng khi nó hỏng.</p>
 
 <h2 id="chang-1">Chặng <span class="stg">1</span>: trình duyệt tách URL</h2>
 
@@ -362,7 +375,8 @@ lời gốc dưới dạng các <strong>bản ghi DNS</strong>: mỗi bản ghi 
 chỉ này.</p>
 
 <p>Bạn có thể tự hỏi DNS bằng lệnh <code>nslookup</code>, có sẵn trên cả Windows lẫn Linux. Đây là output
-thật chạy trên máy người học ở Lab 1 (tên router trong nhà đã được ẩn):</p>
+thật khi tôi chạy Lab 1 trên máy mình ngày 24/09/2026, trong Git Bash trên Windows (tên router nhà tôi đã
+được ẩn):</p>
 
 <figure class="fig">
 <pre><code>$ nslookup github.com
@@ -415,8 +429,8 @@ hai máy trao đổi vài gói tin để thoả thuận mở một <em>kết n�
 lại gói bị mất và xếp lại đúng thứ tự. Kết nối được mở tới một địa chỉ IP và một port cụ thể, ở đây là
 <code>203.0.113.10</code> và port 443.</p>
 
-<p>Chặng <span class="stg">3</span> là chặng người mới vấp nhiều nhất, và nó hỏng theo hai kiểu rất khác nhau: bị từ chối ngay
-lập tức, hoặc chờ mãi không thấy trả lời. Bài 01 dành trọn cho chặng này.</p>
+<p>Chặng <span class="stg">3</span> là chỗ nhiều người vấp đầu tiên khi đưa ứng dụng cho người khác dùng, và nó hỏng theo hai kiểu
+rất khác nhau: bị từ chối ngay lập tức, hoặc chờ mãi không thấy trả lời. Bài 01 dành trọn cho chặng này.</p>
 
 <h2 id="chang-4">Chặng <span class="stg">4</span>: TLS mã hoá và chứng minh danh tính</h2>
 
@@ -434,7 +448,8 @@ vệ được gì.</p>
 trình duyệt và hệ điều hành đã tin sẵn từ khi được cài đặt. Trình duyệt kiểm tra chữ ký của CA, kiểm tra
 tên miền và hạn dùng, rồi mới tiếp tục.</p>
 
-<p>Ở Lab 3, người học đã đọc chứng chỉ thật của <code>example.com</code> bằng lệnh <code>openssl</code>:</p>
+<p>Lab 3 đọc chứng chỉ thật của <code>example.com</code> bằng lệnh <code>openssl</code>. Đây là kết quả khi tôi
+chạy nó ngày 24/09/2026:</p>
 
 <figure class="fig">
 <pre><code>subject=CN=example.com
@@ -448,11 +463,6 @@ cấp cho ai (<code>subject</code>), ai ký (<code>issuer</code>), hiệu lực 
 <p>Hai dòng cuối cho thấy chứng chỉ này chỉ sống 90 ngày, từ 29/07 tới 27/10. Chứng chỉ có hạn dùng, nên
 một website có thể hỏng ở chặng <span class="stg">4</span> vào đúng ngày chứng chỉ hết hạn, dù không ai đụng vào gì. Vì sao chứng
 chỉ được cấp ngắn hạn như vậy, và làm sao gia hạn tự động, là nội dung của Bài 20.</p>
-
-<p>Một hệ quả của thứ tự chặng đáng biết ngay: tên miền thường không được giấu. Câu hỏi DNS ở chặng
-<span class="stg">2</span> thường gửi đi không mã hoá, và tên miền thường được ghi rõ trong bước mở đầu của TLS để server biết
-phải trình chứng chỉ nào. Nói cách khác, HTTPS giấu <em>bạn làm gì</em> trên một website, nhưng thường
-không giấu được <em>bạn đang vào website nào</em>.</p>
 
 <h2 id="chang-5">Chặng <span class="stg">5</span>: gửi request HTTP</h2>
 
@@ -480,8 +490,7 @@ cho server biết request này dành cho website nào. Ở tab sau, bạn sẽ t
   <p>Trên máy người dùng, request đi qua năm chặng: <strong>tách URL, hỏi DNS, mở kết nối TCP, bắt tay
   TLS, gửi HTTP</strong>. Chặng nào hỏng thì hành trình dừng ở đó, và mọi chặng phía sau, kể cả code của
   bạn, không hề biết có request.</p>
-  <p>Còn treo: sau chặng <span class="stg">5</span>, gói tin rời máy người dùng. Nó đi qua những đâu để tới code của bạn? Tab
-  Phía server trả lời.</p>
+  <p>Sau chặng <span class="stg">5</span>, gói tin rời máy người dùng. Nó còn đi qua những đâu trước khi tới code của bạn?</p>
 </div>
 
 </section>
@@ -491,8 +500,8 @@ cho server biết request này dành cho website nào. Ở tab sau, bạn sẽ t
      ===================================================================== -->
 <section class="tab" id="phia-server" data-tab="Phía server" data-note="chặng 6–9, và chặng của bạn">
 
-<p>Tab này đi qua nửa dưới của Hình 4, chặng <span class="stg">6</span> tới <span class="stg">9</span>, rồi trả lời câu hỏi thứ ba: chặng nào là code của
-bạn. Nhưng trước khi tới server, request phải băng qua phần giữa tấm bản đồ.</p>
+<p>Request đã rời máy người dùng. Phần này theo nó qua Internet, qua chặng <span class="stg">6</span> tới <span class="stg">9</span> trên server, rồi dừng
+lại ở câu hỏi thứ ba của bài: trong chín chặng ấy, chặng nào là của bạn, và ai lo những chặng còn lại?</p>
 
 <h2 id="internet">Internet: phần bạn không kiểm soát</h2>
 
@@ -531,8 +540,8 @@ người dùng không bao giờ phải biết con số 8080 tồn tại.</p>
 
 <figure class="fig photo shot">
   <img src="img/nginx-welcome.webp" width="1280" height="600" loading="lazy" alt="Trang trắng với tiêu đề lớn Welcome to nginx! và vài dòng hướng dẫn, kết thúc bằng Thank you for using nginx.">
-  <figcaption><b>Ảnh 4</b> Trang chào mặc định của Nginx, chụp từ Nginx 1.30.5 chạy thật trên máy người
-  viết. Ngay sau khi cài, Nginx đã nhận request và tự trả lời bằng một trang có sẵn, chưa chuyển gì vào ứng
+  <figcaption><b>Ảnh 4</b> Trang chào mặc định của Nginx, chụp từ Nginx 1.30.5 tôi cài và chạy thật trên
+  máy mình. Ngay sau khi cài, Nginx đã nhận request và tự trả lời bằng một trang có sẵn, chưa chuyển gì vào ứng
   dụng nào. Chặng <span class="stg">7</span> vì vậy tự trả lời được một số request mà không cần tới chặng <span class="stg">8</span>.</figcaption>
 </figure>
 
@@ -556,17 +565,46 @@ qua Internet, về trình duyệt.</p>
 
 <p>Giờ có thể trả lời câu hỏi thứ ba. Trong chín chặng, chỉ chặng <span class="stg">8</span> chứa code bạn viết. Tám chặng
 còn lại là hạ tầng: chương trình của người khác, cấu hình của người vận hành, hoặc mạng của các nhà cung
-cấp. Mỗi chặng ấy có thể hỏng mà code của bạn không đổi một dòng.</p>
+cấp. Mỗi chặng ấy có thể hỏng mà code của bạn không đổi một dòng. Vì vậy khi nhận tin nhắn "web không vào
+được" mà code không đổi dòng nào từ hôm qua, nơi đầu tiên cần nghi là tám chặng hạ tầng, không phải chặng
+bạn quen nhất.</p>
+
+<h2 id="devops">DevOps: ai lo cho tám chặng còn lại</h2>
+
+<p>Câu trả lời ấy kéo theo một câu hỏi khác: nếu tám chặng không phải code của bạn, thì ai lo cho chúng?
+Trong một thời gian dài, câu trả lời thường là một đội khác. Đội phát triển (<em>development</em>, gọi tắt
+là dev) viết ứng dụng ở chặng <span class="stg">8</span>; đội vận hành (<em>operations</em>, gọi tắt là ops) giữ server, mạng,
+firewall, Nginx và database. Dev viết xong thì bàn giao, ops nhận về và đưa lên server. Cách chia ấy lộ
+điểm yếu đúng lúc có sự cố: dev chỉ nhìn thấy chặng <span class="stg">8</span> nên kết luận "lỗi ở server", ops thấy server vẫn
+chạy nên kết luận "lỗi ở code", và không ai nhìn được cả chín chặng cùng lúc.</p>
+
+<div class="callout define">
+  <span class="label">Định nghĩa</span>
+  <p><strong>DevOps</strong> là cách tổ chức công việc trong đó một nhóm chịu trách nhiệm cho phần mềm từ
+  lúc viết tới lúc nó chạy ổn định trước người dùng, thay vì chia đôi trách nhiệm cho hai đội ngăn nhau
+  bằng một lần bàn giao. Nó dựa trên ba điều: người viết ứng dụng hiểu và cùng chịu trách nhiệm cho hạ tầng
+  mà ứng dụng chạy trên đó; những bước lặp lại giữa code và server được tự động hoá; và hệ thống được đo đạc
+  để biết nó đang tốt lên hay xấu đi.</p>
+</div>
+
+<p>DevOps không có một văn bản chuẩn như các RFC; định nghĩa trên là cách hiểu chung của người trong nghề.
+Cái tên ra đời năm 2009, từ một hội nghị ở Bỉ ghép hai chữ development và operations. Vì sao hai đội từng
+tách ra, vì sao cách làm ấy hết dùng được, và ngày nay người ta đo DevOps bằng gì, được kể trong phụ lục
+<a href="lich-su-devops.html">Lịch sử DevOps</a>.</p>
+
+<p>Với bạn, định nghĩa ấy có một hệ quả rất cụ thể: phần còn lại của lộ trình là lần lượt nhận trách nhiệm
+cho tám chặng kia. Bạn sẽ đóng gói ứng dụng để nó chạy giống nhau trên mọi máy; tự đưa nó lên một server
+thật, đặt Nginx, tên miền và HTTPS phía trước; tự động hoá chính những bước vừa làm tay; rồi giữ nó chạy
+ổn định trên nhiều máy, có số liệu và cảnh báo. Bài nào cũng bắt đầu từ tấm bản đồ này, vì không thể chịu
+trách nhiệm cho một chặng mà mình không nhìn thấy.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
-  <p><strong>Chín chặng. Chỉ chặng <span class="stg">8</span> là code bạn viết.</strong></p>
-  <p>Vì vậy khi nhận tin nhắn "web không vào được" mà code không đổi dòng nào từ hôm qua, nơi đầu tiên cần
-  nghi là tám chặng hạ tầng, không phải chặng bạn quen nhất. Đó cũng là lý do nghề vận hành hệ thống tồn
-  tại: phải có người hiểu và chịu trách nhiệm cho tám chặng mà lập trình viên ứng dụng thường không nhìn
-  thấy.</p>
-  <p>Còn treo: nói "nghi tám chặng kia" thì dễ, nhưng làm sao nhìn thấy chúng? Tab Lab cho bạn tự quan sát
-  các chặng bằng output thật.</p>
+  <p><strong>Chín chặng. Chỉ chặng <span class="stg">8</span> là code bạn viết.</strong> Tám chặng còn lại là hạ tầng, và là nơi
+  đầu tiên cần nghi khi code không đổi mà web vẫn hỏng. DevOps là cách làm để một nhóm chịu trách nhiệm cho
+  cả chín chặng, thay vì chia đôi cho hai đội.</p>
+  <p>Nhưng muốn chịu trách nhiệm thì trước hết phải nhìn thấy. Làm sao thấy tận mắt những chặng không phải
+  code của mình? Tab Lab làm việc đó bằng output thật.</p>
 </div>
 
 </section>
@@ -576,9 +614,9 @@ cấp. Mỗi chặng ấy có thể hỏng mà code của bạn không đổi m�
      ===================================================================== -->
 <section class="tab" id="lab" data-tab="Lab" data-note="nhìn tận mắt từng chặng">
 
-<p>Tab này biến tấm bản đồ thành thứ nhìn thấy được. Ba lab dưới đây soi vào chặng <span class="stg">2</span>, <span class="stg">3</span>, <span class="stg">4</span>, <span class="stg">5</span> và
-<span class="stg">7</span> bằng output thật; bước tự gây lỗi nằm ngay ở Lab 1. Chạy tất cả trong <strong>Git Bash</strong>
-trên Windows.</p>
+<p>Tấm bản đồ chỉ thật sự thuộc về bạn khi bạn tự thấy các chặng của nó trên máy mình. Ba lab dưới đây
+soi vào chặng <span class="stg">2</span>, <span class="stg">3</span>, <span class="stg">4</span>, <span class="stg">5</span> và dấu vết của chặng <span class="stg">7</span> bằng output thật; bước tự gây lỗi nằm ngay ở
+Lab 1. Chạy tất cả trong <strong>Git Bash</strong> trên Windows.</p>
 
 <pre><code># Lab 1 — chặng 2: DNS
 nslookup github.com
@@ -604,7 +642,7 @@ nào được mở, nên mọi suy đoán kiểu "server chết" hay "firewall c
 <p>Cờ <code>-v</code> (verbose) bảo <code>curl</code> kể lại từng bước nó làm. Ký tự đầu mỗi dòng cho
 biết dòng đó thuộc loại nào: <code>*</code> là lời <code>curl</code> tự kể (đang hỏi DNS, đang kết nối,
 đang bắt tay TLS), <code>&gt;</code> là dữ liệu gửi đi, <code>&lt;</code> là dữ liệu nhận về. Đây là
-những dòng chính trong output thật của người học, xếp theo chặng:</p>
+những dòng chính trong output thật trên máy tôi ngày 24/09/2026, xếp theo chặng:</p>
 
 <figure class="fig">
 <pre class="diagram"><code>* IPv4: 104.20.23.154, 172.66.147.243      ← chặng 2: DNS đã trả lời
@@ -631,7 +669,9 @@ output), nên lab này dùng <code>openssl</code>, một bộ công cụ mật m
 có ở Hình 7. Câu lệnh dài vì nó nối hai lệnh <code>openssl</code> với nhau; dấu <code>|</code> (đưa output
 của lệnh trước làm input của lệnh sau) và phần <code>2&gt;/dev/null</code> (giấu các dòng chẩn đoán) được
 giải nghĩa ở Bài 04, khi bạn học shell. Câu hỏi của lab: chứng chỉ do ai ký, và còn bao nhiêu ngày thì hết
-hạn? Ngày chạy lab là 24/09/2026, nên câu trả lời là 33 ngày.</p>
+hạn? Với output ở Hình 7, chạy ngày 24/09/2026, câu trả lời là 33 ngày. Chạy hôm nay, bạn sẽ thấy một
+chứng chỉ khác với những ngày khác, vì chứng chỉ được thay định kỳ trước khi hết hạn; cách đọc thì giữ
+nguyên.</p>
 
 <h2 id="lab-ve-lai">Tự vẽ lại bản đồ</h2>
 
@@ -666,19 +706,20 @@ không gắn được với một dòng output nào, đó là chặng các bài 
   <li>Nói được khi gặp <code>Non-existent domain</code> thì request đã dừng ở chặng nào</li>
   <li>Đọc được ai ký chứng chỉ của một website và khi nào nó hết hạn</li>
   <li>Nói được vì sao chỉ chặng <span class="stg">8</span> là code của bạn, và điều đó đổi cách bạn tìm lỗi ra sao</li>
+  <li>Nói được DevOps là gì bằng lời của mình, và nó liên quan gì tới tám chặng không phải code của bạn</li>
 </ul>
 
 <h2 id="hieu-sai">Những chỗ hay hiểu sai</h2>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 4</b> Những chỗ người mới hay hiểu sai trong phạm vi bài này.</caption>
-  <thead><tr><th>Người mới hay nghĩ</th><th>Thực tế</th><th>Xem lại</th></tr></thead>
+  <caption><b>Bảng 4</b> Những cách hiểu nghe hợp lý nhưng sai, trong phạm vi bài này.</caption>
+  <thead><tr><th>Dễ nghĩ là</th><th>Thực tế</th><th>Xem lại</th></tr></thead>
   <tbody>
     <tr><td>Web không vào được thì mở code ra xem trước.</td><td>Code không đổi thì nguyên nhân thường nằm ở tám chặng hạ tầng.</td><td><a href="#chang-cua-ban">Phía server</a></td></tr>
     <tr><td>Chứng chỉ là thứ gắn tên miền với địa chỉ IP.</td><td>Gắn tên với địa chỉ là việc của DNS ở chặng <span class="stg">2</span>. Chứng chỉ ở chặng <span class="stg">4</span> chứng minh danh tính, và không chứa địa chỉ IP nào.</td><td><a href="#chang-4">Chặng 4</a></td></tr>
     <tr><td><code>nslookup</code> tự biết địa chỉ của mọi tên miền.</td><td>Nó chỉ hỏi một máy chủ DNS rồi in lại câu trả lời; dòng <code>Server:</code> cho biết ai đã trả lời.</td><td><a href="#chang-2">Chặng 2</a></td></tr>
-    <tr><td>HTTPS giấu luôn việc bạn đang vào website nào.</td><td>HTTPS giấu nội dung; tên miền thường đã lộ ở câu hỏi DNS và ở bước mở đầu của TLS.</td><td><a href="#chang-4">Chặng 4</a></td></tr>
+    <tr><td>DevOps là một công cụ, hoặc tên một chức danh.</td><td>DevOps là một cách tổ chức công việc: một nhóm chịu trách nhiệm từ lúc viết code tới lúc nó chạy ổn định. Công cụ chỉ giúp làm việc đó.</td><td><a href="#devops">DevOps</a></td></tr>
   </tbody>
 </table>
 </div>
@@ -689,15 +730,16 @@ không gắn được với một dòng output nào, đó là chặng các bài 
 request đi qua những chặng nào, và chặng nào thật sự là code của bạn? Câu trả lời là chín chặng: trình
 duyệt, DNS, mở kết nối, mã hoá, gửi request, firewall, reverse proxy, ứng dụng, database. Năm chặng đầu
 diễn ra trên máy người dùng, bốn chặng sau trên server, và ở giữa là Internet. Chỉ chặng <span class="stg">8</span> là code bạn
-viết; tám chặng còn lại là hạ tầng, và phần lớn sự cố nằm ở đó.</p>
+viết; tám chặng còn lại là hạ tầng, và phần lớn sự cố nằm ở đó. DevOps là cách làm để một nhóm chịu
+trách nhiệm cho cả chín chặng ấy, và lộ trình này đi qua từng chặng một.</p>
 
 <p>Từ nay, mỗi công cụ trong lộ trình sẽ có một chỗ cụ thể để gắn vào tấm bản đồ này, với một trách nhiệm
 cụ thể và một kiểu hỏng cụ thể, thay vì là một cái tên rời rạc để học thuộc.</p>
 
 <div class="callout" id="cau-hoi-tiep">
   <span class="label">Câu hỏi cho bài sau</span>
-  <p>Trong chín chặng, chặng <span class="stg">3</span>, mở kết nối tới đúng máy và đúng chương trình, là chỗ người mới vấp đầu
-  tiên, và họ vấp ngay trên máy dev chứ chưa cần tới server. Từ đó sinh ra câu hỏi của bài tiếp theo:</p>
+  <p>Trong chín chặng, chặng <span class="stg">3</span>, mở kết nối tới đúng máy và đúng chương trình, là chỗ dễ vấp đầu tiên,
+  và nó có thể hỏng ngay trên máy dev, chưa cần tới server. Từ đó sinh ra câu hỏi của bài tiếp theo:</p>
   <p><strong>App chạy ngon khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì
   không được. Chặng mở kết nối hỏng ở đâu?</strong></p>
   <p><a href="../01-ip-port-listen-firewall/"><i class="ic ic-r" aria-hidden="true"></i> Bài 01 · IP, port, listen, firewall</a></p>
@@ -726,12 +768,12 @@ ngay; dùng chúng để tra cứu khi một bài sau đi sâu vào chặng tư�
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do người viết tự chụp.</p>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b>Ví dụ thành phần URI, RFC 3986 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc3986.html">rfc-editor.org</a>, 30/09/2026.</li>
   <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Router gia đình Linksys WRT54G</a> — Evan-Amos, Wikimedia Commons, public domain.</li>
   <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg">Mẫu cáp quang biển</a> — Lonnie Hagadorn, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
-  <li><b>Ảnh 4</b>Trang chào mặc định của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy người viết, 30/09/2026.</li>
+  <li><b>Ảnh 4</b>Trang chào mặc định của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy tôi, 30/09/2026.</li>
 </ol>
 
 </section>
@@ -755,6 +797,6 @@ ngay; dùng chúng để tra cứu khi một bài sau đi sâu vào chặng tư�
 
 </div>
 
-<script src="../../assets/app.js?v=c4b75b55"></script>
+<script src="../../assets/app.js?v=2b4e881a"></script>
 </body>
 </html>

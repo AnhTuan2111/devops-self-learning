@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Lịch sử WSL</title>
 <meta name="description" content="Vì sao Windows chạy được Linux: máy ảo đầy đủ, Cygwin và MSYS2, WSL 1 dịch syscall, rồi WSL 2 với kernel Linux thật — mỗi bước giải quyết vấn đề gì mà bước trước chưa giải quyết được.">
-<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="04-wsl">
@@ -69,7 +69,8 @@ quay về hướng thứ nhất, nhưng sửa đúng những điểm yếu đã 
 <!-- ================================================================== -->
 <section class="tab" id="t-may-ao" data-tab="Máy ảo đầy đủ" data-note="chạy được, nhưng nặng">
 
-<p class="panel-intro">Tab này kể cách giải đầu tiên và vì sao nó chưa đủ: chạy cả một máy Linux trong máy ảo.</p>
+<p class="panel-intro">Cách giải đầu tiên cũng là cách hiển nhiên nhất: không bắt Windows hiểu Linux nữa, mà chạy
+hẳn một máy Linux bên trong máy ảo. Nó chạy được, nhưng chưa đủ.</p>
 
 <h2 id="may-ao-truyen-thong">Máy ảo truyền thống</h2>
 
@@ -101,8 +102,8 @@ máy ảo có địa chỉ mạng riêng; RAM cấp cho máy ảo thường bị
 <!-- ================================================================== -->
 <section class="tab" id="t-cygwin" data-tab="Cygwin, MSYS2" data-note="biên dịch lại cho Windows">
 
-<p class="panel-intro">Tab này kể hướng thứ hai, nhẹ hơn máy ảo nhiều, và dấu vết mà bạn đã dùng mỗi ngày từ Bài
-00 mà có thể không biết: Git Bash.</p>
+<p class="panel-intro">Hướng thứ hai nhẹ hơn máy ảo nhiều, và nó để lại một dấu vết bạn đã dùng mỗi ngày từ Bài
+00 mà có thể không để ý: chính Git Bash.</p>
 
 <h2 id="cygwin">Cygwin: mang công cụ Unix sang, bằng cách biên dịch lại</h2>
 
@@ -159,7 +160,8 @@ từ môi trường dựng trên Cygwin, mọi tham số "trông giống đườ
 <!-- ================================================================== -->
 <section class="tab" id="t-wsl1" data-tab="WSL 1" data-note="2016: dịch syscall">
 
-<p class="panel-intro">Tab này kể hướng thứ ba: không biên dịch lại gì cả, mà dịch syscall lúc chương trình chạy.</p>
+<p class="panel-intro">Hướng thứ ba táo bạo hơn: không biên dịch lại gì cả, mà dịch từng syscall ngay lúc chương
+trình chạy.</p>
 
 <h2 id="wsl1-dich-syscall">WSL 1: chạy tệp ELF nguyên bản, dịch từng syscall</h2>
 
@@ -172,7 +174,7 @@ phải biên dịch lại gì; bash của Ubuntu, nguyên tệp như trên serve
 <figure class="fig photo shot">
   <img src="img/wsl1-tong-quan-2016.webp" width="1428" height="800" loading="lazy" alt="Đoạn đầu mục Windows Subsystem for Linux trong bài tổng quan năm 2016, liệt kê ba thành phần; dòng về driver lxss.sys và lxcore.sys khoanh đỏ, đoạn nói driver dịch system call của Linux sang NT API khoanh lam.">
   <figcaption><b>Ảnh 1</b> Bài tổng quan WSL năm 2016, nay lưu trong kho lưu trữ blog của Microsoft. Ba thành phần của
-  WSL 1, trong đó <span class="kw"><i class="key k-red" aria-hidden="true"></i>driver lxss.sys và lxcore.sys</span>
+  WSL 1, trong đó dòng <span class="kw"><i class="key k-red" aria-hidden="true"></i>đỏ</span> về driver lxss.sys và lxcore.sys
   "giả lập một kernel Linux bằng cách dịch syscall Linux", và <span class="kw"><i class="key k-blue" aria-hidden="true"></i>đoạn
   giải thích</span>: các driver này dịch system call của Linux sang NT API.</figcaption>
 </figure>
@@ -211,8 +213,8 @@ thích syscall đầy đủ.</p>
 <!-- ================================================================== -->
 <section class="tab" id="t-wsl2" data-tab="WSL 2" data-note="2019: kernel Linux thật">
 
-<p class="panel-intro">Tab này kể bước cuối: quay về máy ảo, nhưng một máy ảo đã bỏ hết những điểm yếu của tab Máy ảo
-đầy đủ.</p>
+<p class="panel-intro">Bước cuối nghe như đi lùi: quay về máy ảo. Nhưng đó là một máy ảo đã bỏ hết những điểm yếu
+của tab Máy ảo đầy đủ.</p>
 
 <h2 id="wsl2-cong-bo">Ngày 6/5/2019: một kernel Linux thật trong Windows</h2>
 
@@ -309,7 +311,7 @@ chỉ WSL 2 cho bạn kernel Linux, và mọi thứ Bài 03 muốn quan sát đ�
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Cả hai ảnh là ảnh chụp màn hình do người viết tự chụp ngày 03/10/2026 từ trang công
+<p class="photo-credits-note">Cả hai ảnh là ảnh chụp màn hình do tôi tự chụp ngày 03/10/2026 từ trang công
 khai của Microsoft; các khung màu là phần đánh dấu thêm vào.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b>Mục Windows Subsystem for Linux trong bài tổng quan năm 2016 — chụp màn hình <a href="https://learn.microsoft.com/en-us/archive/blogs/wsl/windows-subsystem-for-linux-overview">learn.microsoft.com</a>; cắt bỏ mép thanh điều hướng bên trái.</li>
@@ -337,6 +339,6 @@ khai của Microsoft; các khung màu là phần đánh dấu thêm vào.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c4b75b55"></script>
+<script src="../../assets/app.js?v=2b4e881a"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 20 — Tên miền và HTTPS</title>
 <meta name="description" content="Service có tên miền và ổ khóa HTTPS, chứng chỉ tự gia hạn mà không phải nhớ.">
-<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="20">
@@ -59,7 +59,9 @@
 
   <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
   <ul>
+    <li>Đường đi của một câu hỏi DNS: resolver, máy chủ gốc, máy chủ của đuôi tên miền, máy chủ có thẩm quyền</li>
     <li>Bản ghi DNS: A, AAAA, CNAME, TXT; TTL</li>
+    <li>HTTPS không giấu tên miền: câu hỏi DNS gửi đi không mã hoá, và SNI</li>
     <li>dig và /etc/hosts</li>
     <li>Đọc chứng chỉ X.509 và chuỗi tin cậy bằng openssl</li>
     <li>Vì sao chứng chỉ chỉ sống 90 ngày, và xu hướng còn ngắn hơn</li>
@@ -110,6 +112,6 @@
 
 </div>
 
-<script src="../../assets/app.js?v=c4b75b55"></script>
+<script src="../../assets/app.js?v=2b4e881a"></script>
 </body>
 </html>

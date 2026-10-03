@@ -22,8 +22,8 @@ tách nó thành ba câu, mỗi phần bên dưới là một mảnh để ghép
 trước khi đọc, rồi so lại khi làm xong lab.
 
 1. Chọn cấu hình server thì **con số nào** sẽ hết trước?
-2. Vì sao **hết RAM thì app CHẾT**, còn hết CPU thì app chỉ **CHẬM**?
-3. Vì sao **app chết thì website sập** — chuỗi nhân quả đầy đủ tới con số 502?
+2. Vì sao **hết RAM thì app chết**, còn hết CPU thì app chỉ **chậm**?
+3. Vì sao **app chết thì website sập**: chuỗi nhân quả đầy đủ tới con số 502?
 
 Câu nối tiếp: app chết rồi thì **ai dựng nó dậy**?
 
@@ -56,7 +56,7 @@ hỏng mà không ai đụng vào ([Bài 02](../02-chan-doan-theo-chang/)).
 ## Server là gì
 
 Một server chỉ là một máy tính bình thường, khác laptop của bạn đúng ba điểm: nó chạy
-**24/7**, nó **không có màn hình**, và — quan trọng nhất — **không có ai ngồi trước nó**. Hai
+**24/7**, nó **không có màn hình**, và, quan trọng nhất, **không có ai ngồi trước nó**. Hai
 điểm đầu chỉ là chuyện phần cứng, còn điểm thứ ba thay đổi toàn bộ cách phải vận hành, bởi vì
 mọi thứ trên laptop vẫn "tự lành" được là nhờ có bạn ở đó.
 
@@ -81,7 +81,7 @@ Mọi con số trong bảng cấu hình server quy về bốn loại tài nguyê
 ### Ẩn dụ hỗ trợ ghi nhớ: người, mặt bàn, cái tủ
 
 Điều quan trọng không phải từng loại riêng lẻ mà là **quan hệ** giữa chúng: CPU chỉ xử lý dữ
-liệu đang nằm trong RAM, nên muốn dùng file nào thì phải đọc nó từ đĩa vào RAM trước — đó chính
+liệu đang nằm trong RAM, nên muốn dùng file nào thì phải đọc nó từ đĩa vào RAM trước; đó chính
 là 30 giây JVM đọc hàng nghìn file class lúc khởi động. Phép so sánh dưới đây giúp nhớ quan hệ đó,
 và **không phải định nghĩa**:
 
@@ -101,7 +101,7 @@ triệu chứng khác nhau**. Đây chính là bảng tra dùng khi một server
 | Tài nguyên | Hết thì sao | Mức độ |
 |---|---|---|
 | **CPU** | công việc xếp hàng chờ | Chậm |
-| **RAM** | **kernel GIẾT một process** | **Chết** |
+| **RAM** | **kernel giết một process** | **Chết** |
 | **DISK** | không ghi được gì nữa | Lỗi rất lạ |
 | **NETWORK** | gói tin bị vứt bỏ | Timeout |
 
@@ -109,7 +109,7 @@ Sự bất đối xứng giữa CPU và RAM là trọng tâm của bài. Hết C
 lượt, nên mọi thứ chậm đi nhưng vẫn chạy. Hết RAM thì không có "chờ" nào cả: dữ liệu phải có
 chỗ để nằm, nên kernel buộc phải giải phóng chỗ bằng cách giết một process.
 
-> **Hết CPU thì app CHẬM. Hết RAM thì app CHẾT.**
+> **Hết CPU thì app chậm. Hết RAM thì app chết.**
 
 Nối điều này với bảng "ai viết ra" của Bài 02, ta thấy hai mã lỗi quen thuộc thật ra là hai
 loại tài nguyên đã cạn:
@@ -119,7 +119,7 @@ Hết CPU → app chậm    → Nginx hết kiên nhẫn  → 504
 Hết RAM → app bị giết → Nginx bị từ chối  → 502
 ```
 
-**502 và 504 không phải hai mã lỗi cần học thuộc — chúng là hai loại tài nguyên đã cạn.**
+**502 và 504 không phải hai mã lỗi cần học thuộc: chúng là hai loại tài nguyên đã cạn.**
 
 ---
 
@@ -138,7 +138,7 @@ không ai gọi được                    đang listen port 8080
 copy được, xóa được                  kill được — và chết là hết
 ```
 
-**"Chương trình đang listen port 8080" ở Bài 01 — chính là process này.**
+**"Chương trình đang listen port 8080" ở Bài 01 chính là process này.**
 
 Mỗi process sở hữu riêng một bộ tài nguyên do kernel cấp: vùng RAM · danh sách file đang mở ·
 thư mục làm việc · **biến môi trường** · **user chạy nó**. Hệ quả dễ bị bỏ qua nhất nằm ở biến
@@ -196,7 +196,7 @@ port <1024 cần root     →  kernel kiểm tra quyền TRƯỚC khi ghi vào b
 ## Khi process chết
 
 Một process có thể chết theo nhiều cách, và cách nó chết quyết định nó có kịp **dọn dẹp** hay
-không — đóng kết nối database, hoàn tất transaction, ghi nốt những dòng log cuối.
+không: đóng kết nối database, hoàn tất transaction, ghi nốt những dòng log cuối.
 
 | Cách chết | Kịp dọn dẹp? |
 |---|---|
@@ -218,7 +218,7 @@ SIGKILL  process KHÔNG được báo  → connection treo, transaction dở, m�
 
 Khi RAM cạn, kernel không có lựa chọn "chờ": nó **phải** giết một process để lấy lại chỗ. Nó
 chấm điểm từng process (`oom_score`), chủ yếu dựa trên lượng RAM đang chiếm, rồi giết process
-điểm cao nhất — và **trên một server chạy Spring Boot, đó gần như luôn là JVM**.
+điểm cao nhất, và **trên một server chạy Spring Boot, đó gần như luôn là JVM**.
 
 ```
 Triệu chứng:  app BIẾN MẤT · log ứng dụng TRỐNG TRƠN · không ai đụng vào
@@ -292,7 +292,7 @@ node lab/server.js            # ghi lại PID nó in ra
 ```
 
 File `lab/server.js` là một web server nhỏ nhất có thể: nó listen port 8080 và in ra PID của
-chính nó. Kỳ vọng thấy dòng `PID = <số> | dang giu phong 8080`. Nếu thay vào đó là lỗi
+chính nó. Kỳ vọng thấy dòng `PID = <số> | dang listen port 8080`. Nếu thay vào đó là lỗi
 `EADDRINUSE`, nghĩa là port 8080 đã có process khác listen (có thể là một Spring Boot bạn quên
 tắt) — đó chính là `Address already in use` trong bảng ở trên, và Lab 2 sẽ giúp tìm ra ai.
 
@@ -415,11 +415,12 @@ biến. Điều quyết định là **cha của nó là ai và nó được sinh
 
 ---
 
-## Chỗ hay hiểu sai
+## Chỗ tôi từng hiểu sai
 
-Đọc trước khi đánh dấu danh sách tự kiểm tra. Bản có giải thích đầy đủ nằm ở Bảng 10 trong `index.html`.
+Mỗi dòng là một chỗ chính tôi đã hiểu sai khi học bài này. Đọc trước khi đánh dấu danh sách tự kiểm
+tra; bản có giải thích đầy đủ nằm ở Bảng 10 trong `index.html`.
 
-| Người mới hay nghĩ | Thực tế |
+| Tôi từng nghĩ | Thực tế |
 |---|---|
 | Hết RAM thì app không đủ chỗ khởi động | App **đang chạy** bị kernel giết; RAM thu hồi ngay, khởi động lại chỉ là tạo process mới |
 | App "nạp sẵn" biến môi trường nên đổi không ăn | Process giữ **bản sao riêng** từ lúc sinh; muốn giá trị mới phải tạo process mới |
@@ -430,7 +431,7 @@ biến. Điều quyết định là **cha của nó là ai và nó được sinh
 | Server mất điện thì thấy refused hoặc 502 | Thấy **timeout**: không còn kernel nào để từ chối |
 | `kill -9` làm object trong RAM không được dọn | RAM thu hồi hết; mất là thứ **ngoài process**: connection, transaction, log trong bộ đệm |
 | OOM killer giết process chiếm quá nửa RAM | Chủ yếu theo RAM, **so với các process khác** |
-| Có người trông coi thì 502 chỉ thoáng qua | Spring Boot cần 15–60 giây mới listen; nguyên nhân còn thì vòng lặp chết — dựng lại |
+| Có người trông coi thì 502 chỉ thoáng qua | Spring Boot cần 15–60 giây mới listen; nguyên nhân còn thì app bị giết, dựng lại, rồi lại bị giết |
 
 ---
 

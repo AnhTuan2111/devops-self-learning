@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 04 — Phòng lab: WSL2, Docker Desktop và shell tối thiểu</title>
 <meta name="description" content="Dựng một máy Linux thật ngay trong Windows bằng WSL2, điều khiển nó bằng bash, hiểu output và lỗi của một lệnh đi đâu, rồi để Docker Desktop chạy lệnh docker run hello-world đầu tiên.">
-<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="04">
@@ -13,14 +13,13 @@
 <nav class="topbar"><div class="topbar-inner">
   <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-04</span>
   <span class="spacer"></span>
-  <a class="nav" href="#lab">Lab</a>
-  <a class="nav" href="lich-su-wsl.html">Phụ lục</a>
+  <a class="nav" href="lich-su-wsl.html">Phụ lục lịch sử</a>
 </div></nav>
 
 <div class="wrap">
 
 <header class="hero">
-  <p class="eyebrow">Module 0 · Bài 04 · bản nháp 03/10/2026</p>
+  <p class="eyebrow">Module 0 · Bài 04</p>
   <h1>Phòng lab: <span class="hl">một máy Linux thật ngay trong Windows</span></h1>
   <p class="lede">Bài 03 cho thấy app là một process do kernel quản lý, nhưng mọi lab của nó chạy trên
   Windows. Bài này dựng một kernel Linux thật trên chính máy bạn, học vừa đủ shell để điều khiển nó, rồi
@@ -136,8 +135,10 @@ Docker, công cụ của Module 1, đứng ngay sau vì nó cũng cần kernel �
 <!-- ================================================================== -->
 <section class="tab" id="wsl2" data-tab="WSL2" data-note="kernel Linux trong máy ảo nhẹ">
 
-<p>Tab này trả lời câu 1. Nó dựa trên hai kết luận của <a href="../03-may-tinh-va-he-dieu-hanh/#kernel">Bài 03</a>:
-kernel là thành phần duy nhất được chạm phần cứng, và chương trình phải xin kernel làm hộ qua syscall.</p>
+<p>Muốn có Linux thật trên một máy đang chạy Windows, trước hết phải hiểu vì sao hai thứ ấy không thể
+chạy chung một cách đơn giản. Câu trả lời nằm ở hai kết luận của
+<a href="../03-may-tinh-va-he-dieu-hanh/#kernel">Bài 03</a>: kernel là thành phần duy nhất được chạm phần
+cứng, và chương trình phải xin kernel làm hộ qua syscall.</p>
 
 <h2 id="vi-sao-kernel-linux">Vì sao phải là chính kernel Linux</h2>
 
@@ -193,10 +194,10 @@ không chạy. Ảnh 1 so sánh hai thế hệ.</p>
 <figure class="fig photo shot">
   <img src="img/wsl1-wsl2-so-sanh.webp" width="1218" height="870" loading="lazy" alt="Bảng so sánh tính năng WSL 1 và WSL 2 trên trang tài liệu của Microsoft, ba hàng được khoanh màu: Full Linux Kernel, Full system call compatibility và Performance across OS file systems.">
   <figcaption><b>Ảnh 1</b> Bảng so sánh WSL 1 và WSL 2 trên Microsoft Learn.
-  <span class="kw"><i class="key k-red" aria-hidden="true"></i>Full Linux Kernel:</span> lý do bài này chọn WSL2.
-  <span class="kw"><i class="key k-blue" aria-hidden="true"></i>Full system call compatibility:</span> lý do Docker
+  Hàng <span class="kw"><i class="key k-red" aria-hidden="true"></i>đỏ</span> <em>Full Linux Kernel:</em> lý do bài này chọn WSL2.
+  Hàng <span class="kw"><i class="key k-blue" aria-hidden="true"></i>lam</span> <em>Full system call compatibility:</em> lý do Docker
   chạy được trong WSL2 mà không chạy được trong WSL 1.
-  <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>Performance across OS file systems:</span> hàng
+  Hàng <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>vàng</span> <em>Performance across OS file systems:</em> hàng
   duy nhất WSL 1 thắng, vì đọc tệp của Windows từ trong Linux thì WSL2 chậm hơn.</figcaption>
 </figure>
 
@@ -253,8 +254,8 @@ lại nửa phía server: từ Bài 05, chặng <span class="stg">7</span>, <spa
   <span class="label">Chốt</span>
   <p>Câu 1: máy ảo là máy tính dựng bằng phần mềm, có kernel riêng; hypervisor dựa vào ảo hoá phần cứng của CPU để
   chia một máy thật cho nhiều kernel. WSL2 là một máy ảo nhẹ do Windows tự quản, chạy kernel Linux thật do Microsoft
-  biên dịch; Ubuntu là distro đặt bộ chương trình lên kernel đó. Còn treo: máy này không có cửa sổ, không có chuột.
-  Ra lệnh cho nó bằng gì?</p>
+  biên dịch; Ubuntu là distro đặt bộ chương trình lên kernel đó.</p>
+  <p>Nhưng máy này không có cửa sổ, cũng không có chuột. Ra lệnh cho nó bằng gì?</p>
 </div>
 
 </section>
@@ -262,10 +263,10 @@ lại nửa phía server: từ Bài 05, chặng <span class="stg">7</span>, <spa
 <!-- ================================================================== -->
 <section class="tab" id="shell" data-tab="Shell" data-note="terminal, bash, lệnh, PATH">
 
-<p>Tab này trả lời câu 2. Nó dùng lại ba thuộc tính của process ở
-<a href="../03-may-tinh-va-he-dieu-hanh/#process">Bài 03</a>: process cha sinh process con, thư mục làm việc, và
-bản sao biến môi trường riêng. Máy ảo WSL2, giống server ở Bài 03, không có cửa sổ để bấm; cách duy nhất ra lệnh là
-gõ chữ, và việc đó do hai chương trình chia nhau làm.</p>
+<p>Máy ảo WSL2, giống server ở Bài 03, không có cửa sổ để bấm; cách duy nhất ra lệnh là gõ chữ, và việc
+đó do hai chương trình chia nhau làm. Để hiểu chúng, bạn chỉ cần ba thuộc tính của process đã gặp ở
+<a href="../03-may-tinh-va-he-dieu-hanh/#process">Bài 03</a>: process cha sinh process con, thư mục làm việc,
+và bản sao biến môi trường riêng.</p>
 
 <h2 id="terminal-shell">Terminal và shell</h2>
 
@@ -414,8 +415,9 @@ lỗi thì lỗi đó có quyền với cả máy, nên chỉ thêm <code>sudo</
   <span class="label">Chốt</span>
   <p>Câu 2: terminal hiện chữ và chuyển phím; bash đọc dòng lệnh, tách thành tên lệnh và tham số, tìm chương trình
   theo PATH, rồi nhờ kernel sinh process con chạy nó và lấy exit status. Đường dẫn tương đối tính từ thư mục làm việc
-  của process, nên <code>cd</code> phải là builtin; <code>sudo</code> chạy đúng một lệnh bằng root. Còn treo: process
-  con in kết quả ra đâu, và vì sao Bài 00 phải thêm <code>2&gt;/dev/null</code>?</p>
+  của process, nên <code>cd</code> phải là builtin; <code>sudo</code> chạy đúng một lệnh bằng root.</p>
+  <p>Process con in kết quả ra đâu, và vì sao lệnh đọc chứng chỉ ở Bài 00 phải thêm
+  <code>2&gt;/dev/null</code>?</p>
 </div>
 
 </section>
@@ -423,10 +425,10 @@ lỗi thì lỗi đó có quyền với cả máy, nên chỉ thêm <code>sudo</
 <!-- ================================================================== -->
 <section class="tab" id="luong-vao-ra" data-tab="Luồng vào ra" data-note="0, 1, 2, chuyển hướng, pipe">
 
-<p>Tab này trả lời câu 3. Nó dùng lại danh sách file đang mở của process ở
-<a href="../03-may-tinh-va-he-dieu-hanh/#process">Bài 03</a> và vòng fork, exec ở tab Shell. Ba bài trước có những
-lệnh chưa giải nghĩa hết: <code>openssl … 2&gt;/dev/null | …</code> ở Bài 00, <code>curl -o /dev/null</code> ở Bài 01,
-<code>netstat -ano | grep 8080</code> ở Bài 03. Cả ba quy về một cơ chế.</p>
+<p>Ba bài trước để lại những lệnh chưa giải nghĩa hết: <code>openssl … 2&gt;/dev/null | …</code> ở Bài 00,
+<code>curl -o /dev/null</code> ở Bài 01, <code>netstat -ano | grep 8080</code> ở Bài 03. Cả ba quy về một cơ
+chế, và cơ chế ấy dựng trên hai thứ đã có: danh sách file đang mở của process ở
+<a href="../03-may-tinh-va-he-dieu-hanh/#process">Bài 03</a>, và vòng fork, exec ở tab Shell.</p>
 
 <h2 id="ba-luong">Ba luồng chuẩn: số 0, số 1, số 2</h2>
 
@@ -571,7 +573,7 @@ vào cmd.exe:</p>
 The system cannot accept the time entered.
 Enter the new time: 2
 A required privilege is not held by the client.</code></pre>
-  <figcaption><b>Hình 10</b> Đúng lệnh, sai shell (output thật trên máy người học). cmd.exe hiểu phần còn lại là một
+  <figcaption><b>Hình 10</b> Đúng lệnh, sai shell (output thật trên máy tôi, chạy trong cmd.exe). cmd.exe hiểu phần còn lại là một
   giờ mới, từ chối, hỏi lại, rồi báo thiếu quyền vì đặt giờ hệ thống cần quyền quản trị.</figcaption>
 </figure>
 
@@ -583,7 +585,9 @@ viết cho bash.</p>
   <p>Câu 3: mỗi process khởi đầu với ba file descriptor, 0 stdin, 1 stdout, 2 stderr, thừa kế từ bash và mặc định trỏ
   vào terminal. Chuyển hướng là bash đổi đích của một số trước khi chạy lệnh: <code>&gt;</code> đổi số 1,
   <code>2&gt;</code> đổi số 2, <code>/dev/null</code> vứt mọi thứ ghi vào; pipe nối số 1 của lệnh trái vào số 0 của
-  lệnh phải. Còn treo: đã có Linux và bash; bước cuối là Docker, và Docker cũng là hai process nói chuyện với nhau.</p>
+  lệnh phải.</p>
+  <p>Đã có Linux và bash. Mảnh cuối của phòng lab là Docker, và Docker hoá ra cũng là hai process nói chuyện
+  với nhau.</p>
 </div>
 
 </section>
@@ -591,10 +595,11 @@ viết cho bash.</p>
 <!-- ================================================================== -->
 <section class="tab" id="docker-desktop" data-tab="Docker Desktop" data-note="client gọi daemon">
 
-<p>Tab này trả lời câu 4. Nó dùng lại daemon ở <a href="../03-may-tinh-va-he-dieu-hanh/#service">Bài 03</a>,
-<code>refused</code> ở <a href="../01-ip-port-listen-firewall/#ket-noi-tcp">Bài 01</a>, máy ảo WSL2 và stdout ở các
-tab trước. Docker cần những tính năng chỉ kernel Linux có (Bài 05 sẽ chỉ ra), nên trên Windows nó phải chạy trong
-một máy Linux, và máy gần nhất là máy ảo WSL2 vừa dựng.</p>
+<p>Docker cần những tính năng chỉ kernel Linux có (Bài 05 sẽ chỉ ra), nên trên Windows nó phải chạy trong
+một máy Linux, và máy gần nhất là máy ảo WSL2 vừa dựng. Để hiểu Docker Desktop làm gì và vì sao nó hay báo
+lỗi khi chưa bật, bạn dùng lại daemon ở <a href="../03-may-tinh-va-he-dieu-hanh/#service">Bài 03</a>,
+<code>refused</code> ở <a href="../01-ip-port-listen-firewall/#ket-noi-tcp">Bài 01</a>, cùng máy ảo WSL2 và
+stdout ở các tab trước.</p>
 
 <h2 id="client-daemon">Docker là hai chương trình: client và daemon</h2>
 
@@ -645,7 +650,7 @@ các distro khác. Vì vậy máy đã cài Docker Desktop luôn thấy dòng <c
 <h2 id="khi-daemon-vang">Khi daemon vắng mặt</h2>
 
 <p>Kiến trúc hai chương trình có một hệ quả bạn sẽ gặp ngay: client chạy bình thường trong khi daemon không tồn tại.
-Đây là output thật của <code>docker version</code> trong Git Bash trên máy người học, khi Docker Desktop chưa bật:</p>
+Đây là output thật của <code>docker version</code> trong Git Bash trên máy tôi, khi Docker Desktop chưa bật:</p>
 
 <figure class="fig">
 <pre><code>$ docker version
@@ -706,8 +711,8 @@ Docker không phải một chặng mà là cách đóng gói và chạy những 
   <p>Câu 4: Docker Desktop chạy daemon <code>dockerd</code> trong distro riêng <code>docker-desktop</code> của máy ảo
   WSL2; lệnh <code>docker</code> chỉ là client gửi request Docker API tới daemon qua một địa chỉ, named pipe trên
   Windows hay Unix socket trên Linux. Docker Desktop tắt thì client vẫn chạy nhưng đầu bên kia không có ai, và lỗi
-  "không kết nối được tới daemon" là <code>refused</code> của thế giới Docker. Còn treo: biến bốn câu trả lời thành
-  output trên máy bạn, ở tab Lab.</p>
+  "không kết nối được tới daemon" là <code>refused</code> của thế giới Docker.</p>
+  <p>Bốn câu trả lời đã đủ. Việc còn lại là biến chúng thành output trên chính máy bạn.</p>
 </div>
 
 </section>
@@ -911,8 +916,8 @@ nhau, nên chênh lệch là chênh lệch giữa hai kernel.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 6</b> Những chỗ người mới hay vấp khi dựng phòng lab.</caption>
-  <thead><tr><th>Người mới hay nghĩ</th><th>Thực tế</th><th>Xem lại</th></tr></thead>
+  <caption><b>Bảng 6</b> Những cách hiểu nghe hợp lý nhưng sai khi dựng phòng lab.</caption>
+  <thead><tr><th>Dễ nghĩ là</th><th>Thực tế</th><th>Xem lại</th></tr></thead>
   <tbody>
     <tr><td>WSL2 là trình giả lập Linux</td><td>WSL2 chạy kernel Linux thật trong máy ảo; dịch syscall là cách của WSL 1</td><td><a href="#wsl2-la-gi">WSL2</a></td></tr>
     <tr><td>Terminal và shell là một</td><td>Terminal chuyển chữ, shell hiểu chữ; một terminal chạy được nhiều shell</td><td><a href="#terminal-shell">Terminal và shell</a></td></tr>
@@ -979,7 +984,7 @@ signal thật. Docker Desktop dùng chính máy Linux đó để chạy daemon, 
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
 <p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons theo giấy phép ghi ở từng dòng; ảnh đã được chuyển
-sang đen trắng, tách khỏi nền cũ và đặt vào khung vuông. Ảnh chụp màn hình do người viết tự chụp ngày 03/10/2026; khung
+sang đen trắng, tách khỏi nền cũ và đặt vào khung vuông. Ảnh chụp màn hình do tôi tự chụp ngày 03/10/2026; khung
 màu là phần đánh dấu thêm.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b>Bảng so sánh WSL 1 và WSL 2 — chụp màn hình <a href="https://learn.microsoft.com/en-us/windows/wsl/compare-versions">learn.microsoft.com</a>.</li>
@@ -1010,6 +1015,6 @@ màu là phần đánh dấu thêm.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=c4b75b55"></script>
+<script src="../../assets/app.js?v=2b4e881a"></script>
 </body>
 </html>

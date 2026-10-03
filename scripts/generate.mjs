@@ -193,8 +193,8 @@ const indexHtml = `${head({ title: meta.title, desc: meta.subtitle, base: '' })}
       <p class="eyebrow">Lộ trình tự học · mở cho mọi người</p>
       <h1>DevOps<br><span class="hl">từ số 0</span></h1>
       <p class="route"><span>chưa biết gì về hạ tầng</span><i class="ic ic-r arrow" aria-hidden="true"></i><span>tự deploy lên Kubernetes</span></p>
-      <p class="lede">Học theo thứ tự, bài sau dựa trên bài trước. Bài nào cũng có lý thuyết, một bài
-      lab chạy thật và những lỗi hay gặp.</p>
+      <p class="lede">${esc(meta.what)} Học theo thứ tự; bài nào cũng có lý thuyết, một bài lab chạy
+      thật và những lỗi hay gặp.</p>
       <div class="meta">
         <span class="chip ink">${esc(meta.stack)}</span>
       </div>
@@ -382,6 +382,8 @@ const readme = `<a href="${SITE}"><img src="assets/readme/banner.svg" width="100
 # ${meta.title}
 
 > ${meta.subtitle}
+
+${meta.what}
 
 **Đích đến:** ${meta.goal}
 

@@ -18,7 +18,7 @@ chia sẻ lại theo cùng giấy phép đó.
 
 ## Phụ lục `lich-su-he-dieu-hanh.html`
 
-Ảnh 3 của phụ lục dùng lại `img/thompson-ritchie.webp` ở trên.
+`img/thompson-ritchie.webp` ở trên chỉ dùng ở phụ lục (Ảnh 3 của `lich-su-he-dieu-hanh.html`); bài giảng chính không dùng nó, để hai trang không lặp một ảnh.
 
 | Tệp | Nguồn | Tác giả | Giấy phép | Đã chỉnh |
 |---|---|---|---|---|

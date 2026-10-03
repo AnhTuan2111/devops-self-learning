@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 03 — Máy tính, hệ điều hành, process</title>
 <meta name="description" content="502 nghĩa là phía sau Nginx không còn ai trả lời. Bài này cho thấy app thật ra là một process do kernel quản lý, vì sao nó bị giết khi hết RAM, vì sao nó chết thì website sập, và vì sao phải biến nó thành service.">
-<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="stylesheet" href="../../assets/style.css?v=2b4e881a">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="03">
@@ -13,23 +13,23 @@
 <nav class="topbar"><div class="topbar-inner">
   <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-03</span>
   <span class="spacer"></span>
-  <a class="nav" href="#lab">Lab</a>
+  <a class="nav" href="lich-su-he-dieu-hanh.html">Phụ lục lịch sử</a>
 </div></nav>
 
 <div class="wrap">
 
 <header class="hero">
-  <p class="eyebrow">Module 0 · Bài 03 · học 25/09–03/10/2026</p>
+  <p class="eyebrow">Module 0 · Bài 03</p>
   <h1>Máy tính, hệ điều hành, process: <span class="hl">"server" thật ra là cái gì</span></h1>
   <p class="lede">Bài 02 kết luận rằng 502 do Nginx viết ra khi phía sau nó không còn ai trả lời.
   Bài này đi vào chính cái máy chủ ở phía sau đó, để thấy "app" thật ra là gì: <strong>một process
   đang chạy</strong>, sống nhờ bốn loại tài nguyên và nằm dưới quyền quản lý của phần lõi hệ điều
-  hành, gọi là kernel — vì sao nó có thể bị giết, và vì sao nó chết thì cả website sập theo.</p>
+  hành, gọi là kernel; rồi từ đó thấy vì sao nó có thể bị giết, và vì sao nó chết thì cả website sập theo.</p>
   <div class="meta">
     <span class="chip lime"><i class="stt stt-done" aria-hidden="true"></i>Đã xong</span>
     <span class="chip">5–8 giờ học</span>
-    <span class="chip">Chạy trên Windows</span>
     <span class="chip">Lab: Node + Git Bash</span>
+    <a class="chip" href="lich-su-he-dieu-hanh.html"><i class="ic ic-r" aria-hidden="true"></i> Phụ lục: lịch sử hệ điều hành</a>
   </div>
 </header>
 
@@ -72,8 +72,8 @@ của bài vì vậy được tách thành ba câu nhỏ, câu sau dựa trên c
 
 <ol>
   <li>Chọn cấu hình server thì <strong>con số nào</strong> sẽ hết trước?</li>
-  <li>Vì sao <strong>hết RAM thì app CHẾT</strong>, còn hết CPU thì app chỉ <strong>CHẬM</strong>?</li>
-  <li>Vì sao <strong>app chết thì website sập</strong> — chuỗi nhân quả đầy đủ, từ tầng phần cứng tới
+  <li>Vì sao <strong>hết RAM thì app chết</strong>, còn hết CPU thì app chỉ <strong>chậm</strong>?</li>
+  <li>Vì sao <strong>app chết thì website sập</strong>: chuỗi nhân quả đầy đủ, từ tầng phần cứng tới
   con số 502 mà người dùng nhìn thấy trên màn hình?</li>
 </ol>
 
@@ -99,16 +99,16 @@ dậy</strong>? Bảng 1 cho biết mỗi câu được trả lời ở tab nào
 chỗ đã học trước khi đọc tiếp.</p>
 
 <ul>
-  <li><strong>Bản đồ chín chặng</strong>, và chặng 7–8: Nginx đứng trước ứng dụng trên server —
-  <a href="../00-ban-do-toan-canh/#ban-do">Bài 00</a>.</li>
+  <li><strong>Bản đồ chín chặng</strong>, và chặng 7–8: Nginx đứng trước ứng dụng trên server
+  (<a href="../00-ban-do-toan-canh/#ban-do">Bài 00</a>).</li>
   <li><strong>Port và listen</strong>: một port chỉ nhận kết nối khi có một chương trình đang listen ở
-  đó — <a href="../01-ip-port-listen-firewall/#port-listen">Bài 01</a>.</li>
+  đó (<a href="../01-ip-port-listen-firewall/#port-listen">Bài 01</a>).</li>
   <li><strong>Refused và timeout</strong>: refused là máy đích trả lời ngay rằng không có chương trình
-  nào listen; timeout là không có ai trả lời cả — <a href="../01-ip-port-listen-firewall/#ket-noi-tcp">Bài 01</a>.</li>
+  nào listen; timeout là không có ai trả lời cả (<a href="../01-ip-port-listen-firewall/#ket-noi-tcp">Bài 01</a>).</li>
   <li><strong>502 và 504 do Nginx viết</strong>: 502 khi phía sau không trả lời, 504 khi phía sau trả
-  lời quá chậm — <a href="../02-chan-doan-theo-chang/#hai-ma-loi">Bài 02</a>.</li>
+  lời quá chậm (<a href="../02-chan-doan-theo-chang/#hai-ma-loi">Bài 02</a>).</li>
   <li><strong>Hệ thống hỏng mà không ai đụng vào</strong>, và <strong>đã chạy chưa phải đã sẵn
-  sàng</strong> — <a href="../02-chan-doan-theo-chang/#nguyen-tac">Bài 02</a>.</li>
+  sàng</strong> (<a href="../02-chan-doan-theo-chang/#nguyen-tac">Bài 02</a>).</li>
 </ul>
 
 <h2 id="server-la-gi">"Server" thật ra là gì</h2>
@@ -117,7 +117,7 @@ chỗ đã học trước khi đọc tiếp.</p>
 
 <figure class="fig photo side">
   <img src="img/tu-may-chu-nersc.webp" width="720" height="960" loading="lazy" alt="Một tủ máy chủ đứng trong trung tâm dữ liệu, xếp chồng nhiều máy chủ mỏng, mỗi máy cắm dây mạng ở phía trước.">
-  <figcaption><b>Ảnh 1</b> Một tủ máy chủ ở trung tâm dữ liệu NERSC (Mỹ). Mỗi ngăn mỏng là một máy tính đầy đủ — có CPU, RAM, ổ đĩa, card mạng — chỉ thiếu màn hình và bàn phím, vì không ai ngồi trước nó. Một VPS — máy chủ thuê theo tháng — thường là một máy ảo cắt ra từ một máy như thế.</figcaption>
+  <figcaption><b>Ảnh 1</b> Một tủ máy chủ ở trung tâm dữ liệu NERSC (Mỹ). Mỗi ngăn mỏng là một máy tính đầy đủ, có CPU, RAM, ổ đĩa, card mạng, chỉ thiếu màn hình và bàn phím, vì không ai ngồi trước nó. Một VPS (máy chủ thuê theo tháng) thường là một máy ảo cắt ra từ một máy như thế.</figcaption>
 </figure>
 
 
@@ -125,7 +125,7 @@ chỗ đã học trước khi đọc tiếp.</p>
 cầu và trả lời (Nginx là một HTTP server, PostgreSQL là một database server); theo nghĩa <em>phần
 cứng</em>, server là cái máy mà những chương trình đó chạy trên. Ở đây ta nói về nghĩa thứ hai, và kết
 luận rất đơn giản: <strong>một server là một máy tính bình thường</strong>, có CPU, RAM, ổ đĩa, card
-mạng, y hệt chiếc laptop bạn đang dùng — kể cả khi nó là một máy ảo cắt ra từ một máy lớn hơn, phần
+mạng, y hệt chiếc laptop bạn đang dùng, kể cả khi nó là một máy ảo cắt ra từ một máy lớn hơn, phần
 mềm bên trong vẫn thấy một máy tính đầy đủ. Khác biệt giữa server và laptop nằm ở <em>hoàn cảnh sử
 dụng</em>, và hoàn cảnh đó khác nhau đúng ba điểm.</p>
 
@@ -141,8 +141,8 @@ dụng</em>, và hoàn cảnh đó khác nhau đúng ba điểm.</p>
 </table>
 </div>
 
-<p>Hai điểm đầu ít hệ quả. Chạy 24/7 nghĩa là mọi thứ tích tụ theo thời gian — log, rò rỉ bộ nhớ,
-chứng chỉ sắp hết hạn — có đủ thời gian để gây sự cố, đúng nguyên lý "hệ thống hỏng mà không ai đụng
+<p>Hai điểm đầu ít hệ quả. Chạy 24/7 nghĩa là mọi thứ tích tụ theo thời gian (log, rò rỉ bộ nhớ,
+chứng chỉ sắp hết hạn) có đủ thời gian để gây sự cố, đúng nguyên lý "hệ thống hỏng mà không ai đụng
 vào" ở Bài 02. Không màn hình (<em>headless</em>) nghĩa là bạn điều khiển nó qua mạng bằng dòng lệnh,
 việc sẽ học ở Bài 16. Điểm thứ ba mới có sức nặng.</p>
 
@@ -164,12 +164,13 @@ việc sẽ học ở Bài 16. Điểm thứ ba mới có sức nặng.</p>
 
 <h2 id="bon-thu">Bốn tài nguyên của một máy tính</h2>
 
-<p>Tab này trả lời câu 1 (con số nào hết trước) và nửa đầu câu 2 (vì sao hết CPU thì chậm, hết
-RAM thì chết). Server là một máy tính bình thường, và một máy tính — laptop hay server — cung cấp cho
+<p>Hai phương án ở tình huống mở bài khác nhau ở ba con số, nên câu hỏi đầu tiên phải là: ba con số ấy đo
+cái gì, và cái nào cạn trước? Từ đó ra luôn nửa đầu của câu 2, vì sao hết CPU thì chậm còn hết RAM thì
+chết. Server là một máy tính bình thường, và một máy tính, dù là laptop hay server, cung cấp cho
 phần mềm đúng bốn loại tài nguyên. Mọi chương trình sống bằng cách tiêu thụ bốn thứ này, và mọi sự cố
 hiệu năng đều quy về việc <em>một trong bốn thứ cạn</em>. Đó cũng chính là ba con số trong bảng giá ở
 Hình 1, cộng thêm băng thông mạng. Chương trình không tự lấy tài nguyên cho mình: bên chia chúng là
-<strong>kernel</strong>, phần lõi của hệ điều hành, thứ duy nhất nắm quyền trên phần cứng — tab Kernel
+<strong>kernel</strong>, phần lõi của hệ điều hành, thứ duy nhất nắm quyền trên phần cứng; tab Kernel
 sẽ cho thấy vì sao phải có nó.</p>
 
 <figure class="fig">
@@ -192,7 +193,7 @@ sẽ cho thấy vì sao phải có nó.</p>
     <figure><img src="img/o-cung-nvme.webp" width="800" height="600" loading="lazy" alt="Một ổ SSD NVMe dạng thanh M.2, dán nhãn WD_BLACK SN850X."><div class="lbl">disk <small>lưu bền vững</small></div></figure>
     <figure><img src="img/card-mang-pci.webp" width="800" height="600" loading="lazy" alt="Một card mạng Ethernet cắm khe PCI, có một cổng RJ45 để cắm cáp mạng."><div class="lbl">network <small>dữ liệu ra/vào</small></div></figure>
   </div>
-  <figcaption><b>Ảnh 2</b> Bốn tài nguyên của Hình 2, nhìn bằng mắt thường: con chip CPU (AMD Ryzen 9 9950X), một thanh RAM DDR4, một ổ SSD NVMe (WD SN850X) và một card mạng Ethernet. Mọi máy chủ, kể cả VPS, đều chỉ là tổ hợp của bốn loại linh kiện này — khác nhau ở số lượng và tốc độ.</figcaption>
+  <figcaption><b>Ảnh 2</b> Bốn tài nguyên của Hình 2, nhìn bằng mắt thường: con chip CPU (AMD Ryzen 9 9950X), một thanh RAM DDR4, một ổ SSD NVMe (WD SN850X) và một card mạng Ethernet. Mọi máy chủ, kể cả VPS, đều chỉ là tổ hợp của bốn loại linh kiện này, khác nhau ở số lượng và tốc độ.</figcaption>
 </figure>
 
 
@@ -202,7 +203,7 @@ sẽ cho thấy vì sao phải có nó.</p>
   một luồng lệnh. Trên VPS, con số "vCPU" là số core ảo mà máy ảo được chia, không phải số chip vật lý.</dd>
   <dt>RAM <small>Random Access Memory · bộ nhớ trong</small></dt>
   <dd>Nơi chứa dữ liệu và mã lệnh <em>đang được dùng</em>. Nhanh hơn ổ đĩa nhiều bậc độ lớn, nhưng
-  nhỏ hơn, đắt hơn, và mất sạch nội dung khi mất điện — người ta gọi tính chất đó là <em>volatile</em>.</dd>
+  nhỏ hơn, đắt hơn, và mất sạch nội dung khi mất điện; người ta gọi tính chất đó là <em>volatile</em>.</dd>
   <dt>Disk <small>ổ lưu trữ · SSD/HDD</small></dt>
   <dd>Nơi lưu dữ liệu bền vững (<em>persistent</em>): file chương trình, database, log. Tắt máy vẫn
   còn, nhưng truy cập chậm hơn RAM rất nhiều.</dd>
@@ -233,7 +234,7 @@ tiếp với hồ sơ còn trong tủ.</p>
   cái gì còn lại sau khi mất điện.</caption>
   <thead><tr><th></th><th>Là gì</th><th>Tính chất</th><th>Tắt điện</th></tr></thead>
   <tbody>
-    <tr><td><strong>DISK</strong></td><td>cái tủ hồ sơ trong kho</td><td>To, rẻ, <strong>chậm</strong></td><td><i class="ic ic-yes" role="img" aria-label="có"></i> còn nguyên</td></tr>
+    <tr><td><strong>Disk</strong></td><td>cái tủ hồ sơ trong kho</td><td>To, rẻ, <strong>chậm</strong></td><td><i class="ic ic-yes" role="img" aria-label="có"></i> còn nguyên</td></tr>
     <tr><td><strong>RAM</strong></td><td>mặt bàn làm việc</td><td>Nhỏ, đắt, <strong>nhanh</strong></td><td><i class="ic ic-no" role="img" aria-label="không"></i> <strong>sạch trơn</strong></td></tr>
     <tr><td><strong>CPU</strong></td><td>chính người làm việc</td><td>Chỉ làm được với thứ <strong>đang trên bàn</strong></td><td>—</td></tr>
   </tbody>
@@ -247,7 +248,7 @@ phải bê nó từ tủ lên bàn trước", và hết RAM thành "mặt bàn h
   <span class="label">Giới hạn của ẩn dụ này</span>
   <p>Hình ảnh "một người, một cái bàn" gợi ý rằng mỗi lúc chỉ có một việc đang chạy. Thực tế một CPU
   nhiều core chạy <strong>song song thật sự</strong>, và ngay trên một core, kernel còn <em>luân phiên</em>
-  hàng trăm chương trình với nhau nhanh tới mức bạn tưởng chúng chạy cùng lúc — mục ngay dưới đây
+  hàng trăm chương trình với nhau nhanh tới mức bạn tưởng chúng chạy cùng lúc; mục ngay dưới đây
   nói kỹ hơn về việc luân phiên này.</p>
   <p>Ẩn dụ cũng bỏ qua <strong>cache</strong>, bộ nhớ nhỏ nằm ngay trong con chip CPU, nhanh hơn RAM
   nhiều bậc. Để hiểu vì sao hết RAM thì app chết thì chưa cần tới nó, nhưng đừng mang ẩn dụ này đi tối
@@ -267,9 +268,9 @@ là đã khoanh vùng được nguyên nhân trước khi mở log.</p>
   <thead><tr><th>Tài nguyên</th><th>Hết thì chuyện gì xảy ra</th><th>Mức độ</th></tr></thead>
   <tbody>
     <tr><td><strong>CPU</strong></td><td>Công việc <strong>xếp hàng chờ</strong>. Không ai chết, chỉ chậm dần.</td><td>Chậm</td></tr>
-    <tr><td><strong>RAM</strong></td><td>Kernel <strong>GIẾT một process</strong> để lấy lại chỗ</td><td><strong>Chết</strong></td></tr>
-    <tr><td><strong>DISK</strong></td><td>Không ghi được gì nữa. Log tắt, DB không commit được.</td><td>Lỗi rất lạ</td></tr>
-    <tr><td><strong>NETWORK</strong></td><td>Gói tin bị vứt bỏ</td><td>Timeout</td></tr>
+    <tr><td><strong>RAM</strong></td><td>Kernel <strong>giết một process</strong> để lấy lại chỗ</td><td><strong>Chết</strong></td></tr>
+    <tr><td><strong>Disk</strong></td><td>Không ghi được gì nữa. Log tắt, DB không commit được.</td><td>Lỗi rất lạ</td></tr>
+    <tr><td><strong>Network</strong></td><td>Gói tin bị vứt bỏ</td><td>Timeout</td></tr>
   </tbody>
 </table>
 </div>
@@ -280,18 +281,17 @@ sang chương trình khác, nhanh tới mức từ bên ngoài ta thấy chúng 
 việc, không có việc nào bị huỷ; hàng đợi chỉ dài ra, và mỗi việc phải chờ lâu hơn tới lượt mình.</p>
 
 
-<blockquote class="pull"><p>RAM là một tài nguyên chiếm giữ: một byte đã được cấp cho chương trình này thì không thể đồng thời được dùng bởi chương trình khác.</p></blockquote>
 <p>Ngược lại, RAM là một tài nguyên <em>chiếm giữ</em>: một byte đã được cấp cho chương trình này thì
 không thể đồng thời được dùng bởi chương trình khác. Khi RAM đã được cấp hết, chờ đợi không giải
 phóng được gì, vì không chương trình nào tự trả lại phần bộ nhớ nó đang giữ. Kernel buộc phải chọn
 một chương trình và <strong>giết nó</strong> để thu hồi vùng RAM nó đang chiếm. Ổ đĩa đầy thì chương
 trình vẫn sống nhưng mọi thao tác ghi thất bại với lỗi <code>No space left on device</code>: log ngừng
 ghi, database từ chối commit. Mạng quá tải thì gói tin bị vứt bỏ, và phía gửi chỉ thấy im lặng cho tới
-khi hết kiên nhẫn — tức <code>timeout</code> ở Bài 01.</p>
+khi hết kiên nhẫn, tức <code>timeout</code> ở Bài 01.</p>
 
 <div class="callout ok">
   <span class="label">Câu phải thuộc</span>
-  <p><strong>Hết CPU thì app CHẬM. Hết RAM thì app CHẾT.</strong></p>
+  <p><strong>Hết CPU thì app chậm. Hết RAM thì app chết.</strong></p>
 </div>
 
 <h3 id="noi-ban-do">Nối về bản đồ chín chặng: 504 và 502</h3>
@@ -317,24 +317,23 @@ process nào listen port 8080; Nginx xin kết nối tới đó và bị từ ch
                        ↓
                    502  Bad Gateway</code></pre>
   <figcaption><b>Hình 3</b> Hai kiểu cạn kiệt tài nguyên đi qua chặng <span class="stg">7</span> và hiện ra thành hai mã lỗi
-  khác nhau — cả hai đều do Nginx viết, đúng như cột "ai viết ra" ở Bài 02.</figcaption>
+  khác nhau, cả hai đều do Nginx viết, đúng như cột "ai viết ra" ở Bài 02.</figcaption>
 </figure>
 
 <p>Quay lại tình huống mở bài: với stack Spring Boot + PostgreSQL, con số thường cạn trước là
 <strong>RAM</strong>, bởi vì cả JVM lẫn PostgreSQL đều là những chương trình chủ động giữ nhiều bộ
 nhớ để chạy nhanh, trong khi phần lớn thời gian CPU của một ứng dụng web nhỏ ngồi chờ database và
-mạng. Đây là một nhận định "thường thì", không phải "luôn luôn" — một ứng dụng xử lý ảnh hay mã hoá
-nặng có thể cạn CPU trước — và cách duy nhất để biết chắc là đo, việc ta sẽ học ở Bài 37.</p>
+mạng. Đây là một nhận định "thường thì", không phải "luôn luôn": một ứng dụng xử lý ảnh hay mã hoá
+nặng có thể cạn CPU trước, và cách duy nhất để biết chắc là đo, việc ta sẽ học ở Bài 37.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
   <p><strong>Câu 1:</strong> với Spring Boot và PostgreSQL, con số thường cạn trước là RAM.
-  <strong>Câu 2, nửa đầu:</strong> CPU là tài nguyên chia theo lượt, nên hết CPU chỉ sinh ra chờ đợi —
+  <strong>Câu 2, nửa đầu:</strong> CPU là tài nguyên chia theo lượt, nên hết CPU chỉ sinh ra chờ đợi:
   app chậm, Nginx viết 504; RAM là tài nguyên chiếm giữ, nên hết RAM thì kernel phải giết một chương
-  trình — app chết, Nginx viết 502. Bài 02 dạy đọc hai mã lỗi đó; bài này cho thấy chúng là hai loại
+  trình: app chết, Nginx viết 502. Bài 02 dạy đọc hai mã lỗi đó; bài này cho thấy chúng là hai loại
   tài nguyên đã cạn.</p>
-  <p>Còn treo: "chương trình" bị kernel giết thật ra là gì, và vì sao nó chết thì port 8080 trống?
-  Tab Process trả lời.</p>
+  <p>Nhưng "chương trình" bị kernel giết thật ra là gì, và vì sao nó chết thì port 8080 trống ngay?</p>
 </div>
 
 </section>
@@ -344,10 +343,11 @@ nặng có thể cạn CPU trước — và cách duy nhất để biết chắc
 
 <h2 id="jar-chet">Chương trình và process</h2>
 
-<p>Tab này bắt đầu trả lời câu 3. Ở tab trước, kernel "giết một chương trình" khi hết RAM; ở
+<p>Câu 3 bắt đầu từ một chữ đã dùng hai lần mà chưa định nghĩa. Ở tab trước, kernel "giết một chương
+trình" khi hết RAM; ở
 Bài 01, Nginx gọi tới "chương trình đang listen port 8080". Cả hai chỗ cần biết chính xác thứ đó là gì,
 và câu trả lời nằm ở sự khác nhau giữa một <em>chương trình</em> và một <em>process</em>. File
-<code>app.jar</code> mà Maven build ra là một chương trình — một file nén chứa bytecode nằm yên trên ổ
+<code>app.jar</code> mà Maven build ra là một chương trình, tức một file nén chứa bytecode nằm yên trên ổ
 đĩa: không chiếm port nào, không trả lời ai, không tiêu tốn CPU. Mọi thứ thay đổi vào khoảnh khắc bạn
 gõ:</p>
 
@@ -362,10 +362,10 @@ là thứ có thể chết.</p>
 <div class="callout define">
   <span class="label">Định nghĩa</span>
   <p>Một <strong>process</strong> (tiến trình) là một chương trình <em>đang được thực thi</em>. Chuẩn
-  POSIX — bộ chuẩn chung mà các hệ điều hành họ Unix, trong đó có Linux, cùng tuân theo — định
+  POSIX (bộ chuẩn chung mà các hệ điều hành họ Unix, trong đó có Linux, cùng tuân theo) định
   nghĩa chặt hơn: process là một không gian địa chỉ (<em>address space</em>) cùng với một
   hoặc nhiều thread đang chạy bên trong không gian đó, và các tài nguyên hệ thống mà những thread ấy
-  cần. Hệ quả trực tiếp: cùng một chương trình có thể chạy thành nhiều process độc lập cùng lúc —
+  cần. Hệ quả trực tiếp: cùng một chương trình có thể chạy thành nhiều process độc lập cùng lúc:
   gõ <code>java -jar app.jar</code> hai lần là có hai process, mỗi process một PID, một vùng RAM riêng.</p>
 </div>
 
@@ -390,11 +390,6 @@ là thứ có thể chết.</p>
 
 <h3 id="pid">PID và cây process</h3>
 
-<figure class="fig photo side narrow">
-  <img src="img/thompson-ritchie.webp" width="620" height="402" loading="lazy" alt="Ảnh đen trắng hai người đàn ông để râu: Ken Thompson bên trái, Dennis Ritchie bên phải.">
-  <figcaption><b>Ảnh 3</b> Ken Thompson (trái) và Dennis Ritchie — hai người tạo ra Unix ở Bell Labs từ năm 1969. Cách một process mới ra đời mà đoạn bên cạnh mô tả — process cha gọi <code>fork()</code> rồi process con gọi <code>exec()</code> — được Unix đưa vào dùng rộng rãi, và Linux kế thừa gần như nguyên vẹn.</figcaption>
-</figure>
-
 
 <p>Kernel cần một cách để gọi tên từng process, và cách nó dùng là một con số nguyên gọi là PID
 (<em>process identifier</em>). PID được cấp khi process sinh ra và thu hồi khi process chết, nên nó
@@ -410,7 +405,7 @@ trên máy tạo thành một <strong>cây</strong>.</p>
   <caption><b>Bảng 5</b> Ba khái niệm để đọc cây process.</caption>
   <thead><tr><th>Khái niệm</th><th>Là gì</th></tr></thead>
   <tbody>
-    <tr><td><strong>PID</strong></td><td>Số định danh của process. Kernel cấp khi sinh, thu lại khi chết. <strong>Không cố định</strong> — restart app là có PID mới.</td></tr>
+    <tr><td><strong>PID</strong></td><td>Số định danh của process. Kernel cấp khi sinh, thu lại khi chết. <strong>Không cố định</strong>: restart app là có PID mới.</td></tr>
     <tr><td><strong>PPID</strong></td><td>PID của process <em>cha</em>. Mọi process đều được sinh ra bởi một process khác.</td></tr>
     <tr><td><strong>PID 1</strong></td><td>Gốc của cây. Process đầu tiên kernel tạo khi máy khởi động. Trên Linux thường là <code>systemd</code>.</td></tr>
   </tbody>
@@ -436,13 +431,13 @@ sinh ra một <code>bash</code> riêng cho bạn, và quãng từ lúc đăng nh
 <em>phiên SSH</em>. Cách dùng SSH học kỹ ở Bài 16.</p>
 
 <p>Nhánh <code>sshd <i class="ic ic-r" role="img" aria-label="sang"></i> bash <i class="ic ic-r" role="img" aria-label="sang"></i> java</code> cho thấy ứng dụng là <em>con cháu</em> của phiên
-SSH bạn đăng nhập: phiên đó đóng không khéo thì ứng dụng có thể bị kéo chết theo — một lý do để không
+SSH bạn đăng nhập: phiên đó đóng không khéo thì ứng dụng có thể bị kéo chết theo, và đó là một lý do để không
 chạy ứng dụng production bằng cách gõ tay (tab Service nói cách chạy đúng). Nhánh <code>nginx</code>
 cho thấy <strong>một master và nhiều worker</strong>. Trên Linux, chỉ process chạy bằng
-<code>root</code> — tài khoản có toàn quyền trên máy — mới được listen các port dưới 1024, trong đó có
+<code>root</code> (tài khoản có toàn quyền trên máy) mới được listen các port dưới 1024, trong đó có
 port 443 của HTTPS. Vì vậy master chạy bằng root để mở port 443, còn các worker xử lý request chạy bằng
 một user thường, để nếu worker bị khai thác thì kẻ tấn công chỉ có quyền của user đó. Bên kiểm tra
-quyền ấy là kernel, nhân vật của tab sau.</p>
+quyền ấy là kernel, chủ đề của tab sau.</p>
 
 <h3 id="so-huu">Mỗi process sở hữu những gì</h3>
 
@@ -473,7 +468,7 @@ hệ quả dùng được ngay.</p>
 
 <div class="callout">
   <span class="label">Hai hệ quả dùng được ngay</span>
-  <p><strong>Hệ quả 1 · Biến môi trường là thuộc tính của PROCESS, không phải của máy.</strong> Process
+  <p><strong>Hệ quả 1 · Biến môi trường là thuộc tính của process, không phải của máy.</strong> Process
   con nhận một <em>bản sao</em> biến môi trường của cha lúc được sinh ra; từ đó hai bản sống độc lập.
   Vì vậy <code>export</code> trong một terminal không ảnh hưởng terminal khác (Lab 6), và đây là cách
   mật khẩu hay địa chỉ database được đưa vào ứng dụng mà không ghi cứng trong code.
@@ -484,10 +479,10 @@ hệ quả dùng được ngay.</p>
   công chỉ có đúng phần của user đó. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../09-dockerfile-production/">Bài 09</a>.</p>
 </div>
 
-<h3 id="thread">Process và thread — đừng nhầm</h3>
+<h3 id="thread">Process và thread</h3>
 
 <p>Một câu hỏi tự nhiên nảy sinh, và câu trả lời của nó giải thích vì sao một lỗi bộ nhớ ở một chỗ
-nhỏ có thể kéo chết cả ứng dụng — một phần của câu 2: nếu mỗi process có vùng nhớ riêng, thì làm sao
+nhỏ có thể kéo chết cả ứng dụng (một phần của câu 2): nếu mỗi process có vùng nhớ riêng, thì làm sao
 Spring Boot phục vụ hàng trăm request cùng lúc? Câu trả lời là <strong>thread</strong> (luồng): một
 dòng thực thi độc lập <em>bên trong</em> một process, có con trỏ lệnh và ngăn xếp (<em>stack</em>)
 riêng, nhưng <strong>dùng chung</strong> vùng nhớ và danh sách file đang mở với mọi thread khác của
@@ -502,7 +497,7 @@ process đó.</p>
   <figcaption><b>Hình 7</b> Process là đơn vị cô lập, thread là đơn vị thực thi.</figcaption>
 </figure>
 
-<p>Spring Boot của bạn là <strong>MỘT process</strong> với <strong>hàng trăm thread</strong> — theo mô
+<p>Spring Boot của bạn là <strong>một process</strong> với <strong>hàng trăm thread</strong>: theo mô
 hình truyền thống, Tomcat nhúng bên trong giữ một pool thread và giao mỗi HTTP request cho một thread
 trong pool. (<em>Virtual thread</em> của Java 21 không thay đổi điều này: chúng vẫn nằm trong cùng
 một process.) Chính việc dùng chung vùng nhớ là nguồn gốc của cả ưu điểm lẫn rủi ro.</p>
@@ -512,7 +507,7 @@ một process.) Chính việc dùng chung vùng nhớ là nguồn gốc của c�
   <caption><b>Bảng 6</b> Ba hệ quả của việc nhiều thread chung một process.</caption>
   <thead><tr><th>Hệ quả</th><th>Vì sao</th></tr></thead>
   <tbody>
-    <tr><td><strong>Giết process là giết TẤT CẢ thread</strong></td><td>Không có chuyện "giết một request": kernel dừng mọi thread và thu hồi vùng nhớ chung của process.</td></tr>
+    <tr><td><strong>Giết process là giết tất cả thread</strong></td><td>Không có chuyện "giết một request": kernel dừng mọi thread và thu hồi vùng nhớ chung của process.</td></tr>
     <tr><td><strong>Một thread làm tràn RAM thì CẢ process chết</strong></td><td>Các thread dùng chung vùng nhớ, nên OOM killer giết cả process, không giết riêng thread gây ra.</td></tr>
     <tr><td>Thread rẻ hơn process rất nhiều</td><td>Tạo thread không phải dựng một vùng nhớ mới như tạo process</td></tr>
   </tbody>
@@ -520,18 +515,18 @@ một process.) Chính việc dùng chung vùng nhớ là nguồn gốc của c�
 </div>
 
 <p>Hệ quả thứ hai đáng để suy ngẫm thêm, vì nó giải thích một hiện tượng gây bối rối: chỉ một endpoint
-có lỗi — chẳng hạn một API xuất báo cáo nạp cả bảng dữ liệu vào bộ nhớ — cũng đủ làm sập toàn bộ ứng
+có lỗi (chẳng hạn một API xuất báo cáo nạp cả bảng dữ liệu vào bộ nhớ) cũng đủ làm sập toàn bộ ứng
 dụng, kéo theo mọi endpoint khác vốn hoàn toàn khoẻ mạnh. Không có vách ngăn nào giữa các thread về
 mặt bộ nhớ; đó là cái giá của việc chúng chia sẻ bộ nhớ để trao đổi dữ liệu nhanh.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
   <p><strong>"App" là một process</strong>: chương trình <code>app.jar</code> khi đang chạy, được kernel
-  cấp một PID, một vùng RAM riêng, một danh sách file và kết nối đang mở — trong đó có port 8080 mà
+  cấp một PID, một vùng RAM riêng, một danh sách file và kết nối đang mở, trong đó có port 8080 mà
   Nginx gọi tới. Spring Boot là một process chứa nhiều thread dùng chung vùng nhớ, nên giết process là
   giết mọi request đang xử lý dở.</p>
-  <p>Còn treo: bên cấp PID, cấp RAM, ghi nhận port 8080 thuộc về process nào — và có quyền giết process
-  — là ai? Tab Kernel trả lời.</p>
+  <p>Vậy ai là bên cấp PID, cấp RAM, ghi nhận port 8080 thuộc về process nào, và có quyền giết
+  process?</p>
 </div>
 
 </section>
@@ -541,8 +536,9 @@ mặt bộ nhớ; đó là cái giá của việc chúng chia sẻ bộ nhớ đ
 
 <h2 id="vi-sao-kernel">Vì sao Spring Boot không tự ghi thẳng vào ổ cứng?</h2>
 
-<p>Tab này trả lời phần giữa của câu 3: ai giữ quan hệ giữa port 8080 và process đang listen nó, và
-vì sao process chết thì quan hệ đó biến mất ngay. Hãy hình dung mọi chương trình đều được chạm thẳng
+<p>Phần giữa của câu 3 nằm ở một thành phần đã được nhắc tên từ Bài 01 mà chưa được giải thích: ai giữ quan hệ giữa port 8080 và
+process đang listen nó, và vì sao process chết thì quan hệ đó biến mất ngay? Muốn thấy vì sao phải có thành
+phần ấy, hãy hình dung mọi chương trình đều được chạm thẳng
 vào phần cứng. Một app lỗi có thể ghi đè vùng RAM của app khác; hai app cùng ghi một vị trí trên đĩa
 làm hỏng dữ liệu của nhau; một app độc hại đọc được mật khẩu trong bộ nhớ của app khác. Vì vậy phải có
 một lớp trung gian nắm <strong>độc quyền</strong> phần cứng, đứng giữa mọi chương trình và máy, quyết
@@ -552,7 +548,7 @@ một lớp trung gian nắm <strong>độc quyền</strong> phần cứng, đ�
   <span class="label">Định nghĩa</span>
   <p><strong>Kernel</strong> (nhân hệ điều hành) là phần lõi của hệ điều hành, chạy ở chế độ đặc
   quyền của CPU (<em>kernel mode</em>) và là thành phần duy nhất được phép thao tác trực tiếp với phần
-  cứng. Mọi chương trình còn lại — kể cả những thứ trông rất "hệ thống" như bash hay Nginx — chạy ở
+  cứng. Mọi chương trình còn lại, kể cả những thứ trông rất "hệ thống" như bash hay Nginx, chạy ở
   chế độ hạn chế (<em>user mode</em>), trong một vùng gọi chung là <strong>user space</strong>. Sự
   phân tách này không phải quy ước giấy tờ: nó được chính CPU cưỡng chế bằng các mức đặc quyền phần
   cứng, nên một chương trình ở user mode <em>không thể</em> thực thi lệnh đặc quyền dù có muốn.</p>
@@ -575,7 +571,7 @@ một lớp trung gian nắm <strong>độc quyền</strong> phần cứng, đ�
   <figcaption><b>Hình 8</b> User space và kernel. Chỉ có một cánh cửa giữa hai thế giới: system call.</figcaption>
 </figure>
 
-<h3 id="syscall">syscall — app không tự làm, nó XIN kernel làm hộ</h3>
+<h3 id="syscall">syscall: app không tự làm, nó xin kernel làm hộ</h3>
 
 <p>Nếu chương trình không được chạm phần cứng, làm sao nó đọc được file hay mở được kết nối mạng? Nó
 phải <em>xin</em>. Cơ chế xin đó gọi là <strong>system call</strong>, thường viết tắt là syscall:
@@ -606,7 +602,7 @@ là hiểu được những lỗi mà không framework nào che giấu nổi.</p
 <h3 id="bang-port">Kernel giữ bảng các port đang listen</h3>
 
 <p>Một trong những thứ kernel quản lý là quan hệ giữa port và process. Khi Spring Boot "listen ở port
-8080", thực tế nó gọi <code>bind()</code> rồi <code>listen()</code> — hai syscall nhóm Mạng ở Bảng 7 —
+8080", thực tế nó gọi <code>bind()</code> rồi <code>listen()</code> (hai syscall nhóm Mạng ở Bảng 7),
 tức là <strong>xin kernel ghi nhận rằng port 8080 thuộc về process này</strong>. Kernel thêm vào bảng
 các port đang listen một dòng: <em>"8080 <i class="ic ic-r" role="img" aria-label="sang"></i> PID 4123"</em>. Từ lúc đó, mọi kết nối
 gửi tới port 8080 đều được kernel chuyển cho đúng process ấy. Lệnh <code>netstat</code> ở Lab 2 in ra
@@ -632,11 +628,10 @@ chính bảng này. Ba hiện tượng bạn sẽ gặp đi gặp lại có chun
 <div class="callout ok">
   <span class="label">Chốt</span>
   <p><strong>Kernel</strong> là phần lõi của hệ điều hành, thứ duy nhất được chạm vào phần cứng; mọi
-  process — kể cả process chạy bằng root — chỉ có thể xin qua syscall. Kernel cấp PID và RAM, và giữ
+  process, kể cả process chạy bằng root, chỉ có thể xin qua syscall. Kernel cấp PID và RAM, và giữ
   bảng các port đang listen: process chết thì dòng của nó bị xoá ngay, nên kết nối tới port đó bị từ
   chối.</p>
-  <p>Còn treo: process chết theo những cách nào, và khi hết RAM thì kernel chọn process nào để giết?
-  Tab Process chết trả lời, rồi ghép đủ chuỗi tới 502.</p>
+  <p>Process có thể chết theo những cách nào, và khi hết RAM, kernel chọn process nào để giết?</p>
 </div>
 
 </section>
@@ -646,11 +641,11 @@ chính bảng này. Ba hiện tượng bạn sẽ gặp đi gặp lại có chun
 
 <h2 id="nam-cach">Process chết: được báo trước, hay bị ép</h2>
 
-<p>Tab này hoàn tất câu 2 — ai giết process khi hết RAM, và giết thế nào — rồi ghép đủ chuỗi nhân
-quả của câu 3. <em>Cách</em> một process chết quyết định hệ thống còn lại trong trạng thái nào: Spring
+<p>Hai câu hỏi còn dở đều quy về một khoảnh khắc: lúc một process chết. Câu 2 cần biết ai giết process
+khi hết RAM và giết thế nào; câu 3 cần ghép đủ chuỗi từ cái chết ấy tới con số 502. <em>Cách</em> một process chết quyết định hệ thống còn lại trong trạng thái nào: Spring
 Boot đang giữ connection tới database, transaction đang dở, log còn trong bộ đệm chưa ghi xuống đĩa.
 Được báo trước thì nó dọn dẹp được; không thì những thứ đó bị bỏ lại giữa chừng. Process sống trong
-user space và không tự biết chuyện bên ngoài nó, nên lời báo phải đi qua kernel — và kênh kernel dùng
+user space và không tự biết chuyện bên ngoài nó, nên lời báo phải đi qua kernel, và kênh kernel dùng
 để báo cho một process gọi là <strong>signal</strong>.</p>
 
 
@@ -659,7 +654,7 @@ user space và không tự biết chuyện bên ngoài nó, nên lời báo ph�
   <dd>Một thông báo ngắn mà kernel gửi tới process vào bất kỳ lúc nào, không cần process hỏi; mỗi
   signal mang một con số và một ý nghĩa quy ước.
   Process có thể đăng ký hàm xử lý (<em>handler</em>) cho phần lớn signal; nếu không đăng ký, mỗi
-  signal có một hành vi mặc định — với SIGTERM và SIGINT, mặc định là kết thúc process.</dd>
+  signal có một hành vi mặc định; với SIGTERM và SIGINT, mặc định là kết thúc process.</dd>
   <dt>SIGINT <small>signal số 2</small></dt>
   <dd>"Ngắt": signal mà terminal gửi cho chương trình đang chạy khi bạn bấm <kbd>Ctrl</kbd>+<kbd>C</kbd>.</dd>
   <dt>SIGTERM <small>signal số 15</small></dt>
@@ -667,20 +662,20 @@ user space và không tự biết chuyện bên ngoài nó, nên lời báo ph�
   có cơ hội dọn dẹp trước khi thoát.</dd>
   <dt>SIGKILL <small>signal số 9</small></dt>
   <dd>"Kết thúc ngay": signal <em>không thể</em> bị bắt, chặn hay bỏ qua. Process không bao giờ nhận
-  được nó theo nghĩa thông thường — kernel trực tiếp xoá process.</dd>
+  được nó theo nghĩa thông thường: kernel trực tiếp xoá process.</dd>
 </dl>
 
-<h3 id="term-vs-kill">SIGTERM và SIGKILL — một khác biệt rất thật</h3>
+<h3 id="term-vs-kill">SIGTERM và SIGKILL: một khác biệt rất thật</h3>
 
 <figure class="fig photo shot">
   <img src="img/man-signal7.webp" width="1313" height="1293" loading="lazy" alt="Bảng tín hiệu chuẩn trong man page signal(7), ba dòng SIGINT, SIGKILL và SIGTERM được khoanh màu.">
-  <figcaption><b>Ảnh 4</b> Bảng tín hiệu chuẩn trong man page <code>signal(7)</code> — man page là trang hướng dẫn chính thức đi kèm Linux, mỗi lệnh hay khái niệm một trang — với ba dòng khoanh: <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>SIGINT,</span> tín hiệu mà phím Ctrl+C gửi tới; <span class="kw"><i class="key k-red" aria-hidden="true"></i>SIGKILL,</span> tín hiệu của <code>kill -9</code>; và <span class="kw"><i class="key k-blue" aria-hidden="true"></i>SIGTERM,</span> tín hiệu mặc định của lệnh <code>kill</code>. Cả ba có hành động mặc định <code>Term</code> — kết thúc process — nhưng chỉ SIGKILL là không bắt được, nên app không có cơ hội dọn dẹp.</figcaption>
+  <figcaption><b>Ảnh 3</b> Bảng tín hiệu chuẩn trong man page <code>signal(7)</code> (man page là trang hướng dẫn chính thức đi kèm Linux, mỗi lệnh hay khái niệm một trang), với ba dòng khoanh: <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>SIGINT,</span> tín hiệu mà phím Ctrl+C gửi tới; <span class="kw"><i class="key k-red" aria-hidden="true"></i>SIGKILL,</span> tín hiệu của <code>kill -9</code>; và <span class="kw"><i class="key k-blue" aria-hidden="true"></i>SIGTERM,</span> tín hiệu mặc định của lệnh <code>kill</code>. Cả ba có hành động mặc định <code>Term</code>, tức kết thúc process, nhưng chỉ SIGKILL là không bắt được, nên app không có cơ hội dọn dẹp.</figcaption>
 </figure>
 
 
 <p>Cặp quan trọng nhất là SIGTERM và SIGKILL. Cả hai đều kết thúc process, nhưng SIGTERM là một
 <em>lời đề nghị</em> gửi tới process, còn SIGKILL là một <em>mệnh lệnh</em> kernel thực thi mà process
-không được hỏi. Với SIGTERM, nếu process đã đăng ký handler — Spring Boot có — thì handler chạy, cho
+không được hỏi. Với SIGTERM, nếu process đã đăng ký handler (Spring Boot có đăng ký) thì handler chạy, cho
 ứng dụng cơ hội thu xếp. Với SIGKILL, không handler nào được gọi: kernel dừng mọi thread của process và
 thu hồi toàn bộ tài nguyên của nó.</p>
 
@@ -704,8 +699,8 @@ thu hồi toàn bộ tài nguyên của nó.</p>
 
 <p>Ở tab Bốn tài nguyên, khi RAM cạn thì kernel phải giết một process. Cơ chế làm việc đó tên là
 <strong>OOM killer</strong> (<em>Out-Of-Memory killer</em>). Không còn cách nào tìm bộ nhớ trống,
-kernel không có lựa chọn "từ chối lịch sự": nó chấm điểm từng process — xem được trong
-<code>/proc/&lt;PID&gt;/oom_score</code> — và <strong>giết process có điểm cao nhất</strong> bằng
+kernel không có lựa chọn "từ chối lịch sự": nó chấm điểm từng process (điểm xem được trong
+<code>/proc/&lt;PID&gt;/oom_score</code>) và <strong>giết process có điểm cao nhất</strong> bằng
 SIGKILL. Điểm chủ yếu dựa trên <strong>process nào đang chiếm nhiều bộ nhớ nhất</strong>, vì giết nó
 giải phóng được nhiều chỗ nhất chỉ bằng một lần giết.</p>
 
@@ -717,16 +712,16 @@ giải phóng được nhiều chỗ nhất chỉ bằng một lần giết.</p>
   thật chỉ được cấp vào lúc chương trình <em>chạm</em> tới vùng nhớ đó lần đầu. Cách làm này tiết kiệm rất
   nhiều, vì chương trình hay xin nhiều hơn mức thật sự dùng. Nhưng cái giá là tới lúc chương trình
   chạm vào một vùng nhớ đã được hứa mà RAM vật lý không còn, kernel không thể "rút lại lời hứa" với
-  một lời từ chối được nữa — và OOM killer là lối thoát cuối cùng.</p>
+  một lời từ chối được nữa, và OOM killer là lối thoát cuối cùng.</p>
 </div>
 
 <div class="callout warn">
   <span class="label">Và trên một server Spring Boot, ai ăn RAM nhiều nhất?</span>
   <p><strong>Chính là JVM.</strong> JVM giữ một vùng heap lớn cho các object của ứng dụng, cộng thêm
-  bộ nhớ cho metaspace, cho stack của hàng trăm thread, cho mã đã được biên dịch — nên trên một server
+  bộ nhớ cho metaspace, cho stack của hàng trăm thread, cho mã đã được biên dịch, nên trên một server
   chạy Spring Boot, nó thường là process lớn nhất máy.</p>
   <p>Hệ quả phản trực giác: khi server hết RAM, process bị giết gần như luôn luôn là <strong>chính app
-  của bạn</strong> — kể cả khi process gây hết RAM là một process khác, chẳng hạn một script backup
+  của bạn</strong>, kể cả khi process gây hết RAM là một process khác, chẳng hạn một script backup
   chạy lúc nửa đêm. Kernel không tìm process gây ra sự cố; nó tìm process mà giết đi thì được nhiều
   bộ nhớ nhất.</p>
 </div>
@@ -750,7 +745,7 @@ kernel ép buộc thì không.</p>
 </table>
 </div>
 
-<h3 id="dau-hieu-oom">Dấu hiệu nhận biết OOM — và vì sao nó khó tìm</h3>
+<h3 id="dau-hieu-oom">Dấu hiệu nhận biết OOM, và vì sao nó khó tìm</h3>
 
 <figure class="fig">
 <pre class="diagram"><code>  Triệu chứng đặc trưng:
@@ -769,15 +764,15 @@ stack trace nào.</p>
 
 <div class="callout ok">
   <span class="label">Log trống cũng là một bằng chứng</span>
-  <p>Log ứng dụng trống không có nghĩa là không có dấu vết — dấu vết chỉ nằm <strong>ở chỗ
+  <p>Log ứng dụng trống không có nghĩa là không có dấu vết; dấu vết chỉ nằm <strong>ở chỗ
   khác</strong>. Bên giết process là kernel, và kernel tự ghi lại việc nó đã giết process nào vào log
   của chính nó:</p>
 <pre><code>dmesg | grep -i "killed process"</code></pre>
   <p>Đó là nơi <em>duy nhất</em> ghi lại sự việc. Không biết chỗ này thì bạn sẽ tìm mãi trong log ứng
-  dụng — nơi chắc chắn không có gì.</p>
+  dụng, nơi chắc chắn không có gì.</p>
 </div>
 
-<h2 id="chuoi-day-du">Vì sao "app chết thì website sập" — chuỗi đầy đủ</h2>
+<h2 id="chuoi-day-du">Vì sao "app chết thì website sập": chuỗi đầy đủ</h2>
 
 <p>Giờ ta có đủ mảnh ghép để trả lời câu hỏi thứ ba ở đầu bài một cách trọn vẹn, đi một mạch từ tầng
 vật lý tới con số người dùng nhìn thấy. Hãy đọc chuỗi dưới đây như một bằng chứng toán học: mỗi bước
@@ -804,11 +799,10 @@ là hệ quả tất yếu của bước trước, và mỗi bước dựa trên
 
 <div class="callout">
   <span class="label">Bảy bước, và bạn đã biết từng bước một</span>
-  <p>Bước 6 chính là <code>Connection refused</code> mà bạn đã tự tay đo được ở <a href="../01-ip-port-listen-firewall/#lab">Bài 01</a> — curl báo
-  <strong>2076 ms</strong>, lệnh <code>time</code> đo cả lượt là <strong>2,155 giây</strong> — chỉ
+  <p>Bước 6 chính là <code>Connection refused</code> mà bạn đã tự tay đo được ở <a href="../01-ip-port-listen-firewall/#lab">Bài 01</a>, chỉ
   khác là lần này nó xảy ra <em>bên trong</em> server, và bên nhận nó là Nginx thay cho curl.</p>
   <p>Đây là ý nghĩa đầy đủ của nguyên tắc 2 ở <a href="../02-chan-doan-theo-chang/#nguyen-tac">Bài 02</a>,
-  <em>"triệu chứng chứng minh các chặng trước"</em>: 502 chứng minh Nginx vẫn chạy tốt, nhưng nguyên nhân thật nằm ở <strong>bước 1</strong> — sáu bước phía
+  <em>"triệu chứng chứng minh các chặng trước"</em>: 502 chứng minh Nginx vẫn chạy tốt, nhưng nguyên nhân thật nằm ở <strong>bước 1</strong>, sáu bước phía
   trước, ở một tầng mà trang lỗi không bao giờ nhắc tới. Sửa bằng cách restart app thì 502 biến mất,
   nhưng bước 1 vẫn còn nguyên và sẽ lặp lại.</p>
 </div>
@@ -816,10 +810,10 @@ là hệ quả tất yếu của bước trước, và mỗi bước dựa trên
 <div class="callout ok">
   <span class="label">Chốt</span>
   <p><strong>Câu 2, nửa sau:</strong> khi hết RAM, OOM killer của kernel chấm điểm process chủ yếu theo
-  lượng RAM đang giữ, chọn process lớn nhất — trên server Spring Boot thường là JVM — và giết bằng
+  lượng RAM đang giữ, chọn process lớn nhất (trên server Spring Boot thường là JVM) và giết bằng
   SIGKILL, nên app không kịp dọn dẹp và log ứng dụng trống trơn. <strong>Câu 3:</strong> process chết,
   kernel xoá dòng của port 8080, Nginx xin kết nối bị từ chối và viết 502.</p>
-  <p>Còn treo: app đã chết rồi thì ai dựng nó dậy? Tab Service trả lời.</p>
+  <p>Còn một câu tự mọc ra từ chuỗi bảy bước: app đã chết rồi thì ai dựng nó dậy?</p>
 </div>
 
 </section>
@@ -827,7 +821,7 @@ là hệ quả tất yếu của bước trước, và mỗi bước dựa trên
 <!-- ================================================================== -->
 <section class="tab" id="service" data-tab="Service" data-note="process + người trông coi">
 
-<h2 id="process-vs-service">Process và service — khác nhau ở một người</h2>
+<h2 id="process-vs-service">Process và service: khác nhau ở bên trông coi</h2>
 
 <p>Chuỗi bảy bước ở tab trước kết thúc với một ứng dụng đã chết và một website trả 502. Câu hỏi tiếp
 theo, sinh ra từ chính câu 3, là: <em>ai sẽ dựng nó dậy?</em> Với một process bình thường, câu trả lời là không ai cả. Một
@@ -837,17 +831,17 @@ không có cơ chế nào khiến nó tự khởi động khi máy bật lên. �
 
 <figure class="fig photo shot">
   <img src="img/systemd-restart.webp" width="1118" height="892" loading="lazy" alt="Bảng 1 trong man page systemd.service: hàng là các kiểu process chết, cột là các giá trị Restart=, dấu X cho biết systemd có khởi động lại hay không.">
-  <figcaption><b>Ảnh 5</b> Bảng 1 trong man page <code>systemd.service(5)</code>: với từng kiểu chết (hàng) và từng giá trị <code>Restart=</code> (cột), dấu X cho biết systemd có dựng process dậy lại hay không. <span class="kw"><i class="key k-red" aria-hidden="true"></i>Dòng</span> khoanh đỏ là trường hợp của <code>kill -9</code> — một tín hiệu "không sạch"; <span class="kw"><i class="key k-blue" aria-hidden="true"></i>dòng</span> khoanh lam là OOM killer. Cả hai đều được <code>Restart=on-failure</code> khởi động lại — đó chính là chính sách trông coi biến một process thành một service.</figcaption>
+  <figcaption><b>Ảnh 4</b> Bảng 1 trong man page <code>systemd.service(5)</code>: với từng kiểu chết (hàng) và từng giá trị <code>Restart=</code> (cột), dấu X cho biết systemd có dựng process dậy lại hay không. <span class="kw"><i class="key k-red" aria-hidden="true"></i>Dòng</span> khoanh đỏ là trường hợp của <code>kill -9</code>, một tín hiệu "không sạch"; <span class="kw"><i class="key k-blue" aria-hidden="true"></i>dòng</span> khoanh lam là OOM killer. Cả hai đều được <code>Restart=on-failure</code> khởi động lại; đó chính là chính sách trông coi biến một process thành một service.</figcaption>
 </figure>
 
 
 <div class="callout define">
   <span class="label">Định nghĩa</span>
-  <p>Một <strong>service</strong> — trong truyền thống Unix còn gọi là <strong>daemon</strong> — là
+  <p>Một <strong>service</strong> (trong truyền thống Unix còn gọi là <strong>daemon</strong>) là
   một process chạy nền, không gắn với terminal nào, <em>được một process khác trông coi</em>. Người
   trông coi đó (<em>supervisor</em>) chịu trách nhiệm khởi động service khi máy bật, theo dõi nó trong
   lúc chạy, và dựng nó dậy khi nó chết theo một chính sách định trước. Trên các bản phân phối Linux
-  hiện đại, người trông coi mặc định là <code>systemd</code> — chính là PID 1 ở gốc cây process trong
+  hiện đại, người trông coi mặc định là <code>systemd</code>, chính là PID 1 ở gốc cây process trong
   Hình 5.</p>
 </div>
 
@@ -868,19 +862,19 @@ không có cơ chế nào khiến nó tự khởi động khi máy bật lên. �
 chạy thành process hay chạy thành service là <em>cùng một file</em>, cùng một đoạn code; khác biệt
 duy nhất nằm ở chỗ có một process khác đứng ngoài, cầm trong tay mô tả "chương trình này cần chạy,
 chạy bằng user nào, chết thì làm gì". Đó là lý do việc biến một ứng dụng thành service không đòi hỏi
-sửa một dòng code nào — chỉ cần viết một file cấu hình cho người trông coi.</p>
+sửa một dòng code nào; chỉ cần viết một file cấu hình cho người trông coi.</p>
 
 <div class="callout">
   <span class="label">Và ta quay về đúng câu mở đầu bài</span>
   <p><strong>Không có ai ngồi trước server.</strong> Nên phải có một <em>process khác</em> làm thay
-  việc của con người đó: nhìn thấy app chết, và dựng nó dậy — kể cả lúc hai giờ sáng, kể cả
+  việc của con người đó: nhìn thấy app chết, và dựng nó dậy, kể cả lúc hai giờ sáng, kể cả
 khi chính OOM killer đã giết nó.</p>
   <figure class="fig">
 <pre class="diagram"><code>  Docker      trông coi ứng dụng đóng gói trên một máy    →  Bài 14
   Kubernetes  trông coi ứng dụng trên cả một cụm máy      →  Bài 27</code></pre>
     <figcaption><b>Hình 13</b> Hai công cụ trông coi bạn sẽ học trong lộ trình, bên cạnh systemd:
-    Docker — công cụ đóng gói và chạy ứng dụng, học từ Bài 05 — và Kubernetes — chạy ứng dụng trên
-    nhiều máy, học từ Bài 26. Tên khác nhau, việc giống nhau: thấy process chết thì dựng nó dậy.</figcaption>
+    Docker (công cụ đóng gói và chạy ứng dụng, học từ Bài 05) và Kubernetes (chạy ứng dụng trên
+    nhiều máy, học từ Bài 26). Tên khác nhau, việc giống nhau: thấy process chết thì dựng nó dậy.</figcaption>
   </figure>
   <p>Hai công cụ khác nhau, <strong>cùng một ý tưởng</strong>: thay thế người trực.</p>
 </div>
@@ -888,14 +882,14 @@ khi chính OOM killer đã giết nó.</p>
 <div class="callout warn">
   <span class="label">Giới hạn của việc tự dựng dậy</span>
   <p>Một service tự khởi động lại là cần thiết, nhưng không phải thuốc chữa. Quay lại chuỗi bảy bước:
-  người trông coi can thiệp sau bước 3, dựng app dậy, và 502 biến mất — nhưng bước 1 vẫn còn đó. Nếu
+  người trông coi can thiệp sau bước 3, dựng app dậy, và 502 biến mất, nhưng bước 1 vẫn còn đó. Nếu
   RAM cạn vì một nguyên nhân kéo dài, app sẽ bị giết, được dựng dậy, rồi lại bị giết, thành một vòng
   lặp mà nhìn từ ngoài giống như website "chập chờn". Tự động dựng dậy giải quyết <em>triệu chứng</em>
   để người dùng ít bị ảnh hưởng; tìm ra bước 1 vẫn là việc của bạn, và đó là lý do ở Bài 37 và 38 ta sẽ học
-  cách đo và cách tự báo động — để biết app đã phải dựng dậy bao nhiêu lần và vì sao.</p>
-  <p>Vòng lặp đó còn một hệ quả khó thấy hơn. Ngay sau khi được dựng lại, JVM thường còn nhỏ vì chưa
+  cách đo và cách tự báo động, để biết app đã phải dựng dậy bao nhiêu lần và vì sao.</p>
+  <p>Vòng lặp đó còn một hệ quả khó thấy hơn, và đây là chỗ tôi tự nhận ra trong lúc học bài này. Ngay sau khi được dựng lại, JVM thường còn nhỏ vì chưa
   nạp hết mọi thứ. Nếu thứ làm cạn RAM là một script sao lưu chạy ban đêm, lúc này chính script mới là
-  process lớn nhất — và OOM killer giết nó. App sống lại, nhưng bản sao lưu đêm đó thất
+  process lớn nhất, và OOM killer giết nó. App sống lại, nhưng bản sao lưu đêm đó thất
   bại mà không ai hay, cho tới ngày cần khôi phục dữ liệu mới phát hiện ra.</p>
 </div>
 
@@ -905,8 +899,8 @@ khi chính OOM killer đã giết nó.</p>
   mô tả "chạy chương trình nào, bằng user nào, chết thì làm gì". Trên Linux, bên trông coi mặc định là
   systemd (PID 1): nó chạy app khi máy bật và dựng app dậy khi app chết. Tự dựng dậy chữa triệu chứng
   chứ không chữa nguyên nhân.</p>
-  <p>Còn treo: mọi điều bài này nói đều có thể thấy tận mắt. Tab Lab cho bạn tự sinh ra, tìm và giết
-  một process.</p>
+  <p>Mọi điều bài này nói đều có thể thấy tận mắt. Tab Lab cho bạn tự sinh ra, tìm và giết một
+  process.</p>
 </div>
 
 </section>
@@ -940,7 +934,7 @@ cốt lõi của nó như sau:</p>
 const server = http.createServer((req, res) => res.end('con song\n'));
 
 server.listen(8080, () => {
-  console.log('PID = ' + process.pid + '  |  dang giu phong 8080');
+  console.log('PID = ' + process.pid + '  |  dang listen port 8080');
 });
 
 // Đăng ký hàm xử lý SIGINT — chỉ chạy khi được báo trước (Ctrl+C)
@@ -968,7 +962,7 @@ sau đều cần nó.</p>
 <pre><code>Error: Cannot find module '…\devops_selfLearning\lab\server.js'
   code: 'MODULE_NOT_FOUND'</code></pre>
   <p>File không hề mất. Node tính đường dẫn tương đối <code>lab/server.js</code> từ <strong>thư mục
-  làm việc của process</strong> — dòng <code>cwd</code> trong Hình 6 — chứ không tính từ chỗ file nằm,
+  làm việc của process</strong> (dòng <code>cwd</code> trong Hình 6), chứ không tính từ chỗ file nằm,
   nên nó đi tìm một thư mục <code>lab</code> không có ở gốc repo. Ứng dụng Spring Boot cũng vậy:
   <code>new File("config/app.yml")</code> tìm thấy hay không là tuỳ bạn gõ <code>java -jar</code> từ
   thư mục nào. Sửa: <code>cd</code> vào thư mục của bài rồi chạy lại.</p>
@@ -994,7 +988,7 @@ khi debug <code>Address already in use</code> ngoài đời thật: thay vì đo
 bạn đọc thẳng bảng các port đang listen của kernel. (Dấu <code>//</code> trước <code>FI</code> là vì Git Bash hiểu
 một dấu <code>/</code> là đường dẫn; nhân đôi nó để truyền nguyên văn cho lệnh Windows.)</p>
 
-<p>Một lần chạy thật trên Windows cho ra:</p>
+<p>Trên máy tôi, lần chạy thật cho ra:</p>
 
 <pre><code>$ curl http://localhost:8080
 con song
@@ -1010,7 +1004,7 @@ Image Name                     PID Session Name        Session#    Mem Usage
 node.exe                     29140 Console                    1     54,532 K</code></pre>
 
 <p>Hai dòng <code>LISTENING</code> mang cùng PID 29140, khớp với PID mà Node tự in ra: một process
-listen port 8080 trên cả địa chỉ IPv4 <code>0.0.0.0</code> lẫn địa chỉ IPv6 <code>[::]</code> — chuyện
+listen port 8080 trên cả địa chỉ IPv4 <code>0.0.0.0</code> lẫn địa chỉ IPv6 <code>[::]</code>, đúng chuyện
 listen address ở <a href="../01-ip-port-listen-firewall/#port-listen">Bài 01</a>. Dòng thứ ba, trạng thái
 <code>TIME_WAIT</code> với PID <code>0</code>, thì không phải một process đang listen: đó là dấu vết của chính kết nối mà <code>curl</code> vừa mở rồi đóng, đang chờ
 kernel dọn hẳn.</p>
@@ -1028,10 +1022,10 @@ Trước khi chạy, hãy dự đoán bằng bảng các port đang listen ở t
   port: 8080</code></pre>
 
 <p>Mấy dòng cuối đọc được bằng chính kiến thức của bài. <code>syscall: 'listen'</code> là lời process
-mới xin kernel ghi nhận port 8080 — nhóm Mạng trong Bảng 7. <code>EADDRINUSE</code> là câu trả lời của
+mới xin kernel ghi nhận port 8080 (nhóm Mạng trong Bảng 7). <code>EADDRINUSE</code> là câu trả lời của
 kernel sau khi tra bảng và thấy port 8080 đã thuộc process khác; <code>address already in use</code> chỉ là
-Node dịch mã đó sang chữ. Process mới không có code bắt lỗi này nên tự chết — cách chết "exception
-không bắt được" trong Bảng 8 — còn process cũ vẫn chạy như không có gì xảy ra.</p>
+Node dịch mã đó sang chữ. Process mới không có code bắt lỗi này nên tự chết (cách chết "exception
+không bắt được" trong Bảng 8), còn process cũ vẫn chạy như không có gì xảy ra.</p>
 
 <div class="callout ok">
   <span class="label">Chạy thêm một process không bao giờ đẩy được process đang listen port đó</span>
@@ -1051,25 +1045,25 @@ tasklist //FI "PID eq &lt;PID&gt;" //FO LIST</code></pre>
 
 <p>So hai con số. <strong>Cùng một chương trình, khác nhau ở chỗ một cái đang sống.</strong> Phần
 chênh lệch không nằm trong file của bạn: nó là toàn bộ bộ máy JavaScript của Node được nạp vào
-RAM để chạy vài dòng code đó — đúng như Hình 4 đã mô tả cho <code>app.jar</code>.</p>
+RAM để chạy vài dòng code đó, đúng như Hình 4 đã mô tả cho <code>app.jar</code>.</p>
 
-<p>Một lần chạy thật: <code>server.js</code> nặng 1.188 byte, còn process Node chạy nó chiếm 54.532 KB,
+<p>Trên máy tôi: <code>server.js</code> nặng 1.188 byte, còn process Node chạy nó chiếm 54.532 KB,
 gấp khoảng <strong>47.000 lần</strong>. Trên cùng máy lúc đó có một process <code>java.exe</code> chiếm
-732.832 KB, hơn 13 lần Node — một minh chứng nhỏ cho điều tab Process chết đã nói: JVM thường là
+732.832 KB, hơn 13 lần Node: một minh chứng nhỏ cho điều tab Process chết đã nói: JVM thường là
 process lớn nhất máy.</p>
 
-<h3 id="lab-4">Lab 4 — Giết process, và xem phòng trống ngay lập tức</h3>
+<h3 id="lab-4">Lab 4 — Giết process, và xem port 8080 trống ngay lập tức</h3>
 
 <p>Ở cửa sổ đang chạy server, bấm <strong><kbd>Ctrl</kbd> + <kbd>C</kbd></strong>. Quan sát dòng
-<code>[SIGINT] duoc bao truoc, dang don dep...</code> — app <strong>được báo trước</strong> và kịp
+<code>[SIGINT] duoc bao truoc, dang don dep...</code>: app <strong>được báo trước</strong> và kịp
 nói lời cuối trước khi thoát. Rồi ở cửa sổ kia:</p>
 
 <pre><code>time curl -4 http://localhost:8080
 netstat -ano | grep 8080</code></pre>
 
-<p>Bạn sẽ thấy <code>curl</code> báo lỗi <code>(7)</code> — không kết nối được, tức là refused — và dòng
+<p>Bạn sẽ thấy <code>curl</code> báo lỗi <code>(7)</code> (không kết nối được, tức là refused), và dòng
 <code>LISTENING</code> của port 8080 <strong>biến mất</strong>. So con số của <code>time</code> với 2,155 giây ở Bài 01
-và ghi vào <code>notes.md</code>. Một lần chạy thật:</p>
+và ghi vào <code>notes.md</code>. Trên máy tôi:</p>
 
 <pre><code>$ time curl -4 http://localhost:8080
 curl: (7) Failed to connect to localhost port 8080 after 2030 ms: Could not connect to server
@@ -1088,7 +1082,7 @@ bị từ chối kết nối, nên con số gần như không đổi giữa các
 <h3 id="lab-5">Lab 5 — Tự gây lỗi: giết ép, và so sánh</h3>
 
 <p>Đây là bước cố tình gây lỗi của bài. Chạy lại <code>node lab/server.js</code>, ghi PID mới (để ý
-nó đã khác PID ở Lab 1 — PID không cố định). Lần này, ở cửa sổ khác, <strong>giết ép</strong>:</p>
+nó đã khác PID ở Lab 1, vì PID không cố định). Lần này, ở cửa sổ khác, <strong>giết ép</strong>:</p>
 
 <pre><code># PowerShell hoặc Git Bash — /F nghĩa là ÉP BUỘC
 taskkill //F //PID &lt;PID&gt;</code></pre>
@@ -1100,7 +1094,7 @@ taskkill //F //PID &lt;PID&gt;</code></pre>
   taskkill /F  →  cửa sổ tắt phụt, KHÔNG in gì cả              ← KHÔNG kịp in gì</code></pre>
     <figcaption><b>Hình 14</b> Hai cách chết của cùng một process, quan sát từ cửa sổ của chính nó.</figcaption>
   </figure>
-  <p>Đây chính xác là khác biệt giữa <strong>SIGTERM</strong> và <strong>SIGKILL</strong> trên Linux —
+  <p>Đây chính xác là khác biệt giữa <strong>SIGTERM</strong> và <strong>SIGKILL</strong> trên Linux,
   và là lý do OOM killer để lại log trống trơn. Bạn vừa tái hiện, trong môi trường an toàn, đúng cái
   cảm giác sẽ gặp trên production: process biến mất và không để lại một lời nào.</p>
 </div>
@@ -1124,7 +1118,7 @@ hai là một process bash khác, với bản sao biến môi trường riêng c
 cách quản lý cấu hình và secret sau này. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../10-cau-hinh-va-secret/">Bài 10</a>.</p>
 
 <p>Câu "những process con mà bash đó sinh ra sau thời điểm <code>export</code>" kiểm chứng được ngay.
-Mỗi lệnh gõ vào bash đều chạy thành một process con của nó — kể cả khi lệnh đó là chính
+Mỗi lệnh gõ vào bash đều chạy thành một process con của nó, kể cả khi lệnh đó là chính
 <code>bash</code>. Trong các lệnh dưới đây, <code>$$</code> là PID của bash đang chạy, còn
 <code>$PPID</code> là PID của cha nó:</p>
 
@@ -1151,27 +1145,27 @@ nó là ai, và nó được sinh ra trước hay sau dòng <code>export</code>.
 chạy một dòng JavaScript viết ngay trên dòng lệnh; <code>process.env</code> tương đương
 <code>System.getenv()</code> của Java.)</p>
 
-<h2 id="hay-hieu-sai">Những chỗ hay hiểu sai</h2>
+<h2 id="hay-hieu-sai">Những chỗ tôi từng hiểu sai</h2>
 
-<p>Trước khi đánh dấu danh sách tự kiểm tra, hãy đọc bảng dưới. Mỗi dòng là một cách hiểu nghe rất
-hợp lý — người mới học bài này thường nghĩ đúng như thế — nhưng sai ở một mắt xích cụ thể. Nếu bạn
-từng nghĩ như cột đầu, bấm "xem lại" để quay về đúng mục đã giảng.</p>
+<p>Trước khi đánh dấu danh sách tự kiểm tra, hãy đọc bảng dưới. Mỗi dòng là một chỗ chính tôi đã hiểu
+sai khi học bài này. Cách nghĩ nào cũng nghe rất hợp lý, nhưng sai ở một mắt xích cụ thể; nếu bạn cũng
+đang nghĩ như cột đầu, bấm "xem lại" để quay về đúng mục đã giảng.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 10</b> Mười cách hiểu sai thường gặp, và mắt xích bị bỏ sót.</caption>
-  <thead><tr><th>Người mới hay nghĩ</th><th>Thực tế</th><th></th></tr></thead>
+  <caption><b>Bảng 10</b> Mười chỗ tôi từng hiểu sai khi học bài này, và mắt xích bị bỏ sót.</caption>
+  <thead><tr><th>Tôi từng nghĩ</th><th>Thực tế</th><th></th></tr></thead>
   <tbody>
     <tr><td>Hết RAM thì app không đủ chỗ để khởi động; muốn khởi động lại phải giết bớt process khác</td><td>App <strong>đang chạy</strong> thì bị kernel giết để lấy lại RAM. Phần RAM đó được thu hồi ngay, nên khởi động lại chỉ là tạo một process mới vào chỗ trống</td><td><a href="#can-kiet">xem lại</a></td></tr>
     <tr><td>Đổi biến môi trường mà app không thấy, vì app đã "nạp sẵn" giá trị</td><td>Process giữ <strong>bản sao riêng</strong> từ lúc được sinh ra; đọc lại bao nhiêu lần vẫn là giá trị cũ. Muốn giá trị mới phải tạo process mới</td><td><a href="#so-huu">xem lại</a></td></tr>
     <tr><td>Đã là process khác thì không đọc được biến môi trường đặt ở terminal</td><td>Process con sinh ra <strong>sau</strong> <code>export</code> nhận được bản sao; chỉ process không phải con (một cửa sổ khác) mới không có</td><td><a href="#lab-6">xem lại</a></td></tr>
     <tr><td>Chạy lại chương trình thì bản đang chạy sẽ tự tắt để nhường chỗ</td><td>Process mới bị kernel từ chối (<code>EADDRINUSE</code>) và chết; process cũ vẫn listen port đó</td><td><a href="#lab-2-tranh-phong">xem lại</a></td></tr>
-    <tr><td>Viết bằng C, chạy thẳng lệnh CPU là lách được kernel — vì kernel cũng viết bằng C</td><td>Ranh giới do <strong>CPU</strong> cưỡng chế, không do ngôn ngữ. Đoạn C đó vẫn là một process trong user space</td><td><a href="#vi-sao-kernel">xem lại</a></td></tr>
+    <tr><td>Viết bằng C, chạy thẳng lệnh CPU là lách được kernel, vì kernel cũng viết bằng C</td><td>Ranh giới do <strong>CPU</strong> cưỡng chế, không do ngôn ngữ. Đoạn C đó vẫn là một process trong user space</td><td><a href="#vi-sao-kernel">xem lại</a></td></tr>
     <tr><td>Process chạy bằng root thì chạy trong kernel, chạm thẳng được phần cứng</td><td>root là một <strong>user</strong>, kernel đọc nó để quyết định cho phép; kernel mode là một <strong>chế độ của CPU</strong>. Process root vẫn ở user space, vẫn phải xin qua syscall</td><td><a href="#vi-sao-kernel">xem lại</a></td></tr>
     <tr><td>Server mất điện thì người dùng thấy refused, hoặc 502</td><td>Thấy <strong>timeout</strong>: không còn kernel nào để từ chối, Nginx cũng đã chết, nên không ai viết ra lỗi cả</td><td><a href="../01-ip-port-listen-firewall/#ket-noi-tcp">xem lại</a></td></tr>
     <tr><td>Bị <code>kill -9</code> thì các object trong RAM không được dọn</td><td>RAM được kernel thu hồi hết. Thứ bị bỏ dở là những thứ <strong>ngoài process</strong>: connection treo ở database, transaction dở, log còn trong bộ đệm</td><td><a href="#term-vs-kill">xem lại</a></td></tr>
     <tr><td>OOM killer giết process chiếm quá nửa RAM, và chắc chắn giết nó</td><td>Chấm điểm <strong>chủ yếu theo RAM</strong> và <strong>so với các process khác</strong>: lớn nhất thì nhiều khả năng bị chọn nhất</td><td><a href="#oom">xem lại</a></td></tr>
-    <tr><td>Có người trông coi dựng dậy ngay, nên 502 chỉ thoáng qua</td><td>Process mới đã chạy nhưng Spring Boot còn cần 15–60 giây mới listen 8080 — <strong>đang chạy chưa phải sẵn sàng</strong>. Nếu nguyên nhân còn đó thì app bị giết rồi dựng lại liên tục</td><td><a href="#process-vs-service">xem lại</a></td></tr>
+    <tr><td>Có người trông coi dựng dậy ngay, nên 502 chỉ thoáng qua</td><td>Process mới đã chạy nhưng Spring Boot còn cần 15–60 giây mới listen 8080: <strong>đang chạy chưa phải sẵn sàng</strong>. Nếu nguyên nhân còn đó thì app bị giết rồi dựng lại liên tục</td><td><a href="#process-vs-service">xem lại</a></td></tr>
   </tbody>
 </table>
 </div>
@@ -1199,8 +1193,8 @@ từng nghĩ như cột đầu, bấm "xem lại" để quay về đúng mục �
 
 <p>Câu hỏi của bài là: 502 nghĩa là phía sau Nginx không còn ai trả lời, nhưng "app" thật ra là gì,
 vì sao nó có thể chết, và vì sao nó chết thì website sập. Giờ câu trả lời đã trọn. <strong>App là một
-process do kernel quản lý.</strong> Hết RAM thì kernel giết process lớn nhất — trên server Spring Boot
-thường là chính app — bằng SIGKILL, nên app không kịp dọn dẹp. Process chết thì kernel xoá dòng của
+process do kernel quản lý.</strong> Hết RAM thì kernel giết process lớn nhất (trên server Spring Boot
+thường là chính app) bằng SIGKILL, nên app không kịp dọn dẹp. Process chết thì kernel xoá dòng của
 port 8080, Nginx bị từ chối và viết 502. Muốn app tự sống lại thì phải giao nó cho một process khác
 trông coi, tức biến nó thành <strong>service</strong>.</p>
 
@@ -1236,7 +1230,7 @@ một process sống nhờ RAM và CPU, được kernel cấp PID và port, và 
 
 <div class="callout">
   <span class="label">Đọc thêm, không bắt buộc</span>
-  <p><a href="lich-su-he-dieu-hanh.html">Phụ lục: vì sao có hệ điều hành và process</a> — chạy theo
+  <p><a href="lich-su-he-dieu-hanh.html">Phụ lục: vì sao có hệ điều hành và process</a>: chạy theo
   lô, chia sẻ thời gian, Unix và Linux: mỗi bước giải quyết vấn đề mà bước trước để lại.</p>
 </div>
 
@@ -1260,22 +1254,21 @@ một process sống nhờ RAM và CPU, được kernel cấp PID và port, và 
   <li><a href="https://nodejs.org/api/process.html#signal-events">Node.js — Signal events</a> — cách
   Node xử lý SIGINT, SIGTERM, SIGKILL, kể cả trên Windows.</li>
   <li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html">systemd.service</a>
-  — tuỳ chọn <code>Restart=</code>, chính sách dựng process dậy của systemd trong Ảnh 5.</li>
+  — tuỳ chọn <code>Restart=</code>, chính sách dựng process dậy của systemd trong Ảnh 4.</li>
 </ol>
 
 
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do người viết tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do tôi tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
 <ol class="photo-credits">
   <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg">Tủ máy chủ ở trung tâm dữ liệu NERSC</a> — Derrick Coetzee, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
   <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:AMD_Ryzen_9_9950X.jpg">CPU AMD Ryzen 9 9950X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
   <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png">Thanh RAM DDR4</a> — PantheraLeo1359531, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
   <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Western_Digital_SN850X_NVME_solid_state_drive_8TB_front_side.jpg">Ổ SSD NVMe WD SN850X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
   <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg">Card mạng Ethernet PCI</a> — afrank99, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
-  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Ken_Thompson_and_Dennis_Ritchie--1973.jpg">Ken Thompson và Dennis Ritchie</a> — không rõ tác giả, Wikimedia Commons, public domain.</li>
-  <li><b>Ảnh 4</b>Bảng tín hiệu chuẩn, signal(7) — chụp màn hình <a href="https://man7.org/linux/man-pages/man7/signal.7.html">man7.org</a>, 30/09/2026.</li>
-  <li><b>Ảnh 5</b>Bảng 1, systemd.service(5) — chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a>, 30/09/2026; đã ẩn ba cột on-abnormal, on-abort, on-watchdog.</li>
+  <li><b>Ảnh 3</b>Bảng tín hiệu chuẩn, signal(7) — chụp màn hình <a href="https://man7.org/linux/man-pages/man7/signal.7.html">man7.org</a>, 30/09/2026.</li>
+  <li><b>Ảnh 4</b>Bảng 1, systemd.service(5) — chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a>, 30/09/2026; đã ẩn ba cột on-abnormal, on-abort, on-watchdog.</li>
 </ol>
 </section>
 
@@ -1298,6 +1291,6 @@ một process sống nhờ RAM và CPU, được kernel cấp PID và port, và 
 
 </div>
 
-<script src="../../assets/app.js?v=c4b75b55"></script>
+<script src="../../assets/app.js?v=2b4e881a"></script>
 </body>
 </html>

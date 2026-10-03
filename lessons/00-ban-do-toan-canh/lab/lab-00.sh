@@ -1,60 +1,46 @@
 #!/usr/bin/env bash
 #
-# Bài 00 — Lab: nhìn từng chặng của một HTTP request bằng mắt
+# Bài 00 — Lab: nhìn tận mắt từng chặng của một request
 #
-# Chạy trong Git Bash hoặc WSL Ubuntu. KHÔNG chạy trong cmd.exe —
-# ở đó `time` là lệnh đặt đồng hồ hệ thống và `;` không tách lệnh được.
+# Chạy trong Git Bash (hoặc một shell Linux). KHÔNG chạy trong cmd.exe:
+# ở đó cú pháp của `|` và `2>/dev/null` khác hẳn.
 #
-#   bash lab-00.sh
+#   bash lab/lab-00.sh
 #
+# Script chỉ gom ba lab của tab Lab vào một chỗ. Cách đọc từng dòng output nằm trong
+# index.html (tab Lab) và phan-tich-output.html.
 set -u
 
 hr() { printf '\n\033[1m%s\033[0m\n' "── $* ──────────────────────────────"; }
 
-hr "Lab 1 · chặng ② DNS — tên miền dịch ra số"
+hr "Lab 1 · chặng 2, DNS: tên miền dịch ra địa chỉ"
 nslookup github.com
 
-hr "Lab 1b · chặng ② hỏng — NXDOMAIN"
+hr "Lab 1 · bước tự gây lỗi: một tên miền không tồn tại (NXDOMAIN)"
 nslookup khong-ton-tai-dau-nhe-12345.com
 
-hr "Lab 2 · chặng ③④⑤ nối nhau"
+hr "Lab 2 · chặng 2, 3, 4, 5 nối tiếp nhau, và dấu vết của chặng 7"
 # Tự tìm trong output:
-#   Trying <ip>:443          → ③ TCP đang mở kết nối
-#   Established connection   → ③ ống đã thông (để ý CẢ port phía mình)
-#   ALPN                     → ④ thỏa thuận giao thức trong lúc bắt tay TLS
-#   > GET / HTTP/1.1         → ⑤ request đi ra
-#   > Host: example.com      → ⑤ dòng Nginx đọc để biết hỏi web nào
-#   < HTTP/1.1 200 OK        → đường về
-#   < Server: cloudflare     → ⑦ reverse proxy ngoài đời thật
+#   IPv4: ...                → chặng 2: DNS đã trả lời
+#   Established connection   → chặng 3: kết nối TCP đã mở
+#   ALPN: server accepted    → chặng 4: bắt tay TLS xong
+#   > GET / HTTP/1.1         → chặng 5: request đi ra
+#   > Host: example.com      → dòng cho server biết request dành cho website nào
+#   < HTTP/1.1 200 OK        → câu trả lời đi về
+#   < Server: cloudflare     → chặng 7 ngoài đời thật: một reverse proxy đứng trước website
 curl -v https://example.com 2>&1 | head -40
 
-hr "Lab 3 · chặng ④ — đọc tấm 'căn cước' của một website thật"
-# subject  = cấp cho AI
-# issuer   = AI ký bảo lãnh (CA)
-# notAfter = HẾT HẠN — thủ phạm của 'sáng thứ Hai'
+hr "Lab 3 · chặng 4: đọc chứng chỉ của một website thật"
+# subject  = chứng chỉ cấp cho tên miền nào
+# issuer   = ai đã ký (CA)
+# notAfter = ngày hết hạn
 echo | openssl s_client -connect example.com:443 -servername example.com 2>/dev/null \
   | openssl x509 -noout -subject -issuer -dates
-
-hr "Lab 4a · BỊ TỪ CHỐI — máy sống, phòng trống"
-# Kỳ vọng: curl: (7). Nó tự dừng vì NHẬN ĐƯỢC CÂU TRẢ LỜI.
-time curl -4 -o /dev/null http://127.0.0.1:9999
-
-hr "Lab 4b · SỰ IM LẶNG — không ai ở địa chỉ đó"
-# Kỳ vọng: curl: (28) ở đúng 5 giây. Nó dừng vì TA bảo nó dừng.
-time curl -4 -o /dev/null --max-time 5 http://10.255.255.1:9999
-
-hr "Lab 5 · chứng minh: timeout do TA quyết định, refused thì không"
-# Đổi 5 → 15 và quan sát: lần này nó chạy đúng 15 giây.
-# Còn Lab 4a thì đặt --max-time bao nhiêu cũng vẫn dừng ở ~2 giây.
-time curl -4 -o /dev/null --max-time 15 http://10.255.255.1:9999
 
 hr "Xong"
 cat <<'EOF'
 
-  refused  →  có điểm kết thúc CỦA RIÊNG NÓ
-  timeout  →  thời lượng là con số BẠN chọn
-
-  Thấy SỐ (502/504/500/404)  →  đã vào được nhà  →  soi nửa trong (⑦⑧⑨)
-  Không thấy số              →  còn ngoài cổng   →  soi nửa ngoài (②③⑥⑦)
+  Bước cuối không cần lệnh: đóng tài liệu, vẽ lại chín chặng theo thứ tự, và ghi bên
+  cạnh mỗi chặng dòng output nào ở trên đã cho bạn nhìn thấy nó.
 
 EOF

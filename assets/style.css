@@ -600,7 +600,7 @@ blockquote.pull p::before {
 
 /* Dải nhiều ảnh cùng hàng: 2 cột ở điện thoại, n cột ở màn rộng */
 .photo-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-.photo-row.n3 { grid-template-columns: minmax(0, 1fr); }
+.photo-row.n3, .photo-row.n2 { grid-template-columns: minmax(0, 1fr); }
 .photo-row figure { margin: 0; }
 .photo-row img { display: block; width: 100%; height: auto; border-top: var(--rule-m) solid var(--ink); background: var(--surface); }
 .photo-row.shots img { border: var(--rule-s) solid var(--ink); border-top-width: var(--rule-m); }
@@ -634,7 +634,7 @@ blockquote.pull p::before {
   figure.photo.small { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); }
   figure.photo.side { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }   /* ảnh phụ: một nửa */
   .photo-row.n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .photo-row.n3 { grid-template-columns: minmax(0, 1fr); }
+  .photo-row.n3, .photo-row.n2 { grid-template-columns: minmax(0, 1fr); }
 }
 /* Ảnh bên lề: chỉ ở màn rộng mới lệch phải cho chữ chảy quanh — bố cục bất đối xứng */
 @media (min-width: 64rem) {

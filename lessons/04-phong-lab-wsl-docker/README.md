@@ -198,7 +198,7 @@ Trong PowerShell, `wsl -l -v` giờ có `docker-desktop` ở trạng thái `Runn
 ### Lab 6 — Tự gây lỗi: tắt daemon, rồi sửa
 
 Chuột phải biểu tượng Docker ở khay hệ thống, **Quit Docker Desktop**. Chạy `docker version` trong Git
-Bash và trong Ubuntu. Output thật trong Git Bash trên máy người học:
+Bash và trong Ubuntu. Output thật trong Git Bash trên máy tôi:
 
 ```
 Client:

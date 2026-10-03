@@ -8,6 +8,8 @@
 
 > Học DevOps từ số 0, từ Docker tới Kubernetes
 
+DevOps là cách làm để chính người viết code đưa được nó lên server, giữ nó chạy ổn, và tìm ra lỗi khi nó hỏng.
+
 **Đích đến:** Tự đưa một ứng dụng Spring Boot lên Kubernetes, giữ nó chạy ổn định, và tự tìm ra lỗi khi nó hỏng.
 
 | | |
