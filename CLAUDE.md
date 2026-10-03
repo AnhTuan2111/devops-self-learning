@@ -76,6 +76,11 @@ theo vì có ba câu hỏi đầu bài và các tab đi theo một chuỗi nhân
 dấu vết còn lại tới nay → nối về bài chính. Hero ghi "Phụ lục · đọc thêm, không bắt buộc". Đã có:
 `00/lich-su-devops.html`, `01/ipv4-vs-ipv6.html`, `03/lich-su-he-dieu-hanh.html`, `04/lich-su-wsl.html`.
 
+**Mục "Tự kiểm tra" chỉ có ở trang bài chính** (người học 04/10/2026: "các mục Tự kiểm tra chỉ nên có trong các
+bài học chứ phần đọc thêm hoặc phụ lục mổ output đâu có cần"). Trang phụ và phụ lục (lịch sử, phân tích output,
+`ipv4-vs-ipv6.html`) là phần đọc thêm: kết bằng mục nối về bài chính rồi tới Nguồn đọc thêm, không có
+`<ul class="check">`.
+
 **Trang bìa ít chữ** (người học phản ánh 30/09/2026: người mới đọc bìa thấy dài và rối thì nản):
 trang chủ, README của repo, trang khung của bài, câu giới thiệu module — mỗi chỗ một hai câu, không
 thuật ngữ khó. **Không đưa ghi chú tự nhắc lên trang** (lý do xếp thứ tự module, quy trình viết hai
