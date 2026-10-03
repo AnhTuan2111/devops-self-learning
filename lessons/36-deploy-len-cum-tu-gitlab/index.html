@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 36 — Deploy lên cụm từ GitLab, và GitOps</title>
+<meta name="description" content="git push là service trên cụm tự cập nhật, qua pipeline hoặc qua GitOps.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="36">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-36</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M5">Module 5</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 5 · Bài 36</p>
+  <h1>Deploy lên cụm từ GitLab, và GitOps</h1>
+  <p class="lede">Đang deploy lên cụm bằng tay qua Rancher hoặc kubectl. Làm sao git push là cụm tự cập nhật, và không ai sửa tay được nữa?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">5–8 giờ</span>
+    <span class="chip">Rancher và vận hành</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 36">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../35-rancher/">Bài 35</a> kết luận: Rancher là lớp quản lý nhiều cụm: mỗi màn hình là một lời gọi API Kubernetes, và RBAC chia quyền theo project và namespace.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Pipeline deploy bằng helm với quyền tối thiểu, hoặc GitOps với Fleet: cụm tự đồng bộ theo Git và ghi đè mọi thay đổi tay.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Hệ thống đã tự deploy. Làm sao biết nó đang khoẻ hay đang yếu dần, trước khi người dùng gặp lỗi? <a href="../37-metric-va-dashboard/">Bài 37</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../25-cd-va-rollback/">Bài 25 · Deploy tự động và rollback</a></li>
+    <li><a href="../35-rancher/">Bài 35 · Rancher: quản lý cụm qua một giao diện</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Deploy từ pipeline bằng kubectl hoặc helm với quyền hạn chế</li>
+    <li>ServiceAccount và kubeconfig riêng cho CI</li>
+    <li>GitOps: cụm tự đồng bộ theo nội dung Git</li>
+    <li>Fleet của Rancher</li>
+    <li>Rollback trên cụm: helm rollback hoặc git revert</li>
+    <li>Vì sao không nên kubectl apply bằng tay lên production</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Pipeline GitLab deploy Helm chart lên cụm học; sau đó chuyển sang Fleet. Cố tình sửa tay một thứ trên cụm để thấy GitOps ghi đè lại theo Git.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Pipeline deploy lên cụm với quyền tối thiểu</li>
+    <li>Giải thích được GitOps khác deploy bằng pipeline ở đâu</li>
+    <li>Rollback được một lần deploy trên cụm</li>
+    <li>Nói được vì sao sửa tay trên cụm là nguồn gốc của sự cố</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../35-rancher/">
+    <span class="dir">Bài trước</span>
+    <span class="t">35 · Rancher</span>
+  </a>
+  <a class="next" href="../37-metric-va-dashboard/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">37 · Metric và dashboard</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 36 · Module M5 — Rancher và vận hành — Quản lý cụm, theo dõi, xử lý sự cố · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

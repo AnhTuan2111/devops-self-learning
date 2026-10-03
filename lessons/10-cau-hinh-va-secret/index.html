@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 10 — Cấu hình và secret: một image, nhiều môi trường</title>
+<meta name="description" content="Chạy cùng một image ở dev, staging và production chỉ bằng cách đổi cấu hình, và không bao giờ nhúng mật khẩu vào image.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="10">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-10</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M1">Module 1</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 1 · Bài 10</p>
+  <h1>Cấu hình và secret: <span class="hl">một image, nhiều môi trường</span></h1>
+  <p class="lede">Cùng một image phải chạy ở máy dev lẫn production, với database và mật khẩu khác nhau. Đưa cấu hình vào bằng cách nào mà không phải build lại, và không làm lộ mật khẩu?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">3–5 giờ</span>
+    <span class="chip">Docker</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 10">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../09-dockerfile-production/">Bài 09</a> kết luận: Multi-stage build để image nhỏ, dòng USER để process không chạy bằng root, và cấu hình JVM tôn trọng giới hạn bộ nhớ của container để không bị giết với exit code 137.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Qua biến môi trường lúc chạy container, đúng cơ chế bản sao biến môi trường của process ở Bài 03. Secret không bao giờ nằm trong image hay trong Git, vì layer giữ lại mọi thứ đã từng được ghi vào.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Xoá container PostgreSQL là dữ liệu mất sạch. Dữ liệu phải nằm ở đâu để sống lâu hơn container? <a href="../11-volume-va-du-lieu/">Bài 11</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../08-dockerfile-dau-tien/">Bài 08 · Dockerfile đầu tiên cho Spring Boot</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Biến môi trường: export, env, ${...} (Linux dạy đúng lúc)</li>
+    <li>ENV và ARG trong Dockerfile</li>
+    <li>12-factor: tách cấu hình khỏi code</li>
+    <li>docker run -e và --env-file</li>
+    <li>Spring Boot đọc cấu hình từ biến môi trường</li>
+    <li>Vì sao secret không được nằm trong image hay trong Git</li>
+    <li>Xử lý khi lỡ commit secret</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Chạy cùng một image với hai bộ biến môi trường khác nhau. Cố tình nhúng mật khẩu vào Dockerfile rồi dùng docker history lấy nó ra, để thấy vì sao không được làm vậy.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Chạy được một image với cấu hình khác mà không build lại</li>
+    <li>Giải thích được vì sao secret trong image coi như đã lộ</li>
+    <li>Biết phải làm gì trong giờ đầu tiên sau khi lỡ commit secret</li>
+    <li>Kể được thứ tự Spring Boot ưu tiên các nguồn cấu hình</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../09-dockerfile-production/">
+    <span class="dir">Bài trước</span>
+    <span class="t">09 · Dockerfile chuẩn production</span>
+  </a>
+  <a class="next" href="../11-volume-va-du-lieu/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">11 · Dữ liệu</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 10 · Module M1 — Docker — Đóng gói và chạy ứng dụng · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

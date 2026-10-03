@@ -1,0 +1,112 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 33 — Gỡ lỗi pod</title>
+<meta name="description" content="Chẩn đoán có hệ thống mọi kiểu pod hỏng: Pending, CrashLoopBackOff, ImagePullBackOff, OOMKilled.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="33">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-33</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M4">Module 4</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 4 · Bài 33</p>
+  <h1>Gỡ lỗi pod</h1>
+  <p class="lede">Pod kẹt ở Pending, CrashLoopBackOff hay ImagePullBackOff. Đọc gì, ở đâu để biết nguyên nhân?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">4–7 giờ</span>
+    <span class="chip">Kubernetes</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 33">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../32-ingress-va-https/">Bài 32</a> kết luận: Ingress khai báo luật theo host và path, Ingress controller (một Nginx chạy trong cụm) thực thi luật đó, còn cert-manager tự cấp và tự gia hạn chứng chỉ.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>describe và events cho biết cụm đã cố làm gì, logs --previous cho biết app nói gì trước khi chết. Mỗi trạng thái trỏ về một nhóm nguyên nhân.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Bộ manifest đã lớn và lặp lại cho mỗi môi trường, lại còn những việc chạy một lần hay theo lịch như backup. Quản lý chúng thế nào? <a href="../34-helm-job-cronjob/">Bài 34</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../30-probe-va-tai-nguyen/">Bài 30 · Probe và giới hạn tài nguyên</a></li>
+    <li><a href="../31-du-lieu-trong-kubernetes/">Bài 31 · Dữ liệu trong Kubernetes: PVC và StatefulSet</a></li>
+    <li><a href="../32-ingress-va-https/">Bài 32 · Ingress và HTTPS trong cụm</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>kubectl describe và events: đọc từ dưới lên</li>
+    <li>kubectl logs --previous</li>
+    <li>kubectl exec và container gỡ lỗi tạm thời</li>
+    <li>Pending: thiếu tài nguyên, hay không có node phù hợp</li>
+    <li>CrashLoopBackOff, ImagePullBackOff, CreateContainerConfigError, OOMKilled</li>
+    <li>Bảng triệu chứng dẫn tới nguyên nhân cho Kubernetes (nối Bài 15)</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Tự gây sáu kiểu pod hỏng, trộn thứ tự rồi chẩn đoán từng cái chỉ bằng kubectl, ghi vào bảng triệu chứng.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Có một thứ tự lệnh cố định để chẩn đoán pod hỏng</li>
+    <li>Đọc được events để biết vì sao pod Pending</li>
+    <li>Xem được log của lần chạy trước khi pod đã khởi động lại</li>
+    <li>Phân biệt được năm trạng thái lỗi phổ biến nhất</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../32-ingress-va-https/">
+    <span class="dir">Bài trước</span>
+    <span class="t">32 · Ingress và HTTPS trong cụm</span>
+  </a>
+  <a class="next" href="../34-helm-job-cronjob/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">34 · Helm, Job và CronJob</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 33 · Module M4 — Kubernetes — Chạy container trên cả một cụm máy · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

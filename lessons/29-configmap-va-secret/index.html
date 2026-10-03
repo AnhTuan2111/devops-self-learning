@@ -1,0 +1,110 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 29 — ConfigMap và Secret</title>
+<meta name="description" content="Tách cấu hình khỏi manifest, và biết Secret của Kubernetes bảo vệ được tới đâu.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="29">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-29</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M4">Module 4</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 4 · Bài 29</p>
+  <h1>ConfigMap và Secret</h1>
+  <p class="lede">Cấu hình và mật khẩu đang nằm cứng trong manifest. Đưa chúng vào pod bằng cách nào cho tách bạch và an toàn?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">3–5 giờ</span>
+    <span class="chip">Kubernetes</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 29">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../28-service-va-dns-trong-cum/">Bài 28</a> kết luận: Bằng Service: một tên và một địa chỉ ổn định, chọn pod theo label. DNS của cụm phân giải tên Service, giống DNS nội bộ của Docker ở Bài 12.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>ConfigMap cho cấu hình, Secret cho dữ liệu nhạy cảm, nạp vào pod qua biến môi trường hoặc tệp. Và base64 của Secret không phải là mã hoá.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Pod báo Running mà người dùng vẫn gặp lỗi, hoặc pod bị khởi động lại liên tục. Làm sao cụm biết app đã sẵn sàng thật, và cấp bao nhiêu tài nguyên là đủ? <a href="../30-probe-va-tai-nguyen/">Bài 30</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../10-cau-hinh-va-secret/">Bài 10 · Cấu hình và secret: một image, nhiều môi trường</a></li>
+    <li><a href="../28-service-va-dns-trong-cum/">Bài 28 · Service và DNS trong cụm</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>ConfigMap: cấu hình dạng biến môi trường hoặc tệp</li>
+    <li>Secret: base64 không phải là mã hoá</li>
+    <li>Nạp vào pod: env, envFrom, volume</li>
+    <li>Đổi cấu hình thì pod có tự nhận không</li>
+    <li>Không commit Secret vào Git; các cách quản lý secret an toàn</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Chuyển cấu hình Spring Boot sang ConfigMap và Secret. Cố tình tham chiếu một key không tồn tại để pod kẹt ở CreateContainerConfigError, rồi sửa.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Đưa được cấu hình vào pod bằng ConfigMap</li>
+    <li>Giải thích được vì sao Secret không tự động an toàn</li>
+    <li>Biết đổi ConfigMap xong phải làm gì để pod nhận</li>
+    <li>Đọc được lỗi CreateContainerConfigError</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../28-service-va-dns-trong-cum/">
+    <span class="dir">Bài trước</span>
+    <span class="t">28 · Service và DNS trong cụm</span>
+  </a>
+  <a class="next" href="../30-probe-va-tai-nguyen/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">30 · Probe và giới hạn tài nguyên</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 29 · Module M4 — Kubernetes — Chạy container trên cả một cụm máy · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 14 — Container sống và chết thế nào: signal, restart, log</title>
+<meta name="description" content="Container tắt êm không mất request đang xử lý, tự sống lại khi chết, và log không làm đầy ổ đĩa.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="14">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-14</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M1">Module 1</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 1 · Bài 14</p>
+  <h1>Container sống và chết thế nào: <span class="hl">signal, restart, log</span></h1>
+  <p class="lede">Hệ thống đã lên bằng một lệnh. Khi container bị dừng, bị giết hay tự chết, request đang xử lý ra sao, và ai dựng nó dậy?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">4–6 giờ</span>
+    <span class="chip">Docker</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 14">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../13-docker-compose/">Bài 13</a> kết luận: Mô tả toàn bộ trong compose.yaml rồi chạy docker compose up. Healthcheck giải quyết chuyện &quot;đã chạy chưa phải đã sẵn sàng&quot; giữa các service.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>docker stop gửi SIGTERM, chờ, rồi mới SIGKILL. App phải tắt êm, CMD phải ở dạng exec để nhận được signal, restart policy dựng container dậy, và log cần được xoay vòng.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Container chết ngay sau khi khởi động, hoặc chạy mà không ai gọi được. Có thứ tự kiểm tra cố định nào thay cho thử bừa không? <a href="../15-go-loi-container/">Bài 15</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../03-may-tinh-va-he-dieu-hanh/">Bài 03 · Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì</a></li>
+    <li><a href="../13-docker-compose/">Bài 13 · Docker Compose: cả hệ thống trong một file</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Signal: SIGTERM, SIGKILL, SIGINT (nối Bài 03)</li>
+    <li>PID 1 trong container: nhận nuôi process mồ côi, dọn zombie; và vì sao dạng shell của CMD làm mất signal</li>
+    <li>docker stop, thời gian chờ, và tắt êm (graceful shutdown) của Spring Boot</li>
+    <li>Restart policy: no, on-failure, always, unless-stopped</li>
+    <li>docker logs, log driver và xoay vòng log</li>
+    <li>Exit code 0, 1, 137, 143 nói lên điều gì</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Chạy Spring Boot với CMD dạng shell và dạng exec, docker stop cả hai và so thời gian tắt. Cố tình cho app crash liên tục để quan sát restart policy. Cấu hình xoay vòng log để log không nuốt ổ đĩa.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Giải thích được vì sao docker stop đôi khi phải chờ 10 giây</li>
+    <li>Cấu hình được Spring Boot tắt êm</li>
+    <li>Chọn đúng restart policy cho một service</li>
+    <li>Đọc được exit code 143 và 137 khác nhau thế nào</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../13-docker-compose/">
+    <span class="dir">Bài trước</span>
+    <span class="t">13 · Docker Compose</span>
+  </a>
+  <a class="next" href="../15-go-loi-container/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">15 · Gỡ lỗi container</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 14 · Module M1 — Docker — Đóng gói và chạy ứng dụng · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

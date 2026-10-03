@@ -3,12 +3,27 @@
     "00": {
       "status": "done",
       "date": "2026-09-24",
-      "note": "Hoc theo doi thoai thay-tro. Sua duoc 9 cho hieu sai. Con treo: so sanh refused tren WSL Ubuntu (Bai 02)."
+      "note": "Học trong buổi đối thoại 21–24/09 (khi ấy là phần đầu của Bài 00 gộp). Còn treo: so refused trên Linux, làm ở Bài 04."
     },
     "01": {
       "status": "done",
+      "date": "2026-09-24",
+      "note": "Học trong buổi Bài 00 gộp. Hai lab refused và timeout: 2,155 giây và 5,066 giây trên Windows."
+    },
+    "02": {
+      "status": "done",
+      "date": "2026-09-24",
+      "note": "Học trong buổi Bài 00 gộp: bảng triệu chứng có cột ai viết ra, ba nguyên tắc chẩn đoán."
+    },
+    "03": {
+      "status": "done",
       "date": "2026-10-03",
-      "note": "Hoc theo doi thoai thay-tro, 6 phan + 6 lab. Sua duoc 11 cho hieu sai. Ghi them buoc tu gay loi EADDRINUSE va thi nghiem $$/$PPID."
+      "note": "Học theo đối thoại, 6 phần và 6 lab. Sửa được 11 chỗ hiểu sai. Thêm bước tự gây lỗi EADDRINUSE và thí nghiệm $$/$PPID."
+    },
+    "04": {
+      "status": "doing",
+      "date": "2026-10-03",
+      "note": "Bản nháp tài liệu viết trước để đọc; chưa học."
     }
   }
 }

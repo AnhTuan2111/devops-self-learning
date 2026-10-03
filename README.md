@@ -1,4 +1,4 @@
-<a href="https://anhtuan2111.github.io/devops-self-learning/"><img src="assets/readme/banner.svg" width="100%" alt="DevOps từ số 0 — đã xong 2/39 bài"></a>
+<a href="https://anhtuan2111.github.io/devops-self-learning/"><img src="assets/readme/banner.svg" width="100%" alt="DevOps từ số 0 — đã xong 4/41 bài"></a>
 
 <img src="assets/readme/roadmap.svg" width="100%" alt="Bức tranh lộ trình: mỗi hàng một module, mỗi ô một bài; ô đã học được tô màu">
 
@@ -14,8 +14,8 @@
 |---|---|
 | **Công cụ** | Spring Boot + PostgreSQL + Docker + GitLab CI + Kubernetes + Rancher |
 | **Môi trường** | Windows 11 + WSL2 Ubuntu + Docker Desktop |
-| **Quy mô** | 39 bài · 6 module · khoảng 162–264 giờ học |
-| **Tiến độ** | 2/39 bài đã xong |
+| **Quy mô** | 41 bài · 6 module · khoảng 165–269 giờ học |
+| **Tiến độ** | 4/41 bài đã xong |
 
 Mỗi bài đi từ một **vấn đề có thật**, tới **khái niệm**, rồi mới tới **công cụ**. Bài nào cũng có
 một lab chạy thật, với một bước cố tình gây lỗi rồi tự sửa.
@@ -28,82 +28,84 @@ một lab chạy thật, với một bước cố tình gây lỗi rồi tự s�
 
 > Vừa đủ nền để Docker có nghĩa: một request đi qua những đâu, process là gì, và một máy Linux để thực hành.
 
-| | # | Bài | Mục tiêu | Ước lượng | Đã học |
+| | # | Bài | Câu hỏi của bài | Ước lượng | Đã học |
 |---|---|---|---|---|---|
-| xong | `00` | [Bản đồ toàn cảnh: một request đi từ browser tới code của bạn](lessons/00-ban-do-toan-canh/) | Vẽ lại được bằng trí nhớ toàn bộ đường đi của một HTTP request, và gọi tên được mọi thành phần trên đường đi đó. | 6–10 giờ | 24/09/2026 |
-| xong | `01` | [Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì](lessons/01-may-tinh-va-he-dieu-hanh/) | Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy. | 5–8 giờ | 03/10/2026 |
-|  | `02` | [Phòng lab: WSL2, Docker Desktop và shell tối thiểu](lessons/02-phong-lab-wsl-docker/) | Có một máy Linux thật ngay trong Windows, Docker chạy được trong đó, và đủ vài lệnh shell để đi lại, đọc và sửa tệp. | 3–5 giờ | — |
+| xong | `00` | [Bản đồ toàn cảnh: một request đi qua chín chặng](lessons/00-ban-do-toan-canh/) | Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi qua những chặng nào, và chặng nào thật sự là code của bạn? | 3–5 giờ | 24/09/2026 |
+| xong | `01` | [IP, port, listen, firewall: vì sao gọi không tới](lessons/01-ip-port-listen-firewall/) | App chạy ngon khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu? | 3–5 giờ | 24/09/2026 |
+| xong | `02` | [Chẩn đoán theo chặng: nhìn lỗi biết chỗ hỏng](lessons/02-chan-doan-theo-chang/) | Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết chặng nào đang hỏng? | 3–5 giờ | 24/09/2026 |
+| xong | `03` | [Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì](lessons/03-may-tinh-va-he-dieu-hanh/) | 502 nghĩa là phía sau Nginx không còn ai trả lời. Nhưng "app" thật ra là gì trên một máy chủ, vì sao nó có thể chết, và vì sao nó chết thì website sập? | 5–8 giờ | 03/10/2026 |
+| đang học | `04` | [Phòng lab: WSL2, Docker Desktop và shell tối thiểu](lessons/04-phong-lab-wsl-docker/) | Server thật chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình, để thấy process, signal và lỗi đúng như trên server? | 3–5 giờ | 03/10/2026 |
 
 ### M1 · Docker — Đóng gói và chạy ứng dụng
 
 > Đóng gói và chạy ứng dụng bằng Docker. Phần Linux và mạng cần tới được dạy ngay trong bài cần nó.
 
-| | # | Bài | Mục tiêu | Ước lượng | Đã học |
+| | # | Bài | Câu hỏi của bài | Ước lượng | Đã học |
 |---|---|---|---|---|---|
-|  | `03` | [Container đầu tiên: nó chỉ là một process bị cô lập](lessons/03-container-dau-tien/) | Chạy, xem, vào trong và xoá container thành thạo, và chứng minh được container chỉ là một process Linux bị giới hạn tầm nhìn. | 4–6 giờ | — |
-|  | `04` | [Gọi được app trong container: port và listen address](lessons/04-port-va-publish/) | Không bao giờ còn mắc lỗi kinh điển: app chạy trong container nhưng từ ngoài không ai gọi được. | 3–5 giờ | — |
-|  | `05` | [Image và registry: image được làm từ những lớp nào](lessons/05-image-va-registry/) | Hiểu một image gồm những gì, lấy về từ đâu, và đặt tên phiên bản thế nào cho đúng. | 3–5 giờ | — |
-|  | `06` | [Dockerfile đầu tiên cho Spring Boot](lessons/06-dockerfile-dau-tien/) | Tự viết Dockerfile đóng gói project Spring Boot của bạn, và hiểu mỗi dòng tạo ra layer nào. | 4–6 giờ | — |
-|  | `07` | [Dockerfile chuẩn production: nhỏ, không root, không bị giết vì hết bộ nhớ](lessons/07-dockerfile-production/) | Biến image Spring Boot thành một image nhỏ, chạy không bằng root, và không bị giết vì hết bộ nhớ. | 5–8 giờ | — |
-|  | `08` | [Cấu hình và secret: một image, nhiều môi trường](lessons/08-cau-hinh-va-secret/) | Chạy cùng một image ở dev, staging và production chỉ bằng cách đổi cấu hình, và không bao giờ nhúng mật khẩu vào image. | 3–5 giờ | — |
-|  | `09` | [Dữ liệu: volume, PostgreSQL và backup](lessons/09-volume-va-du-lieu/) | Không bao giờ mất dữ liệu vì xoá nhầm container, và khôi phục được database từ bản backup. | 4–6 giờ | — |
-|  | `10` | [Docker network: container gọi nhau bằng tên](lessons/10-docker-network/) | Hiểu vì sao trong Docker bạn viết jdbc:postgresql://db:5432 thay vì localhost, và sửa được khi hai container không thấy nhau. | 3–5 giờ | — |
-|  | `11` | [Docker Compose: cả hệ thống trong một file](lessons/11-docker-compose/) | Một lệnh dựng lên toàn bộ Spring Boot + PostgreSQL, tái lập được trên máy bất kỳ. | 5–8 giờ | — |
-|  | `12` | [Container sống và chết thế nào: signal, restart, log](lessons/12-vong-doi-container/) | Container tắt êm không mất request đang xử lý, tự sống lại khi chết, và log không làm đầy ổ đĩa. | 4–6 giờ | — |
-|  | `13` | [Gỡ lỗi container](lessons/13-go-loi-container/) | Có một quy trình chẩn đoán container hỏng thay vì thử bừa. | 4–7 giờ | — |
+|  | `05` | [Container đầu tiên: nó chỉ là một process bị cô lập](lessons/05-container-dau-tien/) | hello-world vừa chạy "trong một container". Container là một máy ảo nhỏ như WSL2, hay chỉ là một process như ở Bài 03? | 4–6 giờ | — |
+|  | `06` | [Gọi được app trong container: port và listen address](lessons/06-port-va-publish/) | Container là một process có mạng riêng. Vậy làm sao gọi được app chạy bên trong nó từ trình duyệt trên máy mình? | 3–5 giờ | — |
+|  | `07` | [Image và registry: image được làm từ những lớp nào](lessons/07-image-va-registry/) | Container chạy từ image. Image là gì, lấy về từ đâu, và vì sao tải image thứ hai lại nhanh hơn image đầu? | 3–5 giờ | — |
+|  | `08` | [Dockerfile đầu tiên cho Spring Boot](lessons/08-dockerfile-dau-tien/) | Tới giờ ta toàn chạy image người khác làm sẵn. Làm sao tự đóng gói chính app Spring Boot của mình thành image? | 4–6 giờ | — |
+|  | `09` | [Dockerfile chuẩn production: nhỏ, không root, không bị giết vì hết bộ nhớ](lessons/09-dockerfile-production/) | Image vừa build vừa nặng, chạy bằng root, và có thể bị kernel giết vì hết bộ nhớ. Làm sao cho nó đủ tốt để chạy production? | 5–8 giờ | — |
+|  | `10` | [Cấu hình và secret: một image, nhiều môi trường](lessons/10-cau-hinh-va-secret/) | Cùng một image phải chạy ở máy dev lẫn production, với database và mật khẩu khác nhau. Đưa cấu hình vào bằng cách nào mà không phải build lại, và không làm lộ mật khẩu? | 3–5 giờ | — |
+|  | `11` | [Dữ liệu: volume, PostgreSQL và backup](lessons/11-volume-va-du-lieu/) | Xoá container PostgreSQL là dữ liệu mất sạch. Dữ liệu phải nằm ở đâu để sống lâu hơn container? | 4–6 giờ | — |
+|  | `12` | [Docker network: container gọi nhau bằng tên](lessons/12-docker-network/) | App và PostgreSQL giờ là hai container. Vì sao app gọi localhost:5432 thì bị từ chối, và hai container gọi nhau bằng cách nào? | 3–5 giờ | — |
+|  | `13` | [Docker Compose: cả hệ thống trong một file](lessons/13-docker-compose/) | Mỗi lần dựng lại phải gõ tay hai container, một network, một volume và cả đống tham số. Làm sao dựng lại cả hệ thống bằng một lệnh? | 5–8 giờ | — |
+|  | `14` | [Container sống và chết thế nào: signal, restart, log](lessons/14-vong-doi-container/) | Hệ thống đã lên bằng một lệnh. Khi container bị dừng, bị giết hay tự chết, request đang xử lý ra sao, và ai dựng nó dậy? | 4–6 giờ | — |
+|  | `15` | [Gỡ lỗi container](lessons/15-go-loi-container/) | Container chết ngay sau khi khởi động, hoặc chạy mà không ai gọi được. Có thứ tự kiểm tra cố định nào thay cho thử bừa không? | 4–7 giờ | — |
 
 ### M2 · Server thật — Deploy lên một máy Linux thật
 
 > Tự tay đưa ứng dụng lên một server thật một lần, để biết các module sau đang tự động hoá những gì.
 
-| | # | Bài | Mục tiêu | Ước lượng | Đã học |
+| | # | Bài | Câu hỏi của bài | Ước lượng | Đã học |
 |---|---|---|---|---|---|
-|  | `14` | [SSH vào server](lessons/14-ssh-vao-server/) | Vào server an toàn bằng khóa, cấu hình một lần rồi chỉ cần gõ ssh tên-server. | 3–5 giờ | — |
-|  | `15` | [Linux sinh tồn trên server](lessons/15-linux-tren-server/) | Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ, port và giới hạn của process mà không bị lạc. | 4–7 giờ | — |
-|  | `16` | [Deploy thủ công bằng Compose lên server](lessons/16-deploy-thu-cong/) | Tự tay đưa hệ thống lên server thật một lần, và ghi lại chính xác từng bước để sau này tự động hoá. | 5–8 giờ | — |
-|  | `17` | [Reverse proxy đứng trước ứng dụng](lessons/17-reverse-proxy/) | Đặt Nginx trước Spring Boot, và phân biệt được lỗi 502, 504, 413 do đâu mà ra. | 5–8 giờ | — |
-|  | `18` | [Tên miền và HTTPS](lessons/18-ten-mien-va-https/) | Service có tên miền và ổ khóa HTTPS, chứng chỉ tự gia hạn mà không phải nhớ. | 4–7 giờ | — |
+|  | `16` | [SSH vào server](lessons/16-ssh-vao-server/) | Hệ thống đã chạy được trên máy mình. Để đưa nó lên một server ở xa, không màn hình, ta điều khiển server đó bằng cách nào cho an toàn? | 3–5 giờ | — |
+|  | `17` | [Linux sinh tồn trên server](lessons/17-linux-tren-server/) | Đã vào được một server lạ. Log nằm ở đâu, ổ đĩa và RAM còn bao nhiêu, ai đang giữ port nào, và một process được mở bao nhiêu file? | 4–7 giờ | — |
+|  | `18` | [Deploy thủ công bằng Compose lên server](lessons/18-deploy-thu-cong/) | Đã biết đi lại trên server. Đưa image và compose.yaml lên đó rồi chạy thật thì cần chính xác những bước nào? | 5–8 giờ | — |
+|  | `19` | [Reverse proxy đứng trước ứng dụng](lessons/19-reverse-proxy/) | App đang lộ thẳng port 8080 ra ngoài. Vì sao nên đặt Nginx đứng trước, và khi đã đặt thì 502, 504, 413 sinh ra từ đâu? | 5–8 giờ | — |
+|  | `20` | [Tên miền và HTTPS](lessons/20-ten-mien-va-https/) | Người dùng vẫn phải gõ địa chỉ IP, và trình duyệt báo "không an toàn". Làm sao có tên miền và ổ khoá HTTPS tự gia hạn? | 4–7 giờ | — |
 
 ### M3 · CI/CD với GitLab — Từ git push tới server
 
 > Tự động hoá bằng GitLab CI đúng những bước vừa làm tay ở module trước.
 
-| | # | Bài | Mục tiêu | Ước lượng | Đã học |
+| | # | Bài | Câu hỏi của bài | Ước lượng | Đã học |
 |---|---|---|---|---|---|
-|  | `19` | [CI/CD là quy trình, không phải công cụ](lessons/19-cicd-la-quy-trinh/) | Vẽ được pipeline mình cần trước khi viết dòng YAML nào, từ chính runbook của Bài 16. | 2–4 giờ | — |
-|  | `20` | [GitLab CI cơ bản](lessons/20-gitlab-ci-co-ban/) | Pipeline đầu tiên trên GitLab: mỗi lần push, code tự được kiểm tra. | 4–6 giờ | — |
-|  | `21` | [CI cho Spring Boot: build, test, cache](lessons/21-ci-spring-boot/) | Không merge một commit làm hỏng build hay gãy test. | 4–7 giờ | — |
-|  | `22` | [Build và push image lên GitLab Container Registry](lessons/22-build-va-push-image/) | Mỗi commit trên nhánh chính sinh ra một image có phiên bản rõ ràng, sẵn sàng deploy. | 4–6 giờ | — |
-|  | `23` | [Deploy tự động và rollback](lessons/23-cd-va-rollback/) | git push là server tự cập nhật, và quay về bản cũ trong dưới một phút. | 5–8 giờ | — |
+|  | `21` | [CI/CD là quy trình, không phải công cụ](lessons/21-cicd-la-quy-trinh/) | Deploy bằng tay theo runbook vừa chậm vừa dễ sót bước. Bước nào nên giao cho máy làm, và theo thứ tự nào? | 2–4 giờ | — |
+|  | `22` | [GitLab CI cơ bản](lessons/22-gitlab-ci-co-ban/) | Đã vẽ được pipeline trên giấy. Viết nó ra thế nào để GitLab tự chạy mỗi lần push? | 4–6 giờ | — |
+|  | `23` | [CI cho Spring Boot: build, test, cache](lessons/23-ci-spring-boot/) | Pipeline đã chạy. Làm sao nó chặn được một commit làm gãy build hay gãy test trước khi được merge? | 4–7 giờ | — |
+|  | `24` | [Build và push image lên GitLab Container Registry](lessons/24-build-va-push-image/) | Code đã được kiểm tra tự động. Làm sao mỗi commit tốt tự sinh ra một image có phiên bản rõ ràng, sẵn sàng deploy? | 4–6 giờ | — |
+|  | `25` | [Deploy tự động và rollback](lessons/25-cd-va-rollback/) | Mỗi commit đã có image riêng. Làm sao server tự cập nhật sau mỗi lần merge, và quay về bản cũ thật nhanh khi bản mới hỏng? | 5–8 giờ | — |
 
 ### M4 · Kubernetes — Chạy container trên cả một cụm máy
 
 > Chạy container trên nhiều máy cùng lúc. Mỗi khái niệm ở đây nối về một bài Docker đã học.
 
-| | # | Bài | Mục tiêu | Ước lượng | Đã học |
+| | # | Bài | Câu hỏi của bài | Ước lượng | Đã học |
 |---|---|---|---|---|---|
-|  | `24` | [Vì sao cần Kubernetes, và dựng một cụm nhỏ trên máy](lessons/24-vi-sao-kubernetes/) | Nói được Kubernetes giải quyết điều gì mà Compose trên một máy không làm được, và có một cụm để thực hành. | 4–7 giờ | — |
-|  | `25` | [Pod và Deployment](lessons/25-pod-va-deployment/) | Chạy Spring Boot trên Kubernetes bằng Deployment, cập nhật phiên bản không gián đoạn, và quay lại khi hỏng. | 4–6 giờ | — |
-|  | `26` | [Service và DNS trong cụm](lessons/26-service-va-dns-trong-cum/) | Các pod gọi nhau ổn định bằng tên, dù pod liên tục bị thay. | 4–6 giờ | — |
-|  | `27` | [ConfigMap và Secret](lessons/27-configmap-va-secret/) | Tách cấu hình khỏi manifest, và biết Secret của Kubernetes bảo vệ được tới đâu. | 3–5 giờ | — |
-|  | `28` | [Probe và giới hạn tài nguyên](lessons/28-probe-va-tai-nguyen/) | Pod chỉ nhận traffic khi app thật sự sẵn sàng, và không bị giết oan vì CPU hay bộ nhớ. | 5–8 giờ | — |
-|  | `29` | [Dữ liệu trong Kubernetes: PVC và StatefulSet](lessons/29-du-lieu-trong-kubernetes/) | Chạy PostgreSQL trong cụm mà không mất dữ liệu khi pod bị thay, và biết khi nào không nên làm vậy. | 5–8 giờ | — |
-|  | `30` | [Ingress và HTTPS trong cụm](lessons/30-ingress-va-https/) | Đưa service ra ngoài cụm bằng tên miền và HTTPS, chứng chỉ tự gia hạn. | 5–8 giờ | — |
-|  | `31` | [Gỡ lỗi pod](lessons/31-go-loi-pod/) | Chẩn đoán có hệ thống mọi kiểu pod hỏng: Pending, CrashLoopBackOff, ImagePullBackOff, OOMKilled. | 4–7 giờ | — |
-|  | `32` | [Helm, Job và CronJob](lessons/32-helm-job-cronjob/) | Đóng gói bộ manifest thành một chart dùng lại cho nhiều môi trường, và chạy tác vụ một lần hoặc theo lịch. | 5–8 giờ | — |
+|  | `26` | [Vì sao cần Kubernetes, và dựng một cụm nhỏ trên máy](lessons/26-vi-sao-kubernetes/) | Mọi thứ đang chạy trên một server. Server đó chết thì sao, và khi một máy không còn đủ sức thì làm gì? | 4–7 giờ | — |
+|  | `27` | [Pod và Deployment](lessons/27-pod-va-deployment/) | Đã có một cụm. Chạy app Spring Boot lên đó bằng gì, và vì sao pod bị xoá lại tự sinh ra? | 4–6 giờ | — |
+|  | `28` | [Service và DNS trong cụm](lessons/28-service-va-dns-trong-cum/) | Pod liên tục bị thay, và mỗi lần thay lại đổi địa chỉ IP. Vậy app gọi PostgreSQL, và người ngoài gọi app, bằng địa chỉ nào? | 4–6 giờ | — |
+|  | `29` | [ConfigMap và Secret](lessons/29-configmap-va-secret/) | Cấu hình và mật khẩu đang nằm cứng trong manifest. Đưa chúng vào pod bằng cách nào cho tách bạch và an toàn? | 3–5 giờ | — |
+|  | `30` | [Probe và giới hạn tài nguyên](lessons/30-probe-va-tai-nguyen/) | Pod báo Running mà người dùng vẫn gặp lỗi, hoặc pod bị khởi động lại liên tục. Làm sao cụm biết app đã sẵn sàng thật, và cấp bao nhiêu tài nguyên là đủ? | 5–8 giờ | — |
+|  | `31` | [Dữ liệu trong Kubernetes: PVC và StatefulSet](lessons/31-du-lieu-trong-kubernetes/) | Pod PostgreSQL bị thay là mất dữ liệu. Trong một cụm nhiều máy, dữ liệu sống ở đâu? | 5–8 giờ | — |
+|  | `32` | [Ingress và HTTPS trong cụm](lessons/32-ingress-va-https/) | Service mới gọi được từ trong cụm. Đưa app ra ngoài bằng tên miền và HTTPS thì làm thế nào? | 5–8 giờ | — |
+|  | `33` | [Gỡ lỗi pod](lessons/33-go-loi-pod/) | Pod kẹt ở Pending, CrashLoopBackOff hay ImagePullBackOff. Đọc gì, ở đâu để biết nguyên nhân? | 4–7 giờ | — |
+|  | `34` | [Helm, Job và CronJob](lessons/34-helm-job-cronjob/) | Bộ manifest đã lớn và lặp lại cho mỗi môi trường, lại còn những việc chạy một lần hay theo lịch như backup. Quản lý chúng thế nào? | 5–8 giờ | — |
 
 ### M5 · Rancher và vận hành — Quản lý cụm, theo dõi, xử lý sự cố
 
 > Quản lý cụm bằng Rancher, theo dõi, cảnh báo, xử lý sự cố, rồi tự dựng lại toàn bộ.
 
-| | # | Bài | Mục tiêu | Ước lượng | Đã học |
+| | # | Bài | Câu hỏi của bài | Ước lượng | Đã học |
 |---|---|---|---|---|---|
-|  | `33` | [Rancher: quản lý cụm qua một giao diện](lessons/33-rancher/) | Hiểu Rancher đứng ở đâu so với Kubernetes, và đọc được mọi thứ trên giao diện Rancher bằng ngôn ngữ kubectl. | 4–7 giờ | — |
-|  | `34` | [Deploy lên cụm từ GitLab, và GitOps](lessons/34-deploy-len-cum-tu-gitlab/) | git push là service trên cụm tự cập nhật, qua pipeline hoặc qua GitOps. | 5–8 giờ | — |
-|  | `35` | [Metric và dashboard](lessons/35-metric-va-dashboard/) | Có một dashboard trả lời được: service đang khoẻ hay yếu, và yếu ở đâu. | 5–8 giờ | — |
-|  | `36` | [Log và cảnh báo](lessons/36-log-va-canh-bao/) | Tìm được nguyên nhân một lỗi xảy ra 3 ngày trước, và được báo trước khi người dùng phàn nàn. | 4–7 giờ | — |
-|  | `37` | [Xử lý sự cố: quy trình khi mọi thứ đang cháy](lessons/37-xu-ly-su-co/) | Có một quy trình chẩn đoán theo tầng thay vì hoảng loạn thử mọi thứ. | 4–7 giờ | — |
-|  | `38` | [Tổng kết: tự dựng lại toàn bộ](lessons/38-tong-ket/) | Chứng minh đã đạt đích đến: một service đi từ git push lên cụm, có probe, cấu hình, HTTPS, dashboard và cảnh báo, và tự giải thích được mọi mũi tên trong kiến trúc. | 5–8 giờ | — |
+|  | `35` | [Rancher: quản lý cụm qua một giao diện](lessons/35-rancher/) | Quản lý một cụm bằng kubectl và tệp YAML thì ổn. Khi có nhiều cụm và nhiều người cùng làm, nhìn và phân quyền thế nào? | 4–7 giờ | — |
+|  | `36` | [Deploy lên cụm từ GitLab, và GitOps](lessons/36-deploy-len-cum-tu-gitlab/) | Đang deploy lên cụm bằng tay qua Rancher hoặc kubectl. Làm sao git push là cụm tự cập nhật, và không ai sửa tay được nữa? | 5–8 giờ | — |
+|  | `37` | [Metric và dashboard](lessons/37-metric-va-dashboard/) | Hệ thống đã tự deploy. Làm sao biết nó đang khoẻ hay đang yếu dần, trước khi người dùng gặp lỗi? | 5–8 giờ | — |
+|  | `38` | [Log và cảnh báo](lessons/38-log-va-canh-bao/) | Dashboard cho thấy đang có lỗi. Tìm nguyên nhân một lỗi từ ba ngày trước ở đâu, và làm sao được báo ngay mà không phải ngồi nhìn dashboard? | 4–7 giờ | — |
+|  | `39` | [Xử lý sự cố: quy trình khi mọi thứ đang cháy](lessons/39-xu-ly-su-co/) | Cảnh báo vừa kêu lúc nửa đêm. Làm gì, theo thứ tự nào, để tìm ra chỗ hỏng thay vì thử bừa? | 4–7 giờ | — |
+|  | `40` | [Tổng kết: tự dựng lại toàn bộ](lessons/40-tong-ket/) | Đã đi qua từng mảnh. Bạn có tự dựng lại được toàn bộ hệ thống từ một repo trống, và giải thích được từng mũi tên trong đó không? | 5–8 giờ | — |
 
 ---
 

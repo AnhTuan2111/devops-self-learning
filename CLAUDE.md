@@ -19,17 +19,24 @@ Claude đóng vai người dạy kèm: mỗi phiên dạy một bài, rồi ghi 
 
 ## Lộ trình
 
-**39 bài (00–38), 6 module**, đích đến ghi ở `meta.goal` của `curriculum.json`. Không nhắc lại
+**41 bài (00–40), 6 module**, đích đến ghi ở `meta.goal` của `curriculum.json`. Không nhắc lại
 hay so sánh với bất kỳ lộ trình nào trước đây, ở bất cứ trang nào:
 
 | Module | Bài | Nội dung |
 |---|---|---|
-| M0 Nền tảng tối thiểu | 00–02 | bản đồ request, process/kernel, phòng lab + shell tối thiểu |
-| M1 Docker | 03–13 | vào **ngay sau phòng lab**; Linux và mạng dạy đúng lúc trong từng bài Docker |
-| M2 Server thật | 14–18 | SSH, Linux trên server, deploy tay bằng Compose, Nginx, tên miền + HTTPS — trên một server Linux thật |
-| M3 CI/CD với GitLab | 19–23 | tự động hoá đúng những bước đã làm tay ở M2 |
-| M4 Kubernetes | 24–32 | mỗi khái niệm nối về một bài Docker (pod về container, Service về DNS…) |
-| M5 Rancher và vận hành | 33–38 | Rancher, deploy lên cụm từ GitLab/GitOps, metric, log, cảnh báo, sự cố, tổng kết |
+| M0 Nền tảng tối thiểu | 00–04 | bản đồ chín chặng · IP/port/listen/firewall · chẩn đoán theo chặng · process/kernel · phòng lab + shell |
+| M1 Docker | 05–15 | vào **ngay sau phòng lab**; Linux và mạng dạy đúng lúc trong từng bài Docker |
+| M2 Server thật | 16–20 | SSH, Linux trên server, deploy tay bằng Compose, Nginx, tên miền + HTTPS — trên một server Linux thật |
+| M3 CI/CD với GitLab | 21–25 | tự động hoá đúng những bước đã làm tay ở M2 |
+| M4 Kubernetes | 26–34 | mỗi khái niệm nối về một bài Docker (pod về container, Service về DNS…) |
+| M5 Rancher và vận hành | 35–40 | Rancher, deploy lên cụm từ GitLab/GitOps, metric, log, cảnh báo, sự cố, tổng kết |
+
+**Chuỗi câu hỏi** (người học yêu cầu 03/10/2026: "đọc theo hướng tịnh tiến thì càng ngày càng phải mở
+ra được câu trả lời, dẫn dắt người đọc tới một đáp án cụ thể và lại mở ra một câu hỏi mới để bài tiếp
+theo trả lời"). Mỗi bài trong `curriculum.json` có **`question`** (câu hỏi bài trả lời) và **`answer`**
+(đáp án cụ thể bài dẫn tới); `question` của bài N+1 phải mọc ra từ `answer` của bài N. `generate.mjs`
+dừng nếu thiếu, và trang khung tự hiện "Từ bài trước · Câu hỏi của bài · Bài này dẫn tới · Câu hỏi cho
+bài sau". Sửa lộ trình thì sửa cả chuỗi cho liền mạch.
 
 Mỗi bài có trường **`needs`**: danh sách bài phải học trước, **chỉ được trỏ về bài đứng trước**
 (`generate.mjs` dừng nếu sai). Trang khung và README khung hiện mục "Cần đã học trước". Khi viết một
@@ -40,6 +47,28 @@ chính tệp CLAUDE.md này. Nơi làm việc, tên server, IP, tên miền nộ
 output lab có địa chỉ thật: chỉ ghi vào `*.rieng.md` hoặc thư mục `rieng/` (đã có trong `.gitignore`), hoặc
 bộ nhớ riêng của Claude (nằm ngoài repo). Bài giảng chỉ dùng tình huống đã khái quát hoá ("một service
 khởi động chậm bị giới hạn CPU"), không nêu tên hệ thống thật.
+
+### Xương sống bắt buộc của một trang bài (03/10/2026)
+
+Bài 00 cũ rời rạc vì 13 mục đứng cạnh nhau như 13 bài nhỏ, không câu hỏi dẫn đường; Bài 01 cũ dễ
+theo vì có ba câu hỏi đầu bài và các tab đi theo một chuỗi nhân quả. Từ nay mọi trang bài theo khung:
+
+1. **Tab `van-de`**: đoạn nối "Bài trước kết thúc ở câu hỏi: …" (nguyên văn `question`, link tới
+   `#cau-hoi-tiep` của bài trước) · tình huống cụ thể · câu hỏi của bài chia 2–3 câu hỏi con · **bảng
+   "câu hỏi nào trả lời ở tab nào"** · mục **`#can-hoc-truoc`** (khái niệm dùng lại, link về đúng tab).
+2. **Mỗi tab giữa** mở bằng một đoạn nói tab trả lời câu hỏi con nào và dùng lại gì; kết bằng khối
+   `<div class="callout ok"><span class="label">Chốt</span>…</div>`: đáp án rút gọn + câu còn treo dẫn
+   sang tab sau.
+3. **Tab cuối `ket`**: Tự kiểm tra · Những chỗ hay hiểu sai · Kết lại (trả lời trọn câu hỏi, khớp
+   `answer`) · khối **`#cau-hoi-tiep`** nêu nguyên văn `question` của bài sau, vì sao đáp án vừa có lại
+   sinh ra câu hỏi đó, và link sang bài sau · Nguồn đọc thêm · Nguồn ảnh.
+4. Trang chính 5.000–7.500 chữ; trang phụ ≤ 4.000 chữ. Một bài quá dài, nhiều chủ đề → **tách bài**
+   (như Bài 00 cũ thành 00, 01, 02), đừng nhồi.
+
+**Phụ lục lịch sử** (người học gợi ý 03/10/2026, "đôi khi"): một trang phụ cho công nghệ có lý do ra
+đời đáng kể — vấn đề trước khi có nó → các cách giải trước và giới hạn → nó giải quyết đúng điều gì →
+dấu vết còn lại tới nay → nối về bài chính. Hero ghi "Phụ lục · đọc thêm, không bắt buộc". Đã có:
+`01/ipv4-vs-ipv6.html`, `03/lich-su-he-dieu-hanh.html`, `04/lich-su-wsl.html`.
 
 **Trang bìa ít chữ** (người học phản ánh 30/09/2026: người mới đọc bìa thấy dài và rối thì nản):
 trang chủ, README của repo, trang khung của bài, câu giới thiệu module — mỗi chỗ một hai câu, không
@@ -65,7 +94,7 @@ Script **không ghi đè** file đã tồn tại trong `lessons/` — an toàn k
 ### Thời lượng bài (sửa 30/09/2026)
 
 Mỗi bài có `"hours": [ít, nhiều]` trong `curriculum.json` — **giờ học thật cho trọn một bài**,
-không phải thời gian giảng (Bài 00 kéo dài 4 ngày; riêng `index.html` của Bài 01 khoảng 10.000 chữ,
+không phải thời gian giảng (Bài 00 cũ kéo dài 4 ngày; riêng `index.html` của Bài 03 khoảng 10.000 chữ,
 đọc kỹ một lượt đã mất 1–1,5 giờ). Thời lượng cộng từ bốn phần ghi
 ở `meta.time.parts`: đọc trước 1–2 giờ · đối thoại 1,5–3 giờ · lab (kể cả bước tự gây lỗi) 1–3 giờ
 · ghi notes và bồi tài liệu 0,5–1 giờ. Bài nhẹ 2–5 giờ; bài nhiều mảnh ghép 5–8 giờ. Khi
@@ -103,7 +132,7 @@ Nhịp chuẩn của một buổi:
 5. Trả lời đúng thì xác nhận ngắn gọn rồi đi tiếp — không khen dài dòng.
 6. Hết các phần mới tới lab, rồi mới viết/chốt tài liệu.
 
-### Từ Bài 01 trở đi: viết NHÁP TRƯỚC, dạy, rồi BỒI ĐẮP
+### Từ Bài 03 trở đi: viết NHÁP TRƯỚC, dạy, rồi BỒI ĐẮP
 
 Người học đã đổi nhịp (25/09/2026). Quy trình giờ là **hai lượt viết**:
 
@@ -115,7 +144,7 @@ Người học đã đổi nhịp (25/09/2026). Quy trình giờ là **hai lư�
    - chỗ người học hiểu sai + cách đã giảng lại
    - output lab THẬT trên máy họ
    - câu hỏi họ tự nghĩ ra ngoài kịch bản
-   - trang phụ nếu một nhánh đào quá sâu (như ipv4-vs-ipv6.html ở Bài 00)
+   - trang phụ nếu một nhánh đào quá sâu (như ipv4-vs-ipv6.html ở Bài 01)
 ```
 
 Lượt ② vẫn là phần quan trọng nhất. Lượt ① chỉ là nền — **đừng coi viết xong lượt ① là
@@ -153,17 +182,17 @@ Khi người học nói "dạy bài tiếp theo" / "học bài NN":
   hơn. Thuật ngữ hạ tầng nào xuất hiện lần đầu thì phải được giới thiệu ngay tại đó bằng lời thường
   (1–2 câu, kèm "học kỹ ở Bài NN" nếu nó có bài riêng), hoặc **thay bằng lời thường** nếu đoạn văn
   không thật sự cần nó. Một đoạn văn không chứa quá **một** thuật ngữ mới. Bài sau gọi lại tên khái
-  niệm của bài trước ("kernel — người quản lý phần cứng đã gặp ở Bài 01 — …") để kiến thức nối thành
+  niệm của bài trước ("kernel — phần lõi hệ điều hành đã gặp ở Bài 03 — …") để kiến thức nối thành
   chuỗi theo thời gian, không phân mảnh. Lượt soát 30/09/2026 đếm được 78 thuật ngữ dùng trước khi
-  giới thiệu ở Bài 00–01 (tệ nhất: "gói tin" dùng 44 lần mà không trang nào định nghĩa).
+  giới thiệu ở Bài 00 và 01 cũ, tức Bài 00–03 bây giờ (tệ nhất: "gói tin" dùng 44 lần mà không trang nào định nghĩa).
 - **Không có mục lạc đề** (người học cấm 30/09/2026: "một bài học cấu trúc phải chặt chẽ, ràng buộc
   và liên kết với nhau"). Mỗi `h2`/`h3`, mỗi khối chú thích, kể cả khối "Đào sâu", phải trả lời
   được: *nó phục vụ câu hỏi nào ở tab `Vấn đề`, hoặc mục tiêu nào trong `curriculum.json`?* — và
   **câu nối đó phải viết ra trên trang**, không để người đọc tự đoán. Không trả lời được thì bỏ.
   Nội dung đúng nhưng thuộc bài khác thì **chuyển sang bài đó** (ghi vào `concepts` của bài đó trong
   `curriculum.json`), không giữ lại làm "kiến thức tặng thêm". Các dạng đã mắc: giải nghĩa bù một
-  lệnh của bài trước (`2>/dev/null` ở Bài 01 — chỗ đúng là Bài 02); dạy trước công cụ của bài sau
-  (`docker stop`, cấu hình Kubernetes trong Bài 01); khối "Đào sâu" mở ra chủ đề mới thay vì đào sâu
+  lệnh của bài trước (`2>/dev/null` ở Bài 03 — chỗ đúng là Bài 04); dạy trước công cụ của bài sau
+  (`docker stop`, cấu hình Kubernetes trong Bài 03); khối "Đào sâu" mở ra chủ đề mới thay vì đào sâu
   đúng khái niệm vừa giảng (zombie, capabilities). Viết xong một bài, soát lại từng mục theo câu hỏi
   trên trước khi đưa người học đọc.
 - **Problem → Concept → Tool.** Không bao giờ mở đầu bằng "Docker là...".
@@ -186,8 +215,15 @@ vở bài tập nhưng mỗi bước vẫn phải có câu giải thích *vì sa
    phải tồn tại; (b) *định nghĩa chính thức* — tên chuẩn tiếng Anh + tiếng Việt, phát biểu
    bằng thuật ngữ kỹ thuật, kèm nguồn chuẩn nếu có (RFC, POSIX, man page, tài liệu chính
    thức); (c) *cơ chế* — chuỗi nhân quả từng bước, chuyện gì xảy ra ở tầng nào; (d) *ví dụ* —
-   trước hết một ví dụ **kỹ thuật thật** (lệnh, output), **sau đó** mới tới ẩn dụ đời thường;
+   trước hết một ví dụ **kỹ thuật thật** (lệnh, output), **sau đó** — nếu thật cần — mới tới ẩn dụ;
    (e) *hệ quả, giới hạn, ngoại lệ*, rồi nối về bản đồ 9 chặng.
+
+**Bớt ẩn dụ, chính xác trước, kể chuyện linh hoạt** (người học yêu cầu 03/10/2026, ghi đè các điểm
+"không bỏ ẩn dụ" bên dưới): **tối đa MỘT khối ẩn dụ mỗi trang**, chỉ cho khái niệm trung tâm. **Không
+ví von trang trí** trong văn xuôi, tiêu đề, nhãn tab, chú thích ("sổ phòng", "người ngồi trong phòng",
+"cửa ngõ", "lễ tân khổng lồ", "kẻ sát nhân", "cái hộp"…) — viết thẳng bằng thuật ngữ ("bảng các port
+đang listen do kernel giữ"). Giọng vẫn là người dạy kể chuyện: dẫn bằng tình huống, câu hỏi, nhân quả.
+Ẩn dụ đang giữ: Bài 01 tòa nhà · Bài 02 lễ tân · Bài 03 người – mặt bàn – tủ.
 
 ### Luật ẩn dụ (người học yêu cầu 29/09/2026)
 
@@ -207,9 +243,7 @@ Người học phản ánh: các trang cũ "bụp một phát ẩn dụ luôn" �
 - **Mỗi ẩn dụ phải kèm giới hạn của nó** — một câu nói rõ chỗ nào nó *không* còn đúng
   (ví dụ: "phòng" gợi ý port là không gian vật lý, thực tế nó chỉ là một con số 16 bit trong
   header). Khi ẩn dụ và định nghĩa mâu thuẫn, **định nghĩa thắng**.
-- **Không bỏ ẩn dụ.** Chúng vẫn là công cụ ghi nhớ tốt và người học đã thuộc chúng; chỉ đổi
-  vị trí và gắn nhãn. Các ẩn dụ đã dùng (tòa nhà, lễ tân, căn cước, tủ hồ sơ/mặt bàn) giữ
-  nguyên nội dung.
+- (Đã thay bằng luật "bớt ẩn dụ" ở trên: tối đa một khối mỗi trang.)
 2. **Viết thành đoạn văn liền mạch** với từ nối lập luận: *bởi vì, do đó, hệ quả là, nói cách
    khác, ngược lại, điều này dẫn tới*. Không dùng gạch đầu dòng cụt để thay cho lập luận;
    gạch đầu dòng chỉ dành cho thứ rời rạc thật (bước lab, checklist, danh sách lệnh).
@@ -221,7 +255,7 @@ Người học phản ánh: các trang cũ "bụp một phát ẩn dụ luôn" �
    chính thức (rfc-editor.org, man7.org, docs chính thức).
 5. **Trung thực về độ chắc chắn:** phân biệt *luôn luôn* với *thường thì*. Năm, con số lịch
    sử, số hiệu RFC chỉ viết khi chắc chắn — không chắc thì bỏ, đừng bịa cho có vẻ học thuật.
-6. Vẫn xưng **"bạn"**. Vẫn giữ các ẩn dụ đã dạy ở Bài 00 — học thuật không có nghĩa là bỏ ví dụ.
+6. Vẫn xưng **"bạn"**. Học thuật không có nghĩa là bỏ ví dụ: mỗi ý trừu tượng đi kèm một ví dụ kỹ thuật thật.
 
 Trong **chat** vẫn giữ nhịp đối thoại (chia phần, hỏi, đợi) — nhưng phần giảng trước câu hỏi
 cũng theo năm nhịp trên, không giảng cụt.
@@ -359,7 +393,7 @@ trang bài giảng chính tối thiểu **4 khối ảnh**, mỗi trang phụ t�
 1. **Nguồn** — chỉ hai loại: (a) Wikimedia Commons, giấy phép CC0 / public domain / CC BY /
    CC BY-SA (`node scripts/anh/commons.mjs tim "…"` rồi `lay "File:…"` — lưu kèm giấy phép);
    (b) **tự chụp màn hình** từ trang công khai (RFC, man7.org, IANA, crt.sh…) hoặc từ **phần
-   mềm chạy thật trên máy** (như trang lỗi Nginx ở Bài 00 — chạy Nginx thật để lấy 404/502/504).
+   mềm chạy thật trên máy** (như trang lỗi Nginx ở Bài 02 — chạy Nginx thật để lấy 404/502/504).
    Không dùng ảnh không rõ giấy phép. Trang chặn bot (403) thì **không vượt**, tìm bản khác.
 2. **Tùy biến theo phong cách bài** (`python scripts/anh/hau-ky.py`): ảnh chụp thật chuyển hai
    tông mực `#151515` / **mặt đọc `#fffdf8`** — tông sáng phải trùng `--surface` của khung tab, nơi
@@ -431,18 +465,23 @@ phải; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền
 
 ## Trạng thái hiện tại
 
-- **Bài 00: XONG** (21–24/09/2026). Có 3 trang: `index.html` (bài giảng),
-  `phan-tich-output.html` (mổ băng output thật), `ipv4-vs-ipv6.html` (phụ lục).
-  Dùng bộ ba trang này làm **khuôn mẫu** cho các bài sau.
-- **Bài 01: XONG** (25/09–03/10/2026), đã qua lượt ③: Bảng 9 "Những chỗ hay hiểu sai" ở tab cuối,
-  output lab thật trong từng lab, thêm bước tự gây lỗi `EADDRINUSE` (hai process tranh một phòng) và
-  thí nghiệm `$$`/`$PPID` + `node -e` ở Lab 6 — cả hai sinh ra từ chính buổi lab.
-- **Chờ người học quyết** (hỏi lại khi tới Module 2): server cho Bài 14–18 là VPS thuê hay máy ảo trên
-  máy mình; giữ hay bỏ nhánh lab "CA nội bộ" ở Bài 18.
-- Kế tiếp: **Bài 02** — Phòng lab: WSL2, Docker Desktop và shell tối thiểu; rồi vào Docker từ Bài 03.
+- **03/10/2026: tách Bài 00 cũ** (học 21–24/09, rời rạc, 22.700 chữ) thành **Bài 00** bản đồ chín chặng
+  (+ trang phụ `phan-tich-output.html`), **Bài 01** IP/port/listen/firewall (+ phụ lục
+  `ipv4-vs-ipv6.html`), **Bài 02** chẩn đoán theo chặng — cả ba XONG. **Bài 01 cũ → Bài 03** (XONG
+  25/09–03/10, đã qua lượt ③: Bảng 9, output lab thật, EADDRINUSE, `$$`/`$PPID`; + phụ lục
+  `lich-su-he-dieu-hanh.html`). Cả bốn viết lại theo xương sống mới.
+- Phần chứng chỉ chuyên sâu của Bài 00 cũ (vì sao 90 ngày, chiếm DNS là xin được chứng chỉ, chuỗi
+  X.509, crt.sh) **chuyển sang Bài 20**; tư liệu gốc ở commit 866ceb1, `lessons/00-ban-do-toan-canh/
+  index.html` tab "Chứng chỉ & DNS" và `phan-tich-output.html` tab "Chứng chỉ"; ảnh crt.sh đã đặt sẵn ở
+  `lessons/20-ten-mien-va-https/img/`. "Tám lý do cần Nginx" chuyển sang **Bài 19** (cùng commit, tab
+  "Thời gian & Nginx").
+- **Bài 04 (Phòng lab): ĐANG HỌC** — lượt ① (bản nháp để đọc trước) viết 03/10/2026, + phụ lục
+  `lich-su-wsl.html`. Kế tiếp sau đó: vào Docker từ Bài 05.
+- **Chờ người học quyết** (hỏi lại khi tới Module 2): server cho Bài 16–20 là VPS thuê hay máy ảo trên
+  máy mình; giữ hay bỏ nhánh lab "CA nội bộ" ở Bài 20.
 - **28/09/2026: đổi giọng văn sang học thuật + chia tab mọi trang; giao diện qua hai lượt** —
-  neo-brutalism "Sổ thép" rồi chốt **Bauhaus** (một kiểu duy nhất). Bài 00 (3 trang), Bài 01,
-  trang chủ và 37 trang khung đều đã theo hệ mới.
+  neo-brutalism "Sổ thép" rồi chốt **Bauhaus** (một kiểu duy nhất). Mọi trang bài, trang chủ và
+  các trang khung đều theo hệ này.
 - **README cũng theo Bauhaus** (người học yêu cầu "sửa cả readme cho khớp"): không nhúng card
   neo-brutalism của repo profile nữa. `scripts/readme-art.mjs` (gọi từ `generate.mjs`) vẽ vào
   `assets/readme/`: `banner.svg` (tiêu đề + ba hình số liệu), `roadmap.svg` (bức tranh lộ trình tự
@@ -452,38 +491,39 @@ phải; `narrow` cho ảnh nhỏ) · `shot` (ảnh chụp màn hình, có viền
   GitHub là việc của repo `AnhTuan2111` (neo-brutalism, không đổi sang Bauhaus); nhưng **nội dung**
   profile nói về khoá học (số bài, đích đến, công cụ) phải được sửa theo mỗi lần lộ trình đổi.
 
-### Khái niệm đã dạy ở Bài 00 — phải tái sử dụng, không định nghĩa lại
+### Khái niệm đã dạy ở Bài 00–03 — phải tái sử dụng, không định nghĩa lại
 
-Người học đã nắm và đã dùng được những thứ sau. Các bài sau **nối vào** chúng:
+Người học đã nắm và đã dùng được những thứ sau. Các bài sau **nối vào** chúng (gọi đúng tên, link về):
 
-- **Mô hình tòa nhà**: IP = cửa ngõ · port = phòng · process listen = người ngồi trong phòng,
-  tự chọn tiếp khách từ cửa nào · firewall = bảo vệ ở cửa ngõ
-- **Nginx = lễ tân**: nhận việc, đi vào trong hỏi giúp, bê kết quả ra. Khách không vào trong.
-- **Bản đồ 9 chặng** ①–⑨, và "chỉ chặng ⑧ là code bạn viết"
-- **Bảng triệu chứng có cột "ai viết ra"** — 502 do Nginx viết, 500 do Spring Boot viết
-- 3 nguyên tắc: *mã HTTP là một câu trả lời* · *triệu chứng chứng minh chặng trước đã chạy tốt* ·
-  *sửa một tầng thì triệu chứng đổi*
-- **refused vs timeout**: refused có điểm kết thúc của riêng nó; timeout dài bằng con số ta chọn
-- **Chứng chỉ = căn cước, CA = Bộ Công an**; cert công khai / private key bí mật
-- **DNS là gốc rễ của lòng tin** — nắm DNS là xin được cert hợp lệ
-- **Hệ thống hỏng mà không ai đụng vào** — thời gian tự nó là nguyên nhân sự cố
-- `"container đang chạy"` ≠ `"app sẵn sàng"`
+- **Bài 00:** bản đồ chín chặng, "chỉ chặng 8 là code bạn viết"; URL và các phần; DNS, gói tin,
+  chứng chỉ và CA ở mức khái niệm (chứng chỉ công khai, private key bí mật).
+- **Bài 01:** một máy nhiều địa chỉ IP; port, listen, listen address (127.0.0.1, 0.0.0.0); firewall;
+  ba điều kiện để gọi tới được; refused (máy đích còn sống, trả lời ngay) và timeout (không ai trả lời,
+  dài bằng con số ta chọn); bộ bốn IP:port. Ẩn dụ đã dùng: tòa nhà.
+- **Bài 02:** mã lỗi là một câu trả lời, có cột "ai viết ra" (502/504 do Nginx viết, 500 do app viết);
+  ba nguyên tắc chẩn đoán; đã chạy chưa phải đã sẵn sàng (cửa sổ 502 lúc khởi động); hệ thống hỏng mà
+  không ai đụng vào. Ẩn dụ đã dùng: lễ tân.
+- **Bài 03:** bốn tài nguyên và kiểu cạn của từng cái; process, PID, cây process, thread; process sở
+  hữu vùng nhớ, user, thư mục làm việc, biến môi trường (con nhận bản sao của cha); kernel, user space,
+  syscall, kernel mode do CPU cưỡng chế; signal (SIGINT, SIGTERM bắt được; SIGKILL không); OOM killer
+  chọn process lớn nhất; chuỗi bảy bước từ RAM cạn tới 502; service = process + người trông coi có bản
+  mô tả (systemd). Ẩn dụ đã dùng: người – mặt bàn – tủ.
 
 ### Môi trường — đã thay đổi so với lúc khởi tạo
 
 - **WSL Ubuntu đã bị gỡ.** `wsl -l -v` chỉ còn distro `docker-desktop` (không có bash).
-  Cài lại ở **Bài 02** — đó đúng là nội dung của bài đó, không phải sự cố.
-- **Docker Desktop chưa chạy** (daemon không kết nối được). Bật ở Bài 02.
+  Cài lại ở **Bài 04** — đó đúng là nội dung của bài đó, không phải sự cố.
+- **Docker Desktop chưa chạy** (daemon không kết nối được). Bật ở Bài 04.
 - Người học đang dùng **Git Bash** cho mọi lab. Git for Windows biên dịch `curl` dựa trên
   **schannel**, nên `curl -v` KHÔNG in thông tin chứng chỉ → dùng `openssl s_client` thay thế.
 - IP LAN thay đổi giữa các buổi (DHCP) — đừng ghi cứng địa chỉ vào tài liệu.
 
 ### Nợ kỹ thuật của bài học
 
-- **Bài 02**: chạy `time curl -4 -o /dev/null http://127.0.0.1:9999` trong WSL Ubuntu và
-  so với **2,155s** đo được trên Windows. Đây là thí nghiệm đối chứng đã hứa với người học.
+- **Bài 04**: chạy `time curl -4 -o /dev/null http://127.0.0.1:9999` trong WSL Ubuntu và
+  so với **2,155s** đo được trên Windows (Bài 01). Đây là thí nghiệm đối chứng đã hứa với người học.
 - GitHub Pages: phục vụ từ nhánh `main`, thư mục gốc. CI/CD trong lộ trình dùng **GitLab** (Bài
-  19–23), không dùng GitHub Actions. Tự động deploy trang này bằng GitHub Actions chỉ là **phụ lục
+  21–25), không dùng GitHub Actions. Tự động deploy trang này bằng GitHub Actions chỉ là **phụ lục
   tự chọn**, làm khi người học yêu cầu — nên **đừng tạo sẵn** `.github/workflows/`.
 
 ## Lưu ý kỹ thuật

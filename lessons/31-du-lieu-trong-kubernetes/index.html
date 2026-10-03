@@ -1,0 +1,110 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 31 — Dữ liệu trong Kubernetes: PVC và StatefulSet</title>
+<meta name="description" content="Chạy PostgreSQL trong cụm mà không mất dữ liệu khi pod bị thay, và biết khi nào không nên làm vậy.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="31">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-31</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M4">Module 4</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 4 · Bài 31</p>
+  <h1>Dữ liệu trong Kubernetes: <span class="hl">PVC và StatefulSet</span></h1>
+  <p class="lede">Pod PostgreSQL bị thay là mất dữ liệu. Trong một cụm nhiều máy, dữ liệu sống ở đâu?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">5–8 giờ</span>
+    <span class="chip">Kubernetes</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 31">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../30-probe-va-tai-nguyen/">Bài 30</a> kết luận: Probe cho cụm biết app đã khởi động xong, đã sẵn sàng hay đã treo. Requests và limits đặt đúng thì app không bị bóp CPU tới mức chết đứng, cũng không bị OOMKilled.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Trong PersistentVolume, xin qua PVC và gắn với StatefulSet để mỗi bản sao giữ đúng ổ đĩa của mình. Nhiều khi database nên nằm ngoài cụm.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Service mới gọi được từ trong cụm. Đưa app ra ngoài bằng tên miền và HTTPS thì làm thế nào? <a href="../32-ingress-va-https/">Bài 32</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../11-volume-va-du-lieu/">Bài 11 · Dữ liệu: volume, PostgreSQL và backup</a></li>
+    <li><a href="../30-probe-va-tai-nguyen/">Bài 30 · Probe và giới hạn tài nguyên</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Ổ đĩa trong pod là tạm thời</li>
+    <li>PersistentVolume, PersistentVolumeClaim, StorageClass</li>
+    <li>StatefulSet: tên ổn định, ổ đĩa riêng cho từng bản sao</li>
+    <li>Backup database chạy trong cụm</li>
+    <li>Database trong cụm hay dịch vụ bên ngoài: đánh đổi</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Chạy PostgreSQL bằng StatefulSet có PVC, xoá pod để chứng minh dữ liệu còn. Cố tình dùng Deployment không có PVC để thấy dữ liệu mất. Backup và khôi phục.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Giải thích được PVC khác volume của Docker ở đâu (nối Bài 11)</li>
+    <li>Nói được vì sao database dùng StatefulSet chứ không dùng Deployment</li>
+    <li>Khôi phục được database trong cụm từ backup</li>
+    <li>Kể được một lý do nên và một lý do không nên chạy database trong cụm</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../30-probe-va-tai-nguyen/">
+    <span class="dir">Bài trước</span>
+    <span class="t">30 · Probe và giới hạn tài nguyên</span>
+  </a>
+  <a class="next" href="../32-ingress-va-https/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">32 · Ingress và HTTPS trong cụm</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 31 · Module M4 — Kubernetes — Chạy container trên cả một cụm máy · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

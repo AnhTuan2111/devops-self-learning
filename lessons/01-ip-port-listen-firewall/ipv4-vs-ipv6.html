@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phụ lục — Lịch sử địa chỉ IP</title>
+<meta name="description" content="Vì sao Internet có dải địa chỉ mạng riêng và vì sao server không đặt ở nhà: IPv4 năm 1981, chia lớp, CIDR, NAT, cái giá của NAT, và IPv6 — mỗi bước giải quyết vấn đề gì mà bước trước chưa giải quyết được.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="01-ipv6">
+
+<nav class="topbar"><div class="topbar-inner">
+  <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-01 / phu-luc-lich-su</span>
+  <span class="spacer"></span>
+</div></nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Bài 01 · Phụ lục · đọc thêm, không bắt buộc</p>
+  <h1>Lịch sử địa chỉ IP: <span class="hl">vì sao Internet thành ra như hôm nay</span></h1>
+  <p class="lede">Bài 01 nói rằng các dải địa chỉ mạng riêng không bao giờ ra Internet, và vì thế một
+  server không đặt được trên laptop ở nhà. Phụ lục này kể lại vì sao Internet được xây như vậy: bốn
+  công nghệ nối tiếp nhau, mỗi công nghệ ra đời để giải quyết đúng vấn đề mà công nghệ trước để lại.</p>
+  <div class="meta">
+    <span class="chip violet">Phụ lục · lịch sử</span>
+    <a class="chip" href="index.html"><i class="ic ic-l" aria-hidden="true"></i> Bài giảng 01</a>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của phụ lục lịch sử địa chỉ IP">
+
+<!-- ================================================================== -->
+<section class="tab" id="t-1981" data-tab="Năm 1981" data-note="IPv4 ra đời">
+
+<p class="panel-intro">Phụ lục trả lời một câu hỏi nảy ra từ tab Địa chỉ IP của Bài 01: vì sao lại có
+những dải địa chỉ không được ra Internet, và vì sao máy ở nhà không ai gọi tới được? Câu trả lời bắt đầu
+từ một quyết định thiết kế năm 1981.</p>
+
+<h2 id="1981">1981: một mạng nghiên cứu cần địa chỉ</h2>
+
+<figure class="fig photo side">
+  <img src="img/imp-arpanet.webp" width="1000" height="700" loading="lazy" alt="Mặt trước một tủ máy màu xám với hai hàng công tắc và đèn, tấm biển ghi Interface Message Processor.">
+  <figcaption><b>Ảnh 1</b> Interface Message Processor (IMP) của hãng BBN, thiết bị chuyển gói tin của ARPANET và là tiền thân của router ngày nay, trưng bày ở Computer History Museum. ARPANET chạy từ năm 1969; IPv4 được đặc tả năm 1981, và ARPANET chuyển hẳn sang TCP/IP vào ngày 1/1/1983.</figcaption>
+</figure>
+
+<p>Trước năm 1981, vấn đề của những người xây mạng không phải là thiếu địa chỉ mà là có quá nhiều kiểu
+mạng không nói chuyện được với nhau. Mạng chính khi ấy là <strong>ARPANET</strong>, một mạng nghiên cứu
+nối vài trăm máy tính của các trường đại học, phòng thí nghiệm và Bộ Quốc phòng Mỹ. Muốn nối các mạng khác
+nhau thành một "mạng của các mạng", cần một cách đánh địa chỉ chung cho mọi máy, bất kể nó nằm trong mạng
+nào. Lời giải là giao thức IP, và phiên bản được chuẩn hoá vào tháng 9 năm 1981 trong văn bản RFC 791 chính
+là IPv4, thứ ta vẫn dùng hôm nay.</p>
+
+<p>Những người thiết kế chọn độ dài <strong>32 bit</strong> cho một địa chỉ. Một địa chỉ 32 bit được viết
+thành bốn nhóm 8 bit, mỗi nhóm đổi sang một số thập phân từ 0 tới 255 và ngăn cách bằng dấu chấm. Tổng số
+địa chỉ mà 32 bit tạo ra được là:</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  2³² = 4.294.967.296  ≈  4,3 tỷ địa chỉ
+
+  192     .168     .10      .38
+  11000000.10101000.00001010.00100110    ← 32 bit, chia 4 nhóm 8 bit</code></pre>
+<figcaption><b>Hình 1</b> Không gian địa chỉ IPv4, và một địa chỉ viết ở dạng thập phân lẫn nhị phân.</figcaption>
+</figure>
+
+<figure class="fig photo shot">
+  <img src="img/rfc791-header.webp" width="1036" height="558" loading="lazy" alt="Sơ đồ phần đầu gói tin IPv4 trong RFC 791 vẽ bằng ký tự, hai hàng Source Address và Destination Address được khoanh đỏ và lam.">
+  <figcaption><b>Ảnh 2</b> Khuôn phần đầu gói tin IPv4 nguyên bản trong RFC 791, tháng 9/1981. Mỗi hàng của sơ đồ rộng đúng 32 bit; <span class="kw"><i class="key k-red" aria-hidden="true"></i>địa</span> chỉ nguồn và <span class="kw"><i class="key k-blue" aria-hidden="true"></i>địa</span> chỉ đích mỗi cái chiếm trọn một hàng, nên một địa chỉ IPv4 không thể dài hơn 32 bit. Con số 4,3 tỷ bị khoá cứng từ chính hai dòng này.</figcaption>
+</figure>
+
+<p>Năm 1981, 4,3 tỷ địa chỉ nghe như vô hạn. Dân số thế giới khi ấy khoảng 4,5 tỷ người, gần như không
+ai sở hữu máy tính, và một máy tính to bằng cái tủ, do cả một đội kỹ sư vận hành. Chọn 32 bit vì vậy
+không phải thiếu tầm nhìn, mà là một quyết định hợp lý với những gì người ta biết lúc đó. Nhưng mọi quyết
+định kiến trúc đều mang theo một giả định về tương lai, và giả định "4,3 tỷ là đủ" về sau hết đúng.</p>
+
+<h2 id="chia-lop">Cách chia theo lớp làm địa chỉ cạn nhanh hơn</h2>
+
+<p>Vấn đề không chỉ nằm ở con số 4,3 tỷ, mà còn ở cách chia nó cho các tổ chức. Ban đầu, không gian địa
+chỉ được chia theo <strong>lớp</strong>: vài bit đầu của địa chỉ quyết định nó thuộc lớp nào, và lớp quyết
+định luôn kích thước khối được cấp. Không có kích thước nào nằm giữa các lớp.</p>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 1</b> Ba lớp địa chỉ dùng để cấp cho các tổ chức.</caption>
+  <thead><tr><th>Lớp</th><th>Bit đầu</th><th>Số khối</th><th>Địa chỉ mỗi khối</th><th>Phần của toàn bộ không gian</th></tr></thead>
+  <tbody>
+    <tr><td><strong>A</strong></td><td><code>0</code></td><td>128</td><td>16.777.216</td><td>một nửa</td></tr>
+    <tr><td><strong>B</strong></td><td><code>10</code></td><td>16.384</td><td>65.536</td><td>một phần tư</td></tr>
+    <tr><td><strong>C</strong></td><td><code>110</code></td><td>2.097.152</td><td>256</td><td>một phần tám</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Bước nhảy 256 lần giữa các cỡ khối là nguồn gốc của sự lãng phí. Một tổ chức cần 300 địa chỉ thì khối
+lớp C với 256 địa chỉ không đủ, nên phải nhận một khối lớp B với 65.536 địa chỉ, và bỏ không hơn 99% số
+đó. Ở cực trên, một số trường đại học, tập đoàn và cơ quan được cấp nguyên một khối lớp A, tức hơn 16
+triệu địa chỉ cho một tổ chức. Sổ đăng ký của IANA, tổ chức quản lý số hiệu của Internet, đến nay vẫn còn
+dấu vết của thời kỳ này: nhiều khối lớn ghi tên một tổ chức duy nhất.</p>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>IPv4 giải quyết được bài toán của năm 1981: một cách đánh địa chỉ chung cho mọi mạng. Nhưng nó để
+  lại hai vấn đề cho thập niên sau: <strong>tổng số địa chỉ có hạn</strong>, và <strong>cách chia theo
+  lớp phung phí</strong> phần địa chỉ có hạn đó.</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-cidr" data-tab="CIDR" data-note="1993: bỏ chia lớp">
+
+<p class="panel-intro">Tab này kể công nghệ đầu tiên ra đời để vá IPv4: nó giải quyết vấn đề chia
+phung phí của tab trước, và một vấn đề thứ hai mà chia lớp sinh ra.</p>
+
+<h2 id="bao-dong">Đầu thập niên 1990: hai cuộc khủng hoảng cùng tới</h2>
+
+<p>World Wide Web ra đời năm 1991, và Internet bắt đầu bùng nổ thương mại. Tới đầu thập niên 1990, cộng
+đồng kỹ thuật nhận ra hai cuộc khủng hoảng đang tới cùng lúc. Thứ nhất, các khối lớp B, cỡ "vừa vặn" nhất
+cho doanh nghiệp, đang cạn rất nhanh. Thứ hai, danh sách đường đi mà mỗi router lớn của Internet phải nhớ
+đang phình ra, vì mỗi khối lớp C được cấp là thêm một dòng riêng trong danh sách đó. Một router chỉ có
+bao nhiêu đó bộ nhớ, nên danh sách đường đi không thể phình mãi.</p>
+
+<p>Khoảng năm 1992, IETF, tổ chức soạn các chuẩn của Internet, bắt đầu thiết kế một thế hệ địa chỉ mới;
+đó sẽ là IPv6 ở tab cuối. Nhưng một thế hệ mới cần nhiều năm, trong khi khủng hoảng đang tới ngay. Vì vậy
+người ta làm song song hai việc: thiết kế cái mới, và vá cái cũ.</p>
+
+<h2 id="cidr">CIDR (1993): ranh giới ở bất kỳ bit nào</h2>
+
+<p><strong>CIDR</strong> (<em>Classless Inter-Domain Routing</em>), chuẩn hoá năm 1993 trong RFC 1519 và
+nay được thay bằng RFC 4632, làm một việc nghe thì đơn giản: <em>bỏ hệ thống lớp</em>. Thay vì để vài bit
+đầu quyết định cỡ khối, CIDR cho phép ranh giới giữa phần "mạng" và phần "máy" nằm ở bất kỳ bit nào, và
+ghi vị trí đó bằng một con số sau dấu gạch chéo. Đó chính là ký hiệu <code>/8</code> mà Bài 01 đã gặp ở
+sổ đăng ký của IANA.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  192.168.1.0/24   ← 24 bit đầu cố định, 8 bit cuối tự do → 256 địa chỉ
+  10.0.0.0/8       ← 8 bit đầu cố định                     → 16,7 triệu địa chỉ
+
+  số địa chỉ trong khối /n  =  2^(32 − n)</code></pre>
+<figcaption><b>Hình 2</b> Ký hiệu CIDR: con số sau dấu gạch chéo là số bit cố định ở đầu địa chỉ.</figcaption>
+</figure>
+
+<p>Con số sau dấu gạch chéo đếm <em>bit</em>, không liên quan gì tới các con số trong địa chỉ. Dải
+loopback <code>127.0.0.0/8</code> vì vậy không chứa 127⁴ địa chỉ như người mới hay đoán, mà chứa
+2²⁴, khoảng 16,7 triệu địa chỉ, dù mặc định máy chỉ dùng đúng một địa chỉ trong đó là
+<code>127.0.0.1</code>.</p>
+
+<p>CIDR giải quyết cả hai cuộc khủng hoảng. Tổ chức cần 300 địa chỉ giờ nhận một khối <code>/23</code>
+với 512 địa chỉ thay vì 65.536, nên địa chỉ không còn bị phung phí theo bước nhảy 256 lần. Và nhiều khối
+nhỏ nằm liền nhau có thể được gộp thành một khối lớn, chỉ chiếm một dòng trong danh sách đường đi của
+router, nên danh sách ấy ngừng phình to.</p>
+
+<dl class="terms">
+  <dt>Prefix <small>tiền tố mạng</small></dt>
+  <dd>Phần bit cố định ở đầu địa chỉ, chung cho mọi máy trong một khối. Trong <code>192.168.1.0/24</code>,
+  prefix là 24 bit đầu.</dd>
+  <dt>Subnet mask <small>mặt nạ mạng con</small></dt>
+  <dd>Cách viết cũ của cùng thông tin đó: <code>/24</code> tương đương <code>255.255.255.0</code>. Các công
+  cụ mạng vẫn dùng cả hai cách viết.</dd>
+</dl>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>CIDR chữa được sự <strong>phung phí</strong> và sự phình to của danh sách đường đi. Nhưng nó chỉ chia
+  khéo hơn; <strong>tổng số vẫn là 4,3 tỷ</strong>. Internet vẫn lớn nhanh hơn thế, nên vẫn cần một cách để
+  nhiều máy dùng chung ít địa chỉ.</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-nat" data-tab="NAT" data-note="1994: dùng chung một địa chỉ">
+
+<p class="panel-intro">Tab này kể công nghệ thứ hai: nó giải quyết đúng vấn đề CIDR không giải được,
+là tổng số địa chỉ, bằng cách cho cả một mạng dùng chung một địa chỉ.</p>
+
+<h2 id="nat">NAT (1994): cả một mạng, một địa chỉ công khai</h2>
+
+<p><strong>NAT</strong> (<em>Network Address Translation</em>), mô tả lần đầu trong RFC 1631 năm 1994 và
+sau đó trong RFC 3022, cho phép cả một mạng dùng chung <strong>một</strong> địa chỉ công khai. Nó đi kèm
+với ba dải mạng riêng mà RFC 1918 dành ra, tức ba dải Bài 01 đã gặp: <code>10.0.0.0/8</code>,
+<code>172.16.0.0/12</code> và <code>192.168.0.0/16</code>. Mọi mạng nội bộ trên thế giới đều được dùng lại
+các dải này, chính vì chúng không bao giờ xuất hiện trên Internet. Đó là câu trả lời cho phần đầu của câu
+hỏi phụ lục: dải mạng riêng tồn tại để hàng triệu mạng cùng dùng lại một nhóm địa chỉ nhỏ.</p>
+
+<figure class="fig photo">
+  <img src="img/router-gia-dinh.webp" width="800" height="600" loading="lazy" alt="Một router không dây gia đình có hai ăng-ten dựng đứng.">
+  <figcaption><b>Ảnh 3</b> Router gia đình, ở đây là Linksys WRT54G, một mẫu rất phổ biến những năm 2000. Đây là nơi NAT diễn ra: mọi máy trong nhà mang địa chỉ mạng riêng kiểu <code>192.168.x.x</code>, còn router đứng ra đại diện bằng một địa chỉ duy nhất phía nhà mạng.</figcaption>
+</figure>
+
+<figure class="fig">
+<pre class="diagram"><code>    ┌──── NHÀ CỦA BẠN ──────────────┐
+    │                               │
+    │  laptop      192.168.10.38    │  ← mạng riêng,
+    │  điện thoại  192.168.10.51    │    không ra Internet
+    │  TV          192.168.10.77    │
+    │                  │            │
+    └──────────────────┼────────────┘
+                       │
+                  ROUTER (NAT)
+                       │
+                  203.0.113.7   ← công khai, MỘT địa chỉ
+                       │          cả nhà dùng chung
+                  ~ INTERNET ~</code></pre>
+<figcaption><b>Hình 3</b> Mọi thiết bị trong nhà dùng địa chỉ mạng riêng; chỉ router có một địa chỉ
+công khai. Địa chỉ <code>203.0.113.7</code> thuộc dải mà RFC 5737 dành riêng cho tài liệu, nên không trỏ
+tới mạng thật của ai.</figcaption>
+</figure>
+
+<p>Cơ chế cụ thể như sau. Khi laptop gửi một gói tin ra Internet, router thay địa chỉ nguồn (mạng riêng)
+của gói tin bằng địa chỉ công khai của chính nó, đồng thời thay port nguồn bằng một port do router tự
+chọn, rồi ghi cặp thay thế đó vào một bảng dịch địa chỉ. Khi gói trả lời quay về địa chỉ công khai và port
+đó, router tra bảng, đổi địa chỉ đích lại cho đúng, và chuyển gói tin cho đúng laptop, dù điện thoại cũng
+đang nói chuyện với cùng một server.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  192.168.10.38 : 55289   ⟷   203.0.113.7 : 61204   →  104.20.23.154:443
+  192.168.10.51 : 49802   ⟷   203.0.113.7 : 61205   →  104.20.23.154:443</code></pre>
+<figcaption><b>Hình 4</b> Bảng dịch địa chỉ của router: mỗi kết nối đi ra được gán một port công khai
+riêng.</figcaption>
+</figure>
+
+<p>Hình 4 nối thẳng về tab Kết nối TCP của Bài 01. Port tạm <code>55289</code> mà hệ điều hành cấp cho
+<code>curl</code>, một chi tiết trông như vụn vặt trong bộ bốn, chính là thứ giúp router phân biệt các kết
+nối từ những máy khác nhau trong nhà. Không có port trong bảng dịch, router không biết trả gói tin về cho
+ai.</p>
+
+<p>NAT hiệu quả tới mức nó đẩy lùi khủng hoảng IPv4 thêm hai thập kỷ. Nhưng nó chỉ trì hoãn chứ không xoá
+được giới hạn. Ngày 3 tháng 2 năm 2011, IANA phát đi những khối địa chỉ IPv4 trống cuối cùng cho các cơ
+quan quản lý địa chỉ khu vực; vài tháng sau, APNIC, cơ quan phụ trách khu vực châu Á – Thái Bình Dương,
+chuyển sang cấp phát nhỏ giọt khối cuối cùng của mình.</p>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>NAT giải quyết được <strong>tổng số địa chỉ</strong>, thứ CIDR không giải được, bằng cách cho cả một
+  mạng dùng chung một địa chỉ công khai. Nhưng NAT có một cái giá, và cái giá đó chính là lý do server không
+  đặt được ở nhà.</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-gia-nat" data-tab="Giá của NAT" data-note="vì sao server không đặt ở nhà">
+
+<p class="panel-intro">Tab này trả lời phần sau của câu hỏi phụ lục: vì sao một máy ở nhà không ai trên
+Internet gọi tới được. Câu trả lời là cái giá của chính công nghệ ở tab trước.</p>
+
+<h2 id="gia-cua-nat">Cái giá của NAT: kết nối chỉ được khởi tạo từ bên trong</h2>
+
+<p>Internet ban đầu được xây theo một nguyên tắc: <strong>mọi máy đều có thể gọi thẳng mọi máy</strong>.
+NAT phá vỡ nguyên tắc đó. Bảng dịch địa chỉ của router chỉ được ghi khi có một kết nối <em>đi ra</em>;
+một gói tin từ Internet <em>đi vào</em> mà không khớp dòng nào trong bảng thì router không có cách nào biết
+nó dành cho thiết bị nào trong nhà, nên đành vứt bỏ. Kết quả là một sự bất đối xứng mà người dùng ngày nay
+coi là hiển nhiên, dù nó chưa bao giờ là thiết kế ban đầu.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  Máy bạn GỌI RA Internet    →  được: router ghi bảng và trả lời về
+  Internet GỌI VÀO máy bạn   →  không được: router không biết
+                                gói tin này dành cho máy nào trong nhà</code></pre>
+<figcaption><b>Hình 5</b> Sau NAT, kết nối chỉ mở được khi máy bên trong là bên khởi tạo.</figcaption>
+</figure>
+
+<p>Đây là câu trả lời đầy đủ cho vì sao server không đặt trên laptop ở nhà. Không phải vì laptop yếu:
+nó thừa sức chạy Spring Boot và PostgreSQL. Mà vì laptop không có địa chỉ nào mà Internet gọi tới được.
+Địa chỉ <code>192.168.10.38</code> chỉ có nghĩa trong nhà, còn địa chỉ công khai thuộc về router, và router
+vứt mọi kết nối đi vào không có trong bảng. Muốn mở đường vào, phải ghi tay một dòng cố định vào bảng của
+router, gọi là <em>port forwarding</em>.</p>
+
+<div class="callout deep">
+  <span class="label">Đào sâu · nguyên tắc end-to-end</span>
+  <p>Năm 1984, Saltzer, Reed và Clark công bố bài báo <em>End-to-End Arguments in System Design</em>, lập
+  luận rằng mạng ở giữa nên càng đơn giản càng tốt, chỉ chuyển gói tin, còn mọi xử lý nên nằm ở hai đầu.
+  Internet được xây theo tinh thần đó. NAT đặt một thiết bị ghi nhớ trạng thái từng kết nối vào giữa, và
+  từ đó quyết định kết nối nào được phép tồn tại. Đó là lý do nhiều kỹ sư mạng coi NAT không chỉ là một
+  miếng vá, mà là một thay đổi kiến trúc của Internet.</p>
+</div>
+
+<h2 id="cgnat">Tầng NAT thứ hai: khi nhà mạng cũng NAT</h2>
+
+<p>Khi địa chỉ IPv4 công khai cạn dần, nhiều nhà mạng không còn đủ địa chỉ để cấp cho mỗi router gia
+đình một địa chỉ riêng. Họ đặt thêm một tầng NAT nữa ở phía nhà mạng, gọi là <strong>Carrier-Grade
+NAT</strong> (CGNAT): router nhà bạn chỉ nhận một địa chỉ gần như công khai, và hàng trăm khách hàng dùng
+chung một địa chỉ công khai thật ở phía sau. RFC 6598 dành riêng dải <code>100.64.0.0/10</code> cho khoảng
+giữa này. Hệ quả là ngay cả port forwarding trên router nhà bạn cũng vô dụng, vì gói tin từ Internet đã bị
+chặn ở tầng NAT của nhà mạng, trước khi tới được router của bạn.</p>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>Cái giá của NAT là <strong>Internet chỉ còn gọi ra được, không gọi vào được</strong>, và CGNAT làm
+  điều đó chặt thêm một tầng. Server vì vậy phải đặt ở nơi có địa chỉ công khai, như trung tâm dữ liệu. Muốn
+  trả lại cho mọi máy một địa chỉ công khai, cần nhiều địa chỉ hơn hẳn 4,3 tỷ.</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-ipv6" data-tab="IPv6" data-note="lời giải gốc">
+
+<p class="panel-intro">Tab này kể lời giải gốc mà IETF bắt đầu thiết kế từ năm 1992: một thế hệ địa
+chỉ đủ lớn để không cần NAT, và lý do nó phổ cập chậm tới vậy.</p>
+
+<h2 id="ipv6">IPv6: 128 bit, đủ cho mọi máy</h2>
+
+<p>Đặc tả IPv6 đầu tiên xuất hiện năm 1995 (RFC 1883), được sửa lại thành RFC 2460 năm 1998, và tới năm
+2017 mới được nâng lên thành chuẩn Internet chính thức (RFC 8200). Ý đồ chính của nó là mở rộng không gian
+địa chỉ tới mức không cần NAT nữa, tức trả lại khả năng mọi máy gọi thẳng mọi máy.</p>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 2</b> IPv4 và IPv6 ở những điểm người vận hành sẽ gặp.</caption>
+  <thead><tr><th></th><th>IPv4</th><th>IPv6</th></tr></thead>
+  <tbody>
+    <tr><td>Độ dài địa chỉ</td><td>32 bit</td><td><strong>128 bit</strong></td></tr>
+    <tr><td>Số địa chỉ</td><td>4,3 tỷ</td><td>khoảng 3,4 × 10³⁸</td></tr>
+    <tr><td>Cách viết</td><td>thập phân, 4 nhóm</td><td>thập lục phân, 8 nhóm</td></tr>
+    <tr><td>Ví dụ</td><td><code>192.168.1.1</code></td><td><code>2606:4700:10::ac42:93f3</code></td></tr>
+    <tr><td>Loopback</td><td><code>127.0.0.1</code></td><td><code>::1</code></td></tr>
+    <tr><td>NAT</td><td>gần như bắt buộc</td><td>không cần trong thiết kế</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Một địa chỉ IPv6 gồm 8 nhóm, mỗi nhóm 16 bit viết bằng 4 chữ số thập lục phân. Viết đầy đủ thì rất dài,
+nên chuẩn cho phép hai cách rút gọn: bỏ các số 0 ở đầu mỗi nhóm, và thay <em>một</em> chuỗi liên tiếp các
+nhóm toàn số 0 bằng hai dấu hai chấm. Chỉ được thay một lần, vì người đọc phải tự suy ra
+<code>::</code> thay cho bao nhiêu nhóm bằng cách lấy 8 trừ số nhóm còn lại.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  Đầy đủ:    2606:4700:0010:0000:0000:0000:ac42:93f3
+  Rút gọn:   2606:4700:10::ac42:93f3
+
+  ::1     =  0000:0000:0000:0000:0000:0000:0000:0001   ← loopback IPv6</code></pre>
+<figcaption><b>Hình 6</b> Hai quy tắc rút gọn địa chỉ IPv6, và địa chỉ loopback viết đầy đủ.</figcaption>
+</figure>
+
+<h2 id="vi-sao-cham">Vì sao gần 30 năm IPv6 vẫn chưa thay được IPv4</h2>
+
+<p>Lý do phổ cập chậm nằm ở kinh tế nhiều hơn ở kỹ thuật. Thứ nhất, IPv6 không tương thích ngược: máy chỉ có IPv6 không nói chuyện được với
+máy chỉ có IPv4, nên không thể nâng cấp dần tại chỗ, mà phải chạy song song cả hai, gọi là
+<em>dual-stack</em>, tốn gấp đôi công vận hành mà không được lợi gì ngay. Thứ hai, NAT "đủ dùng": người
+dùng cuối chưa thấy khủng hoảng nào, nên không ai trả tiền để giải quyết nó. Thứ ba
+là một vòng luẩn quẩn: nhà mạng không triển khai vì chưa có nội dung trên IPv6, còn nội dung không lên IPv6
+vì chưa có người dùng. Vòng ấy đang bị phá dần bởi mạng di động: hàng tỷ điện thoại không thể đều có địa
+chỉ IPv4 công khai, nên nhiều nhà mạng di động triển khai IPv6 trước. Google công bố tỉ lệ người dùng truy
+cập Google qua IPv6; con số đã vượt 40% từ vài năm trước, và bạn có thể xem số mới nhất trong
+<a href="#nguon-lich-su">nguồn đọc thêm</a>.</p>
+
+<p>Output của lab Bài 00 cho thấy trạng thái lưng chừng đó trên chính một máy thật:</p>
+
+<figure class="fig">
+<pre><code>* IPv6: 2606:4700:10::ac42:93f3      ← example.com CÓ IPv6
+* IPv4: 104.20.23.154                ← và vẫn giữ IPv4 (dual-stack)
+
+*   Trying [2606:4700:10::ac42:93f3]:443...   ← curl thử IPv6 trước
+*   Trying 104.20.23.154:443...               ← rồi thử IPv4
+* Established connection ... 104.20.23.154    ← IPv4 thắng</code></pre>
+<figcaption><b>Hình 7</b> Trích output <code>curl -v</code> chạy trên máy người học ngày 24/09/2026, có
+chú thích bên phải.</figcaption>
+</figure>
+
+<p><code>example.com</code> có cả IPv6 lẫn IPv4, và <code>curl</code> thử IPv6 trước. Nhưng kết nối cuối
+cùng vẫn đi bằng IPv4, và lệnh
+<code>nslookup</code> ở cùng buổi lab cho thấy router WiFi chỉ có một địa chỉ link-local
+<code>fe80::…</code>. Đó là dấu hiệu mạnh, dù chưa phải chứng minh tuyệt đối, rằng mạng gia đình ấy chưa có
+đường IPv6 ra Internet: nội dung đã sẵn sàng, nhà mạng thì chưa.</p>
+
+<h3 id="dinh-chinh-2s"><code>localhost</code> ra hai địa chỉ</h3>
+
+<p>Thời kỳ dual-stack để lại một cái bẫy liên quan trực tiếp tới Bài 01. Trên nhiều hệ thống hiện đại,
+tên <code>localhost</code> phân giải ra hai địa chỉ, <code>::1</code> trước rồi tới <code>127.0.0.1</code>.
+Nếu một database chỉ listen <code>127.0.0.1</code>, còn ứng dụng kết nối tới <code>localhost</code> và thử
+<code>::1</code> trước, ứng dụng có thể nhận lỗi <code>refused</code> dù database đang chạy hoàn toàn bình
+thường: database chỉ không listen trên địa chỉ mà ứng dụng gọi tới, đúng điều kiện 3 của Bài 01. Cơ chế
+này không phải lời giải cho con số 2,155 giây ở lab Bài 01, vì lệnh đó dùng <code>-4</code> và gõ thẳng
+<code>127.0.0.1</code>.</p>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>IPv6 là lời giải gốc cho tổng số địa chỉ: 128 bit đủ để mọi máy có địa chỉ công khai mà không cần NAT.
+  Nhưng vì không tương thích ngược và vì NAT vẫn đủ dùng, Internet hôm nay sống trong thời kỳ chạy song song
+  hai giao thức, và thời kỳ đó để lại những dấu vết người vận hành sẽ gặp.</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-hom-nay" data-tab="Dấu vết" data-note="hôm nay, và câu hỏi của Bài 01">
+
+<p class="panel-intro">Tab cuối gom lại những gì của lịch sử này còn ở lại trong công việc hằng ngày,
+và nối về câu hỏi của Bài 01.</p>
+
+<h2 id="dau-vet">Bốn dấu vết còn lại hôm nay</h2>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 3</b> Mỗi dấu vết của lịch sử địa chỉ IP, và nơi lộ trình gặp lại nó.</caption>
+  <thead><tr><th>Dấu vết</th><th>Sinh ra từ</th><th>Gặp lại ở</th></tr></thead>
+  <tbody>
+    <tr><td>Máy ở nhà không ai gọi tới được; server phải có địa chỉ công khai</td><td>NAT, CGNAT</td><td><a href="index.html#ba-dai">Bài 01</a>, <a href="../18-deploy-thu-cong/">Bài 18</a></td></tr>
+    <tr><td>Ký hiệu <code>/8</code>, <code>/24</code> trong sổ đăng ký và trong luật firewall</td><td>CIDR</td><td><a href="index.html#ba-dai">Bài 01</a>, <a href="../17-linux-tren-server/">Bài 17</a></td></tr>
+    <tr><td>Tên miền có hai loại bản ghi địa chỉ: một cho IPv4, một cho IPv6</td><td>dual-stack</td><td><a href="../20-ten-mien-va-https/">Bài 20</a></td></tr>
+    <tr><td>Firewall giữ hai bộ luật riêng cho IPv4 và IPv6</td><td>dual-stack</td><td><a href="../17-linux-tren-server/">Bài 17</a></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout warn">
+  <span class="label">Dấu vết nguy hiểm nhất</span>
+  <p>Firewall trên Linux giữ hai bộ luật riêng cho IPv4 và IPv6. Chặn kỹ bộ này mà quên bộ kia thì máy chủ
+  vẫn phơi ra Internet qua IPv6 mà người quản trị không hề biết. Lộ trình kiểm tra đúng chỗ này khi đi một
+  vòng máy chủ ở <a href="../17-linux-tren-server/">Bài 17</a>.</p>
+</div>
+
+<h2 id="noi-ve-bai-01">Nối về câu hỏi của Bài 01</h2>
+
+<p>Bài 01 hỏi vì sao người khác không gọi được app của bạn. Lịch sử này thêm một tầng cho câu trả lời:
+ngoài ba điều kiện trên một máy, còn một điều kiện ở cấp toàn Internet. Đồng nghiệp cùng mạng WiFi gọi
+được tới địa chỉ mạng riêng của bạn, vì hai người ở cùng một mạng. Một người ngoài Internet thì không bao
+giờ gọi được, vì địa chỉ mạng riêng không ra Internet, và router làm NAT vứt mọi kết nối đi vào. Đó là lý
+do các module sau của lộ trình đưa ứng dụng lên một máy chủ có địa chỉ công khai, rồi gắn cho nó một tên
+miền.</p>
+
+<h2 id="tu-kiem-tra-lich-su">Tự kiểm tra</h2>
+
+<p>Bấm vào từng dòng khi giải thích được mà không nhìn lại.</p>
+
+<ul class="check">
+  <li>Kể được bốn công nghệ theo thứ tự, và mỗi cái giải quyết vấn đề gì của cái trước</li>
+  <li>Tính được số địa chỉ của IPv4 và của một khối <code>/24</code>, <code>/23</code> bằng công thức 2^(32 − n)</li>
+  <li>Giải thích được vì sao chia theo lớp làm IPv4 cạn nhanh hơn</li>
+  <li>Vẽ lại được bảng dịch địa chỉ của NAT và giải thích vai trò của port trong đó</li>
+  <li>Giải thích được vì sao NAT khiến server không đặt được trên laptop ở nhà</li>
+  <li>Rút gọn và viết đầy đủ được một địa chỉ IPv6</li>
+  <li>Kể được ba lý do IPv6 phổ cập chậm</li>
+</ul>
+
+<h2 id="nguon-lich-su">Nguồn đọc thêm</h2>
+
+<ol class="refs">
+  <li>RFC 791 — <em>Internet Protocol</em> (IPv4), 1981.
+  <a href="https://www.rfc-editor.org/rfc/rfc791">rfc-editor.org/rfc/rfc791</a></li>
+  <li>RFC 4632 — <em>Classless Inter-domain Routing (CIDR)</em>, bản thay thế cho RFC 1519 (1993).
+  <a href="https://www.rfc-editor.org/rfc/rfc4632">rfc-editor.org/rfc/rfc4632</a></li>
+  <li>RFC 1918 — <em>Address Allocation for Private Internets</em>.
+  <a href="https://www.rfc-editor.org/rfc/rfc1918">rfc-editor.org/rfc/rfc1918</a></li>
+  <li>RFC 1631 và RFC 3022 — NAT, mô tả ban đầu (1994) và "Traditional NAT" (2001).
+  <a href="https://www.rfc-editor.org/rfc/rfc1631">rfc-editor.org/rfc/rfc1631</a> ·
+  <a href="https://www.rfc-editor.org/rfc/rfc3022">rfc3022</a></li>
+  <li>RFC 6598 — dải <code>100.64.0.0/10</code> dùng chung cho Carrier-Grade NAT.
+  <a href="https://www.rfc-editor.org/rfc/rfc6598">rfc-editor.org/rfc/rfc6598</a></li>
+  <li>RFC 8200 — <em>Internet Protocol, Version 6 (IPv6) Specification</em>.
+  <a href="https://www.rfc-editor.org/rfc/rfc8200">rfc-editor.org/rfc/rfc8200</a></li>
+  <li>RFC 4291 — <em>IP Version 6 Addressing Architecture</em>.
+  <a href="https://www.rfc-editor.org/rfc/rfc4291">rfc-editor.org/rfc/rfc4291</a></li>
+  <li>RFC 5737 — <em>IPv4 Address Blocks Reserved for Documentation</em> (dải chứa <code>203.0.113.7</code>).
+  <a href="https://www.rfc-editor.org/rfc/rfc5737">rfc-editor.org/rfc/rfc5737</a></li>
+  <li>IANA — sổ đăng ký các khối IPv4 <code>/8</code>, nơi còn thấy dấu vết cấp phát theo lớp.
+  <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org/assignments/ipv4-address-space</a></li>
+  <li>Google — thống kê tỉ lệ người dùng truy cập qua IPv6.
+  <a href="https://www.google.com/intl/en/ipv6/statistics.html">google.com/intl/en/ipv6/statistics.html</a></li>
+  <li>J. H. Saltzer, D. P. Reed, D. D. Clark — <em>End-to-End Arguments in System Design</em>, ACM
+  Transactions on Computer Systems, 1984.</li>
+</ol>
+
+<h2 id="nguon-anh">Nguồn ảnh</h2>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do người viết tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<ol class="photo-credits">
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Interface_Message_Processor_-_BBN_Arpanet_Router_-_Computer_History_Museum_(2007-11-10_23.06.56_by_Carlo_Nardone).jpg">Interface Message Processor của ARPANET</a> — Carlo Nardone, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
+  <li><b>Ảnh 2</b>Khuôn phần đầu gói tin IPv4, RFC 791 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc791.html">rfc-editor.org</a>, 30/09/2026.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Router gia đình Linksys WRT54G</a> — Evan-Amos, Wikimedia Commons, public domain.</li>
+</ol>
+
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="index.html">
+    <span class="dir">Quay lại</span>
+    <span class="t">Bài giảng 01</span>
+  </a>
+  <a class="next" href="../02-chan-doan-theo-chang/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">02 · Chẩn đoán theo chặng</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 01 · Phụ lục · Lịch sử địa chỉ IP · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

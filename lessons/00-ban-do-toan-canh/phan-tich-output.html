@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00 — Mổ băng output thật</title>
-<meta name="description" content="Đọc từng dòng output thật của nslookup, curl -v, openssl và time chạy trên máy học viên. Mỗi chỗ lệch so với tài liệu mẫu được giải thích như một dữ kiện về DNS, TCP, TLS, HTTP và shell.">
+<meta name="description" content="Đọc từng dòng output thật của nslookup, curl -v và openssl ở ba lab của Bài 00, và gắn mỗi dòng vào đúng chặng trên bản đồ chín chặng.">
 <link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
@@ -18,16 +18,14 @@
 <div class="wrap">
 
 <header class="hero">
-  <p class="eyebrow">Bài 00 · Lab · 24/09/2026</p>
+  <p class="eyebrow">Bài 00 · Trang phụ · output ghi ngày 24/09/2026</p>
   <h1>Mổ băng output thật: <span class="hl">từng dòng một</span></h1>
-  <p class="lede">Mọi dòng output trên trang này được chạy trên chính máy của người học — Windows 11,
-  Git Bash, một mạng WiFi gia đình — chứ không phải ví dụ dựng sẵn trong sách. Chúng lệch khá nhiều
-  so với tài liệu mẫu, và trang này đối xử với mỗi chỗ lệch như một dữ kiện cần được giải thích,
-  chứ không phải một sự cố cần giấu đi.</p>
+  <p class="lede">Ba lab của Bài 00 cho ra những dòng output thật, chạy trên máy người học: Windows 11,
+  Git Bash, một mạng WiFi gia đình. Trang này đọc từng dòng, gắn mỗi dòng vào một chặng trên bản đồ, và
+  giải thích những chỗ output lệch khỏi tài liệu mẫu.</p>
   <div class="meta">
-    <span class="chip lime">Output thật · 24/09/2026</span>
-    <a class="chip" href="index.html"><i class="ic ic-l" role="img" aria-label="từ"></i> Bài giảng 00</a>
-    <a class="chip" href="ipv4-vs-ipv6.html"><i class="ic ic-r" aria-hidden="true"></i> Phụ lục IPv4/IPv6/NAT</a>
+    <span class="chip lime"><i class="stt stt-done" aria-hidden="true"></i>Output thật</span>
+    <a class="chip" href="index.html"><i class="ic ic-l" role="img" aria-label="về"></i> Bài giảng 00</a>
   </div>
 </header>
 
@@ -36,387 +34,244 @@
 <!-- ================================================================== -->
 <section class="tab" id="t-dns" data-tab="DNS" data-note="Lab 1 · chặng 2">
 
-<h2 id="vi-sao">Vì sao phải đọc output thật thay vì output mẫu</h2>
+<h2 id="cach-doc">Cách đọc một dòng output</h2>
 
-<p>Tài liệu mẫu bao giờ cũng cho ra output đẹp, bởi vì người viết đã chọn sẵn một môi trường
-sạch: một máy Linux, một mạng có đủ IPv4 lẫn IPv6, một bản <code>curl</code> được biên dịch với
-OpenSSL. Máy thật của bạn thì không được chọn như thế — nó là một tổ hợp ngẫu nhiên của hệ điều
-hành, trình biên dịch, nhà mạng và cái router mà ai đó đã cắm trong phòng. Do đó output mẫu nên
-được hiểu như <em>bản đồ</em>, còn output trên máy bạn mới là <em>lãnh thổ</em>; và khoảng cách
-giữa hai thứ đó — đúng ra là ở đâu, và vì sao máy mình lại khác — chính là nơi kiến thức thật nằm.
-Người chỉ học thuộc output mẫu sẽ hoảng khi thấy một dòng lạ; người hiểu vì sao output khác
-nhau sẽ coi dòng lạ đó là một manh mối.</p>
+<p>Tài liệu mẫu bao giờ cũng cho ra output đẹp, vì người viết đã chọn sẵn một môi trường sạch. Máy thật
+thì không được chọn như thế: nó là tổ hợp của một hệ điều hành, một bản công cụ cụ thể, một nhà mạng và
+một chiếc router. Do đó output trên máy bạn thường khác tài liệu, và chỗ khác ấy chính là nơi có nhiều
+điều để học. Mỗi dòng trên trang này được đọc bằng ba câu hỏi giống nhau:</p>
 
-<div class="callout">
-  <span class="label">Cách đọc một dòng output — ba câu hỏi dùng cho cả trang</span>
-  <ol>
-    <li><strong>Ai in ra dòng này?</strong> Chính công cụ đang chạy, hệ điều hành, hay một máy ở
-    đầu bên kia? (Đây là cột "ai viết ra" của bảng triệu chứng trong bài giảng.)</li>
-    <li><strong>Dòng này nói về chặng nào</strong> trong bản đồ <span class="stg">1</span> <i class="ic ic-r" role="img" aria-label="sang"></i> <span class="stg">9</span>?</li>
-    <li><strong>Nó chứng minh được điều gì về các chặng trước nó?</strong> Theo nguyên tắc chẩn
-    đoán số 2, một dòng xuất hiện được thì mọi chặng đứng trước nó đã chạy tốt.</li>
-  </ol>
-</div>
+<ol>
+  <li><strong>Ai in ra dòng này?</strong> Chính công cụ đang chạy, hay một máy ở đầu bên kia?</li>
+  <li><strong>Dòng này nói về chặng nào</strong> trên bản đồ <span class="stg">1</span> <i class="ic ic-r" role="img" aria-label="tới"></i> <span class="stg">9</span>?</li>
+  <li><strong>Nó cho biết gì về các chặng đứng trước?</strong> Một dòng chỉ in ra được khi những chặng
+  trước nó đã chạy xong.</li>
+</ol>
 
-<h2 id="nslookup"><span class="stg">1</span> <code>nslookup github.com</code> — chặng <span class="stg">2</span></h2>
+<h2 id="nslookup"><code>nslookup github.com</code> — chặng <span class="stg">2</span></h2>
 
 <figure class="fig">
-<pre><code>Server:  wifi.cmcc
+<pre><code>Server:  (tên router, đã ẩn)
 Address: fe80::10
 
 Non-authoritative answer:
 Name:    github.com
 Address: 20.205.243.166</code></pre>
-<figcaption><b>Hình 1</b> Output thật của <code>nslookup github.com</code> trong Git Bash, 24/09/2026.</figcaption>
+<figcaption><b>Hình 1</b> Output thật của <code>nslookup github.com</code> trong Git Bash, 24/09/2026.
+Tên router trong nhà đã được ẩn.</figcaption>
 </figure>
 
-<p><code>nslookup</code> là một công cụ truy vấn DNS có mặt trên cả Windows lẫn Linux. Điều quan
-trọng cần hiểu trước tiên là nó <strong>không tự biết câu trả lời</strong>: nó chỉ đóng gói câu
-hỏi <em>"tên này ứng với địa chỉ nào?"</em>, gửi tới máy chủ DNS mà hệ điều hành đang được cấu
-hình để dùng, rồi in lại câu trả lời nhận được. Vì vậy output luôn chia làm hai khối: khối đầu
-cho biết <em>ai đã trả lời</em>, khối sau cho biết <em>câu trả lời là gì</em>. Người mới thường
-chỉ nhìn khối sau; người vận hành nhìn khối đầu trước, bởi vì một câu trả lời sai thường bắt
-nguồn từ việc hỏi nhầm người.</p>
-<blockquote class="pull"><p>Người vận hành nhìn khối đầu trước, bởi vì một câu trả lời sai thường bắt nguồn từ việc hỏi nhầm người.</p></blockquote>
+<p><code>nslookup</code> không tự biết câu trả lời. Nó đóng gói câu hỏi "tên này ứng với địa chỉ nào",
+gửi tới máy chủ DNS mà hệ điều hành được cấu hình để dùng, rồi in lại câu trả lời nhận được. Vì vậy output
+luôn chia làm hai khối: khối đầu cho biết <em>ai đã trả lời</em>, khối sau cho biết <em>câu trả lời là
+gì</em>. Người mới thường chỉ nhìn khối sau; người vận hành nhìn khối đầu trước, bởi vì một câu trả lời
+sai thường bắt nguồn từ việc hỏi nhầm chỗ.</p>
 
+<h3 id="dns-server"><code>Server:</code> — ai đang trả lời câu hỏi DNS</h3>
 
-<h3 id="dns-server"><code>Server: wifi.cmcc</code> — DNS resolver đang phục vụ bạn</h3>
-
-<p><strong>Đây không phải GitHub.</strong> Đây là cái router WiFi trong phòng, và
-<code>wifi.cmcc</code> là tên nội bộ nó tự đặt cho mình. Khi máy bạn cần biết
-<code>github.com</code> là số mấy, nó không hỏi thẳng GitHub — nó không thể, vì muốn hỏi GitHub
-thì trước hết phải biết địa chỉ của GitHub, mà đó lại chính là điều đang cần tìm. Máy bạn hỏi
-router; router, nếu chưa nhớ sẵn câu trả lời, sẽ hỏi tiếp lên một máy chủ DNS lớn hơn (thường là
-của nhà mạng), và máy chủ đó mới đi hỏi lần lượt từ gốc xuống. Toàn bộ chuỗi hỏi han này là chặng
-<span class="stg">2</span> của bản đồ, và nó diễn ra trước khi một gói tin nào được gửi tới GitHub.</p>
-
-<figure class="fig">
-<pre class="diagram"><code>  máy bạn (stub resolver)
-      │  "github.com là số mấy?"
-      ▼
-  router wifi.cmcc ── có sẵn trong cache? ──→ CÓ: trả lời ngay
-      │ không                                    (non-authoritative)
-      ▼
-  resolver đệ quy (thường của nhà mạng)
-      │  hỏi lần lượt từ gốc xuống:
-      ├──→ root server               "tên .com thì hỏi bên .com"
-      ├──→ máy chủ TLD .com          "github.com thì hỏi name server của GitHub"
-      └──→ name server của GitHub    "20.205.243.166"   ← authoritative</code></pre>
-<figcaption><b>Hình 2</b> Đường đi điển hình của một câu hỏi DNS. Mỗi tầng giữa có thể trả lời
-ngay từ cache mà không cần đi tiếp xuống dưới.</figcaption>
-</figure>
+<p>Dòng này không phải GitHub. Đó là chiếc router WiFi trong nhà, đang đóng vai máy chủ DNS cho mọi thiết
+bị trong mạng. Máy người dùng không hỏi thẳng GitHub, và cũng không thể: muốn hỏi GitHub thì phải biết địa
+chỉ của GitHub, mà đó lại chính là điều đang cần tìm. Máy hỏi router; router, nếu chưa nhớ sẵn câu trả
+lời, chuyển câu hỏi lên một máy chủ DNS lớn hơn (thường của nhà mạng), và máy chủ đó đi hỏi lần lượt từ
+gốc xuống. Bốn loại máy chủ trên đường đi ấy có tên riêng:</p>
 
 <dl class="terms">
-  <dt>Stub resolver <small>bộ phân giải cục bộ</small></dt>
-  <dd>Phần nhỏ trong hệ điều hành của bạn, chỉ biết một việc: chuyển câu hỏi DNS cho một máy chủ
-  khác và chờ câu trả lời. Nó không tự đi hỏi từ gốc xuống.</dd>
-  <dt>Recursive resolver <small>máy chủ phân giải đệ quy</small></dt>
-  <dd>Máy chủ nhận câu hỏi và chịu trách nhiệm đi hỏi thay bạn cho tới khi có câu trả lời cuối
-  cùng, rồi lưu câu trả lời đó vào cache để trả lời nhanh cho lần sau.</dd>
-  <dt>Authoritative name server <small>máy chủ tên có thẩm quyền</small></dt>
-  <dd>Máy chủ được chủ tên miền ủy quyền giữ bản ghi gốc. Câu trả lời của nó là nguồn sự thật;
-  mọi câu trả lời khác chỉ là bản sao.</dd>
-  <dt>TTL <small>time to live</small></dt>
-  <dd>Số giây mà một bản ghi DNS được phép nằm trong cache trước khi phải hỏi lại nguồn gốc. Chủ
-  tên miền đặt con số này cho từng bản ghi.</dd>
+  <dt>Recursive resolver <small>máy chủ DNS đệ quy</small></dt>
+  <dd>Máy chủ nhận câu hỏi và chịu trách nhiệm đi hỏi thay bạn cho tới khi có câu trả lời cuối cùng, rồi
+  nhớ câu trả lời đó một thời gian để trả lời nhanh cho lần sau.</dd>
+  <dt>Root server <small>máy chủ gốc</small></dt>
+  <dd>Điểm bắt đầu của mọi lần hỏi từ gốc. Nó không biết địa chỉ của <code>github.com</code>, nhưng biết
+  phần đuôi <code>.com</code> thì phải hỏi ai.</dd>
+  <dt>TLD server <small>máy chủ tên miền cấp cao</small></dt>
+  <dd>Máy chủ phụ trách một phần đuôi như <code>.com</code> hay <code>.vn</code>. Nó biết tên miền nào
+  thuộc đuôi đó đang được máy chủ nào giữ bản ghi.</dd>
+  <dt>Authoritative server <small>máy chủ có thẩm quyền</small></dt>
+  <dd>Máy chủ được chủ tên miền giao giữ các bản ghi gốc. Câu trả lời của nó là nguồn sự thật; mọi câu
+  trả lời khác chỉ là bản sao.</dd>
 </dl>
 
-<h3 id="dns-fe80"><code>Address: fe80::10</code> — một địa chỉ chỉ có nghĩa trong đoạn mạng này</h3>
-
-<p>Dòng này cho biết router được liên lạc qua một địa chỉ IPv6 bắt đầu bằng <code>fe80</code>.
-Dải <code>fe80::/10</code> được chuẩn IPv6 dành riêng cho địa chỉ <strong>link-local</strong>,
-nghĩa là <em>"chỉ có giá trị trong đoạn mạng vật lý này"</em>: mọi card mạng bật IPv6 đều tự gán
-cho mình một địa chỉ loại này mà không cần ai cấp, và router được thiết kế để <em>không bao
-giờ</em> chuyển tiếp gói tin mang địa chỉ link-local sang mạng khác. Hệ quả là chỉ những thiết
-bị đang cùng bắt một sóng WiFi mới nói chuyện được với <code>fe80::10</code>; một máy ở mạng khác
-gõ đúng địa chỉ đó sẽ chạm tới một thiết bị hoàn toàn khác — hoặc không chạm tới gì cả.</p>
-
-<p>Nếu đặt nó cạnh hai dải đặc biệt đã gặp trong bài giảng — loopback <code>127.0.0.1</code> và
-private <code>192.168.…</code> — ta được đúng thang đo độ "gần" đã học: cả ba đều <strong>không được
-chuyển ra Internet</strong>, và <code>fe80::…</code> đứng ở bậc giữa, rộng hơn một máy nhưng hẹp
-hơn cả một mạng nội bộ.</p>
-
-<h3 id="dns-non-auth"><code>Non-authoritative answer</code> — dòng hay nhất khối này</h3>
-
-<p>Dòng này là lời thú nhận thẳng thắn của router: <em>"Tôi không phải nguồn sự thật, tôi đang
-trả lời từ trí nhớ."</em> Về mặt kỹ thuật, mỗi gói tin trả lời DNS có một cờ tên là
-<strong>AA</strong> (Authoritative Answer); chỉ máy chủ có thẩm quyền đối với tên miền đó mới bật
-cờ này, và <code>nslookup</code> in dòng <em>Non-authoritative answer</em> khi cờ tắt. Nói cách
-khác, router đã hỏi <code>github.com</code> vào lúc nào đó trước đây, lưu câu trả lời vào
-<strong>cache</strong>, và bây giờ đọc lại bản lưu đó cho bạn. Câu trả lời authoritative chỉ đến
-từ name server chính thức của GitHub.</p>
-
-<p>Điều này dẫn tới một hệ quả mà ai làm DevOps cũng sẽ va phải: câu trả lời từ cache chỉ
-<strong>đúng tại thời điểm nó được lưu</strong>. Khi bạn đổi bản ghi DNS ở nhà cung cấp, thao tác
-đó mất một giây; nhưng hàng triệu cache trên khắp thế giới vẫn tiếp tục trả lời bản cũ cho tới khi
-<strong>TTL</strong> của chúng hết hạn — mỗi cache hết hạn vào một thời điểm khác nhau, tùy lúc
-nó lưu. Người ta hay gọi hiện tượng này là "DNS propagation" (DNS lan truyền), nhưng tên gọi đó dễ
-gây hiểu nhầm: không có gì lan đi cả; thứ thực sự xảy ra là vô số bản sao độc lập lần lượt hết hạn.</p>
-
-<div class="callout">
-  <span class="label">Đây chính là lý do "đổi DNS phải chờ"</span>
-  <pre class="diagram"><code>  authoritative      →  từ nguồn gốc, luôn đúng
-  non-authoritative  →  từ cache, ĐÚNG TẠI THỜI ĐIỂM NÓ ĐƯỢC LƯU</code></pre>
-  <p>Bạn sửa bản ghi trong 1 giây, nhưng các cache vẫn đọc bản cũ cho tới khi TTL hết hạn. Cách
-  làm chuyên nghiệp là <em>hạ TTL xuống thấp vài ngày trước</em> khi định đổi, rồi mới đổi.
-  <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
-</div>
-
-<h3 id="dns-azure"><code>Address: 20.205.243.166</code> — nhìn IP đoán hạ tầng</h3>
-
-<p>Khối địa chỉ <code>20.x.x.x</code> mà dòng này thuộc về phần lớn do Microsoft nắm giữ và dùng
-cho Azure, còn GitHub thuộc về Microsoft từ năm 2018 — nên việc GitHub chạy trên Azure là hoàn
-toàn khớp. Đây là một mẹo nhỏ nhưng dùng được trong chẩn đoán: nhìn địa chỉ IP, bạn thường đoán
-được một dịch vụ đang nằm trên hạ tầng của ai. Tuy vậy, cần nhớ đây là <em>suy luận</em> chứ không
-phải <em>chứng minh</em>: các khối địa chỉ có thể được mua bán và chia lại.</p>
-
-<h2 id="nxdomain"><span class="stg">2</span> Tên miền không tồn tại — chặng <span class="stg">2</span> hỏng</h2>
-
 <figure class="fig">
-<pre><code>*** wifi.cmcc can't find khong-ton-tai-dau-nhe-12345.com: Non-existent domain</code></pre>
-<figcaption><b>Hình 3</b> Truy vấn một tên miền không tồn tại. Chỉ một dòng, nhưng đủ để khoanh vùng sự cố.</figcaption>
+<pre class="diagram"><code>  máy người dùng
+      │  "github.com là địa chỉ nào?"
+      ▼
+  router trong nhà ── đã nhớ sẵn? ──→ CÓ: trả lời ngay (non-authoritative)
+      │ chưa
+      ▼
+  máy chủ DNS đệ quy (thường của nhà mạng)
+      │  hỏi lần lượt từ gốc xuống:
+      ├──→ root server               "đuôi .com thì hỏi máy chủ .com"
+      ├──→ máy chủ TLD .com          "github.com thì hỏi máy chủ của GitHub"
+      └──→ máy chủ của GitHub        "20.205.243.166"   ← authoritative</code></pre>
+<figcaption><b>Hình 2</b> Đường đi điển hình của một câu hỏi DNS. Mỗi tầng giữa có thể trả lời ngay từ
+những gì nó đã nhớ, không cần đi tiếp xuống dưới.</figcaption>
 </figure>
 
-<p>Đây là chặng <span class="stg">2</span> hỏng, ở dạng thuần khiết nhất. Cụm <em>Non-existent domain</em> chính là
-<strong>NXDOMAIN</strong> — tên gọi quen thuộc của mã trả lời số 3 (<em>Name Error</em>) trong chuẩn
-DNS. Mã này có một ý nghĩa rất chặt: nó không nói "tôi không liên lạc được", mà khẳng định
-<em>"tôi đã hỏi tới nơi có thẩm quyền, và nơi đó xác nhận tên này không tồn tại"</em>. Với một
-tên <code>.com</code> chưa từng được đăng ký, nơi có thẩm quyền đó là các máy chủ của tên miền cấp
-cao <code>.com</code>: chúng không có bản ghi ủy quyền nào cho tên này, nên trả lời NXDOMAIN.</p>
+<figure class="fig photo shot">
+  <img src="img/iana-root-servers.webp" width="1528" height="934" loading="lazy" alt="Bảng danh sách root server trên trang IANA: mười ba tên từ a.root-servers.net tới m.root-servers.net, mỗi tên kèm một địa chỉ IPv4, một địa chỉ IPv6 và tổ chức vận hành.">
+  <figcaption><b>Ảnh 1</b> Danh sách root server do IANA công bố: mười ba tên, từ
+  <code>a.root-servers.net</code> tới <code>m.root-servers.net</code>, do mười hai tổ chức vận hành. Theo
+  chính trang này, đằng sau mười ba tên là một mạng gồm hàng trăm máy chủ đặt ở nhiều nước. Đây là đỉnh của Hình 2:
+  mọi lần hỏi từ gốc đều bắt đầu ở một trong mười ba tên này.</figcaption>
+</figure>
 
-<p>Hãy để ý <strong>ai là người báo lỗi</strong> trong output: <code>wifi.cmcc</code> — vẫn là cái
-router. Nó hỏi lên trên, nhận về câu "không có tên này", rồi chuyển lời lại cho bạn. Điều này khớp
-chính xác với bảng "ai viết ra" trong bài giảng: dòng NXDOMAIN có tác giả nằm ở <strong>phía máy
-người dùng</strong>, bởi vì server đích thậm chí còn chưa tồn tại để mà trả lời. Hệ quả chẩn đoán
-rất rõ ràng: khi gặp NXDOMAIN, chưa hề có kết nối TCP nào được mở, chưa có TLS, chưa có HTTP; mọi
-suy đoán về "server chết" hay "firewall chặn" đều vô nghĩa ở bước này.</p>
+<h3 id="dns-fe80"><code>Address: fe80::10</code> — địa chỉ của router</h3>
 
-<div class="callout deep">
-  <span class="label">Đào sâu — ngay cả câu "không có" cũng được cache</span>
-  <p>Chuẩn về <em>negative caching</em> (RFC 2308) cho phép resolver lưu cả câu trả lời NXDOMAIN
-  trong một khoảng thời gian do tên miền cấp trên quy định. Nó tiết kiệm được rất nhiều truy vấn
-  vô ích, nhưng sinh ra một cái bẫy thực tế: nếu bạn tra một tên miền <em>trước khi</em> kịp tạo
-  bản ghi, rồi tạo bản ghi xong tra lại, bạn vẫn có thể nhận NXDOMAIN thêm một lúc nữa — không phải
-  vì bản ghi sai, mà vì cache vẫn đang nhớ câu "không có" cũ. Ta sẽ gặp lại tình huống này khi trỏ
-  tên miền cho service ở <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
+<p>Router được liên lạc qua một địa chỉ bắt đầu bằng <code>fe80</code>. Đây là một loại địa chỉ đặc biệt
+chỉ có nghĩa trong mạng nội bộ đang dùng; nó không bao giờ được chuyển ra Internet. Địa chỉ IP có những
+dải đặc biệt như vậy, và Bài 01 dành một phần để giải thích chúng.</p>
+
+<h3 id="dns-non-auth"><code>Non-authoritative answer</code> — trả lời từ trí nhớ</h3>
+
+<p>Dòng này là lời thừa nhận của router: <em>"tôi không phải nguồn sự thật, tôi đang trả lời từ những gì
+đã nhớ"</em>. Router đã hỏi <code>github.com</code> vào lúc nào đó trước đây, lưu câu trả lời vào bộ nhớ
+đệm (<strong>cache</strong>), và giờ đọc lại bản lưu ấy. Mỗi bản ghi DNS được chủ tên miền gắn một con số
+gọi là <strong>TTL</strong> (<em>time to live</em>): số giây bản ghi được phép nằm trong cache trước khi
+phải hỏi lại nguồn gốc.</p>
+
+<p>Từ đây có một hệ quả mà ai đưa ứng dụng lên Internet cũng sẽ gặp: đổi một bản ghi DNS chỉ mất một
+giây, nhưng các cache trên khắp thế giới vẫn trả lời bản cũ cho tới khi TTL của chúng hết hạn, mỗi cache
+một thời điểm khác nhau. Cách chuẩn bị cho việc này được dạy ở Bài 20, khi bạn trỏ tên miền thật về
+server.</p>
+
+<h2 id="nxdomain">Tên miền không tồn tại — chặng <span class="stg">2</span> hỏng</h2>
+
+<figure class="fig">
+<pre><code>*** (tên router, đã ẩn) can't find khong-ton-tai-dau-nhe-12345.com: Non-existent domain</code></pre>
+<figcaption><b>Hình 3</b> Truy vấn một tên miền không tồn tại, bước tự gây lỗi của Lab 1.</figcaption>
+</figure>
+
+<p>Cụm <em>Non-existent domain</em> chính là <strong>NXDOMAIN</strong>, mã trả lời của DNS cho trường hợp
+tên không tồn tại. Mã này có nghĩa rất chặt: nó không nói "tôi không liên lạc được", mà khẳng định "đã hỏi
+tới nơi có thẩm quyền, và nơi đó xác nhận tên này không tồn tại". Với một tên <code>.com</code> chưa từng
+được đăng ký, nơi có thẩm quyền là máy chủ TLD <code>.com</code>.</p>
+
+<p>Theo câu hỏi thứ nhất ở đầu trang, <strong>ai in ra dòng này?</strong> Vẫn là router: nó hỏi lên trên,
+nhận về câu "không có tên này", rồi chuyển lời lại. Server đích còn chưa tồn tại để mà trả lời. Theo câu
+hỏi thứ ba: dòng này cho biết request dừng ở chặng <span class="stg">2</span>, chưa có kết nối TCP nào được mở, nên mọi suy đoán về
+server hay firewall đều chưa có chỗ đứng.</p>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>Output của <code>nslookup</code> trả lời hai câu: <strong>ai</strong> đã trả lời câu hỏi DNS, và câu
+  trả lời là gì. Câu trả lời thường đến từ cache, nên có thể cũ tới khi TTL hết hạn. <code>NXDOMAIN</code>
+  nghĩa là request dừng ngay ở chặng <span class="stg">2</span>.</p>
+  <p>Còn treo: khi DNS đã trả lời đúng, những chặng sau diễn ra thế nào? Output của <code>curl -v</code>
+  ở tab sau kể lại từng bước.</p>
 </div>
 
 </section>
 
 <!-- ================================================================== -->
-<section class="tab" id="t-curl-bat-tay" data-tab="curl: bắt tay" data-note="Lab 2 · chặng 3 và 4">
+<section class="tab" id="t-curl-ket-noi" data-tab="curl: kết nối" data-note="Lab 2 · chặng 2 tới 4">
 
-<p class="panel-intro">Khối output của <code>curl -v https://example.com</code> là khối giàu thông
-tin nhất của cả buổi lab, nên được mổ trong hai tab. Tab này đi qua phần <em>trước khi</em> HTTP
-bắt đầu: phân giải tên, chọn đường, và bắt tay TLS.</p>
+<p class="panel-intro">Output của <code>curl -v https://example.com</code> là khối giàu thông tin nhất
+của cả ba lab, nên được đọc trong hai tab. Tab này đi qua phần diễn ra <em>trước khi</em> HTTP bắt đầu:
+hỏi DNS, mở kết nối, bắt tay TLS.</p>
 
-<h2 id="curl"><span class="stg">3</span> <code>curl -v https://example.com</code> — khối giàu nhất</h2>
+<h2 id="ky-tu-dau-dong">Ký tự đầu dòng: ai đang nói</h2>
 
-<p>Cờ <code>-v</code> (verbose) bảo <code>curl</code> kể lại từng bước nó làm. Để đọc được output
-này, chỉ cần nắm quy ước ở ký tự đầu dòng: mỗi loại ký tự cho biết dòng đó do ai "nói" và đi theo
-chiều nào. Quy ước này ổn định giữa các phiên bản <code>curl</code>, nên học một lần là dùng được
-mãi.</p>
+<p>Cờ <code>-v</code> (verbose) bảo <code>curl</code> kể lại từng bước nó làm. Ký tự đầu mỗi dòng cho biết
+dòng đó do ai "nói" và đi theo chiều nào. Quy ước này ổn định giữa các phiên bản <code>curl</code>, nên học
+một lần là dùng được mãi.</p>
 
 <div class="table-scroll">
 <table>
   <caption><b>Bảng 1</b> Ký tự đầu dòng trong output của <code>curl -v</code>.</caption>
-  <thead><tr><th>Ký tự</th><th>Nghĩa</th><th>Tương ứng chặng</th></tr></thead>
+  <thead><tr><th>Ký tự</th><th>Nghĩa</th><th>Chặng</th></tr></thead>
   <tbody>
-    <tr><td><code>*</code></td><td>Lời <code>curl</code> tự kể: đang phân giải tên, đang thử kết nối, đang bắt tay TLS…</td><td><span class="stg">2</span> <span class="stg">3</span> <span class="stg">4</span></td></tr>
-    <tr><td><code>&gt;</code></td><td>Dữ liệu <strong>gửi đi</strong> — dòng request và các header</td><td><span class="stg">5</span></td></tr>
-    <tr><td><code>&lt;</code></td><td>Dữ liệu <strong>nhận về</strong> — dòng trạng thái và các header trả lời</td><td><span class="stg">7</span> (và <span class="stg">8</span> phía sau nó)</td></tr>
+    <tr><td><code>*</code></td><td>Lời <code>curl</code> tự kể: đang hỏi DNS, đang kết nối, đang bắt tay TLS…</td><td><span class="stg">2</span> <span class="stg">3</span> <span class="stg">4</span></td></tr>
+    <tr><td><code>&gt;</code></td><td>Dữ liệu <strong>gửi đi</strong>: dòng request và các header</td><td><span class="stg">5</span></td></tr>
+    <tr><td><code>&lt;</code></td><td>Dữ liệu <strong>nhận về</strong>: dòng trạng thái và các header trả lời</td><td><span class="stg">7</span> (và những gì phía sau nó)</td></tr>
   </tbody>
 </table>
 </div>
 
-<h3 id="curl-phan-giai">Phân giải tên: một cái tên, bốn địa chỉ</h3>
+<h2 id="curl-phan-giai">Chặng <span class="stg">2</span>: một cái tên, bốn địa chỉ</h2>
 
 <figure class="fig">
 <pre><code>* Host example.com:443 was resolved.
 * IPv6: 2606:4700:10::ac42:93f3, 2606:4700:10::6814:179a
 * IPv4: 104.20.23.154, 172.66.147.243</code></pre>
-<figcaption><b>Hình 4</b> Phần phân giải tên trong output thật của <code>curl -v</code>.</figcaption>
+<figcaption><b>Hình 4</b> Phần hỏi DNS trong output thật của <code>curl -v</code>.</figcaption>
 </figure>
 
-<p><strong><code>:443</code> là do <code>curl</code> tự điền.</strong> Ta gõ
-<code>https://example.com</code>, không gõ port nào cả. Nhưng chuẩn HTTP (RFC 9110) quy định rằng
-khi URL không ghi port, scheme <code>https</code> ngầm hiểu là port <code>443</code> và
-<code>http</code> ngầm hiểu là <code>80</code>. <code>curl</code> chỉ đang làm đúng điều chuẩn yêu
-cầu — và đây cũng là lý do bạn chưa bao giờ phải gõ port khi vào một website công cộng.</p>
+<p><strong><code>:443</code> do <code>curl</code> tự điền.</strong> URL gõ vào không có port, nên
+<code>curl</code> điền port mặc định của <code>https</code>, đúng như chặng <span class="stg">1</span> ở bài giảng.</p>
 
-<p>Điều đáng chú ý hơn là <strong>MỘT cái tên trả về BỐN địa chỉ</strong>: hai địa chỉ IPv6 (bản
-ghi <code>AAAA</code>) và hai địa chỉ IPv4 (bản ghi <code>A</code>). DNS hoàn toàn cho phép một tên
-có nhiều bản ghi cùng loại, và client được tự do chọn — nếu địa chỉ thứ nhất không kết nối được,
-nó thử địa chỉ tiếp theo.</p>
+<p>Điều đáng chú ý hơn là <strong>một cái tên trả về bốn địa chỉ</strong>: hai địa chỉ IPv6 và hai địa
+chỉ IPv4. IPv4 là loại địa chỉ bốn số quen thuộc; IPv6 là thế hệ địa chỉ mới, dài hơn nhiều, viết bằng
+các nhóm chữ số và chữ cái ngăn bởi dấu hai chấm (Bài 01 và phụ lục của nó kể vì sao có hai loại). DNS cho
+phép một tên có nhiều địa chỉ, và client được tự do chọn: nếu địa chỉ thứ nhất không kết nối được, nó thử
+địa chỉ tiếp theo. Khi mỗi địa chỉ dẫn tới một máy khác nhau, một máy chết thì các máy còn lại vẫn phục
+vụ. Đó là một cách chia tải và dự phòng có từ rất sớm, hoạt động ngay ở chặng <span class="stg">2</span>.</p>
 
-<div class="callout ok">
-  <span class="label">Mở rộng khái niệm — chiều ngược lại của "một máy nhiều địa chỉ"</span>
-  <p>Trong bài giảng ta đã học rằng <em>một máy có nhiều địa chỉ</em>. Output này cho thấy chiều
-  ngược lại cũng đúng: <strong>một cái TÊN có thể trỏ tới NHIỀU MÁY.</strong></p>
-  <p>Khi mỗi địa chỉ dẫn tới một máy chủ khác nhau, một máy chết thì các máy còn lại vẫn phục vụ.
-  Đây là <strong>load balancing và dự phòng ở tầng DNS</strong> — một trong những nền móng lâu đời
-  nhất của các hệ thống chịu tải lớn, vì nó hoạt động trước cả khi gói tin đầu tiên được gửi đi.</p>
-</div>
-
-<h3 id="curl-chon-duong">Chọn đường: Happy Eyeballs</h3>
+<h2 id="curl-chon-duong">Chặng <span class="stg">3</span>: chọn đường và mở kết nối</h2>
 
 <figure class="fig">
 <pre><code>*   Trying [2606:4700:10::ac42:93f3]:443...
-*   Trying 104.20.23.154:443...</code></pre>
-<figcaption><b>Hình 5</b> <code>curl</code> thử IPv6 trước, rồi thử IPv4.</figcaption>
+*   Trying 104.20.23.154:443...
+* Established connection to example.com (104.20.23.154 port 443) from 192.168.10.38 port 55289</code></pre>
+<figcaption><b>Hình 5</b> <code>curl</code> thử IPv6 trước, rồi IPv4, và kết nối thành công qua IPv4.</figcaption>
 </figure>
 
-<p>Khi một tên có cả địa chỉ IPv6 lẫn IPv4, client đứng trước một câu hỏi thực dụng: thử cái nào
-trước? Nếu cứ thử IPv6 rồi chờ nó thất bại hẳn mới chuyển sang IPv4, thì ở những mạng có IPv6 hỏng,
-người dùng sẽ phải ngồi chờ hàng chục giây cho mỗi lần tải trang. Lời giải được chuẩn hóa với cái
-tên rất hình ảnh là <strong>Happy Eyeballs</strong> (RFC 6555, sau đó là phiên bản 2 trong RFC 8305):
-client thử IPv6 trước, nhưng chỉ cho nó một khoảng trễ rất ngắn; nếu chưa thấy hồi âm, nó mở song
-song một kết nối IPv4, và đường nào bắt tay xong trước thì dùng đường đó, hủy đường còn lại.</p>
-<blockquote class="pull"><p>Client thử IPv6 trước, nhưng chỉ cho nó một khoảng trễ rất ngắn; nếu chưa thấy hồi âm, nó mở song song một kết nối IPv4, và đường nào bắt tay xong trước thì dùng đường đó.</p></blockquote>
+<p>Khi một tên có cả hai loại địa chỉ, client thử IPv6 trước nhưng chỉ chờ nó một khoảng rất ngắn; chưa
+thấy hồi âm thì mở song song một kết nối IPv4, đường nào xong trước thì dùng đường đó. Cách làm này được
+chuẩn hoá với tên gọi <strong>Happy Eyeballs</strong> (RFC 8305). Ở đây IPv4 đã thắng. Suy luận hợp lý nhất
+là mạng này không có đường IPv6 ra Internet; dòng <code>fe80::10</code> ở tab trước ủng hộ suy luận đó, dù
+đây mới là dấu hiệu mạnh chứ chưa phải chứng minh.</p>
 
+<p>Dòng <code>Established connection</code> đánh dấu chặng <span class="stg">3</span> đã xong: kết nối TCP đã mở. Dòng này ghi bốn con
+số, hai của phía server và hai của phía máy người dùng; vì sao một kết nối cần đủ bốn con số, và port
+<code>55289</code> ở đâu ra, là một phần của <a href="../01-ip-port-listen-firewall/#ket-noi-tcp">Bài 01</a>.</p>
 
-<p>Trong output của ta, <strong>IPv4 đã thắng</strong>. Suy luận hợp lý nhất là mạng này
-<strong>không có đường IPv6 ra Internet</strong>, và dòng <code>Address: fe80::10</code> ở tab
-trước ủng hộ suy luận đó: router chỉ lộ ra một địa chỉ link-local. Tuy nhiên, để trung thực về độ
-chắc chắn, cần nói rằng đây là <em>dấu hiệu mạnh</em> chứ chưa phải <em>chứng minh</em> — về lý
-thuyết IPv4 cũng có thể thắng chỉ vì IPv6 chậm hơn một chút. Muốn kiểm chứng dứt khoát, chạy
-<code>curl -6 https://example.com</code> (ép dùng IPv6: nếu mạng không có IPv6 thì lệnh sẽ thất
-bại) và xem trong <code>ipconfig</code> máy có địa chỉ IPv6 toàn cầu nào (bắt đầu bằng
-<code>2</code> hoặc <code>3</code>) hay không. Câu chuyện đầy đủ về IPv6 nằm ở
-<a href="ipv4-vs-ipv6.html">phụ lục</a>.</p>
-
-<h3 id="curl-tls">TLS — và chỗ "thiếu" so với tài liệu mẫu</h3>
+<h2 id="curl-tls">Chặng <span class="stg">4</span>: TLS, và chỗ "thiếu" so với tài liệu mẫu</h2>
 
 <figure class="fig">
 <pre><code>* schannel: disabled automatic use of client certificate
 * ALPN: curl offers http/1.1
 * ALPN: server accepted http/1.1</code></pre>
-<figcaption><b>Hình 6</b> Phần bắt tay TLS. Ngắn hơn hẳn so với output trong tài liệu Linux.</figcaption>
+<figcaption><b>Hình 6</b> Phần bắt tay TLS, ngắn hơn hẳn output trong tài liệu viết trên Linux.</figcaption>
 </figure>
 
-<p><strong><code>schannel</code> là viết tắt của Secure Channel — thư viện TLS có sẵn trong chính
-Windows.</strong> <code>curl</code> không tự cài đặt mật mã; nó giao phần bắt tay TLS cho một thư
-viện bên dưới, và cùng một chương trình <code>curl</code> có thể được biên dịch với những thư viện
-khác nhau: OpenSSL, schannel, và một số thư viện khác. Dòng đầu tiên trong Hình 6 là bằng chứng
-rằng bản <code>curl</code> trên máy này đã dùng schannel.</p>
-
-<p>Chi tiết đó giải thích trọn vẹn việc ta <strong>không thấy</strong> những dòng mà tài liệu viết
-trên Linux hay in ra, vì những dòng đó là do thư viện OpenSSL cung cấp:</p>
-
-<figure class="fig">
-<pre class="diagram"><code>  thiếu:  SSL connection using TLSv1.3
-  thiếu:  subject: CN=example.com
-  thiếu:  expire date: ...</code></pre>
-<figcaption><b>Hình 7</b> Những dòng tài liệu mẫu có mà máy này không in ra.</figcaption>
-</figure>
+<p><code>curl</code> không tự làm phần mật mã; nó giao bắt tay TLS cho một thư viện bên dưới, và cùng một
+chương trình <code>curl</code> có thể được dựng với những thư viện khác nhau. Chữ <code>schannel</code> ở
+dòng đầu là tên thư viện TLS có sẵn trong Windows, và nó là bằng chứng rằng bản <code>curl</code> của Git
+Bash dùng thư viện này. Thư viện ấy không in thông tin chứng chỉ ra như thư viện OpenSSL hay dùng trên
+Linux, nên output thiếu hẳn mấy dòng <code>subject</code>, <code>expire date</code> mà tài liệu mẫu có.
+Đó là lý do Lab 3 phải đọc chứng chỉ bằng <code>openssl</code>.</p>
 
 <div class="callout warn">
-  <span class="label">Một đính chính trong buổi học</span>
-  <p>Ban đầu giả thuyết được đưa ra là Git Bash đã gọi nhầm bản
-  <code>C:\Windows\System32\curl.exe</code> của Windows. Giả thuyết này được kiểm tra lại, thay vì
-  được tin luôn:</p>
+  <span class="label">Một giả thuyết đã được kiểm lại</span>
+  <p>Trong buổi học, giả thuyết đầu tiên là Git Bash đã gọi nhầm bản <code>curl.exe</code> của Windows.
+  Giả thuyết được kiểm bằng một lệnh, thay vì được tin luôn:</p>
   <pre><code>$ which curl
 /mingw64/bin/curl</code></pre>
-  <p><strong>Giả thuyết sai.</strong> Đó đúng là <code>curl</code> của Git Bash. Nguyên nhân thật:
-  <strong><code>curl</code> đi kèm Git for Windows dùng schannel</strong> làm thư viện TLS, không
-  phải OpenSSL. Cùng một tên lệnh, cùng một dòng phiên bản, nhưng thư viện mã hóa bên dưới khác
-  nhau thì output khác nhau. Bài học phương pháp đi kèm cũng quan trọng không kém: một giả thuyết
-  nghe hợp lý vẫn phải được kiểm chứng bằng một lệnh cụ thể trước khi được ghi vào tài liệu.</p>
+  <p>Đó đúng là <code>curl</code> của Git Bash, nên giả thuyết sai; nguyên nhân thật là thư viện TLS bên
+  dưới. Một giả thuyết nghe hợp lý vẫn phải được kiểm bằng một lệnh cụ thể trước khi được ghi lại. Lệnh
+  <code>curl -V</code> (chữ V hoa) in ra thư viện TLS mà một bản <code>curl</code> đang dùng.</p>
 </div>
 
-<p>Nếu muốn tự xem một bản <code>curl</code> được biên dịch với thư viện nào, lệnh
-<code>curl -V</code> (chữ V hoa) in ra dòng phiên bản kèm danh sách thư viện TLS và các tính năng
-được hỗ trợ. Đây là lệnh nên chạy đầu tiên mỗi khi output của <code>curl</code> trên hai máy khác
-nhau một cách khó hiểu.</p>
+<p>Hai dòng <code>ALPN</code> kể một thoả thuận nhỏ diễn ra ngay trong lúc bắt tay: client gửi danh sách
+phiên bản HTTP nó nói được (ở đây chỉ có <code>http/1.1</code>), server chọn một phiên bản trong danh sách
+đó. Gộp việc này vào bắt tay giúp tiết kiệm một lượt đi về giữa hai máy.</p>
 
-<p>Hai dòng <strong>ALPN</strong> (Application-Layer Protocol Negotiation, RFC 7301) kể lại một
-cuộc thỏa thuận nhỏ nhưng tinh tế. Ngay trong lúc bắt tay TLS, client gửi kèm danh sách các giao
-thức ứng dụng nó biết nói — ở đây chỉ có <code>http/1.1</code> — và server chọn một giao thức
-<em>trong danh sách đó</em>. Gộp việc thỏa thuận vào cùng vòng bắt tay giúp tiết kiệm một lượt đi
-về giữa hai máy. Server không được phép chọn thứ client không đề nghị, nên dù Cloudflare thừa sức
-nói HTTP/2, cuộc trò chuyện lần này vẫn diễn ra bằng HTTP/1.1, đơn giản vì bản <code>curl</code> này
-chỉ đề nghị đúng một lựa chọn.</p>
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>Trước khi gửi một chữ HTTP nào, <code>curl</code> đã đi qua chặng <span class="stg">2</span> (một tên, bốn địa chỉ), chặng <span class="stg">3</span>
+  (thử IPv6, kết nối được qua IPv4) và chặng <span class="stg">4</span> (bắt tay TLS bằng thư viện của Windows). Mỗi chặng để lại
+  dấu vết bằng những dòng bắt đầu bằng <code>*</code>.</p>
+  <p>Còn treo: kênh đã mở và đã mã hoá, vậy request đi ra và câu trả lời về trông thế nào? Tab sau.</p>
+</div>
 
 </section>
 
 <!-- ================================================================== -->
-<section class="tab" id="t-curl-hoi-thoai" data-tab="curl: hội thoại" data-note="Lab 2 · chặng 5 và 7">
+<section class="tab" id="t-curl-request" data-tab="curl: request" data-note="Lab 2 · chặng 5 và 7">
 
-<p class="panel-intro">Tiếp nửa sau của output <code>curl -v</code>: kết nối đã được thiết lập,
-request đi ra, câu trả lời đi về — và trong câu trả lời có một món quà bất ngờ.</p>
+<p class="panel-intro">Nửa sau của output <code>curl -v</code>: request đi ra ở chặng <span class="stg">5</span>, câu trả lời đi về, và
+trong câu trả lời có dấu vết của chặng <span class="stg">7</span> ngoài đời thật.</p>
 
-<h2 id="bon-thanh-phan">Dòng quan trọng nhất của cả bài lab</h2>
-
-<figure class="fig">
-<pre><code>* Established connection to example.com (104.20.23.154 port 443) from 192.168.10.38 port 55289</code></pre>
-<figcaption><b>Hình 8</b> Kết nối TCP đã thành lập. Một dòng, bốn con số.</figcaption>
-</figure>
-
-<p>Dòng này tiết lộ một sự thật mà người mới hầu như không bao giờ tự nghĩ tới: <strong>một kết
-nối TCP được xác định bởi BỐN thành phần</strong>, không phải hai. Ta quen nghĩ "kết nối tới
-<code>104.20.23.154:443</code>", tức là chỉ nhìn phía server; nhưng hệ điều hành ở cả hai đầu nhận
-diện kết nối bằng cả bốn con số: IP và port phía client, IP và port phía server. Bộ bốn này thường
-được gọi là <em>4-tuple</em>, và mọi gói tin thuộc kết nối đều mang đúng bộ bốn đó.</p>
-
-<figure class="fig">
-<pre class="diagram"><code>   192.168.10.38 : 55289    ←──────→    104.20.23.154 : 443
-   └─────┬──────┘  └──┬──┘              └──────┬─────┘  └─┬─┘
-    IP máy tôi    port CỦA TÔI            IP server    port server
-                       ↑
-                 tôi không chọn nó.
-                 Hệ điều hành tự cấp — gọi là ephemeral port</code></pre>
-<figcaption><b>Hình 9</b> Bốn thành phần của một kết nối TCP. Port phía client do hệ điều hành cấp tạm thời.</figcaption>
-</figure>
-
-<p>Port <code>55289</code> phía client được gọi là <strong>ephemeral port</strong> — port "phù
-du". Chương trình không chọn nó; khi <code>curl</code> xin mở kết nối, hệ điều hành lấy một số còn
-trống trong một khoảng dành sẵn, gắn vào kết nối, và thu hồi khi kết nối đóng. Port của server thì
-ngược lại: nó phải cố định và được biết trước (<code>443</code>), vì nếu không thì client không biết
-gõ cửa phòng nào.</p>
-
-<div class="callout deep">
-  <span class="label">Đào sâu — khoảng ephemeral port</span>
-  <p>Cơ quan quản lý số hiệu Internet (IANA) khuyến nghị dùng khoảng <code>49152–65535</code> làm
-  port tạm thời (RFC 6335), và Windows hiện đại mặc định cấp port tạm trong đúng khoảng này —
-  <code>55289</code> nằm gọn trong đó.</p>
-</div>
-
-<div class="callout">
-  <span class="label">Câu hỏi ít ai nghĩ tới</span>
-  <p>Nếu mở 10 tab trình duyệt cùng vào <code>example.com</code>, server phân biệt chúng bằng cách
-  nào, khi cả 10 cùng đến từ một IP và cùng gõ port 443?</p>
-  <p><strong>Bằng port phía client.</strong> Mỗi tab một ephemeral port khác nhau, nên mỗi tab là
-  một bộ bốn khác nhau. Server nhìn cả bốn thành phần để biết gói tin nào thuộc kết nối nào.
-  <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../15-linux-tren-server/">Bài 15</a>, khi lệnh <code>ss</code> liệt kê từng kết nối đang mở.</p>
-</div>
-
-<h3 id="dhcp">Một phát hiện bất ngờ: IP nội bộ đã đổi</h3>
-
-<p>Lab của bài không chạy <code>ipconfig</code> — lệnh của Windows in ra địa chỉ IP của từng giao
-diện mạng. Nhưng nếu bạn chạy nó ở hai thời điểm khác nhau rồi so với địa chỉ đứng sau chữ
-<code>from</code> ở dòng trên, hai con số có thể không giống nhau. Trên máy chạy lab này, chúng đã
-khác:</p>
-
-<figure class="fig">
-<pre class="diagram"><code>  Lúc chạy ipconfig lần đầu:   192.168.110.203
-  Trong kết nối này:           192.168.10.38     ← ĐÃ ĐỔI</code></pre>
-<figcaption><b>Hình 10</b> Cùng một máy, hai địa chỉ LAN khác nhau trong cùng một buổi học.</figcaption>
-</figure>
-
-<p>Địa chỉ LAN của máy đã thay đổi giữa hai lần đo — hoặc vì máy đã chuyển sang một mạng khác,
-hoặc vì router đã cấp lại một địa chỉ mới. Cơ chế cấp phát đó tên là <strong>DHCP</strong>
-(Dynamic Host Configuration Protocol, RFC 2131). Điểm mấu chốt của DHCP nằm ngay trong từ vựng của
-nó: router không <em>cho</em> máy bạn một địa chỉ, mà <em>cho thuê</em> (lease) trong một thời hạn;
-hết hạn mà không gia hạn, hoặc đổi mạng, thì địa chỉ có thể khác đi.</p>
-
-<div class="callout ok">
-  <span class="label">Hệ quả — ghim lại</span>
-  <p><strong>IP nội bộ không cố định. Không thể dựa vào nó.</strong></p>
-  <p>Đó chính là lý do server production cần <strong>IP tĩnh</strong>, và là lý do ta dùng
-  <strong>tên miền</strong> thay vì ghi cứng địa chỉ IP vào file cấu hình.</p>
-</div>
-
-<h2 id="request">Phần request đi ra — chặng <span class="stg">5</span></h2>
+<h2 id="request">Request đi ra — chặng <span class="stg">5</span></h2>
 
 <figure class="fig">
 <pre><code>&gt; GET / HTTP/1.1
@@ -424,40 +279,25 @@ hết hạn mà không gia hạn, hoặc đổi mạng, thì địa chỉ có th
 &gt; User-Agent: curl/8.21.0
 &gt; Accept: */*
 &gt;</code></pre>
-<figcaption><b>Hình 11</b> Request HTTP mà <code>curl</code> gửi đi, nguyên văn.</figcaption>
+<figcaption><b>Hình 7</b> Request HTTP mà <code>curl</code> gửi đi, nguyên văn.</figcaption>
 </figure>
 
-<p>Ký tự <code>&gt;</code> nghĩa là gửi đi, và đây là <strong>chặng <span class="stg">5</span></strong> của bản đồ. Cấu
-trúc của một request HTTP/1.1 đơn giản tới bất ngờ: dòng đầu tiên gồm ba phần — <em>phương thức</em>
-(<code>GET</code>), <em>đích</em> (<code>/</code>, tức là phần path của URL) và <em>phiên bản giao
-thức</em>; tiếp theo là các dòng header dạng <code>Tên: giá trị</code>. Dòng <code>&gt;</code> trống
-ở cuối không phải lỗi hiển thị: theo chuẩn, một dòng trống đánh dấu <strong>hết phần header</strong>,
-và thứ gì theo sau là body. <code>GET</code> không có body, nên request dừng ngay tại đó.</p>
+<p>Dòng đầu gồm ba phần: phương thức (<code>GET</code>), đích (<code>/</code>, tức phần path của URL) và
+phiên bản giao thức. Tiếp theo là các header dạng <code>Tên: giá trị</code>. Dòng <code>&gt;</code> trống
+ở cuối không phải lỗi hiển thị: theo chuẩn, một dòng trống đánh dấu hết phần header, và thứ gì theo sau là
+body. <code>GET</code> không có body, nên request dừng tại đó.</p>
 
-<div class="callout">
-  <span class="label">Khoanh tròn dòng <code>Host: example.com</code></span>
-  <p>Đây chính là header khiến "một IP, nhiều ứng dụng" trở nên khả thi:</p>
-  <pre class="diagram"><code>  Máy ở 104.20.23.154 có thể đang phục vụ HÀNG NGHÌN website.
-  Gói tin tới nơi, nhưng biết trả về web nào?
-             ↓
-  Nó đọc đúng dòng "Host: example.com" này.</code></pre>
-  <p>Không có dòng này thì một IP chỉ phục vụ được một website. HTTP/1.1 bắt buộc mọi request phải
-  có header <code>Host</code>, và toàn bộ web hiện đại — kể cả Nginx đọc <code>Host</code> để biết
-  hỏi web nào ở chặng <span class="stg">7</span> — đứng trên đúng dòng này.</p>
-</div>
+<p>Dòng <code>Host: example.com</code> là thứ cho phép một địa chỉ IP phục vụ nhiều website: máy ở
+<code>104.20.23.154</code> có thể đang phục vụ hàng nghìn website, và nó đọc đúng dòng này để biết request
+dành cho website nào. HTTP/1.1 bắt buộc mọi request phải có header <code>Host</code>.</p>
 
-<div class="callout deep">
-  <span class="label">Đào sâu — nhưng với HTTPS, <code>Host</code> đến quá muộn</span>
-  <p>Có một nghịch lý nhỏ: với HTTPS, server phải chọn <em>chứng chỉ nào</em> để trình ra ngay trong
-  bắt tay TLS, tức là <em>trước khi</em> nó đọc được header <code>Host</code> (vì header đó chỉ
-  được gửi sau khi kênh mã hóa đã dựng xong). Nếu một IP phục vụ nghìn website, server lấy gì để
-  biết nên trình chứng chỉ của website nào? Lời giải là phần mở rộng <strong>SNI</strong> (Server
-  Name Indication, RFC 6066): client ghi sẵn tên miền mình muốn vào ngay gói tin mở đầu của bắt tay
-  TLS. SNI là "header Host của tầng TLS" — và đó chính là lý do lệnh <code>openssl</code> ở tab
-  sau phải có cờ <code>-servername example.com</code>.</p>
-</div>
+<p>Với HTTPS còn một chi tiết: server phải chọn chứng chỉ để trình ra ngay trong bắt tay TLS, tức là
+<em>trước khi</em> đọc được header <code>Host</code>. Lời giải là phần mở rộng <strong>SNI</strong>
+(<em>Server Name Indication</em>): client ghi sẵn tên miền mình muốn vào gói tin mở đầu của bắt tay TLS.
+Đây chính là lý do lệnh <code>openssl</code> ở Lab 3 phải có cờ <code>-servername example.com</code>, và
+cũng là lý do tên miền thường không được HTTPS giấu đi.</p>
 
-<h2 id="response">Phần trả lời — chặng <span class="stg">7</span> ngoài đời thật</h2>
+<h2 id="response">Câu trả lời đi về — chặng <span class="stg">7</span> ngoài đời thật</h2>
 
 <figure class="fig">
 <pre><code>&lt; HTTP/1.1 200 OK
@@ -467,52 +307,41 @@ và thứ gì theo sau là body. <code>GET</code> không có body, nên request 
 &lt; Age: 3889
 &lt; cf-cache-status: HIT
 &lt; CF-RAY: a40142dcc8e87164-HKG</code></pre>
-<figcaption><b>Hình 12</b> Các header trả lời, nguyên văn. Món quà bất ngờ nằm ở bốn dòng giữa.</figcaption>
+<figcaption><b>Hình 8</b> Các header trả lời, nguyên văn.</figcaption>
 </figure>
 
-<p>Ký tự <code>&lt;</code> nghĩa là nhận về. Dòng đầu tiên là <em>dòng trạng thái</em>: phiên bản
-giao thức, mã trạng thái <code>200</code> và cụm lý do <code>OK</code>. Theo nguyên tắc chẩn đoán số
-1 của bài giảng, chỉ riêng việc nhận được một con số đã chứng minh mọi chặng từ <span class="stg">2</span> tới <span class="stg">5</span> đều chạy
-tốt. Nhưng các dòng header phía sau còn kể nhiều hơn thế: chúng cho thấy <strong>chặng <span class="stg">7</span> ngoài đời
-thật</strong> trông như thế nào.</p>
-
-<figure class="fig photo shot small">
-  <img src="img/example-com.webp" width="600" height="290" loading="lazy" alt="Trang example.com mở trong trình duyệt: một biểu tượng cuốn sách nhỏ và một đoạn chữ giải thích tên miền này dành cho ví dụ trong tài liệu.">
-  <figcaption><b>Ảnh 1</b> Phần body mà <code>curl -v</code> nhận về, khi được trình duyệt dựng thành trang. curl chỉ in HTML thô ra màn hình; trình duyệt thì đọc HTML, tải thêm CSS rồi mới vẽ. Chính nội dung trang cũng nhắc lại điều bài học đã nói: tên miền này chỉ dành cho ví dụ trong tài liệu.</figcaption>
-</figure>
-
+<p>Dòng đầu là <em>dòng trạng thái</em>: phiên bản giao thức, mã <code>200</code> và cụm <code>OK</code>.
+Mã trạng thái là cách server cho biết request được xử lý ra sao; Bài 02 dành trọn cho chúng. Ở đây chỉ
+cần một điều: nhận được một dòng trạng thái nghĩa là chặng <span class="stg">2</span> tới <span class="stg">5</span> đều đã chạy tốt, vì nếu không thì đã
+không có ai để trả lời. Các header phía sau còn kể nhiều hơn thế.</p>
 
 <div class="table-scroll">
 <table>
   <caption><b>Bảng 2</b> Đọc các header trả lời của <code>example.com</code>.</caption>
   <thead><tr><th>Dòng</th><th>Nói lên điều gì</th></tr></thead>
   <tbody>
-    <tr><td><code>Server: cloudflare</code></td><td><code>example.com</code> <strong>không</strong> được phục vụ trực tiếp bởi máy gốc. Có một <strong>reverse proxy</strong> đứng trước — đúng vai trò của Nginx trong bản đồ, chỉ là phiên bản khổng lồ phân tán khắp thế giới.</td></tr>
-    <tr><td><code>cf-cache-status: HIT</code></td><td>Cloudflare trả lời <strong>từ cache của nó</strong>. Request <strong>chưa bao giờ tới máy gốc</strong>. Lễ tân trả lời luôn, không cần đi vào trong hỏi.</td></tr>
-    <tr><td><code>Age: 3889</code></td><td>Header chuẩn của cơ chế cache HTTP (RFC 9111): bản cache này đã nằm sẵn ở đó <strong>3889 giây ≈ 65 phút</strong>.</td></tr>
-    <tr><td><code>CF-RAY: …-HKG</code></td><td><strong>HKG là mã sân bay Hong Kong.</strong> Request được phục vụ từ trung tâm dữ liệu của Cloudflare ở Hong Kong, không phải ở Mỹ. Đó là <strong>CDN</strong> (content delivery network — các máy chủ đặt ở nhiều nước, trả lời từ chỗ gần người dùng nhất), và đó là lý do nó nhanh.</td></tr>
-    <tr><td><code>Connection: keep-alive</code></td><td>Giữ ống TCP mở để dùng lại cho request sau, khỏi phải bắt tay TCP và TLS lại từ đầu.</td></tr>
-    <tr><td><code>Transfer-Encoding: chunked</code></td><td>Server không khai báo trước độ dài nội dung, mà gửi thành từng khúc, mỗi khúc tự ghi độ dài của mình.</td></tr>
+    <tr><td><code>Server: cloudflare</code></td><td><code>example.com</code> không được trả lời trực tiếp bởi máy của chủ website. Có một <strong>reverse proxy</strong> đứng trước, do công ty Cloudflare vận hành: đúng vị trí chặng <span class="stg">7</span> trên bản đồ.</td></tr>
+    <tr><td><code>cf-cache-status: HIT</code></td><td>Cloudflare trả lời từ bản lưu (cache) của chính nó. Request <strong>chưa bao giờ tới</strong> máy của chủ website.</td></tr>
+    <tr><td><code>Age: 3889</code></td><td>Bản lưu ấy đã nằm sẵn ở đó 3889 giây, tức khoảng 65 phút.</td></tr>
+    <tr><td><code>CF-RAY: …-HKG</code></td><td>HKG là mã sân bay Hong Kong: request được trả lời từ trung tâm dữ liệu của Cloudflare ở Hong Kong. Mạng máy chủ đặt ở nhiều nước để trả lời từ chỗ gần người dùng nhất như vậy gọi là <strong>CDN</strong> (<em>content delivery network</em>).</td></tr>
+    <tr><td><code>Connection: keep-alive</code></td><td>Giữ kết nối mở để dùng lại cho request sau, khỏi phải bắt tay TCP và TLS lại từ đầu.</td></tr>
   </tbody>
 </table>
 </div>
 
-<figure class="fig">
-<pre><code>* Connection #0 to host example.com:443 left intact</code></pre>
-<figcaption><b>Hình 13</b> Dòng cuối cùng của output <code>curl -v</code>.</figcaption>
+<figure class="fig photo shot small">
+  <img src="img/example-com.webp" width="600" height="290" loading="lazy" alt="Trang example.com mở trong trình duyệt: một biểu tượng cuốn sách nhỏ và một đoạn chữ giải thích tên miền này dành cho ví dụ trong tài liệu.">
+  <figcaption><b>Ảnh 2</b> Phần body mà <code>curl -v</code> nhận về, khi được trình duyệt dựng thành
+  trang. <code>curl</code> chỉ in HTML thô ra màn hình; trình duyệt đọc HTML rồi mới vẽ. Chính nội dung
+  trang nhắc lại điều bài học đã dùng: tên miền này chỉ dành cho ví dụ trong tài liệu.</figcaption>
 </figure>
 
-<p>Dòng cuối cùng xác nhận ống TCP <strong>vẫn còn mở</strong> khi <code>curl</code> kết thúc — đúng
-như <code>keep-alive</code> đã hứa. Với một lệnh <code>curl</code> đơn lẻ thì điều này không mang lại
-lợi ích gì, nhưng trong trình duyệt, nơi một trang web kéo theo hàng chục request tới cùng một máy,
-việc dùng lại kết nối tiết kiệm được hàng chục lượt bắt tay.</p>
-
 <div class="callout ok">
-  <span class="label">Ghim lại — lễ tân khổng lồ</span>
-  <p>Mô hình "Nginx là lễ tân" của Bài 00 không phải một ẩn dụ sách vở. Bạn vừa gặp một lễ tân thật,
-  quy mô toàn cầu, ngay trong output của mình: Cloudflare nhận request, tự trả lời từ cache khi có
-  thể, và chỉ đi vào trong hỏi máy gốc khi cần. <strong>Reverse proxy và CDN có mặt ở khắp nơi, kể
-  cả ở những chỗ bạn không ngờ tới.</strong></p>
+  <span class="label">Chốt</span>
+  <p>Request ở chặng <span class="stg">5</span> chỉ là vài dòng chữ, trong đó <code>Host</code> cho biết website nào được hỏi. Câu
+  trả lời cho thấy chặng <span class="stg">7</span> có thật ngoài đời: một reverse proxy của Cloudflare đứng trước
+  <code>example.com</code> và trả lời từ bản lưu của nó. Reverse proxy có mặt ở nhiều nơi hơn bạn nghĩ.</p>
+  <p>Còn treo: Hình 6 không in gì về chứng chỉ. Muốn xem chứng chỉ ở chặng <span class="stg">4</span> thì làm thế nào? Tab sau.</p>
 </div>
 
 </section>
@@ -520,408 +349,140 @@ việc dùng lại kết nối tiết kiệm được hàng chục lượt bắt
 <!-- ================================================================== -->
 <section class="tab" id="t-chung-chi" data-tab="Chứng chỉ" data-note="Lab 3 · chặng 4">
 
-<h2 id="openssl"><span class="stg">4</span> Đọc chứng chỉ X.509 của một website thật</h2>
+<h2 id="openssl">Đọc chứng chỉ của <code>example.com</code> — chặng <span class="stg">4</span></h2>
 
-<p>Vì bản <code>curl</code> dùng schannel không in thông tin chứng chỉ, ta phải dùng một công cụ khác
-để xem nó. <code>openssl s_client</code> là một client TLS tối giản: nó tự thực hiện bắt tay với
-server rồi in ra mọi thứ nhận được, kể cả chứng chỉ ở dạng mã hóa văn bản (PEM). Nối đầu ra đó vào
-<code>openssl x509</code> để giải mã chứng chỉ đầu tiên thành các trường đọc được. Mỗi phần của câu
-lệnh có một lý do tồn tại riêng:</p>
+<p><code>openssl s_client</code> là một client TLS tối giản: nó tự bắt tay với server rồi in ra những gì
+nhận được, kể cả chứng chỉ ở dạng mã hoá văn bản. Nối output đó vào <code>openssl x509</code> để giải mã
+chứng chỉ thành các trường đọc được. Mỗi phần của câu lệnh có một lý do tồn tại:</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 3</b> Giải phẫu câu lệnh đọc chứng chỉ.</caption>
+  <caption><b>Bảng 3</b> Các phần của câu lệnh đọc chứng chỉ.</caption>
   <thead><tr><th>Phần lệnh</th><th>Vì sao cần</th></tr></thead>
   <tbody>
-    <tr><td><code>echo |</code></td><td>Đưa vào một đầu vào rỗng rồi đóng lại, để <code>s_client</code> bắt tay xong là thoát, thay vì đứng chờ bạn gõ gì đó.</td></tr>
-    <tr><td><code>-connect example.com:443</code></td><td>Mở kết nối TCP tới máy và port cần kiểm tra.</td></tr>
-    <tr><td><code>-servername example.com</code></td><td>Gửi <strong>SNI</strong> — cho server biết ta muốn chứng chỉ của tên nào (xem tab trước).</td></tr>
-    <tr><td><code>2&gt;/dev/null</code></td><td>Giấu các dòng chẩn đoán in ra luồng lỗi, chỉ giữ lại chứng chỉ.</td></tr>
-    <tr><td><code>openssl x509 -noout -subject -issuer -dates</code></td><td>Giải mã chứng chỉ, không in lại bản mã hóa, chỉ in ba nhóm trường: cấp cho ai, ai ký, hiệu lực tới khi nào.</td></tr>
+    <tr><td><code>echo |</code></td><td>Đưa vào một input rỗng rồi đóng lại, để <code>s_client</code> bắt tay xong là thoát thay vì đứng chờ bạn gõ.</td></tr>
+    <tr><td><code>-connect example.com:443</code></td><td>Mở kết nối TCP tới máy và port cần kiểm tra (chặng <span class="stg">3</span>).</td></tr>
+    <tr><td><code>-servername example.com</code></td><td>Gửi SNI: cho server biết ta muốn chứng chỉ của tên nào (tab trước).</td></tr>
+    <tr><td><code>2&gt;/dev/null</code></td><td>Giấu các dòng chẩn đoán, chỉ giữ lại chứng chỉ. Cú pháp này được giải nghĩa ở Bài 04.</td></tr>
+    <tr><td><code>| openssl x509 -noout -subject -issuer -dates</code></td><td>Dấu <code>|</code> đưa output của lệnh trước làm input cho lệnh sau (Bài 04). Lệnh sau giải mã chứng chỉ và chỉ in ba nhóm trường.</td></tr>
   </tbody>
 </table>
 </div>
 
 <figure class="fig">
-<pre><code>$ echo | openssl s_client -connect example.com:443 -servername example.com 2>/dev/null \
+<pre><code>$ echo | openssl s_client -connect example.com:443 -servername example.com 2&gt;/dev/null \
     | openssl x509 -noout -subject -issuer -dates
 
 subject=CN=example.com
 issuer=C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3
 notBefore=Jul 29 22:10:08 2026 GMT
 notAfter=Oct 27 22:17:21 2026 GMT</code></pre>
-<figcaption><b>Hình 14</b> Output thật khi đọc chứng chỉ của <code>example.com</code>, 24/09/2026.</figcaption>
+<figcaption><b>Hình 9</b> Output thật khi đọc chứng chỉ của <code>example.com</code>, 24/09/2026.</figcaption>
 </figure>
 
 <div class="table-scroll">
 <table>
   <caption><b>Bảng 4</b> Nghĩa của từng dòng.</caption>
-  <thead><tr><th>Dòng</th><th>Nghĩa là gì</th></tr></thead>
+  <thead><tr><th>Dòng</th><th>Nghĩa</th></tr></thead>
   <tbody>
-    <tr><td><code>subject=CN=example.com</code></td><td>Chứng chỉ này <strong>cấp cho ai</strong>. CN = Common Name.</td></tr>
-    <tr><td><code>issuer=C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3</code></td><td><strong>Ai ký bảo lãnh.</strong> Tổ chức đứng tên (<code>O</code>) là SSL Corporation — pháp nhân đứng sau CA công khai SSL.com; tên (<code>CN</code>) mang chữ Cloudflare vì đây là một CA trung gian được lập riêng để cấp chứng chỉ cho Cloudflare.</td></tr>
-    <tr><td><code>notBefore=Jul 29 2026</code></td><td>Có hiệu lực từ</td></tr>
-    <tr><td><code>notAfter=Oct 27 2026</code></td><td><strong>Hết hạn</strong> — thủ phạm của kịch bản "sáng thứ Hai web sập" trong bài giảng</td></tr>
+    <tr><td><code>subject=CN=example.com</code></td><td>Chứng chỉ này <strong>cấp cho tên miền nào</strong>. CN là viết tắt của <em>Common Name</em>.</td></tr>
+    <tr><td><code>issuer=…</code></td><td><strong>Ai đã ký</strong> chứng chỉ. Tổ chức đứng tên (<code>O</code>) là SSL Corporation; tên (<code>CN</code>) mang chữ Cloudflare vì đây là một đơn vị ký được lập riêng để cấp chứng chỉ cho Cloudflare.</td></tr>
+    <tr><td><code>notBefore</code></td><td>Có hiệu lực từ 29/07/2026.</td></tr>
+    <tr><td><code>notAfter</code></td><td><strong>Hết hạn</strong> ngày 27/10/2026.</td></tr>
   </tbody>
 </table>
 </div>
 
 <div class="callout warn">
   <span class="label">Bẫy khi đọc trường issuer</span>
-  <p>Thấy chữ Cloudflare trong <code>CN</code>, rất dễ kết luận rằng "Cloudflare vận hành CA của
-  chính họ". Đọc kỹ trường <code>O=SSL Corporation</code> thì thấy không phải: CA trung gian này mang
-  tên Cloudflare nhưng thuộc về một CA công khai khác. Bài học phương pháp: <strong>đọc từng trường
-  một</strong>, đừng suy ra cả dòng từ cái tên nổi bật nhất trong đó.</p>
+  <p>Thấy chữ Cloudflare trong <code>CN</code>, rất dễ kết luận rằng Cloudflare tự cấp chứng chỉ cho mình.
+  Đọc tiếp trường <code>O=SSL Corporation</code> thì thấy không phải. <strong>Đọc từng trường một</strong>,
+  đừng suy ra cả dòng từ cái tên nổi bật nhất trong đó.</p>
 </div>
 
-<div class="callout deep">
-  <span class="label">Đào sâu — X.509 và chuỗi tin cậy</span>
-  <p>Chứng chỉ web tuân theo định dạng X.509, được đặc tả cho Internet trong RFC 5280. Trình duyệt
-  không tin trực tiếp chứng chỉ của <code>example.com</code>; nó lần theo một <em>chuỗi</em>: chứng
-  chỉ lá được một CA trung gian ký, CA trung gian được một CA gốc ký, và CA gốc nằm sẵn trong kho
-  tin cậy cài trong máy. Chỉ cần một mắt xích không kiểm chứng được là cả chuỗi bị từ chối.</p>
-  <pre class="diagram"><code>  CN=example.com                          ← chứng chỉ lá (server trình ra)
-        ▲ ký bởi
-  Cloudflare TLS Issuing ECC CA 3         ← CA trung gian (server trình kèm)
-        ▲ ký bởi
-  CA gốc                                  ← nằm sẵn trong kho tin cậy của máy</code></pre>
-  <p>Một chi tiết nữa: trình duyệt hiện đại khớp tên miền với phần mở rộng <em>Subject Alternative
-  Name</em> (SAN) của chứng chỉ, chứ không dựa vào trường <code>CN</code> nữa. Muốn xem SAN, thử thêm
-  <code>openssl x509 -noout -ext subjectAltName</code> vào cuối đường ống.</p>
-</div>
+<h3 id="hai-dieu">Hai điều tấm chứng chỉ này cho thấy</h3>
 
-<h3 id="ba-dieu">Ba điều tấm chứng chỉ này tiết lộ</h3>
+<p><strong>Thứ nhất, nó chỉ sống 90 ngày</strong>, từ 29/07 tới 27/10. Vào ngày chạy lab (24/09/2026), nó
+còn 33 ngày. Nghĩa là ở đâu đó trong hạ tầng của Cloudflare, có một tác vụ tự động đã được hẹn giờ để gia
+hạn chứng chỉ trước 27/10. Nếu tác vụ đó hỏng mà không ai phát hiện, <code>example.com</code> sẽ hỏng ở
+chặng <span class="stg">4</span> dù không ai đụng vào. Bài 02 gọi loại sự cố này là hệ thống hỏng mà không ai đụng vào; Bài 20
+giải thích vì sao chứng chỉ được cấp ngắn hạn và cách gia hạn tự động.</p>
 
-<figure class="fig photo shot">
-  <img src="img/crtsh-example-com.webp" width="1264" height="580" loading="lazy" alt="Bảng kết quả tra crt.sh cho example.com, cột Issuer Name; một dòng có issuer Cloudflare TLS Issuing ECC CA 3 được khoanh đỏ.">
-  <figcaption><b>Ảnh 2</b> Sổ công khai Certificate Transparency cho example.com, tra trên crt.sh ngày 30/09/2026 (hiện 7 dòng đầu). <span class="kw"><i class="key k-red" aria-hidden="true"></i>Dòng</span> khoanh có issuer <code>C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3</code> và thời hạn 29/07 tới 27/10/2026 — trùng khít với <code>notBefore</code> và <code>notAfter</code> trong output openssl ở trên. Cùng ngày có nhiều dòng gần giống nhau, vì example.com dùng song song hai loại chứng chỉ, và mỗi chứng chỉ thường được ghi vào sổ hai lần. Dòng trên cùng cho thấy một chứng chỉ mới do Sectigo cấp từ 24/09 — trang có thể sẽ sớm chuyển sang nó.</figcaption>
-</figure>
-
-
-<p><strong><span class="stg">1</span> Vòng đời đúng 90 ngày.</strong> Từ 29/07 tới 27/10 là đúng 90 ngày. Con số này không
-phải ngẫu nhiên: 90 ngày là thời hạn mà Let's Encrypt phổ biến từ những năm 2010, và nhiều CA khác
-cũng cấp chứng chỉ ngắn hạn cho các dịch vụ tự động hóa được việc gia hạn. Những lý do đằng sau thời
-hạn ngắn — giới hạn thiệt hại khi lộ private key, ép phải tự động hóa, và việc thu hồi chứng chỉ
-hoạt động kém — đã được phân tích trong bài giảng.</p>
-
-<p><strong><span class="stg">2</span> Có một tiến trình tự động đang chạy, ngay lúc này.</strong></p>
-
-<div class="callout warn">
-  <span class="label">Đáng để dừng lại nghĩ</span>
-  <p>Tại thời điểm chạy lệnh (24/09/2026), chứng chỉ còn <strong>33 ngày</strong>.</p>
-  <p>Nghĩa là ở đâu đó trong hạ tầng Cloudflare, <strong>có một tiến trình tự động đã được hẹn
-  giờ</strong> — người ta hay gọi nôm là một <em>cron job</em> — để gia hạn nó trước 27/10. Nếu tiến
-  trình đó hỏng mà không ai phát hiện, <code>example.com</code> sẽ sập.</p>
-  <p><strong>Kể cả một trong những tên miền nổi tiếng nhất Internet cũng phụ thuộc vào một tác vụ
-  hẹn giờ chạy đúng.</strong> Đây là minh họa trực tiếp cho luận điểm "hệ thống hỏng mà không ai
-  đụng vào" của bài giảng.</p>
-</div>
-
-<p><strong><span class="stg">3</span> Nó thú nhận chính điều làm HTTPS mong manh.</strong> Hãy để ý rằng trường
-<code>subject</code> <strong>chỉ có mỗi <code>CN=example.com</code></strong> — không có tên công ty,
-không có địa chỉ, không có gì về danh tính pháp nhân. Đây là dấu hiệu của chứng chỉ loại
-<strong>DV</strong>: nó chỉ chứng minh <em>"người xin chứng chỉ này kiểm soát được tên miền vào thời
-điểm xin"</em>, không hơn.</p>
-
-<dl class="terms">
-  <dt>DV <small>Domain Validated</small></dt>
-  <dd>CA chỉ kiểm tra quyền kiểm soát tên miền (ví dụ yêu cầu tạo một bản ghi DNS hoặc đặt một file
-  lên website). Tự động hóa được hoàn toàn; đây là loại mà Let's Encrypt cấp.</dd>
-  <dt>OV <small>Organization Validated</small></dt>
-  <dd>CA kiểm tra thêm sự tồn tại của tổ chức, và tên tổ chức được ghi vào <code>subject</code>.</dd>
-  <dt>EV <small>Extended Validation</small></dt>
-  <dd>Kiểm tra pháp nhân kỹ nhất. Trình duyệt từng hiển thị tên công ty trên thanh địa chỉ cho loại
-  này, nhưng các hãng lớn đã bỏ cách hiển thị đó.</dd>
-</dl>
+<p><strong>Thứ hai, nó không chứa địa chỉ IP nào.</strong> Người mới hay nghĩ chứng chỉ là thứ gắn tên
+miền với địa chỉ IP, nhưng việc đó là của DNS ở chặng <span class="stg">2</span>. Chứng chỉ chỉ chứng minh danh tính của một
+<em>tên</em>, và Hình 9 là bằng chứng: không có dòng nào nói tới địa chỉ.</p>
 
 <div class="callout ok">
-  <span class="label">Khớp với bài học về DNS</span>
-  <p>Chính xác là điều đã nói ở phần "DNS là gốc rễ của lòng tin" trong bài giảng:
-  <strong>CA không biết chủ sở hữu là ai — CA chỉ biết ai đang kiểm soát tên miền.</strong></p>
-  <p>Tấm chứng chỉ này tự nó thú nhận điều đó, ngay trong dòng <code>subject</code>.</p>
+  <span class="label">Chốt</span>
+  <p>Chứng chỉ ở chặng <span class="stg">4</span> trả lời ba câu: cấp cho tên miền nào, ai ký, và hiệu lực tới bao giờ. Hạn
+  dùng ngắn biến việc gia hạn thành một việc bắt buộc phải tự động hoá. Phần chuyên sâu về chứng chỉ được
+  học ở Bài 20.</p>
 </div>
 
-<h3 id="tls-termination">Và một chi tiết nối ngược về <code>Server: cloudflare</code></h3>
+</section>
 
-<p>Chứng chỉ mà <code>openssl</code> nhận được là chứng chỉ do Cloudflare trình ra, và nó đi ra từ
-cùng máy chủ biên đã trả lời header <code>Server: cloudflare</code> ở tab trước. Nói cách khác:</p>
+<!-- ================================================================== -->
+<section class="tab" id="t-tong-ket" data-tab="Tổng kết" data-note="chỗ lệch dạy được gì">
 
-<figure class="fig">
-<pre class="diagram"><code>  Chứng chỉ mà trình duyệt kiểm tra
-  là chứng chỉ của LỄ TÂN (Cloudflare),
-  KHÔNG phải của máy gốc.</code></pre>
-<figcaption><b>Hình 15</b> TLS được gỡ ngay tại lớp proxy.</figcaption>
-</figure>
-
-<p>TLS được "gỡ" ngay tại lớp proxy — kỹ thuật này tên là <strong>TLS termination</strong>, và nó
-chính là lý do <span class="stg">1</span> trong danh sách "tám lý do cần Nginx". Hệ quả đáng suy nghĩ là: đoạn đường từ
-Cloudflare về máy gốc là <em>một kết nối riêng</em>, có thể được mã hóa bằng một chứng chỉ khác —
-hoặc, ở cấu hình yếu nhất mà Cloudflare cho phép, hoàn toàn không mã hóa, trong khi người dùng vẫn
-thấy ổ khóa. Đây là một trong những mặt trái của proxy mà lộ trình sẽ nói thẳng khi tới phần HTTPS
-thật ở <a href="../18-ten-mien-va-https/">Bài 18</a>.</p>
-
-<h3 id="hieu-sai-chung-chi">Ba chỗ người mới hay hiểu sai về chứng chỉ</h3>
+<h2 id="cho-lech">Những chỗ lệch dạy được gì</h2>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 5</b> Ba cách hiểu sai phổ biến về chứng chỉ, và thực tế.</caption>
-  <thead><tr><th>Người mới hay nghĩ</th><th>Thực tế</th></tr></thead>
+  <caption><b>Bảng 5</b> Chỗ output lệch so với tài liệu mẫu, và bài học rút ra.</caption>
+  <thead><tr><th>Chỗ lệch</th><th>Do đâu</th><th>Bài học</th></tr></thead>
   <tbody>
-    <tr><td>Chứng chỉ là "đăng ký tên miền với IP"</td><td>Đó là việc của DNS. Chứng chỉ chứng minh <strong>danh tính</strong> của một tên, và chứng chỉ web thông thường không chứa địa chỉ IP nào — Hình 14 là bằng chứng.</td></tr>
-    <tr><td>"Chứng chỉ bị đánh cắp"</td><td>Chứng chỉ là thứ <strong>công khai</strong> — ai cũng đọc được, như bạn vừa làm. Thứ bí mật và bị đánh cắp là <strong>private key</strong> nằm trên server.</td></tr>
-    <tr><td>Lỗi chứng chỉ là do "không dịch được DNS"</td><td>Ngược lại: thấy được lỗi chứng chỉ <strong>chứng minh</strong> DNS và TCP đã chạy tốt. Nếu DNS hỏng thì đã dừng ở NXDOMAIN, không bao giờ tới được bước kiểm tra chứng chỉ.</td></tr>
+    <tr><td>Không thấy dòng chứng chỉ trong <code>curl -v</code></td><td>Thư viện TLS</td><td>Cùng tên lệnh, khác thư viện bên dưới thì khác output</td></tr>
+    <tr><td>Một tên trả về bốn địa chỉ</td><td>DNS</td><td>Một tên có thể trỏ tới nhiều máy, dự phòng từ trước cả gói tin đầu tiên</td></tr>
+    <tr><td><code>example.com</code> được trả lời bởi Cloudflare</td><td>Hạ tầng của bên thứ ba</td><td>Reverse proxy có mặt ở cả những chỗ bạn không ngờ</td></tr>
+    <tr><td>Issuer mang tên Cloudflare nhưng thuộc tổ chức khác</td><td>Cách đọc</td><td>Đọc từng trường một</td></tr>
   </tbody>
 </table>
 </div>
 
-</section>
-
-<!-- ================================================================== -->
-<section class="tab" id="t-refused" data-tab="Refused &amp; timeout" data-note="Lab 4–5 · chặng 3">
-
-<h2 id="refused"><span class="stg">5</span> refused và timeout — đo bằng số</h2>
-
-<figure class="fig">
-<pre><code>$ time curl -4 -o /dev/null http://127.0.0.1:9999
-curl: (7) Failed to connect to 127.0.0.1 port 9999 after 2076 ms
-real    0m2.155s
-
-$ time curl -4 -o /dev/null --max-time 5 http://10.255.255.1:9999
-curl: (28) Connection timed out after 5007 milliseconds
-real    0m5.066s</code></pre>
-<figcaption><b>Hình 16</b> Hai kiểu thất bại, đo bằng <code>time</code> trong Git Bash, 24/09/2026.</figcaption>
-</figure>
-
-<p>Để hiểu vì sao hai lệnh này thất bại theo hai cách khác nhau, cần nhìn vào bước đầu tiên của mọi
-kết nối TCP: <strong>bắt tay ba bước</strong> (three-way handshake), được đặc tả trong chuẩn TCP
-(RFC 9293). Client gửi một gói <code>SYN</code> — "tôi muốn mở kết nối tới phòng này". Nếu có một
-process đang listen ở port đó, hệ điều hành phía server trả lời <code>SYN-ACK</code>, client đáp
-<code>ACK</code>, và kết nối thành lập. Nếu <em>không</em> có ai listen, nhưng máy vẫn sống, chính
-hệ điều hành của máy đó (phần lõi của nó, gọi là kernel — học ở
-<a href="../01-may-tinh-va-he-dieu-hanh/">Bài 01</a>) trả lời bằng một gói <code>RST</code> (reset) — "phòng này không có ai". Còn nếu
-không có máy nào ở địa chỉ đó, hoặc firewall lặng lẽ vứt gói tin, thì không có gì quay về cả, và
-client chỉ còn cách gửi lại <code>SYN</code> theo những khoảng chờ tăng dần cho tới khi bỏ cuộc.</p>
-
-<figure class="fig">
-<pre class="diagram"><code>  REFUSED — máy sống, phòng trống
-  curl ── SYN ─────────────────→ kernel của 127.0.0.1
-  curl ←──────────────── RST ── "không ai ngồi ở phòng 9999"
-  → có CÂU TRẢ LỜI → curl tự kết luận → lỗi (7)
-
-  TIMEOUT — không ai trả lời
-  curl ── SYN ─────────────────→ 10.255.255.1   (không có máy nào)
-  curl ── SYN (gửi lại) ───────→        …
-  curl ── SYN (gửi lại) ───────→        …
-  … im lặng … hết --max-time → curl bỏ cuộc → lỗi (28)</code></pre>
-<figcaption><b>Hình 17</b> Hai kịch bản ở tầng TCP. Chỉ kịch bản đầu có một gói tin quay về.</figcaption>
-</figure>
-
-<p>Địa chỉ <code>10.255.255.1</code> được chọn có chủ đích: nó nằm trong dải private
-<code>10.0.0.0/8</code>, nhưng trong mạng gia đình này không có thiết bị nào mang địa chỉ đó, nên gói
-<code>SYN</code> đi vào hư không. Đây là cách an toàn để tự tạo ra một timeout mà không cần làm phiền
-máy của ai.</p>
-
-<h3 id="ai-dung">Phép thử dứt khoát: ai là người quyết định dừng?</h3>
-
-<figure class="fig">
-<pre class="diagram"><code>  (7)  dừng ở 2076 ms  →  curl DỪNG VÌ NÓ NHẬN ĐƯỢC CÂU TRẢ LỜI.
-                          Ta không hề đặt --max-time. Nó tự dừng.
-
-  (28) dừng ở 5007 ms  →  curl DỪNG VÌ TA BẢO NÓ DỪNG.
-                          Ta đặt --max-time 5. Khớp tới từng mili-giây.</code></pre>
-<figcaption><b>Hình 18</b> Phép thử phân biệt không dựa vào tốc độ, mà dựa vào việc ai quyết định điểm kết thúc.</figcaption>
-</figure>
-
-<p>Người mới thường phân biệt refused và timeout bằng tốc độ: "refused thì nhanh, timeout thì
-chậm". Output trên Windows cho thấy tiêu chí đó không đáng tin — refused ở đây mất tới hơn 2 giây.
-Tiêu chí vững hơn là hỏi <em>ai quyết định điểm kết thúc</em>. Lệnh (7) dừng vì nó đã nhận được một
-câu trả lời, nên nó có điểm kết thúc của riêng mình; lệnh (28) dừng vì ta đã đặt giới hạn, nên thời
-lượng của nó chính là con số ta chọn, khớp tới từng mili-giây.</p>
-
-<div class="callout ok">
-  <span class="label">Cách kiểm chứng — ghim lại</span>
-  <p>Đổi <code>--max-time 5</code> thành <code>--max-time 15</code> <i class="ic ic-r" role="img" aria-label="sang"></i> lệnh timeout chạy đúng 15 giây.
-  Còn lệnh <code>(7)</code> thì dù đặt <code>--max-time</code> bao nhiêu cũng vẫn dừng ở khoảng 2 giây,
-  vì đã có người trả lời nó rồi.</p>
-  <p><strong>Trường hợp bị từ chối có điểm kết thúc của riêng nó. Trường hợp im lặng thì không —
-  thời lượng của nó là con số BẠN chọn.</strong></p>
-</div>
-
-<figure class="fig">
-<pre class="diagram"><code>  (7)  CURLE_COULDNT_CONNECT    →  "tôi không kết nối được"  (có kết luận)
-  (28) CURLE_OPERATION_TIMEDOUT →  "tôi hết giờ chờ"          (không có kết luận)</code></pre>
-<figcaption><b>Hình 19</b> Tên chính thức của hai mã thoát trong thư viện libcurl.</figcaption>
-</figure>
-
-<div class="callout warn">
-  <span class="label">Chỗ người mới hay hiểu sai</span>
-  <p>Người mới hay nghĩ: "VPS còn sống thì không thể bị <code>refused</code>." Sự thật thì ngược
-  lại hoàn toàn: <strong><code>refused</code> CHỈ xảy ra khi máy còn sống</strong>, vì phải có một
-  kernel đang chạy mới gửi được gói <code>RST</code>. Máy chết, hoặc bị firewall che kín, thì cho ra
-  <code>timeout</code>. Do đó refused là một tin <em>tốt một nửa</em>: máy vẫn sống, chỉ có process
-  cần tìm là không có mặt.</p>
-</div>
-
-<h3 id="windows-2s">Vì sao Windows mất 2 giây thay vì 1 mili-giây?</h3>
-
-<p>Trên Linux, khi nhận được <code>RST</code> từ loopback, kernel báo lỗi cho chương trình gần như
-tức thì — thường chỉ vài mili-giây. Windows thì có một hành vi khác đã được quan sát rộng rãi: nó
-<strong>thử lại vài lần</strong> trước khi kết luận rằng kết nối bị từ chối, kể cả khi đích là chính
-máy mình. Cần lưu ý rằng hai lệnh trên đã dùng cờ <code>-4</code> và gõ thẳng địa chỉ
-<code>127.0.0.1</code>, nên giả thuyết "Windows thử <code>::1</code> của IPv6 trước" không áp dụng
-cho con số 2,155s này (xem <a href="ipv4-vs-ipv6.html#dinh-chinh-2s">phụ lục</a>).</p>
-
-<div class="callout">
-  <span class="label">Bài học</span>
-  <p><strong>Cùng một cơ chế mạng có thể biểu hiện rất khác nhau tùy hệ điều hành.</strong></p>
-  <p>Đó là một lý do nữa để deploy lên Linux và học trên Linux, chứ không dựa vào cảm nhận từ máy
-  Windows. Thí nghiệm đối chứng — chạy đúng lệnh này trong WSL Ubuntu rồi so với 2,155s — sẽ làm ở
-  <a href="../02-phong-lab-wsl-docker/">Bài 02</a>, khi phòng lab Linux được dựng.</p>
-</div>
-
-</section>
-
-<!-- ================================================================== -->
-<section class="tab" id="t-shell" data-tab="Lỗi shell" data-note="lỗi hay nhất buổi">
-
-<h2 id="shell"><span class="stg">6</span> Lỗi hay nhất buổi học: <code>time</code> trong <code>cmd.exe</code></h2>
-
-<figure class="fig">
-<pre><code>C:\Users\pc&gt; time curl -s -o /dev/null http://127.0.0.1:9999 ; echo "---"
-
-The system cannot accept the time entered.
-Enter the new time: 2
-A required privilege is not held by the client.
-
-C:\Users\pc&gt; curl -s -o /dev/null http://127.0.0.1:9999 ; echo "---"
-curl: option ---: is unknown</code></pre>
-<figcaption><b>Hình 20</b> Cùng một dòng lệnh, chạy nhầm trong <code>cmd.exe</code>.</figcaption>
-</figure>
-
-<p>Chìa khóa nằm ở một dòng mà mắt rất dễ lướt qua: <strong>"Enter the new time"</strong> — "hãy
-nhập giờ mới". Chương trình không hề cố đo thời gian; nó đang hỏi bạn muốn đặt đồng hồ máy tính về
-mấy giờ.</p>
-
-<div class="callout warn">
-  <span class="label">Nguyên nhân</span>
-  <p>Trong <code>cmd.exe</code>, <code>time</code> <strong>không phải</strong> lệnh đo thời gian. Nó là
-  một lệnh có sẵn của <code>cmd</code> dùng để <strong>xem và đặt lại đồng hồ hệ thống</strong>.</p>
-  <p>Chuỗi sự kiện diễn ra như sau: <code>time</code> nhận phần <code>curl …</code> làm giờ mới <i class="ic ic-r" role="img" aria-label="sang"></i>
-  không hợp lệ ("cannot accept the time entered") <i class="ic ic-r" role="img" aria-label="sang"></i> hỏi lại <i class="ic ic-r" role="img" aria-label="sang"></i> người gõ lệnh nhập <code>2</code> <i class="ic ic-r" role="img" aria-label="sang"></i> việc
-  đổi giờ hệ thống đòi quyền Administrator, nên Windows báo "A required privilege is not held by the
-  client".</p>
-  <p>Và <code>;</code> trong <code>cmd.exe</code> cũng không phải dấu tách lệnh (ở đó dấu tách lệnh là
-  <code>&amp;</code>) — nên ở lần chạy thứ hai, <code>; echo "---"</code> bị chuyển nguyên cho
-  <code>curl</code> làm tham số, và <code>curl</code> than rằng nó không biết tùy chọn <code>---</code>.</p>
-</div>
-
-<div class="callout ok">
-  <span class="label">Bài học thật sự — ghim lại</span>
-  <p><strong><code>cmd</code>, <code>PowerShell</code>, <code>bash</code> là BA NGÔN NGỮ KHÁC NHAU.</strong></p>
-  <p>Cùng một chữ <code>time</code> mang nghĩa hoàn toàn khác. Cùng dấu <code>;</code> hành xử hoàn
-  toàn khác. Shell không phải một "cửa sổ gõ lệnh" trung lập; nó là một trình thông dịch có cú pháp
-  riêng, và dòng lệnh bạn gõ được hiểu theo cú pháp của shell đang chạy.</p>
-  <p>Đây không phải chuyện vặt: một script chạy được trên máy này có thể gãy trên máy khác chỉ vì máy
-  đó dùng <strong>shell khác</strong> — gặp lại ở <a href="../02-phong-lab-wsl-docker/">Bài 02</a>.</p>
-</div>
-
-</section>
-
-<!-- ================================================================== -->
-<section class="tab" id="t-tong-ket" data-tab="Tổng kết" data-note="đọc cuối cùng">
-
-<h2 id="tong-ket">Những chỗ lệch dạy được gì</h2>
-
-<p>Nếu gom mọi chỗ output thật lệch khỏi tài liệu mẫu vào một bảng, ta thấy chúng không phải những
-tai nạn rời rạc. Mỗi chỗ lệch chỉ về một tầng cụ thể của hệ thống — thư viện mã hóa, hệ điều hành,
-shell, cơ chế cấp địa chỉ, hạ tầng của bên thứ ba — và mỗi tầng đó đều là thứ mà người làm vận hành
-phải biết là nó tồn tại, dù chưa cần biết tường tận.</p>
-
-<div class="table-scroll">
-<table>
-  <caption><b>Bảng 6</b> Chỗ lệch so với tài liệu mẫu, và bài học rút ra.</caption>
-  <thead><tr><th>Chỗ lệch so với tài liệu mẫu</th><th>Tầng gây ra</th><th>Bài học</th></tr></thead>
-  <tbody>
-    <tr><td>Không thấy dòng chứng chỉ trong <code>curl -v</code></td><td>Thư viện TLS</td><td>Cùng tên lệnh, khác thư viện mã hóa bên dưới <i class="ic ic-r" role="img" aria-label="sang"></i> khác output</td></tr>
-    <tr><td><code>refused</code> mất 2 giây chứ không tức thì</td><td>Hệ điều hành</td><td>Hành vi mạng phụ thuộc hệ điều hành; dùng <em>ai quyết định dừng</em> làm phép thử thay vì tốc độ</td></tr>
-    <tr><td><code>time</code> không chạy</td><td>Shell</td><td>cmd / PowerShell / bash là ba ngôn ngữ khác nhau</td></tr>
-    <tr><td>IP máy đã đổi giữa hai lần đo</td><td>DHCP</td><td>IP nội bộ không cố định — dùng tên, không ghi cứng số</td></tr>
-    <tr><td><code>example.com</code> trả lời bởi Cloudflare</td><td>Hạ tầng bên thứ ba</td><td>Reverse proxy và CDN có mặt khắp nơi, kể cả ở nơi bạn không ngờ</td></tr>
-    <tr><td>Một tên trả về bốn địa chỉ</td><td>DNS</td><td>Một tên có thể trỏ tới nhiều máy — dự phòng từ trước cả gói tin đầu tiên</td></tr>
-    <tr><td>Issuer mang tên Cloudflare nhưng thuộc tổ chức khác</td><td>Cách đọc</td><td>Đọc từng trường một, đừng suy ra cả dòng từ cái tên nổi bật nhất</td></tr>
-  </tbody>
-</table>
-</div>
-
-<p>Có một mạch chung chạy qua cả bảng: mỗi lần output lệch, câu hỏi đúng không phải là "làm sao cho
-nó giống tài liệu", mà là "tầng nào đã khiến nó khác". Câu hỏi thứ nhất dẫn tới việc sao chép lệnh
-cho tới khi output trông quen mắt; câu hỏi thứ hai dẫn tới việc hiểu hệ thống. Chỉ câu hỏi thứ hai mới
-giúp được bạn vào lúc 9 giờ tối, khi output trên server production cũng không giống bất kỳ tài liệu
-nào.</p>
-
-<div class="callout ok">
-  <span class="label">Điều đáng mang theo nhất</span>
-  <p>Không có buổi lab nào chạy đúng y như tài liệu. <strong>Kỹ năng thật không phải là làm cho output
-  giống tài liệu — mà là giải thích được vì sao nó khác.</strong></p>
-</div>
+<p>Có một mạch chung chạy qua cả bảng: mỗi lần output lệch, câu hỏi đúng không phải là "làm sao cho nó
+giống tài liệu", mà là "chặng nào đã khiến nó khác". Câu hỏi thứ nhất dẫn tới việc chép lệnh cho tới khi
+output trông quen mắt; câu hỏi thứ hai dẫn tới việc hiểu hệ thống, và chỉ câu hỏi thứ hai mới giúp được
+khi output trên một server thật không giống bất kỳ tài liệu nào.</p>
 
 <h2 id="tu-kiem-tra-output">Tự kiểm tra</h2>
 
-<p>Bấm vào từng dòng khi tự tin giải thích được mà không nhìn lại trang này.</p>
-
 <ul class="check">
-  <li>Giải thích được vì sao <code>nslookup</code> in <code>Non-authoritative answer</code>, và điều đó liên quan gì tới việc "đổi DNS phải chờ"</li>
-  <li>Nói được ai là tác giả của dòng NXDOMAIN, và vì sao lúc đó chưa có kết nối TCP nào</li>
-  <li>Đọc được bốn thành phần của một kết nối TCP từ dòng <code>Established connection</code>, và biết port nào do hệ điều hành cấp</li>
-  <li>Giải thích được vì sao cần cả header <code>Host</code> lẫn SNI khi một IP phục vụ nhiều website HTTPS</li>
+  <li>Đọc được hai khối trong output của <code>nslookup</code>: ai trả lời, và trả lời gì</li>
+  <li>Giải thích được vì sao câu trả lời DNS có thể cũ, và TTL liên quan gì tới chuyện đó</li>
+  <li>Nói được ai in ra dòng <code>Non-existent domain</code>, và vì sao lúc đó chưa có kết nối nào</li>
+  <li>Gắn được các dòng <code>*</code>, <code>&gt;</code>, <code>&lt;</code> của <code>curl -v</code> vào đúng chặng</li>
+  <li>Giải thích được vì sao cần header <code>Host</code> khi một địa chỉ IP phục vụ nhiều website</li>
   <li>Đọc được <code>subject</code>, <code>issuer</code>, <code>notAfter</code> của một chứng chỉ bằng <code>openssl</code></li>
-  <li>Phân biệt refused và timeout bằng câu hỏi "ai quyết định dừng", không bằng tốc độ</li>
-  <li>Giải thích được vì sao <code>time</code> và <code>;</code> trong <code>cmd.exe</code> hành xử khác hẳn trong bash</li>
 </ul>
 
 <h2 id="nguon-output">Nguồn đọc thêm</h2>
 
 <ol class="refs">
-  <li>RFC 1034 &amp; RFC 1035 — Domain Names: khái niệm và đặc tả giao thức DNS.
-  <a href="https://www.rfc-editor.org/rfc/rfc1034">rfc-editor.org/rfc/rfc1034</a> ·
-  <a href="https://www.rfc-editor.org/rfc/rfc1035">rfc1035</a></li>
-  <li>RFC 2308 — Negative Caching of DNS Queries.
-  <a href="https://www.rfc-editor.org/rfc/rfc2308">rfc-editor.org/rfc/rfc2308</a></li>
-  <li>RFC 4291 — IP Version 6 Addressing Architecture (dải link-local <code>fe80::/10</code>).
-  <a href="https://www.rfc-editor.org/rfc/rfc4291">rfc-editor.org/rfc/rfc4291</a></li>
-  <li>RFC 1918 — Address Allocation for Private Internets.
-  <a href="https://www.rfc-editor.org/rfc/rfc1918">rfc-editor.org/rfc/rfc1918</a></li>
-  <li>RFC 8305 — Happy Eyeballs Version 2.
+  <li>RFC 1034 và RFC 1035 — <em>Domain Names</em>: khái niệm và giao thức DNS.
+  <a href="https://www.rfc-editor.org/rfc/rfc1034">rfc-editor.org/rfc/rfc1034</a></li>
+  <li>IANA — danh sách root server.
+  <a href="https://www.iana.org/domains/root/servers">iana.org/domains/root/servers</a></li>
+  <li>RFC 8305 — <em>Happy Eyeballs Version 2</em>.
   <a href="https://www.rfc-editor.org/rfc/rfc8305">rfc-editor.org/rfc/rfc8305</a></li>
-  <li>RFC 7301 — TLS Application-Layer Protocol Negotiation (ALPN).
-  <a href="https://www.rfc-editor.org/rfc/rfc7301">rfc-editor.org/rfc/rfc7301</a></li>
-  <li>RFC 6066 — TLS Extensions, mục Server Name Indication.
+  <li>RFC 6066 — <em>TLS Extensions</em>, mục Server Name Indication.
   <a href="https://www.rfc-editor.org/rfc/rfc6066">rfc-editor.org/rfc/rfc6066</a></li>
-  <li>RFC 9110 — HTTP Semantics; RFC 9111 — HTTP Caching.
-  <a href="https://www.rfc-editor.org/rfc/rfc9110">rfc-editor.org/rfc/rfc9110</a> ·
-  <a href="https://www.rfc-editor.org/rfc/rfc9111">rfc9111</a></li>
-  <li>RFC 9293 — Transmission Control Protocol (TCP).
-  <a href="https://www.rfc-editor.org/rfc/rfc9293">rfc-editor.org/rfc/rfc9293</a></li>
-  <li>RFC 6335 — quy trình quản lý số hiệu port, gồm khoảng port động 49152–65535.
-  <a href="https://www.rfc-editor.org/rfc/rfc6335">rfc-editor.org/rfc/rfc6335</a></li>
-  <li>RFC 2131 — Dynamic Host Configuration Protocol.
-  <a href="https://www.rfc-editor.org/rfc/rfc2131">rfc-editor.org/rfc/rfc2131</a></li>
-  <li>RFC 5280 — Internet X.509 Public Key Infrastructure Certificate Profile.
-  <a href="https://www.rfc-editor.org/rfc/rfc5280">rfc-editor.org/rfc/rfc5280</a></li>
-  <li>curl — trang hướng dẫn chính thức và danh sách mã lỗi libcurl.
-  <a href="https://curl.se/docs/manpage.html">curl.se/docs/manpage.html</a> ·
-  <a href="https://curl.se/libcurl/c/libcurl-errors.html">libcurl-errors</a></li>
-  <li>GNU Bash Reference Manual — mục Pipelines mô tả từ khóa <code>time</code>.
-  <a href="https://www.gnu.org/software/bash/manual/bash.html">gnu.org/software/bash/manual</a></li>
+  <li>RFC 7301 — <em>TLS Application-Layer Protocol Negotiation</em> (ALPN).
+  <a href="https://www.rfc-editor.org/rfc/rfc7301">rfc-editor.org/rfc/rfc7301</a></li>
+  <li>RFC 9110 — <em>HTTP Semantics</em>; RFC 9111 — <em>HTTP Caching</em> (header <code>Age</code>).
+  <a href="https://www.rfc-editor.org/rfc/rfc9111">rfc-editor.org/rfc/rfc9111</a></li>
+  <li>curl — trang hướng dẫn chính thức.
+  <a href="https://curl.se/docs/manpage.html">curl.se/docs/manpage.html</a></li>
+  <li>OpenSSL — tài liệu lệnh <code>s_client</code>.
+  <a href="https://docs.openssl.org/master/man1/openssl-s_client/">docs.openssl.org/master/man1/openssl-s_client</a></li>
 </ol>
-
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
-<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang. Ảnh chụp màn hình do người viết tự chụp; các khung màu là phần đánh dấu thêm vào.</p>
+<p class="photo-credits-note">Cả hai ảnh là ảnh chụp màn hình do người viết tự chụp.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b>Trang example.com — chụp màn hình <a href="https://example.com/">example.com</a>, 30/09/2026.</li>
-  <li><b>Ảnh 2</b>Sổ Certificate Transparency của example.com — chụp màn hình <a href="https://crt.sh/?q=example.com">crt.sh</a>, 30/09/2026; đã ẩn hai cột Common Name, Matching Identities và các dòng sau dòng thứ 7.</li>
+  <li><b>Ảnh 1</b>Danh sách root server — chụp màn hình <a href="https://www.iana.org/domains/root/servers">iana.org</a>, 03/10/2026.</li>
+  <li><b>Ảnh 2</b>Trang example.com — chụp màn hình <a href="https://example.com/">example.com</a>, 30/09/2026.</li>
 </ol>
+
 </section>
 
 </main>
@@ -931,15 +492,15 @@ nào.</p>
     <span class="dir">Quay lại</span>
     <span class="t">Bài giảng 00</span>
   </a>
-  <a class="next" href="ipv4-vs-ipv6.html">
-    <span class="dir">Đọc tiếp</span>
-    <span class="t">Phụ lục · IPv4, IPv6 và NAT</span>
+  <a class="next" href="../01-ip-port-listen-firewall/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">01 · IP, port, listen, firewall</span>
   </a>
 </nav>
 
 <footer class="page">
-  <p>Bài 00 · Lab · Mổ băng output thật · DevOps Self-Learning</p>
-  <p>Output ghi ngày 24/09/2026 trên Windows 11 + Git Bash. IP LAN trong trang là của buổi học đó và đã thay đổi.</p>
+  <p>Bài 00 · Trang phụ · Mổ băng output thật · DevOps Self-Learning</p>
+  <p>Output ghi ngày 24/09/2026 trên Windows 11 và Git Bash. Địa chỉ mạng nội bộ trong trang là của buổi học đó.</p>
 </footer>
 
 </div>

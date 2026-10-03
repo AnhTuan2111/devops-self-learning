@@ -60,6 +60,12 @@ const POSTER_MAX = 11;
 const longest = Math.max(...curriculum.modules.map((m) => m.lessons.length));
 if (longest > POSTER_MAX) console.warn(`CẢNH BÁO  có module ${longest} bài > ${POSTER_MAX}: sửa số ${POSTER_MAX} trong .poster ở assets/style.css`);
 
+// Chuỗi câu hỏi: mỗi bài trả lời một câu hỏi (question) và dẫn tới một đáp án cụ thể (answer);
+// câu hỏi của bài sau phải sinh ra từ đáp án của bài trước. Thiếu là dừng.
+for (const l of allLessons) {
+  if (!l.question || !l.answer) throw new Error(`Bài ${l.id}: thiếu question hoặc answer trong curriculum.json`);
+}
+
 const statusOf = (id) => progress.lessons?.[id]?.status ?? 'todo';
 const dateOf = (id) => progress.lessons?.[id]?.date ?? null;
 const dirOf = (l) => `lessons/${l.id}-${l.slug}`;
@@ -142,7 +148,7 @@ const modulesHtml = moduleStats
       .map((l) => {
         const st = statusOf(l.id);
         const d = dateOf(l.id);
-        const sub = `${esc(l.goal)} · ${hrs(l)}${d ? ` · học ${viDate(d)}` : ''}`;
+        const sub = `${esc(l.question)} · ${hrs(l)}${d ? ` · học ${viDate(d)}` : ''}`;
         return `        <a class="lesson ${st}" href="${dirOf(l)}/">
           <span class="num">${l.id}</span>
           <span class="txt">
@@ -354,14 +360,14 @@ const readmeModules = curriculum.modules
       .map((l) => {
         const st = statusOf(l.id);
         const d = dateOf(l.id);
-        return `| ${STATUS_MARK[st]} | \`${l.id}\` | [${l.title}](${dirOf(l)}/) | ${l.goal} | ${hrs(l)} | ${d ? viDate(d) : '—'} |`;
+        return `| ${STATUS_MARK[st]} | \`${l.id}\` | [${l.title}](${dirOf(l)}/) | ${l.question} | ${hrs(l)} | ${d ? viDate(d) : '—'} |`;
       })
       .join('\n');
     return `### ${m.id} · ${m.title}
 
 > ${m.why}
 
-| | # | Bài | Mục tiêu | Ước lượng | Đã học |
+| | # | Bài | Câu hỏi của bài | Ước lượng | Đã học |
 |---|---|---|---|---|---|
 ${rows}`;
   })
@@ -481,7 +487,7 @@ function stubHtml(l, prev, next) {
 <header class="hero">
   <p class="eyebrow">Module ${l.moduleId.slice(1)} · Bài ${l.id}</p>
   <h1>${esc(t1)}${t2 ? ` <span class="hl">${esc(t2)}</span>` : ''}</h1>
-  <p class="lede">${esc(l.goal)}</p>
+  <p class="lede">${esc(l.question)}</p>
   <div class="meta">
     <span class="chip ${STATUS_CHIP[st]}">${STATUS_LABEL[st]}</span>
     <span class="chip">${hrs(l)}</span>
@@ -497,16 +503,19 @@ function stubHtml(l, prev, next) {
     <p>${
       st === 'done'
         ? 'Bài này đã học xong nhưng chưa được viết lại đầy đủ.'
-        : 'Bài này chưa học. Trang mới có khung: mục tiêu, khái niệm, lab và tự kiểm tra.'
+        : 'Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.'
     }</p>
   </div>
-
-  <h2 id="muc-tieu">Mục tiêu</h2>
-  <p>${esc(l.goal)}</p>
-
-  <h2 id="vi-tri">Vì sao bài này nằm ở ${esc(l.moduleId)}</h2>
-  <p>${esc(mod.why)}</p>
-${(l.needs ?? []).length ? `
+${prev ? `
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../${prev.id}-${prev.slug}/">Bài ${prev.id}</a> kết luận: ${esc(prev.answer)}</p>
+` : ''}
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>${esc(l.answer)}</p>
+${next ? `
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>${esc(next.question)} <a href="../${next.id}-${next.slug}/">Bài ${next.id}</a> trả lời câu này.</p>
+` : ''}${(l.needs ?? []).length ? `
   <h2 id="can-hoc-truoc">Cần đã học trước</h2>
   <p>Bài này dùng lại kiến thức của:</p>
   <ul>
@@ -596,10 +605,22 @@ ${glyphImg(l.id)}
 > **Module ${l.moduleId}** · ${l.moduleTitle}
 ${stubMetaLine(l)}
 
-## Mục tiêu
+${allLessons[i - 1] ? `## Từ bài trước
 
-${l.goal}
-${(l.needs ?? []).length ? `
+[Bài ${allLessons[i - 1].id}](../${allLessons[i - 1].id}-${allLessons[i - 1].slug}/) kết luận: ${allLessons[i - 1].answer}
+
+` : ''}## Câu hỏi của bài
+
+**${l.question}**
+
+## Bài này dẫn tới
+
+${l.answer}
+${allLessons[i + 1] ? `
+## Câu hỏi cho bài sau
+
+${allLessons[i + 1].question} [Bài ${allLessons[i + 1].id}](../${allLessons[i + 1].id}-${allLessons[i + 1].slug}/) trả lời câu này.
+` : ''}${(l.needs ?? []).length ? `
 ## Cần đã học trước
 
 ${l.needs.map((n) => `- [Bài ${n} · ${lessonById[n].title}](../${n}-${lessonById[n].slug}/)`).join('\n')}

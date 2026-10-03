@@ -1,0 +1,106 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 40 — Tổng kết: tự dựng lại toàn bộ</title>
+<meta name="description" content="Chứng minh đã đạt đích đến: một service đi từ git push lên cụm, có probe, cấu hình, HTTPS, dashboard và cảnh báo, và tự giải thích được mọi mũi tên trong kiến trúc.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="40">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-40</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M5">Module 5</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 5 · Bài 40</p>
+  <h1>Tổng kết: <span class="hl">tự dựng lại toàn bộ</span></h1>
+  <p class="lede">Đã đi qua từng mảnh. Bạn có tự dựng lại được toàn bộ hệ thống từ một repo trống, và giải thích được từng mũi tên trong đó không?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">5–8 giờ</span>
+    <span class="chip">Rancher và vận hành</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 40">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../39-xu-ly-su-co/">Bài 39</a> kết luận: Chẩn đoán theo chặng của bản đồ chín chặng, làm theo runbook, khôi phục dịch vụ trước rồi mới tìm nguyên nhân, và viết postmortem không đổ lỗi.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Dựng lại toàn bộ và trình bày kiến trúc của chính mình, kèm những điểm yếu còn lại và hướng học tiếp.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../36-deploy-len-cum-tu-gitlab/">Bài 36 · Deploy lên cụm từ GitLab, và GitOps</a></li>
+    <li><a href="../39-xu-ly-su-co/">Bài 39 · Xử lý sự cố: quy trình khi mọi thứ đang cháy</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Dựng lại toàn bộ từ một repo trống</li>
+    <li>Vẽ kiến trúc đầu cuối</li>
+    <li>Tự kiểm bảo mật và chi phí</li>
+    <li>Những điểm yếu còn lại</li>
+    <li>Học tiếp gì sau khoá này</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Từ một repo trống, dựng lại toàn bộ: Dockerfile, pipeline GitLab, Helm chart, Ingress có HTTPS, dashboard, cảnh báo. Rồi tự thuyết trình 15 phút về kiến trúc đó mà không nhìn tài liệu.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="3 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Dựng lại được toàn bộ hệ thống mà không chép từ bài cũ</li>
+    <li>Giải thích được từng mũi tên trong sơ đồ kiến trúc của mình</li>
+    <li>Chỉ ra được ba điểm yếu còn lại và cách xử lý</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../39-xu-ly-su-co/">
+    <span class="dir">Bài trước</span>
+    <span class="t">39 · Xử lý sự cố</span>
+  </a>
+  <a class="next" href="../../">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">Mục lục</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 40 · Module M5 — Rancher và vận hành — Quản lý cụm, theo dõi, xử lý sự cố · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

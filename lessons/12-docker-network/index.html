@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 12 — Docker network: container gọi nhau bằng tên</title>
+<meta name="description" content="Hiểu vì sao trong Docker bạn viết jdbc:postgresql://db:5432 thay vì localhost, và sửa được khi hai container không thấy nhau.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="12">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-12</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M1">Module 1</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 1 · Bài 12</p>
+  <h1>Docker network: <span class="hl">container gọi nhau bằng tên</span></h1>
+  <p class="lede">App và PostgreSQL giờ là hai container. Vì sao app gọi localhost:5432 thì bị từ chối, và hai container gọi nhau bằng cách nào?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">3–5 giờ</span>
+    <span class="chip">Docker</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 12">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../11-volume-va-du-lieu/">Bài 11</a> kết luận: Trong volume hoặc bind mount, nằm ngoài filesystem tạm thời của container. Và một bản backup chỉ có giá trị khi đã khôi phục thử thành công.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Mỗi container có localhost của riêng nó. Đặt chúng vào chung một network tự tạo thì Docker cung cấp DNS nội bộ, và chúng gọi nhau bằng tên, như db:5432.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Mỗi lần dựng lại phải gõ tay hai container, một network, một volume và cả đống tham số. Làm sao dựng lại cả hệ thống bằng một lệnh? <a href="../13-docker-compose/">Bài 13</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../06-port-va-publish/">Bài 06 · Gọi được app trong container: port và listen address</a></li>
+    <li><a href="../11-volume-va-du-lieu/">Bài 11 · Dữ liệu: volume, PostgreSQL và backup</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>localhost bên trong container là chính container đó</li>
+    <li>Bridge network và network tự tạo</li>
+    <li>DNS nội bộ của Docker: gọi nhau bằng tên (nối DNS ở Bài 00)</li>
+    <li>Chỉ publish những cổng cần lộ ra ngoài</li>
+    <li>host.docker.internal</li>
+    <li>ping và nslookup từ trong container</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Cho Spring Boot và PostgreSQL vào chung một network và nối bằng tên. Cố tình để app dùng localhost:5432 để gặp &quot;Connection refused&quot;, rồi sửa. Tách hai container ra hai network để thấy tên không còn phân giải được.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Giải thích được vì sao localhost trong container không trỏ tới máy bạn</li>
+    <li>Nối được hai container bằng tên</li>
+    <li>Chẩn đoán được lỗi &quot;Unknown host&quot; và &quot;Connection refused&quot; giữa hai container</li>
+    <li>Biết cổng nào cần publish và cổng nào nên giấu</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../11-volume-va-du-lieu/">
+    <span class="dir">Bài trước</span>
+    <span class="t">11 · Dữ liệu</span>
+  </a>
+  <a class="next" href="../13-docker-compose/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">13 · Docker Compose</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 12 · Module M1 — Docker — Đóng gói và chạy ứng dụng · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

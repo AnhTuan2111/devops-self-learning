@@ -1,464 +1,205 @@
-# Bài 00 — Bản đồ toàn cảnh: một request đi từ browser tới code của bạn
+# Bài 00 — Bản đồ toàn cảnh: một request đi qua chín chặng
 
 <img src="../../assets/readme/glyph/00.svg" width="132" align="right" alt="Ấn ký của Bài 00">
 
 > **Module M0** · Nền tảng tối thiểu — Request, process và phòng lab
-> Học ngày **21–24/09/2026** · 5 lab
+> Học ngày **21–24/09/2026** · 3 lab · 3–5 giờ học
 
-## Ba trang tài liệu của bài này
+## Câu hỏi của bài
+
+**Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi qua những
+chặng nào, và chặng nào thật sự là code của bạn?**
+
+Bài chia câu hỏi thành ba câu nhỏ: một URL nói gì; request đi qua những chặng nào; chặng nào là code
+của bạn.
 
 | Trang | Nội dung |
 |---|---|
-| **[index.html](index.html)** | Bài giảng chính — bốn khái niệm nền, 9 chặng, bảng triệu chứng, chứng chỉ TLS |
-| **[phan-tich-output.html](phan-tich-output.html)** | Mổ băng output thật từng dòng — `nslookup`, `curl -v`, `openssl` |
-| **[ipv4-vs-ipv6.html](ipv4-vs-ipv6.html)** | Phụ lục — vì sao IP cạn kiệt, NAT, và vì sao server không đặt ở nhà được |
+| **[index.html](index.html)** | Bài giảng chính: URL, bản đồ chín chặng, từng chặng trên máy người dùng và trên server, lab |
+| **[phan-tich-output.html](phan-tich-output.html)** | Mổ băng output thật của ba lab, từng dòng một |
 
-File này là **vở bài tập** (workbook) của bài. Nó không giảng lại từ đầu — phần giải thích
-vì sao, kèm sơ đồ và ví dụ đầy đủ, nằm trong `index.html`. Ở đây chỉ giữ lại những gì cần
-có trong tay khi tự làm lab và tự chấm: các mô hình đã chốt, bảng tra để dò lỗi, các bước
-lab kèm lý do và kết quả kỳ vọng, và danh sách tự kiểm tra. Nên đọc `index.html` trước một
-lượt, rồi mở file này bên cạnh terminal.
+File này là **vở bài tập**: nó không giảng lại, chỉ giữ những gì cần có trong tay khi tự làm lab và tự
+chấm. Phần giải thích vì sao, kèm sơ đồ, nằm trong `index.html`; nên đọc trang đó trước một lượt.
 
 ---
 
 ## Thuật ngữ
 
-Bảng này định nghĩa những từ sẽ xuất hiện liên tục từ đây tới cuối lộ trình. Mỗi định nghĩa
-cố ý ngắn một câu; phiên bản đầy đủ nằm trong bài giảng.
+Mỗi định nghĩa cố ý ngắn một câu; bản đầy đủ nằm trong bài giảng.
 
 | Thuật ngữ | Tiếng Việt | Định nghĩa một câu |
 |---|---|---|
-| URL | địa chỉ tài nguyên | Chuỗi gồm năm phần `scheme://host:port/path?query`, trong đó chỉ `path` và `query` là thứ ứng dụng của bạn đọc. |
-| Packet | gói tin | Mẩu dữ liệu nhỏ mà mạng chuyển đi; phần đầu ghi địa chỉ nơi gửi và nơi nhận. |
-| DNS | hệ thống tên miền | Hệ thống phân tán dịch một cái **tên** (`github.com`) thành một **địa chỉ IP** mà máy tính gửi gói tin tới được. |
-| IP address | địa chỉ IP | Địa chỉ của **một cửa ngõ mạng** (network interface) của máy, không phải của cả cái máy. |
-| Port | cổng | Con số 0–65535 chỉ "phòng" bên trong một cửa ngõ; một kết nối luôn nhắm tới cặp IP + port. |
-| Listen | lắng nghe | Việc một process xin hệ điều hành giữ một port để nhận kết nối, kèm lựa chọn nhận từ cửa ngõ nào. |
-| Loopback | địa chỉ vòng lặp | Card mạng ảo `127.0.0.1` — gói tin gửi tới đây không bao giờ rời khỏi máy. |
-| Firewall | tường lửa | Bộ lọc đứng ở cửa ngõ, quyết định gói tin nào được đi vào (hoặc ra). |
-| TCP | giao thức điều khiển truyền | Giao thức mở một "đường ống" tin cậy giữa hai đầu trước khi gửi dữ liệu. |
-| TLS | bảo mật tầng truyền tải | Lớp nằm trên TCP, vừa **chứng minh danh tính** máy chủ vừa **mã hóa** dữ liệu; `https` = HTTP chạy trên TLS. |
-| Certificate | chứng chỉ | "Tấm căn cước" công khai của một tên miền, được một CA ký bảo lãnh. |
-| CA | tổ chức cấp chứng chỉ | Bên thứ ba mà trình duyệt tin sẵn, có quyền ký chứng chỉ (Let's Encrypt, DigiCert…). |
-| Private key | khóa bí mật | File bí mật trên server, thứ duy nhất chứng minh tấm căn cước kia đúng là của bạn. |
-| Reverse proxy | proxy ngược | Máy chủ đứng trước ứng dụng, nhận request thay nó rồi chuyển vào trong — ở lộ trình này là Nginx (Bài 17). |
-| `refused` / `timeout` | bị từ chối / hết giờ chờ | Hai cách một kết nối thất bại **trước khi** có bất kỳ câu trả lời HTTP nào; nghĩa của chúng khác hẳn nhau. |
+| Request | yêu cầu | Thông điệp client gửi đi để xin một thứ gì đó, ví dụ `GET /users/42`. |
+| Client / Server | máy khách / máy chủ | Client gửi request và chờ trả lời (trình duyệt, `curl`); server nhận request và trả lời. |
+| Hạ tầng | infrastructure | Mọi thứ nằm giữa người dùng và code của bạn: mạng, máy chủ, các chương trình chạy trước hoặc sau ứng dụng. |
+| URL | địa chỉ tài nguyên | Chuỗi gồm năm phần `scheme://host:port/path?query`. |
+| Địa chỉ IP | IP address | Con số định danh một máy trên mạng (chính xác hơn: một giao diện mạng của máy, học ở Bài 01). |
+| DNS | hệ thống tên miền | Hệ thống máy chủ trải khắp thế giới, dịch tên miền thành địa chỉ IP. |
+| Gói tin | packet | Mẩu dữ liệu nhỏ mà mạng chuyển đi; phần đầu ghi địa chỉ nơi gửi và nơi nhận. |
+| Router | bộ định tuyến | Thiết bị nối các mạng với nhau, chuyển gói tin sang mạng gần đích hơn. |
+| TCP | | Giao thức mở một kết nối tin cậy giữa hai máy trước khi gửi dữ liệu. |
+| TLS | | Lớp bảo mật vừa chứng minh danh tính server vừa mã hoá dữ liệu; `https` là HTTP chạy trên TLS. |
+| Chứng chỉ | certificate | Tài liệu điện tử ghi rằng nó thuộc về tên miền nào, hiệu lực tới khi nào, do một CA ký. |
+| CA | tổ chức cấp chứng chỉ | Tổ chức mà trình duyệt và hệ điều hành đã tin sẵn, có quyền ký chứng chỉ. |
+| HTTP, header | | Quy ước viết request và response; header là các dòng `Tên: giá trị` đi kèm. |
+| Firewall | tường lửa | Bộ lọc quyết định gói tin nào được đi vào server. |
+| Reverse proxy | | Chương trình đứng trước ứng dụng, nhận request thay nó rồi chuyển vào trong; ở lộ trình này là Nginx. |
 
 ---
 
-## Bốn khái niệm nền: địa chỉ IP, port, listen, firewall
-
-Bốn khái niệm này rất dễ bị gộp làm một trong đầu người mới, và phần lớn nhầm lẫn về mạng đều
-bắt nguồn từ việc gộp đó. Thực ra chúng là bốn thứ riêng biệt, hỏng theo bốn kiểu
-khác nhau và cho ra bốn triệu chứng khác nhau — định nghĩa chính xác của từng cái nằm ở bảng
-thuật ngữ phía trên.
-
-### Ẩn dụ hỗ trợ ghi nhớ: một tòa nhà
-
-Bốn định nghĩa kia chính xác nhưng trừu tượng. Phép so sánh dưới đây **không phải định nghĩa**,
-nó chỉ giúp giữ bốn vai tách bạch trong trí nhớ:
+## Năm phần của một URL
 
 ```
-IP address          =  địa chỉ của MỘT CỬA NGÕ vào tòa nhà
-port                =  số PHÒNG bên trong tòa nhà
-process đang listen =  có NGƯỜI ngồi trong phòng đó — và người đó
-                       tự chọn sẽ tiếp khách đến từ cửa ngõ NÀO
-firewall            =  BẢO VỆ đứng ở cửa ngõ, lọc ai được vào
+https://api.example.com:443/users/42?active=true
+└─┬─┘   └──────┬───────┘ └┬┘└───┬──┘└─────┬────┘
+scheme       host       port  path      query
 ```
 
-> **Giới hạn của ẩn dụ.** Chữ "phòng" gợi ý port là một không gian vật lý có sẵn. Thực tế không
-> có cái phòng nào cả: port chỉ là một con số 16 bit trong phần đầu gói tin, và hệ điều hành
-> dùng con số đó tra một bảng xem nên giao gói cho process nào. Khi ẩn dụ và định nghĩa mâu
-> thuẫn, **định nghĩa thắng**.
-
-Hệ quả quan trọng nhất là câu sau, cần thuộc lòng:
-
-> **Một địa chỉ IP không định danh một MÁY. Nó định danh một CỬA NGÕ MẠNG của máy đó.**
-
-Một chiếc laptop bình thường đang có ít nhất ba cửa ngõ cùng lúc. Chúng cùng dẫn vào một
-máy, nhưng không thay thế được cho nhau, bởi vì mỗi cửa mở ra một hướng khác:
-
-```
-127.0.0.1       →  cửa hông, chỉ mở vào bên trong nhà
-192.168.10.38   →  cửa chính, mở ra mạng WiFi       (router cấp — CÓ THỂ ĐỔI)
-10.8.0.2        →  cửa sau, mở ra mạng nội bộ qua VPN
-```
-
-Từ đó suy ra vì sao gửi link `localhost:8080` cho đồng nghiệp là vô ích: trên máy họ,
-`localhost` được dịch thành cửa hông của **chính máy họ**, nên request không bao giờ rời
-khỏi bàn của họ.
-
-> `localhost` không phải một địa điểm. Nó là một **từ tương đối** — giống chữ *"ở đây"*.
+- **scheme, host, port** là việc của hạ tầng: mã hoá hay không, đi tới máy nào, chương trình nào nhận.
+- **path, query** là việc của code bạn: `@GetMapping` khớp path, `@RequestParam` đọc query.
+- Không ghi port thì client tự điền: `http` dùng 80, `https` dùng 443.
 
 ---
 
-## Bản đồ 9 chặng
-
-Khi đưa mô hình tòa nhà từ mạng LAN lên Internet thật, đường đi của một request mọc thêm
-bốn thứ: DNS (vì người dùng chỉ biết tên), TLS (vì phải mã hóa và chứng minh danh tính),
-firewall (vì cửa ngõ giờ phơi ra Internet), và Nginx (vì phải có ai gỡ mã hóa và phân luồng).
-Ghép lại, ta được chín chặng nối tiếp nhau:
+## Bản đồ chín chặng
 
 ```
-1 Trình duyệt tách URL
-2 DNS          tên miền  →  IP
-3 TCP          mở kết nối tới IP:443
-4 TLS          bắt tay, kiểm chứng chỉ, mã hóa
-5 HTTP         gửi GET /users/42 + headers
-       ~~~ INTERNET ~~~
-6 FIREWALL     port 443 có mở không
-7 NGINX        gỡ TLS → đọc Host → đẩy vào app     [cửa CHÍNH]
-8 SPRING BOOT  :8080   định tuyến, chạy logic      [cửa HÔNG]
-9 POSTGRESQL   :5432   truy vấn dữ liệu            [cửa HÔNG]
+  ┌─────────────────── MÁY NGƯỜI DÙNG ──────────────────────┐
+  │  1 TRÌNH DUYỆT   tách URL: scheme, host, port, path     │
+  │  2 DNS           hỏi "api.example.com là địa chỉ nào?"  │
+  │                  được trả lời: 203.0.113.10             │
+  │  3 TCP           mở kết nối tới 203.0.113.10, port 443  │
+  │  4 TLS           kiểm tra chứng chỉ, bật mã hoá         │
+  │  5 HTTP          gửi "GET /users/42" kèm các header     │
+  └───────────────────────────┬─────────────────────────────┘
+                              │
+                     ~~~ INTERNET ~~~
+                              │
+  ┌──────────── SERVER (một máy chạy suốt ngày đêm) ────────┐
+  │  6 FIREWALL      dữ liệu tới port 443 có được vào?      │
+  │  7 NGINX         nhận ở port 443, gỡ mã hoá, đọc Host,  │
+  │                  chuyển request vào ứng dụng            │
+  │  8 SPRING BOOT   nhận ở port 8080, chạy code của bạn    │
+  │  9 POSTGRESQL    nhận ở port 5432, đọc và ghi dữ liệu   │
+  └─────────────────────────────────────────────────────────┘
 ```
 
-**Chín chặng. Chỉ chặng 8 là code bạn viết.** Tám chặng còn lại là hạ tầng, và do đó khi
-"web không vào được" mà code không đổi dòng nào, xác suất lỗi nằm ở tám chặng kia lớn hơn
-rất nhiều. Đó chính là lý do nghề DevOps tồn tại.
+**Chín chặng. Chỉ chặng 8 là code bạn viết.** Tám chặng còn lại là hạ tầng, nên khi web hỏng mà code
+không đổi, hãy nghi tám chặng kia trước.
 
-Bản đồ này còn cho thấy một điều thú vị: cùng một cấu hình có thể là lỗi ở chỗ này và là
-tính năng ở chỗ khác.
-
-> Việc app *chỉ listen ở `127.0.0.1`* là **bug** trên máy dev (đồng nghiệp không vào được),
-> nhưng là **feature bảo mật** trên production (chỉ Nginx đứng cùng máy mới gọi vào được).
-> Cùng một cấu hình — bối cảnh quyết định.
-
----
-
-## Bảng tra: triệu chứng, ai viết ra, chặng hỏng
-
-Cột quan trọng nhất của bảng là **"ai viết ra"**. Mỗi thông báo lỗi đều do một thành phần cụ
-thể soạn ra, và biết được tác giả nghĩa là biết request đã đi tới đâu trên bản đồ. Khi gặp sự
-cố, hãy tra theo hàng, rồi bắt đầu nghi ngờ từ cột cuối.
-
-| Người dùng thấy | **Ai viết ra** | Chặng | Nghi ngờ đầu tiên |
-|---|---|---|---|
-| `NXDOMAIN` | Máy **của người dùng** | 2 | Domain chưa trỏ, gõ sai, hết hạn |
-| `Timeout` | **Không ai cả** | 3, 6 | Máy chết, sai IP, firewall nuốt gói tin |
-| `Connection refused` | **Kernel** của server (phần lõi của hệ điều hành — học ở Bài 01) | 3, 7 | Máy sống nhưng phòng trống: Nginx chết |
-| `ERR_CERT_DATE_INVALID` | **Trình duyệt** người dùng | 4 | Cert hết hạn / sai tên miền |
-| **502** Bad Gateway | **Nginx** | 7 tới 8 | App chết, sai port, app chưa khởi động xong |
-| **504** Gateway Timeout | **Nginx** | 7 tới 8 | App sống nhưng quá chậm |
-| **500** Internal Server Error | **Spring Boot** | 8 | Bug code — giờ mới đọc code |
-| **404** Not Found | Nginx *hoặc* Spring Boot | 7, 8 | Sai path / định tuyến nhầm |
-| `pool exhausted` | Spring Boot | 9 | DB chết hoặc quá tải |
-
-### Cặp quan trọng nhất: 502 và 500
-
-Hai mã này trông giống nhau vì đều bắt đầu bằng số 5, nhưng chúng kể hai câu chuyện ngược
-nhau. Với 502, Nginx tự viết trang lỗi vì không gọi được app — nghĩa là code của bạn chưa
-chạy dòng nào, và log ứng dụng sẽ trống trơn. Với 500, app đã nhận request, đã chạy, rồi tự
-ném exception — Nginx chỉ bê hộ trang lỗi đó ra, và log ứng dụng sẽ có một stack trace chờ
-sẵn. Chính sự vắng mặt của log cũng là một bằng chứng.
-
-```
-502  →  ĐỪNG mở code. Code không chạy dòng nào cả.  (log app TRỐNG TRƠN)
-500  →  GIỜ mới mở code. App đã chạy và tự ném exception.  (có stack trace)
-```
-
-### Phân biệt tác giả 404 bằng mắt
-
-Mã 404 có thể đến từ hai tác giả khác nhau, và nhìn vào trang lỗi là đủ phân biệt: trang của
-Nginx luôn "ký tên" phiên bản ở cuối, còn trang của Spring Boot là Whitelabel Error Page
-hoặc một khối JSON.
-
-```
-Nginx:  "404 Not Found / nginx/1.24.0"   ← có KÝ TÊN → lỗi cấu hình
-Spring: "Whitelabel Error Page" / JSON    ← app có nhận → sai route
-```
-
----
-
-## Ba nguyên tắc chẩn đoán
-
-**1. Mọi mã lỗi HTTP đều là một CÂU TRẢ LỜI.** Muốn nhận được `502`, `500` hay `404`, trình
-duyệt phải bắt tay thành công với một ai đó trước đã. Ngược lại, `refused` và `timeout`
-không phải mã HTTP; chúng có nghĩa là chưa có câu trả lời nào cả. Vì vậy chỉ một câu hỏi
-"có thấy con số không?" đã loại được một nửa bản đồ:
-
-```
-Thấy SỐ     →  đã vào được nhà  →  soi NỬA TRONG (7, 8, 9)
-Không thấy  →  còn ngoài cổng   →  soi NỬA NGOÀI (2, 3, 6, 7)
-```
-
-**2. Triệu chứng không chỉ cho biết chặng nào hỏng — nó còn chứng minh mọi chặng TRƯỚC đó đã
-chạy tốt.** Ví dụ, thấy lỗi chứng chỉ nghĩa là DNS đã dịch đúng tên và TCP đã nối được, vì
-nếu không thì request đã dừng ở `NXDOMAIN` hay `timeout` từ trước. Hai chặng bị loại khỏi
-vùng nghi ngờ mà không cần kiểm tra gì.
-
-**3. Sửa một tầng thì triệu chứng ĐỔI, chứ không chắc hết lỗi.** Và triệu chứng mới chính là
-bằng chứng rằng tầng vừa sửa đã đúng. Chẳng hạn, `timeout` đổi thành `refused` sau khi mở
-firewall có nghĩa là gói tin giờ đã tới nơi; thủ phạm còn lại nằm ở chặng sau firewall. Do
-đó người có kinh nghiệm sửa từng tầng một, chứ không sửa năm thứ cùng lúc rồi đoán.
-
-### Phép thử dứt khoát: refused và timeout
-
-Cách phân biệt đáng tin nhất không phải là tốc độ (tốc độ phụ thuộc hệ điều hành, xem Lab
-4), mà là **ai quyết định dừng**. `refused` có điểm kết thúc của riêng nó vì máy bên kia đã
-trả lời "không có ai"; `timeout` thì kéo dài đúng bằng con số ta đặt, vì không có ai trả lời
-và chính ta phải bảo curl thôi chờ.
-
-```
-refused  →  curl dừng vì NHẬN ĐƯỢC CÂU TRẢ LỜI.  Có điểm kết thúc của riêng nó.
-timeout  →  curl dừng vì TA bảo dừng.  Thời lượng là con số BẠN chọn.
-```
-
----
-
-## Chứng chỉ TLS
-
-Chứng chỉ không liên quan gì tới việc gán tên miền với IP — **đó là việc của DNS**. Chứng chỉ
-giải quyết một bài toán khác: khi một máy nói "tôi là api.example.com", lấy gì để tin nó?
-
-Lời giải mà web đang dùng tên là **hạ tầng khóa công khai** (public key infrastructure, PKI).
-Nó chuyển bài toán "làm sao tin một người lạ" thành "làm sao tin một bên thứ ba mà cả hai cùng
-tin", rồi để bên thứ ba đó đứng ra bảo lãnh. Bốn thành phần:
-
-| Thuật ngữ | Là gì |
+| Chặng | Học kỹ ở |
 |---|---|
-| **Certificate** | Tài liệu điện tử định dạng X.509, ghi "khóa công khai này thuộc về tên miền này", có thời hạn, được CA ký |
-| **CA** — Certificate Authority | Tổ chức được trình duyệt tin, có quyền ký chứng chỉ sau khi kiểm tra người xin đang kiểm soát tên miền |
-| **Public key** | Nửa công khai của cặp khóa, nằm ngay trong chứng chỉ |
-| **Private key** | Nửa bí mật, chỉ nằm trên máy chủ — thứ duy nhất chứng minh mình là chủ chứng chỉ |
+| 1 Trình duyệt | bài này |
+| 2 DNS | Bài 20 |
+| 3 TCP | Bài 01 |
+| 4 TLS | Bài 20 |
+| 5 HTTP | Bài 02 |
+| 6 Firewall | Bài 01, Bài 17 |
+| 7 Nginx | Bài 19 |
+| 8 Spring Boot | Bài 03, Bài 08 |
+| 9 PostgreSQL | Bài 11 |
 
-### Ẩn dụ hỗ trợ ghi nhớ: giấy tờ tùy thân
-
-Cấu trúc lòng tin này không phải phát minh của ngành máy tính; xã hội đã dùng nó từ lâu:
-
-| Đời thật | TLS |
-|---|---|
-| Thẻ căn cước | Certificate |
-| Bộ Công an cấp | **CA** (Let's Encrypt, DigiCert…) |
-| Con dấu khó làm giả | Chữ ký số của CA |
-| Bạn tin Bộ Công an | Trình duyệt có sẵn danh sách CA đáng tin |
-
-> **Giới hạn của ẩn dụ.** Căn cước ngoài đời chứng minh *bạn là ai*. Chứng chỉ phổ biến nhất
-> trên web (loại **DV** — Domain Validated) chỉ ghi được mỗi tên miền, và CA cấp nó sau khi
-> kiểm tra người xin *đang kiểm soát tên miền*, chứ không kiểm tra người đó là ai. Khác biệt
-> này chính là lý do mục "DNS là gốc rễ của lòng tin" bên dưới đáng sợ đến thế.
-
-Cần tách bạch hai thứ hay bị gọi nhầm. Chứng chỉ là **công khai** — bấm vào ổ khóa trên trình
-duyệt là xem được chứng chỉ của bất kỳ website nào. Thứ bí mật, và là thứ bị đánh cắp trong
-các vụ lộ lọt, là **private key**:
-
-```
-Certificate  →  CÔNG KHAI. Ai cũng tải được.
-Private key  →  BÍ MẬT. ĐÂY mới là thứ bị đánh cắp.
-```
-
-**Vì sao chứng chỉ chỉ sống 90 ngày.** Có ba lý do nối vào nhau. Thứ nhất, hạn ngắn giới hạn
-thiệt hại: nếu private key lộ, kẻ xấu chỉ mạo danh được tới ngày chứng chỉ hết hạn. Thứ hai,
-hạn ngắn **ép phải tự động hóa**, vì không ai gia hạn tay bốn lần một năm mà không quên. Thứ
-ba, cơ chế thu hồi chứng chỉ của trình duyệt không đáng tin trong thực tế, nên hạn ngắn *chính
-là* cơ chế thu hồi. Lý do thứ hai là một nguyên tắc sẽ gặp lại nhiều lần trong lộ trình:
-
-> Quy trình chạy 1 lần/10 năm thì chắc chắn đã hỏng, chỉ là chưa ai biết.
-> Quy trình chạy 4 lần/năm thì luôn được kiểm chứng.
-> (Cùng logic: backup không restore thử thì không phải backup.)
-
-### DNS là gốc rễ của lòng tin
-
-CA không có cách nào biết "chủ sở hữu" một tên miền là ai; nó chỉ kiểm tra được ai đang
-**kiểm soát** tên miền đó, thường bằng cách yêu cầu tạo một bản ghi DNS. Hệ quả là kẻ chiếm
-được tài khoản quản lý DNS có thể **xin được một chứng chỉ hợp lệ thật**, và người dùng vẫn
-thấy ổ khóa bình thường.
-
-> **CA không biết chủ sở hữu là ai. CA chỉ biết ai đang KIỂM SOÁT tên miền.**
-
-Vì vậy việc phòng thủ đầu tiên, và quan trọng nhất, là bật 2FA (xác thực hai lớp) cho tài khoản
-nhà đăng ký tên miền — ưu tiên hơn cả 2FA GitHub. Hai lớp phòng thủ nữa — chỉ định CA nào được
-cấp chứng chỉ cho tên miền của bạn, và theo dõi sổ công khai ghi lại mọi chứng chỉ được cấp —
-học và làm thật ở Bài 18.
-
----
-
-## Hệ thống hỏng mà không ai đụng vào
-
-Phần lớn dev mang trong đầu mô hình "có lỗi tức là ai đó vừa thay đổi cái gì". Mô hình đó
-sai với cả một nhóm sự cố, trong đó **thời gian trôi qua tự nó là nguyên nhân**:
-
-```
-Chứng chỉ TLS hết hạn          ← 90 ngày
-Tên miền hết hạn               ← 1 năm
-Ổ cứng đầy dần vì log          ← vài tháng
-Memory leak tích tụ            ← vài tuần
-API key / token hết hạn        ← tùy nhà cung cấp
-```
-
-Không sự cố nào trong số đó bị bắt bởi code review, unit test hay staging, bởi vì chúng không
-nằm trong code. Cách chống lại chúng là tự động hóa (tự gia hạn chứng chỉ, Bài 18 và 30) và
-giám sát có cảnh báo trước (Bài 36).
-
-> **Câu hỏi tự kiểm tra:** *"Cái gì trong hệ thống này sẽ tự hỏng nếu tôi không động vào nó
-> trong 6 tháng?"*
-
-Một biến thể của cùng ý tưởng là `"container đang chạy"` ≠ `"app sẵn sàng"`. Docker — công cụ
-đóng gói và chạy ứng dụng, học từ Bài 03 — chạy mỗi ứng dụng thành một container, tức một process
-được cô lập khỏi phần còn lại của máy. Docker báo container `Up` ngay giây đầu tiên vì process đã
-khởi động, nhưng Spring Boot cần thêm 15–60 giây để nạp context và mở port 8080. Khoảng chênh đó
-là **cửa sổ 502 ở mọi lần deploy**. Bài 11 và Bài 28 sẽ dạy cách bắt hệ thống đợi app báo sẵn
-sàng rồi mới chuyển request vào.
-
----
-
-## Tám lý do cần Nginx dù Spring Boot tự chạy được web server
-
-Mẫu tư duy đứng sau danh sách này là: mỗi tầng trong hệ thống tồn tại vì nó **gỡ một trách
-nhiệm ra khỏi tầng khác**. Mỗi dòng dưới đây là một trách nhiệm mà Nginx gánh hộ ứng dụng.
-
-1. **Gỡ TLS** — app không cần biết HTTPS tồn tại, và gia hạn chứng chỉ không phải restart app.
-2. **Lớp chắn** — chặn nguồn gửi quá nhiều request trong thời gian ngắn (rate limit), giới hạn
-   kích thước body, chặn rác, tất cả được xử lý *trước khi* chạm vào app.
-3. **Giảm attack surface** — lỗ hổng trong dependency vẫn nằm đó, nhưng không ai từ Internet
-   chạm trực tiếp tới được.
-4. **Lễ tân** — nhận việc, đưa vào trong, bê kết quả ra; khách không bao giờ vào trong.
-5. **Port <1024 cần root** — Nginx khởi động bằng root (tài khoản có toàn quyền trên máy Linux —
-   học ở Bài 07) chỉ để chiếm port 80/443, rồi *hạ quyền ngay* cho các tiến trình con.
-6. **Một IP, nhiều app** — Nginx đọc header `Host` để biết khách đang hỏi website nào.
-7. **File tĩnh** — trả file ảnh, CSS, JS là việc Nginx làm rẻ hơn JVM rất nhiều.
-8. **Deploy không đứt** — khởi động bản mới, đợi nó sẵn sàng, rồi mới chuyển luồng sang.
-
-> Gặp công cụ mới, luôn hỏi: **"Nó gánh hộ ai việc gì?"** Trả lời được câu đó là hiểu công cụ,
-> chứ không chỉ thuộc lệnh của nó.
+Bốn chặng 2, 4, 6, 7 chỉ xuất hiện khi ứng dụng rời máy dev để lên server: trên máy bạn, trình duyệt gọi
+thẳng `localhost:8080`, không có tên miền để dịch, không ai mã hoá, không ai chặn ở giữa.
 
 ---
 
 ## Lab
 
-Mục tiêu của phần lab là **nhìn tận mắt** từng chặng trên bản đồ, bằng những công cụ có sẵn
-trên máy. Mỗi bước dưới đây ghi rõ ba điều: làm để thấy gì, kết quả kỳ vọng (lấy từ lần chạy
-thật trên máy học ngày 24/09/2026), và nếu kết quả khác thì nó nói lên điều gì.
+Chạy trong **Git Bash** trên Windows. Mỗi lab soi vào một vài chặng; tự trả lời câu hỏi của lab trước khi
+đọc output thật.
 
-**Lưu ý:** chạy trong **Git Bash** hoặc WSL. **Không** chạy trong `cmd.exe` — ở đó `time` là lệnh
-**đặt đồng hồ hệ thống** chứ không phải đo thời gian, và `;` không tách được hai lệnh.
-
-Cách nhanh nhất là chạy cả kịch bản một lượt:
-
-```bash
-bash lab/lab-00.sh
-```
-
-Hoặc làm từng bước như dưới đây để có thời gian đọc output.
-
-### Lab 1 — chặng 2 DNS: tên miền dịch ra số
+### Lab 1 — chặng 2: DNS, và một tên miền không tồn tại
 
 ```bash
 nslookup github.com
 nslookup khong-ton-tai-dau-nhe-12345.com
 ```
 
-Lệnh thứ nhất cho thấy DNS làm đúng việc của nó: nhận một cái tên, trả về một địa chỉ IP. Kỳ
-vọng thấy dòng `Server:` là máy chủ DNS mà máy bạn đang hỏi (thường là router WiFi, đôi khi
-hiện bằng một địa chỉ IPv6 dạng `fe80::…`) và một dòng `Address:` là IP của GitHub. Lệnh thứ
-hai cố ý hỏi một tên không tồn tại để thấy chặng 2 **hỏng** trông thế nào: kỳ vọng
-`Non-existent domain`, tức `NXDOMAIN`. Nếu lệnh thứ nhất cũng báo lỗi, thì vấn đề nằm ở kết
-nối tới máy chủ DNS (mạng, router), chứ chưa liên quan gì tới GitHub.
+**Vì sao:** thấy tận mắt bước dịch tên thành địa chỉ, và thấy request dừng ở chặng 2 khi tên không tồn tại.
+Lệnh thứ hai là **bước tự gây lỗi** của bài.
 
-### Lab 2 — chặng 3, 4, 5 nối nhau
+**Câu hỏi:** dòng `Server:` là ai? Khi gặp `Non-existent domain`, request đã tới chặng nào?
+
+**Đáp án:** `Server:` là máy chủ DNS đang trả lời, thường là router trong nhà. `Non-existent domain`
+(NXDOMAIN) nghĩa là request chưa qua khỏi chặng 2: chưa có kết nối nào được mở.
+
+### Lab 2 — chặng 2 tới 5, và dấu vết chặng 7
 
 ```bash
 curl -v https://example.com
 ```
 
-Cờ `-v` (verbose) bắt curl in ra từng bước nó làm, nên ta thấy được ba chặng nối tiếp nhau
-trên màn hình: dòng `Established connection` là chặng 3 (TCP đã thông, để ý cả port phía
-mình), các dòng bắt tay là chặng 4, dòng `> GET /` và `> Host: example.com` là chặng 5. Trên
-máy học, dòng `< Server: cloudflare` còn cho thấy một reverse proxy ngoài đời thật đang đứng
-trước website. Lưu ý: curl của Git for Windows được biên dịch trên **schannel** chứ không phải
-OpenSSL, nên nó **không in** thông tin chứng chỉ — đó không phải lỗi của bạn, và là lý do có
-Lab 3.
+**Vì sao:** một request trọn vẹn, `curl` kể lại từng bước. Dòng bắt đầu bằng `*` là lời `curl` tự kể,
+`>` là dữ liệu gửi đi, `<` là dữ liệu nhận về.
 
-### Lab 3 — chặng 4: đọc tấm "căn cước" của một website thật
+**Câu hỏi:** dòng nào thuộc chặng 2, 3, 4, 5? Ai đã trả lời request?
+
+**Đáp án:** `IPv4: …` là chặng 2; `Established connection …` là chặng 3; `ALPN: server accepted …` là
+chặng 4; `> GET / HTTP/1.1` là chặng 5. Dòng `< Server: cloudflare` cho thấy một reverse proxy của
+Cloudflare đã trả lời, đúng vị trí chặng 7.
+
+### Lab 3 — chặng 4: đọc chứng chỉ
 
 ```bash
 echo | openssl s_client -connect example.com:443 -servername example.com 2>/dev/null \
   | openssl x509 -noout -subject -issuer -dates
 ```
 
-Lệnh này lấy chứng chỉ mà server trình ra trong lúc bắt tay TLS, rồi chỉ in bốn trường quan
-trọng. `subject` là chứng chỉ cấp cho ai, `issuer` là CA nào ký bảo lãnh, còn `notBefore` và
-`notAfter` là khoảng thời gian chứng chỉ có hiệu lực. Kết quả đo thật ngày 24/09/2026:
-`notBefore=Jul 29 22:10:08 2026 GMT`, `notAfter=Oct 27 22:17:21 2026 GMT` — vòng đời đúng **90
-ngày**, còn **33 ngày** tại thời điểm đo. Nếu `subject` không khớp với tên miền bạn gõ, trình
-duyệt sẽ báo lỗi chứng chỉ; nếu `notAfter` đã qua, đó chính là kịch bản "sáng thứ Hai web sập".
+**Vì sao:** bản `curl` của Git Bash dùng thư viện TLS của Windows (schannel), không in chứng chỉ, nên phải
+đọc bằng `openssl`. Dấu `|` và `2>/dev/null` được giải nghĩa ở Bài 04.
 
-### Lab 4 — tự gây `refused`, rồi tự gây `timeout`, và so sánh
+**Câu hỏi:** chứng chỉ do ai ký, và còn bao nhiêu ngày thì hết hạn?
 
-```bash
-time curl -4 -o /dev/null http://127.0.0.1:9999
-time curl -4 -o /dev/null --max-time 5 http://10.255.255.1:9999
-```
+**Đáp án (đo ngày 24/09/2026):** do `SSL Corporation` ký (đơn vị ký mang tên Cloudflare), hiệu lực từ
+29/07 tới 27/10/2026, tức 90 ngày, còn 33 ngày.
 
-Đây là bước "cố tình gây lỗi" của bài. Lệnh thứ nhất gõ vào phòng 9999 của chính máy mình —
-máy chắc chắn sống nhưng không có ai ngồi trong phòng, nên kernel trả lời "không có ai" và
-curl nhận `refused`. Lệnh thứ hai gửi tới một địa chỉ không có ai trả lời, nên curl chờ cho
-tới khi hết 5 giây ta cho phép. Kết quả đo thật trên Windows:
+### Tự vẽ lại bản đồ
 
-```
-127.0.0.1:9999      → curl: (7)  after 2076 ms     real 2.155s
-10.255.255.1:9999   → curl: (28) after 5007 ms     real 5.066s
-```
-
-Mã `(7)` là không kết nối được, mã `(28)` là hết giờ. Con số 2 giây của `refused` là đặc thù
-của Windows (nó tự thử lại vài lần trước khi bỏ cuộc); trên Linux kernel trả lời gần như tức
-thì. Vì vậy đừng dùng tốc độ để phân biệt hai loại lỗi — hãy dùng Lab 5.
-
-### Lab 5 — chứng minh: `timeout` do TA quyết định, `refused` thì không
-
-```bash
-time curl -4 -o /dev/null --max-time 15 http://10.255.255.1:9999
-```
-
-Chỉ đổi `5` thành `15`. Kỳ vọng: lần này lệnh chạy đúng khoảng 15 giây, chứng minh thời lượng
-của `timeout` là con số **ta** chọn. Ngược lại, dù đặt `--max-time` bao nhiêu cho lệnh `refused`
-ở Lab 4, nó vẫn dừng ở khoảng 2 giây, bởi vì nó có điểm kết thúc của riêng nó. Nếu lệnh này
-dừng sớm với một thông báo khác (chẳng hạn `No route to host`), nghĩa là mạng của bạn đã chủ
-động từ chối đường đi tới dải `10.x` — kết quả đó vẫn dạy được điều gì đó, hãy ghi vào
-`notes.md`.
-
-Kết quả thật và phần mổ xẻ từng dòng nằm ở **[phan-tich-output.html](phan-tich-output.html)**
+Đóng tài liệu, vẽ chín chặng theo thứ tự, ghi bên cạnh mỗi chặng nó chạy ở đâu và dòng output nào ở ba lab
+đã cho bạn thấy nó.
 
 ---
 
 ## Tự kiểm tra
 
-Chỉ đánh dấu khi trả lời được bằng lời của mình, không nhìn lại tài liệu.
+- [ ] Giải thích được từng phần của `https://example.com:443/users/42?x=1`, và phần nào là việc của code
+- [ ] Kể được chín chặng theo đúng thứ tự, và chặng nào chạy ở đâu
+- [ ] Chỉ ra được một dòng output của `curl -v` thuộc chặng nào
+- [ ] Nói được khi gặp `Non-existent domain` thì request đã dừng ở chặng nào
+- [ ] Đọc được ai ký chứng chỉ của một website và khi nào nó hết hạn
+- [ ] Nói được vì sao chỉ chặng 8 là code của bạn, và điều đó đổi cách bạn tìm lỗi ra sao
 
-- [ ] Giải thích `localhost:8080` từng phần, và vì sao không gửi link đó cho người khác được
-- [ ] Nói được một máy có mấy địa chỉ IP, và vì sao chúng không thay thế được nhau
-- [ ] Tách được *"có ai đang listen"* với *"firewall có cho qua"* — hai khái niệm, hai triệu chứng
-- [ ] Giải thích vì sao `refused` **chỉ** xảy ra khi máy còn sống
-- [ ] Phân biệt 502 / 500, nói được **ai viết ra** mỗi trang lỗi
-- [ ] Nói được ≥3 lý do cần Nginx dù Spring Boot đã tự chạy được web server
-- [ ] Giải thích chứng chỉ TLS là gì, và vì sao nó chỉ sống 90 ngày
-- [ ] Giải thích vì sao chiếm được DNS là chiếm được cả HTTPS
-- [ ] Kể được 3 thứ sẽ tự hỏng nếu không ai động vào trong 6 tháng
-- [ ] Vẽ lại sơ đồ từ chặng 1 tới chặng 9 không cần nhìn tài liệu
+## Những chỗ hay hiểu sai
 
----
-
-## Còn treo sang bài sau
-
-**Bài 02** sẽ chạy lại `time curl -4 -o /dev/null http://127.0.0.1:9999` trong **WSL Ubuntu**
-để so con số đo trên Windows (**2,155s**) với Linux — một thí nghiệm đối chứng cho Lab 4.
-
-Những chỗ người mới hay hiểu sai, chẳng hạn "máy chủ còn sống thì không thể `refused`" — thực tế
-là ngược lại — được ghi ở [`notes.md`](notes.md).
-
-**Bài tiếp:** [01 — Máy tính, Hệ điều hành, Process](../01-may-tinh-va-he-dieu-hanh/)
+| Người mới hay nghĩ | Thực tế |
+|---|---|
+| Web không vào được thì mở code ra xem trước. | Code không đổi thì nguyên nhân thường nằm ở tám chặng hạ tầng. |
+| Chứng chỉ là thứ gắn tên miền với địa chỉ IP. | Đó là việc của DNS (chặng 2). Chứng chỉ (chặng 4) chứng minh danh tính và không chứa địa chỉ IP. |
+| `nslookup` tự biết địa chỉ của mọi tên miền. | Nó hỏi một máy chủ DNS rồi in lại câu trả lời; dòng `Server:` cho biết ai trả lời. |
+| HTTPS giấu luôn việc bạn đang vào website nào. | HTTPS giấu nội dung; tên miền thường đã lộ ở câu hỏi DNS và ở bước mở đầu của TLS. |
 
 ---
+
+## Kết lại
+
+Request đi qua **chín chặng**: trình duyệt, DNS, mở kết nối, mã hoá, gửi request, firewall, reverse proxy,
+ứng dụng, database. Năm chặng đầu trên máy người dùng, bốn chặng sau trên server, ở giữa là Internet.
+**Chỉ chặng 8 là code bạn viết.**
+
+**Câu hỏi cho bài sau.** Trong chín chặng, chặng 3 (mở kết nối tới đúng máy, đúng chương trình) là chỗ
+người mới vấp đầu tiên, ngay trên máy dev. Từ đó sinh ra câu hỏi của
+[Bài 01](../01-ip-port-listen-firewall/): *App chạy ngon khi gọi bằng localhost:8080 trên chính máy mình,
+nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu?*
+
+Ghi chép thô, output thật và những chỗ đã hiểu sai nằm ở [`notes.md`](notes.md).
 
 ## Nguồn đọc thêm
 
-Chỉ gồm tài liệu chuẩn và tài liệu chính thức — nơi định nghĩa gốc của những khái niệm trong bài.
-
-- RFC 3986 — cú pháp chung của URI (năm phần của một URL): https://www.rfc-editor.org/rfc/rfc3986
-- RFC 1035 — đặc tả DNS: https://www.rfc-editor.org/rfc/rfc1035
-- RFC 9293 — đặc tả TCP hiện hành: https://www.rfc-editor.org/rfc/rfc9293
+- RFC 3986 — URI Generic Syntax: https://www.rfc-editor.org/rfc/rfc3986
+- RFC 1034, RFC 1035 — Domain Names: https://www.rfc-editor.org/rfc/rfc1035
+- RFC 9293 — TCP: https://www.rfc-editor.org/rfc/rfc9293
 - RFC 8446 — TLS 1.3: https://www.rfc-editor.org/rfc/rfc8446
-- RFC 9110 — ngữ nghĩa HTTP, gồm định nghĩa các mã 404, 500, 502, 504: https://www.rfc-editor.org/rfc/rfc9110
-- RFC 5280 — cấu trúc chứng chỉ X.509: https://www.rfc-editor.org/rfc/rfc5280
-- `connect(2)` — nơi Linux định nghĩa lỗi `ECONNREFUSED` và `ETIMEDOUT`: https://man7.org/linux/man-pages/man2/connect.2.html
-- Tài liệu chính thức của curl: https://curl.se/docs/manpage.html
-- Let's Encrypt — tài liệu và FAQ: https://letsencrypt.org/docs/
+- RFC 9110 — HTTP Semantics: https://www.rfc-editor.org/rfc/rfc9110
+- Nginx — Beginner's Guide: https://nginx.org/en/docs/beginners_guide.html
+- curl — trang hướng dẫn: https://curl.se/docs/manpage.html

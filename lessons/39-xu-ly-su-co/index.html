@@ -1,0 +1,109 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 39 — Xử lý sự cố: quy trình khi mọi thứ đang cháy</title>
+<meta name="description" content="Có một quy trình chẩn đoán theo tầng thay vì hoảng loạn thử mọi thứ.">
+<link rel="stylesheet" href="../../assets/style.css?v=c4b75b55">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="39">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-39</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M5">Module 5</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 5 · Bài 39</p>
+  <h1>Xử lý sự cố: <span class="hl">quy trình khi mọi thứ đang cháy</span></h1>
+  <p class="lede">Cảnh báo vừa kêu lúc nửa đêm. Làm gì, theo thứ tự nào, để tìm ra chỗ hỏng thay vì thử bừa?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">4–7 giờ</span>
+    <span class="chip">Rancher và vận hành</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 39">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../38-log-va-canh-bao/">Bài 38</a> kết luận: Log có cấu trúc được gom tập trung và truy theo correlation ID; cảnh báo với ngưỡng hợp lý gửi tới người trực.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Chẩn đoán theo chặng của bản đồ chín chặng, làm theo runbook, khôi phục dịch vụ trước rồi mới tìm nguyên nhân, và viết postmortem không đổ lỗi.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Đã đi qua từng mảnh. Bạn có tự dựng lại được toàn bộ hệ thống từ một repo trống, và giải thích được từng mũi tên trong đó không? <a href="../40-tong-ket/">Bài 40</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../33-go-loi-pod/">Bài 33 · Gỡ lỗi pod</a></li>
+    <li><a href="../38-log-va-canh-bao/">Bài 38 · Log và cảnh báo</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Chẩn đoán theo tầng: DNS, Ingress, Service, pod, app, database (nối bản đồ chín chặng ở Bài 00 và chẩn đoán theo chặng ở Bài 02)</li>
+    <li>Đầy đĩa, hết bộ nhớ, cạn connection pool</li>
+    <li>Runbook cho từng loại sự cố</li>
+    <li>Postmortem không đổ lỗi</li>
+    <li>Giao tiếp khi đang có sự cố</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Tự gây ba sự cố trên cụm học — database chết, pod bị OOM, Ingress cấu hình sai — xử lý theo quy trình, và viết runbook cho từng loại.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="3 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Có một thứ tự chẩn đoán theo tầng và làm theo được khi đang căng thẳng</li>
+    <li>Viết được runbook cho một loại sự cố</li>
+    <li>Viết được một postmortem không đổ lỗi</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../38-log-va-canh-bao/">
+    <span class="dir">Bài trước</span>
+    <span class="t">38 · Log và cảnh báo</span>
+  </a>
+  <a class="next" href="../40-tong-ket/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">40 · Tổng kết</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 39 · Module M5 — Rancher và vận hành — Quản lý cụm, theo dõi, xử lý sự cố · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=c4b75b55"></script>
+</body>
+</html>

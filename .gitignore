@@ -38,3 +38,6 @@ desktop.ini
 # Log
 *.log
 logs/
+
+# Nhật ký của công cụ chụp trình duyệt (playwright-cli)
+.playwright-cli/
