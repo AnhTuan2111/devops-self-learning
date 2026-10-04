@@ -1,0 +1,110 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 07 — Image và registry: image được làm từ những lớp nào</title>
+<meta name="description" content="Hiểu một image gồm những gì, lấy về từ đâu, và đặt tên phiên bản thế nào cho đúng.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="07">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-07</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M1">Module 1</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 1 · Bài 07</p>
+  <h1>Image và registry: <span class="hl">image được làm từ những lớp nào</span></h1>
+  <p class="lede">Container chạy từ image. Image là gì, lấy về từ đâu, và vì sao tải image thứ hai lại nhanh hơn image đầu?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">3–5 giờ</span>
+    <span class="chip">Docker</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 07">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../06-port-va-publish/">Bài 06</a> kết luận: Phải publish port bằng -p cổng_máy:cổng_container, và app trong container phải listen 0.0.0.0: đúng ba điều kiện của Bài 01, áp vào một mạng mới.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Image là một chồng layer chỉ đọc, tải về từ registry theo tên và tag. Layer giống nhau được dùng chung, còn chỉ digest mới định danh chắc chắn một image.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Tới giờ ta toàn chạy image người khác làm sẵn. Làm sao tự đóng gói chính app Spring Boot của mình thành image? <a href="../08-dockerfile-dau-tien/">Bài 08</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../05-container-dau-tien/">Bài 05 · Container đầu tiên: nó chỉ là một process bị cô lập</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Layer: image là một chồng các lớp chỉ đọc</li>
+    <li>Registry, repository, tag; Docker Hub</li>
+    <li>Tag latest và vì sao không nên tin nó</li>
+    <li>Digest: định danh không bao giờ đổi của một image</li>
+    <li>docker pull, push, login, images, history, rmi</li>
+    <li>Image chính thức và image lạ: rủi ro bảo mật</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Pull hai tag của cùng một image và xem history để thấy những layer được dùng chung. Cố tình pull một tag không tồn tại để gặp lỗi &quot;manifest unknown&quot;, đọc lỗi và sửa.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Giải thích được vì sao pull tag thứ hai nhanh hơn tag đầu</li>
+    <li>Nói được tag khác digest ở điểm nào, và khi nào cần digest</li>
+    <li>Đọc được tên đầy đủ của một image: registry, repository, tag</li>
+    <li>Kể được một rủi ro khi dùng image không rõ nguồn gốc</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../06-port-va-publish/">
+    <span class="dir">Bài trước</span>
+    <span class="t">06 · Gọi được app trong container</span>
+  </a>
+  <a class="next" href="../08-dockerfile-dau-tien/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">08 · Dockerfile đầu tiên cho Spring Boot</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 07 · Module M1 — Docker — Đóng gói và chạy ứng dụng · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

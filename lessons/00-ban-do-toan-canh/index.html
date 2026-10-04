@@ -1,0 +1,103 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 00 — Bản đồ toàn cảnh: một request đi qua chín chặng</title>
+<meta name="description" content="Kể lại được, không nhìn tài liệu, chín chặng một request đi qua từ trình duyệt tới code của bạn, và chặng nào do ai phụ trách.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="00">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-00</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M0">Module 0</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 0 · Bài 00</p>
+  <h1>Bản đồ toàn cảnh: <span class="hl">một request đi qua chín chặng</span></h1>
+  <p class="lede">Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi qua những chặng nào, và chặng nào thật sự là code của bạn?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">3–5 giờ</span>
+    <span class="chip">Nền tảng tối thiểu</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 00">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Chín chặng: trình duyệt, DNS, mở kết nối, mã hoá, gửi request, firewall, reverse proxy, ứng dụng, database. Trong cả đường đi, chỉ ứng dụng là code bạn viết; tám chặng còn lại là hạ tầng, và phần lớn sự cố nằm ở đó.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu? <a href="../01-ip-port-listen-firewall/">Bài 01</a> trả lời câu này.</p>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>URL và các phần của nó: scheme, host, port, path, query</li>
+    <li>Client và server</li>
+    <li>DNS: đổi tên miền thành địa chỉ IP</li>
+    <li>Gói tin và đường đi của nó ra Internet</li>
+    <li>HTTPS ở mức khái niệm: mã hoá và chứng chỉ</li>
+    <li>Ba chặng trên server: reverse proxy, ứng dụng, database</li>
+    <li>Trong cả đường đi, chỉ ứng dụng là code bạn viết</li>
+    <li>DevOps: một nhóm chịu trách nhiệm cho cả chín chặng thay vì hai đội phát triển và vận hành (phụ lục Lịch sử DevOps)</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Dùng nslookup và curl -v quan sát một request thật đi ra Internet, chỉ ra từng dòng output thuộc chặng nào, và đọc chứng chỉ của một website thật. Cố tình tra một tên miền không tồn tại để thấy bước hỏi DNS hỏng. Tự vẽ lại bản đồ.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Giải thích được từng phần của https://example.com:443/users/42?x=1</li>
+    <li>Kể được chín chặng theo đúng thứ tự, và chặng nào chạy ở đâu</li>
+    <li>Chỉ ra được một dòng output của curl -v thuộc chặng nào</li>
+    <li>Nói được vì sao trong cả đường đi chỉ ứng dụng là code của bạn</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../../">
+    <span class="dir">Bài trước</span>
+    <span class="t">Mục lục</span>
+  </a>
+  <a class="next" href="../01-ip-port-listen-firewall/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">01 · IP, port, listen, firewall</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 00 · Module M0 — Nền tảng tối thiểu — Request, process và phòng lab · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

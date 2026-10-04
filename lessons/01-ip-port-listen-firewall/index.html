@@ -1,0 +1,112 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 01 — IP, port, listen, firewall: vì sao gọi không tới</title>
+<meta name="description" content="Biết chính xác vì sao một app gọi được bằng localhost mà người khác không gọi được, và đọc refused hay timeout để biết hỏng ở đâu.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="01">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-01</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M0">Module 0</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 0 · Bài 01</p>
+  <h1>IP, port, listen, firewall: <span class="hl">vì sao gọi không tới</span></h1>
+  <p class="lede">App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">3–5 giờ</span>
+    <span class="chip">Nền tảng tối thiểu</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 01">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../00-ban-do-toan-canh/">Bài 00</a> kết luận: Chín chặng: trình duyệt, DNS, mở kết nối, mã hoá, gửi request, firewall, reverse proxy, ứng dụng, database. Trong cả đường đi, chỉ ứng dụng là code bạn viết; tám chặng còn lại là hạ tầng, và phần lớn sự cố nằm ở đó.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Muốn gọi tới được cần đủ ba điều kiện, theo thứ tự gói tin gặp chúng: đúng địa chỉ IP, firewall cho đi qua, và có chương trình listen ở port đó trên đúng địa chỉ. Refused hay timeout cho biết điều kiện nào đang thiếu.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết chặng nào đang hỏng? <a href="../02-chan-doan-theo-chang/">Bài 02</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../00-ban-do-toan-canh/">Bài 00 · Bản đồ toàn cảnh: một request đi qua chín chặng</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Địa chỉ IP và network interface: một máy có nhiều địa chỉ</li>
+    <li>Port: con số chọn đúng chương trình trong máy</li>
+    <li>Listen và listen address: 127.0.0.1, IP mạng LAN, 0.0.0.0</li>
+    <li>Ba dải địa chỉ đặc biệt: loopback, mạng riêng, link-local</li>
+    <li>Firewall: lớp chặn trước khi gói tin tới chương trình</li>
+    <li>Ba điều kiện để gọi tới được một app</li>
+    <li>TCP: bắt tay ba bước, và bộ bốn IP:port của một kết nối</li>
+    <li>Refused và timeout: ai trả lời, và vì sao một cái tức thì còn một cái phải chờ</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Gọi một app bằng localhost, bằng IP mạng LAN và từ máy khác; đổi listen address giữa 127.0.0.1 và 0.0.0.0. Cố tình gọi vào một port không ai listen và vào một địa chỉ không ai trả lời, rồi đo thời gian refused và timeout bằng time curl.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Giải thích được vì sao localhost là một từ tương đối</li>
+    <li>Kể được ba điều kiện để gọi tới được một app</li>
+    <li>Phân biệt được refused và timeout, và điều kiện nào thiếu sinh ra cái nào</li>
+    <li>Nói được vì sao một server không đặt trên laptop ở nhà</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../00-ban-do-toan-canh/">
+    <span class="dir">Bài trước</span>
+    <span class="t">00 · Bản đồ toàn cảnh</span>
+  </a>
+  <a class="next" href="../02-chan-doan-theo-chang/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">02 · Chẩn đoán theo chặng</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 01 · Module M0 — Nền tảng tối thiểu — Request, process và phòng lab · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

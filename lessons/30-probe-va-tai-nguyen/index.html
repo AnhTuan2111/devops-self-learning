@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 30 — Probe và giới hạn tài nguyên</title>
+<meta name="description" content="Pod chỉ nhận traffic khi app thật sự sẵn sàng, và không bị giết oan vì CPU hay bộ nhớ.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="30">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-30</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M4">Module 4</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 4 · Bài 30</p>
+  <h1>Probe và giới hạn tài nguyên</h1>
+  <p class="lede">Pod báo Running mà người dùng vẫn gặp lỗi, hoặc pod bị khởi động lại liên tục. Làm sao cụm biết app đã sẵn sàng thật, và cấp bao nhiêu tài nguyên là đủ?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">5–8 giờ</span>
+    <span class="chip">Kubernetes</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 30">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../29-configmap-va-secret/">Bài 29</a> kết luận: ConfigMap cho cấu hình, Secret cho dữ liệu nhạy cảm, nạp vào pod qua biến môi trường hoặc tệp. Và base64 của Secret không phải là mã hoá.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Probe cho cụm biết app đã khởi động xong, đã sẵn sàng hay đã treo. Requests và limits đặt đúng thì app không bị bóp CPU tới mức chết đứng, cũng không bị OOMKilled.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Pod PostgreSQL bị thay là mất dữ liệu. Trong một cụm nhiều máy, dữ liệu sống ở đâu? <a href="../31-du-lieu-trong-kubernetes/">Bài 31</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../14-vong-doi-container/">Bài 14 · Container sống và chết thế nào: signal, restart, log</a></li>
+    <li><a href="../29-configmap-va-secret/">Bài 29 · ConfigMap và Secret</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>startupProbe, readinessProbe, livenessProbe khác nhau thế nào</li>
+    <li>Actuator health làm probe</li>
+    <li>requests và limits: CPU và bộ nhớ</li>
+    <li>CPU bị bóp (throttling) làm Spring Boot khởi động rất chậm</li>
+    <li>OOMKilled (nối Bài 03 và 09)</li>
+    <li>Liveness đặt sai gây vòng khởi động lại vô tận</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Đặt CPU limit thấp để thấy Spring Boot khởi động rất chậm và bị liveness giết liên tục, rồi sửa bằng startupProbe. Đặt limit bộ nhớ quá thấp để gặp OOMKilled, rồi chỉnh cho vừa.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Chọn đúng loại probe cho từng mục đích</li>
+    <li>Giải thích được vì sao &quot;container chạy&quot; chưa phải &quot;app sẵn sàng&quot; (nối Bài 02)</li>
+    <li>Đặt được requests và limits hợp lý cho Spring Boot</li>
+    <li>Chẩn đoán được một pod bị khởi động lại liên tục vì probe</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../29-configmap-va-secret/">
+    <span class="dir">Bài trước</span>
+    <span class="t">29 · ConfigMap và Secret</span>
+  </a>
+  <a class="next" href="../31-du-lieu-trong-kubernetes/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">31 · Dữ liệu trong Kubernetes</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 30 · Module M4 — Kubernetes — Chạy container trên cả một cụm máy · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

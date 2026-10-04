@@ -1,0 +1,113 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 17 — Linux sinh tồn trên server</title>
+<meta name="description" content="Đi lại trên một server lạ, tìm log, xem ổ đĩa, bộ nhớ, port và giới hạn của process mà không bị lạc.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="17">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-17</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M2">Module 2</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 2 · Bài 17</p>
+  <h1>Linux sinh tồn trên server</h1>
+  <p class="lede">Đã vào được một server lạ. Log nằm ở đâu, ổ đĩa và RAM còn bao nhiêu, ai đang giữ port nào, và một process được mở bao nhiêu file?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">4–7 giờ</span>
+    <span class="chip">Server thật</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 17">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../16-ssh-vao-server/">Bài 16</a> kết luận: Bằng SSH với một cặp khóa: khóa bí mật ở lại máy mình, khóa công khai đặt trên server, và ~/.ssh/config biến việc đăng nhập thành một lệnh ngắn.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Một bộ lệnh nhỏ trả lời hết: /var/log với tail và grep, df, du, free, ss và ulimit; kèm những quy tắc khi dùng chung server với người khác.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Đã biết đi lại trên server. Đưa image và compose.yaml lên đó rồi chạy thật thì cần chính xác những bước nào? <a href="../18-deploy-thu-cong/">Bài 18</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../11-volume-va-du-lieu/">Bài 11 · Dữ liệu: volume, PostgreSQL và backup</a></li>
+    <li><a href="../16-ssh-vao-server/">Bài 16 · SSH vào server</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Cây thư mục: /etc, /var/log, /home, /opt, /tmp</li>
+    <li>Đọc log: tail -f, grep, less</li>
+    <li>df, du, free: đầy đĩa và hết bộ nhớ</li>
+    <li>Giới hạn số file một process được mở cùng lúc: ulimit -n, lỗi Too many open files, rò rỉ do quên đóng (try-with-resources)</li>
+    <li>ss: process nào đang listen port nào, và từng kết nối đang mở (bộ bốn IP:port)</li>
+    <li>sudo, user và group trên server</li>
+    <li>Quy tắc khi dùng chung một server với người khác</li>
+    <li>Firewall trên server: xem luật đang mở, cả IPv4 lẫn IPv6</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Đi một vòng server và trả lời: log nằm ở đâu, đĩa còn bao nhiêu, ai đang giữ port nào. Tạo một tệp lớn trong thư mục của mình để thấy df thay đổi, tìm ra nó bằng du, rồi dọn.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Tìm được log của một dịch vụ lạ trên server</li>
+    <li>Tìm ra thư mục đang ăn nhiều đĩa nhất</li>
+    <li>Liệt kê được mọi kết nối đang mở tới một port bằng ss (nối Bài 01)</li>
+    <li>Đọc được firewall đang mở những cổng nào</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../16-ssh-vao-server/">
+    <span class="dir">Bài trước</span>
+    <span class="t">16 · SSH vào server</span>
+  </a>
+  <a class="next" href="../18-deploy-thu-cong/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">18 · Deploy thủ công bằng Compose lên server</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 17 · Module M2 — Server thật — Deploy lên một máy Linux thật · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 03 — Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì</title>
+<meta name="description" content="Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="03">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-03</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M0">Module 0</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 0 · Bài 03</p>
+  <h1>Máy tính, Hệ điều hành, Process: <span class="hl">'server' thật ra là cái gì</span></h1>
+  <p class="lede">502 nghĩa là phía sau Nginx không còn ai trả lời. Nhưng &quot;app&quot; thật ra là gì trên một máy chủ, vì sao nó có thể chết, và vì sao nó chết thì website sập?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">5–8 giờ</span>
+    <span class="chip">Nền tảng tối thiểu</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 03">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../02-chan-doan-theo-chang/">Bài 02</a> kết luận: Mỗi mã lỗi là câu trả lời của một thành phần cụ thể: 502 và 504 do Nginx viết khi phía sau không trả lời hoặc trả lời quá chậm, 500 do chính app viết. Biết ai viết ra là khoanh được chặng hỏng, vì triệu chứng luôn chứng minh các chặng phía trước đã chạy tốt.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>App là một process do kernel quản lý. Hết RAM thì kernel giết process lớn nhất, process chết thì port của nó trống và Nginx viết 502. Muốn app tự sống lại thì phải giao nó cho một process khác trông coi, tức biến nó thành service.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Server thật chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình, để thấy process, signal và lỗi đúng như trên server? <a href="../04-phong-lab-wsl-docker/">Bài 04</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../02-chan-doan-theo-chang/">Bài 02 · Chẩn đoán theo chặng: nhìn lỗi biết chỗ hỏng</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>CPU, RAM, ổ đĩa, mạng: hết cái nào thì hỏng kiểu nào</li>
+    <li>Kernel, user space và syscall</li>
+    <li>Process, PID, thread</li>
+    <li>Process sở hữu gì: vùng nhớ, user, thư mục làm việc, biến môi trường</li>
+    <li>Process chết: SIGTERM, SIGKILL, OOM killer</li>
+    <li>Service: process có người trông coi</li>
+    <li>Vì sao app chết thì website sập</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Quan sát process của chính Spring Boot / Node trên máy mình. Tìm PID, xem RAM, kill nó, xem điều gì xảy ra. Tìm xem process nào đang giữ port 8080.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="3 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Chỉ ra được process nào đang giữ một port</li>
+    <li>Giải thích được OOM (hết RAM) sẽ làm gì với app</li>
+    <li>Phân biệt process và service</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../02-chan-doan-theo-chang/">
+    <span class="dir">Bài trước</span>
+    <span class="t">02 · Chẩn đoán theo chặng</span>
+  </a>
+  <a class="next" href="../04-phong-lab-wsl-docker/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">04 · Phòng lab</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 03 · Module M0 — Nền tảng tối thiểu — Request, process và phòng lab · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

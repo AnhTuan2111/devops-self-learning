@@ -1,0 +1,110 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 32 — Ingress và HTTPS trong cụm</title>
+<meta name="description" content="Đưa service ra ngoài cụm bằng tên miền và HTTPS, chứng chỉ tự gia hạn.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="32">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-32</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M4">Module 4</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 4 · Bài 32</p>
+  <h1>Ingress và HTTPS trong cụm</h1>
+  <p class="lede">Service mới gọi được từ trong cụm. Đưa app ra ngoài bằng tên miền và HTTPS thì làm thế nào?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">5–8 giờ</span>
+    <span class="chip">Kubernetes</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 32">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../31-du-lieu-trong-kubernetes/">Bài 31</a> kết luận: Trong PersistentVolume, xin qua PVC và gắn với StatefulSet để mỗi bản sao giữ đúng ổ đĩa của mình. Nhiều khi database nên nằm ngoài cụm.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Ingress khai báo luật theo host và path, Ingress controller (một Nginx chạy trong cụm) thực thi luật đó, còn cert-manager tự cấp và tự gia hạn chứng chỉ.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Pod kẹt ở Pending, CrashLoopBackOff hay ImagePullBackOff. Đọc gì, ở đâu để biết nguyên nhân? <a href="../33-go-loi-pod/">Bài 33</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../20-ten-mien-va-https/">Bài 20 · Tên miền và HTTPS</a></li>
+    <li><a href="../28-service-va-dns-trong-cum/">Bài 28 · Service và DNS trong cụm</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Ingress và Ingress controller (nối Nginx ở Bài 19)</li>
+    <li>Luật theo host và theo path</li>
+    <li>Annotation: timeout, kích thước body — 413 và 504 lần nữa</li>
+    <li>cert-manager: tự cấp và tự gia hạn chứng chỉ (nối Bài 20)</li>
+    <li>Gateway API: thế hệ sau của Ingress</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Cài Ingress controller và cert-manager trên cụm học, cấu hình Ingress có HTTPS. Cố tình trỏ Ingress vào một tên Service sai để gặp 503, rồi sửa.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Viết được Ingress đưa một service ra ngoài theo tên miền</li>
+    <li>Giải thích được Ingress controller làm việc giống Nginx ở Bài 19 thế nào</li>
+    <li>Chứng chỉ trong cụm tự gia hạn</li>
+    <li>Chẩn đoán được lỗi 503 từ Ingress</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../31-du-lieu-trong-kubernetes/">
+    <span class="dir">Bài trước</span>
+    <span class="t">31 · Dữ liệu trong Kubernetes</span>
+  </a>
+  <a class="next" href="../33-go-loi-pod/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">33 · Gỡ lỗi pod</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 32 · Module M4 — Kubernetes — Chạy container trên cả một cụm máy · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

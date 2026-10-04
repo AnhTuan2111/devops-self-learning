@@ -1,0 +1,112 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 27 — Pod và Deployment</title>
+<meta name="description" content="Chạy Spring Boot trên Kubernetes bằng Deployment, cập nhật phiên bản không gián đoạn, và quay lại khi hỏng.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="27">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-27</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M4">Module 4</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 4 · Bài 27</p>
+  <h1>Pod và Deployment</h1>
+  <p class="lede">Đã có một cụm. Chạy app Spring Boot lên đó bằng gì, và vì sao pod bị xoá lại tự sinh ra?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">4–6 giờ</span>
+    <span class="chip">Kubernetes</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 27">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../26-vi-sao-kubernetes/">Bài 26</a> kết luận: Kubernetes điều khiển nhiều máy như một cụm, liên tục đưa trạng thái thật về trạng thái mong muốn. Đổi lại là chi phí vận hành lớn hơn hẳn Compose.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Bằng Deployment: nó giữ đủ số bản sao pod, tự thay pod chết, cập nhật dần từng bản và quay lại được khi bản mới hỏng.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Pod liên tục bị thay, và mỗi lần thay lại đổi địa chỉ IP. Vậy app gọi PostgreSQL, và người ngoài gọi app, bằng địa chỉ nào? <a href="../28-service-va-dns-trong-cum/">Bài 28</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../14-vong-doi-container/">Bài 14 · Container sống và chết thế nào: signal, restart, log</a></li>
+    <li><a href="../24-build-va-push-image/">Bài 24 · Build và push image lên GitLab Container Registry</a></li>
+    <li><a href="../26-vi-sao-kubernetes/">Bài 26 · Vì sao cần Kubernetes, và dựng một cụm nhỏ trên máy</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Pod: một hoặc vài container chạy chung (nối Bài 05)</li>
+    <li>Manifest YAML: apiVersion, kind, metadata, spec</li>
+    <li>Deployment và ReplicaSet: luôn giữ đủ số bản sao</li>
+    <li>Rolling update và kubectl rollout undo</li>
+    <li>kubectl apply, get, describe, logs</li>
+    <li>restartPolicy (nối Bài 14)</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Deploy image Spring Boot bằng một Deployment 3 bản sao, xoá một pod để thấy nó tự sinh lại, rồi cập nhật phiên bản. Cố tình đặt sai tag image để gặp ImagePullBackOff, rồi rollout undo.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Viết được manifest Deployment cho app của mình</li>
+    <li>Giải thích được vì sao pod bị xoá lại tự sinh ra</li>
+    <li>Cập nhật phiên bản và quay lại được</li>
+    <li>Đọc được trạng thái ImagePullBackOff nói lên điều gì</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../26-vi-sao-kubernetes/">
+    <span class="dir">Bài trước</span>
+    <span class="t">26 · Vì sao cần Kubernetes, và dựng một cụm nhỏ trên máy</span>
+  </a>
+  <a class="next" href="../28-service-va-dns-trong-cum/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">28 · Service và DNS trong cụm</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 27 · Module M4 — Kubernetes — Chạy container trên cả một cụm máy · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

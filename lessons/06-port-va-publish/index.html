@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 06 — Gọi được app trong container: port và listen address</title>
+<meta name="description" content="Không bao giờ còn mắc lỗi kinh điển: app chạy trong container nhưng từ ngoài không ai gọi được.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="06">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-06</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M1">Module 1</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 1 · Bài 06</p>
+  <h1>Gọi được app trong container: <span class="hl">port và listen address</span></h1>
+  <p class="lede">Container là một process có mạng riêng. Vậy làm sao gọi được app chạy bên trong nó từ trình duyệt trên máy mình?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">3–5 giờ</span>
+    <span class="chip">Docker</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 06">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../05-container-dau-tien/">Bài 05</a> kết luận: Container là một process Linux bình thường được kernel giới hạn tầm nhìn (namespace) và tài nguyên (cgroup). Nó chạy từ một image và dùng chung kernel với máy, không có kernel riêng như máy ảo.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Phải publish port bằng -p cổng_máy:cổng_container, và app trong container phải listen 0.0.0.0: đúng ba điều kiện của Bài 01, áp vào một mạng mới.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Container chạy từ image. Image là gì, lấy về từ đâu, và vì sao tải image thứ hai lại nhanh hơn image đầu? <a href="../07-image-va-registry/">Bài 07</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../01-ip-port-listen-firewall/">Bài 01 · IP, port, listen, firewall: vì sao gọi không tới</a></li>
+    <li><a href="../05-container-dau-tien/">Bài 05 · Container đầu tiên: nó chỉ là một process bị cô lập</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Nhắc lại từ Bài 01: IP, port, listen address</li>
+    <li>Container có mạng riêng, IP riêng</li>
+    <li>Publish port: -p cổng_máy:cổng_container</li>
+    <li>127.0.0.1 và 0.0.0.0 bên trong container (server.address của Spring Boot)</li>
+    <li>Lỗi &quot;port is already allocated&quot; và cách tìm ai đang giữ port (nối Bài 03)</li>
+    <li>curl để kiểm tra từ ngoài vào</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Chạy một image có sẵn cho chọn địa chỉ listen bằng tham số (ví dụ python -m http.server --bind 127.0.0.1), lần lượt cho nó listen 127.0.0.1 rồi 0.0.0.0, gọi từ máy bằng curl và so kết quả. Cố tình publish trùng một port đang có người dùng để gặp lỗi &quot;port is already allocated&quot;, rồi tự sửa.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Giải thích được vì sao app listen 127.0.0.1 trong container thì từ ngoài không gọi được</li>
+    <li>Viết đúng tham số -p khi biết cổng máy và cổng container</li>
+    <li>Tìm ra ai đang giữ một port khi gặp lỗi port đã bị chiếm</li>
+    <li>Phân biệt được refused, timeout và Empty reply khi gọi vào container (nối Bài 01)</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../05-container-dau-tien/">
+    <span class="dir">Bài trước</span>
+    <span class="t">05 · Container đầu tiên</span>
+  </a>
+  <a class="next" href="../07-image-va-registry/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">07 · Image và registry</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 06 · Module M1 — Docker — Đóng gói và chạy ứng dụng · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

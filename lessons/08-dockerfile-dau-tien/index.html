@@ -1,0 +1,110 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 08 — Dockerfile đầu tiên cho Spring Boot</title>
+<meta name="description" content="Tự viết Dockerfile đóng gói project Spring Boot của bạn, và hiểu mỗi dòng tạo ra layer nào.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="08">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-08</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M1">Module 1</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 1 · Bài 08</p>
+  <h1>Dockerfile đầu tiên cho Spring Boot</h1>
+  <p class="lede">Tới giờ ta toàn chạy image người khác làm sẵn. Làm sao tự đóng gói chính app Spring Boot của mình thành image?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">4–6 giờ</span>
+    <span class="chip">Docker</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 08">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../07-image-va-registry/">Bài 07</a> kết luận: Image là một chồng layer chỉ đọc, tải về từ registry theo tên và tag. Layer giống nhau được dùng chung, còn chỉ digest mới định danh chắc chắn một image.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Viết Dockerfile. Mỗi dòng tạo ra một layer, và thứ tự các dòng quyết định cache, tức quyết định build lại nhanh hay chậm.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Image vừa build vừa nặng, chạy bằng root, và có thể bị kernel giết vì hết bộ nhớ. Làm sao cho nó đủ tốt để chạy production? <a href="../09-dockerfile-production/">Bài 09</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../06-port-va-publish/">Bài 06 · Gọi được app trong container: port và listen address</a></li>
+    <li><a href="../07-image-va-registry/">Bài 07 · Image và registry: image được làm từ những lớp nào</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>FROM, WORKDIR, COPY, RUN, CMD, ENTRYPOINT, EXPOSE</li>
+    <li>Build context và .dockerignore</li>
+    <li>Cache theo layer: vì sao thứ tự các dòng quyết định tốc độ build</li>
+    <li>CMD và ENTRYPOINT khác nhau thế nào</li>
+    <li>docker build, gắn tag và chạy image tự build</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Viết Dockerfile cho jar Spring Boot, build rồi chạy. Sửa một dòng code, build lại và đo thời gian; đảo thứ tự các lệnh COPY để phá cache rồi đo lại. Cố tình bỏ .dockerignore để thấy build context phình to.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Viết được Dockerfile chạy được cho một project Spring Boot</li>
+    <li>Giải thích được vì sao đổi một dòng thì mọi dòng sau nó phải build lại</li>
+    <li>Nói được CMD khác ENTRYPOINT thế nào</li>
+    <li>Biết .dockerignore nên chứa những gì</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../07-image-va-registry/">
+    <span class="dir">Bài trước</span>
+    <span class="t">07 · Image và registry</span>
+  </a>
+  <a class="next" href="../09-dockerfile-production/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">09 · Dockerfile chuẩn production</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 08 · Module M1 — Docker — Đóng gói và chạy ứng dụng · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

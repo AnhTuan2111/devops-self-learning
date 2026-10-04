@@ -1,0 +1,108 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 21 — CI/CD là quy trình, không phải công cụ</title>
+<meta name="description" content="Vẽ được pipeline mình cần trước khi viết dòng YAML nào, từ chính runbook của Bài 18.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="21">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-21</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M3">Module 3</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 3 · Bài 21</p>
+  <h1>CI/CD là quy trình, không phải công cụ</h1>
+  <p class="lede">Deploy bằng tay theo runbook vừa chậm vừa dễ sót bước. Bước nào nên giao cho máy làm, và theo thứ tự nào?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">2–4 giờ</span>
+    <span class="chip">CI/CD với GitLab</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 21">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../20-ten-mien-va-https/">Bài 20</a> kết luận: Trỏ bản ghi DNS về server, xin chứng chỉ từ một CA bằng cách chứng minh quyền sở hữu tên miền, cho Nginx dùng chứng chỉ đó, và kiểm chứng rằng việc gia hạn thật sự chạy.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Một pipeline gồm build, test, đóng gói, deploy. Bước nào lặp lại và kiểm tra được thì tự động hoá, bước nào rủi ro thì có người duyệt.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Đã vẽ được pipeline trên giấy. Viết nó ra thế nào để GitLab tự chạy mỗi lần push? <a href="../22-gitlab-ci-co-ban/">Bài 22</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../18-deploy-thu-cong/">Bài 18 · Deploy thủ công bằng Compose lên server</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>CI, CD và Continuous Deployment</li>
+    <li>Build, test, package, deploy</li>
+    <li>Artifact và registry</li>
+    <li>Môi trường dev, staging, production</li>
+    <li>Pipeline chậm là pipeline vô dụng</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Chuyển runbook của Bài 18 thành sơ đồ pipeline từng bước, đánh dấu bước nào tự động được và bước nào cần người duyệt. Cố tình bỏ một bước trong runbook khi deploy tay để thấy vì sao con người là mắt xích dễ gãy nhất.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="3 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Phân biệt được CI, Continuous Delivery và Continuous Deployment</li>
+    <li>Vẽ được pipeline cho project của mình</li>
+    <li>Chỉ ra được bước nào trong runbook dễ sai nhất khi làm tay</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../20-ten-mien-va-https/">
+    <span class="dir">Bài trước</span>
+    <span class="t">20 · Tên miền và HTTPS</span>
+  </a>
+  <a class="next" href="../22-gitlab-ci-co-ban/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">22 · GitLab CI cơ bản</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 21 · Module M3 — CI/CD với GitLab — Từ git push tới server · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>

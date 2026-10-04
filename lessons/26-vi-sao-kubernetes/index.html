@@ -1,0 +1,110 @@
+<!doctype html>
+<!-- devops-selflearning:generated-stub -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 26 — Vì sao cần Kubernetes, và dựng một cụm nhỏ trên máy</title>
+<meta name="description" content="Nói được Kubernetes giải quyết điều gì mà Compose trên một máy không làm được, và có một cụm để thực hành.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="26">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="home" href="../../">devops-self-learning</a>
+    <span class="crumb">/ bai-26</span>
+    <span class="spacer"></span>
+    <a class="nav" href="../../#M4">Module 4</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 4 · Bài 26</p>
+  <h1>Vì sao cần Kubernetes, và dựng một cụm nhỏ trên máy</h1>
+  <p class="lede">Mọi thứ đang chạy trên một server. Server đó chết thì sao, và khi một máy không còn đủ sức thì làm gì?</p>
+  <div class="meta">
+    <span class="chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
+    <span class="chip">4–7 giờ</span>
+    <span class="chip">Kubernetes</span>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của Bài 26">
+
+<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
+  <div class="callout">
+    <span class="label">Trang này mới là khung</span>
+    <p>Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.</p>
+  </div>
+
+  <h2 id="tu-bai-truoc">Từ bài trước</h2>
+  <p><a href="../25-cd-va-rollback/">Bài 25</a> kết luận: Pipeline SSH vào server chạy một script deploy chạy lại nhiều lần vẫn an toàn (compose pull, up -d). Rollback là deploy lại tag cũ, với điều kiện migration database tương thích ngược.</p>
+
+  <h2 id="dap-an">Bài này dẫn tới</h2>
+  <p>Kubernetes điều khiển nhiều máy như một cụm, liên tục đưa trạng thái thật về trạng thái mong muốn. Đổi lại là chi phí vận hành lớn hơn hẳn Compose.</p>
+
+  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
+  <p>Đã có một cụm. Chạy app Spring Boot lên đó bằng gì, và vì sao pod bị xoá lại tự sinh ra? <a href="../27-pod-va-deployment/">Bài 27</a> trả lời câu này.</p>
+
+  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
+  <p>Bài này dùng lại kiến thức của:</p>
+  <ul>
+    <li><a href="../15-go-loi-container/">Bài 15 · Gỡ lỗi container</a></li>
+  </ul>
+
+  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
+  <ul>
+    <li>Giới hạn của một máy: máy chết là hệ thống chết</li>
+    <li>Cụm (cluster): control plane và node; node chỉ là một máy Linux</li>
+    <li>Trạng thái mong muốn và vòng lặp điều chỉnh</li>
+    <li>kubectl và kubeconfig</li>
+    <li>Cụm học trên máy: k3d hoặc kind</li>
+    <li>Chi phí vận hành thật của Kubernetes</li>
+  </ul>
+</section>
+
+<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
+  <h2 id="lab">Bài lab dự kiến</h2>
+  <p>Dựng một cụm k3d nhiều node và xem các node. Cố tình dừng một node (docker stop container của node đó) để thấy nó chuyển NotReady, rồi bật lại.</p>
+  <div class="callout warn">
+    <span class="label">Luật của mọi bài lab</span>
+    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
+  </div>
+</section>
+
+<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="4 mục">
+  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
+  <ul class="check">
+    <li>Nói được ba việc Kubernetes làm mà Compose trên một máy không làm</li>
+    <li>Giải thích được control plane và node</li>
+    <li>Dùng kubectl xem trạng thái cụm</li>
+    <li>Giải thích được &quot;trạng thái mong muốn&quot; bằng một ví dụ</li>
+  </ul>
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="../25-cd-va-rollback/">
+    <span class="dir">Bài trước</span>
+    <span class="t">25 · Deploy tự động và rollback</span>
+  </a>
+  <a class="next" href="../27-pod-va-deployment/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">27 · Pod và Deployment</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 26 · Module M4 — Kubernetes — Chạy container trên cả một cụm máy · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>
