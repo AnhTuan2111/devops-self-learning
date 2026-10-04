@@ -4,6 +4,11 @@
       "status": "done",
       "date": "2026-09-24",
       "note": "Học trong buổi đối thoại 21–24/09 (khi ấy là phần đầu của Bài 00 gộp). Còn treo: so refused trên Linux, làm ở Bài 04."
+    },
+    "01": {
+      "status": "done",
+      "date": "2026-09-24",
+      "note": "Học trong buổi Bài 00 gộp. Hai lab refused và timeout: 2,155 giây và 5,066 giây trên Windows."
     }
   }
 }

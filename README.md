@@ -1,4 +1,4 @@
-<a href="https://anhtuan2111.github.io/devops-self-learning/"><img src="assets/readme/card.svg" width="100%" alt="DevOps từ số 0: đã xong 1/41 bài. Bấm để mở bản web đầy đủ."></a>
+<a href="https://anhtuan2111.github.io/devops-self-learning/"><img src="assets/readme/card.svg" width="100%" alt="DevOps từ số 0: đã xong 2/41 bài. Bấm để mở bản web đầy đủ."></a>
 
 # DevOps Self-Learning
 
@@ -13,7 +13,7 @@ DevOps là cách làm để chính người viết code đưa được nó lên 
 | **Công cụ** | Spring Boot + PostgreSQL + Docker + GitLab CI + Kubernetes + Rancher |
 | **Môi trường** | Windows 11 + WSL2 Ubuntu + Docker Desktop |
 | **Quy mô** | 41 bài · 6 module · khoảng 165–269 giờ học |
-| **Tiến độ** | 1/41 bài đã xong |
+| **Tiến độ** | 2/41 bài đã xong |
 
 Mỗi bài đi từ một **vấn đề có thật**, tới **khái niệm**, rồi mới tới **công cụ**. Bài nào cũng có
 một lab chạy thật, với một bước cố tình gây lỗi rồi tự sửa.
@@ -29,7 +29,7 @@ một lab chạy thật, với một bước cố tình gây lỗi rồi tự s�
 | # | Bài | Câu hỏi của bài | Ước lượng | Trạng thái |
 |---|---|---|---|---|
 | `00` | [Bản đồ toàn cảnh: một request đi qua chín chặng](lessons/00-ban-do-toan-canh/) | Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi qua những chặng nào, và chặng nào thật sự là code của bạn? | 3–5 giờ | xong 24/09/2026 |
-| `01` | [IP, port, listen, firewall: vì sao gọi không tới](lessons/01-ip-port-listen-firewall/) | App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu? | 3–5 giờ | — |
+| `01` | [IP, port, listen, firewall: vì sao gọi không tới](lessons/01-ip-port-listen-firewall/) | App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu? | 3–5 giờ | xong 24/09/2026 |
 | `02` | [Chẩn đoán theo chặng: nhìn lỗi biết chỗ hỏng](lessons/02-chan-doan-theo-chang/) | Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết chặng nào đang hỏng? | 3–5 giờ | — |
 | `03` | [Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì](lessons/03-may-tinh-va-he-dieu-hanh/) | 502 nghĩa là phía sau Nginx không còn ai trả lời. Nhưng "app" thật ra là gì trên một máy chủ, vì sao nó có thể chết, và vì sao nó chết thì website sập? | 5–8 giờ | — |
 | `04` | [Phòng lab: WSL2, Docker Desktop và shell tối thiểu](lessons/04-phong-lab-wsl-docker/) | Server thật chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình, để thấy process, signal và lỗi đúng như trên server? | 3–5 giờ | — |
