@@ -1,0 +1,46 @@
+# Thông tin riêng — KHÔNG BAO GIỜ commit (repo này công khai): tên server, IP, tên miền nội bộ…
+*.rieng.md
+rieng/
+
+# Secret — KHÔNG BAO GIỜ commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa*
+secrets/
+
+# Build
+target/
+build/
+dist/
+node_modules/
+*.jar
+*.war
+
+# Backup và dump
+*.sql
+*.dump
+*.tar.gz
+backups/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Log
+*.log
+logs/
+
+# Nhật ký của công cụ chụp trình duyệt (playwright-cli)
+.playwright-cli/
+
+# Quy ước làm việc riêng của Claude Code với repo này: chỉ ở máy người học, không đưa lên GitHub
+CLAUDE.md
