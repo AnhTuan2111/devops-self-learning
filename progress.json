@@ -1,1 +1,9 @@
-{ "lessons": {} }
+{
+  "lessons": {
+    "00": {
+      "status": "done",
+      "date": "2026-09-24",
+      "note": "Học trong buổi đối thoại 21–24/09 (khi ấy là phần đầu của Bài 00 gộp). Còn treo: so refused trên Linux, làm ở Bài 04."
+    }
+  }
+}

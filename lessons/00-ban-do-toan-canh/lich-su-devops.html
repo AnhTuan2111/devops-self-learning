@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phụ lục — Lịch sử DevOps</title>
+<meta name="description" content="DevOps là gì và vì sao nó ra đời: hai đội phát triển và vận hành với hai thước đo ngược nhau, Agile năm 2001 tăng tốc một nửa, những năm 2006–2009 nhập hai nửa lại, định nghĩa trong chuẩn IEEE 2675-2021, và cách người ta đo DevOps ngày nay.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="00-devops">
+
+<nav class="topbar"><div class="topbar-inner">
+  <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-00 / lich-su-devops</span>
+  <span class="spacer"></span>
+</div></nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Bài 00 · Phụ lục · đọc thêm, không bắt buộc</p>
+  <h1>Lịch sử DevOps: <span class="hl">vì sao hai đội phải nhập lại</span></h1>
+  <p class="lede">Bài 00 chỉ ra rằng trong chín chặng của một request chỉ một chặng là code bạn viết. Phụ
+  lục này kể ai đã lo tám chặng còn lại, vì sao cách chia việc cũ gây rắc rối, và cái tên DevOps ra đời từ
+  đâu.</p>
+  <div class="meta">
+    <span class="chip violet">Phụ lục · Lịch sử DevOps</span>
+    <a class="chip" href="index.html#devops"><i class="ic ic-l" aria-hidden="true"></i> Bài giảng 00</a>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của phụ lục lịch sử DevOps">
+
+<!-- ================================================================== -->
+<section class="tab" id="t-hai-doi" data-tab="Hai đội" data-note="trước khi có DevOps">
+
+<p class="panel-intro">Cuối tab Phía server của Bài 00 còn một câu mình chưa kể hết: tám chặng không phải
+code của bạn thì ai lo? Phần lớn lịch sử ngành phần mềm, câu trả lời là <em>một đội khác</em>. Muốn hiểu vì
+sao phải nghĩ ra DevOps thì bắt đầu từ cách chia việc đó.</p>
+
+<h2 id="hai-doi">Phát triển và vận hành: hai đội, hai thước đo</h2>
+
+<p>Ở rất nhiều công ty phần mềm trước năm 2010, và ở không ít công ty hôm nay, công việc được chia cho hai
+bộ phận. Bộ phận <strong>phát triển</strong> (<em>development</em>, gọi tắt là dev) viết tính năng mới. Bộ
+phận <strong>vận hành</strong> (<em>operations</em>, gọi tắt là ops) giữ cho hệ thống chạy: lắp và cấu hình
+máy chủ, giữ mạng và firewall, sao lưu dữ liệu, trực khi có sự cố lúc nửa đêm. Theo bản đồ chín chặng thì dev
+lo ứng dụng, còn ops lo gần như mọi thứ quanh nó.</p>
+
+<figure class="fig photo">
+  <img src="img/noc-iupui.webp" width="1200" height="800" loading="lazy" alt="Một phòng làm việc nhiều bàn, mỗi bàn hai ba màn hình, phía trước là một dải màn hình lớn hiện bản đồ mạng của nước Mỹ.">
+  <figcaption><b>Ảnh 1</b> Trung tâm vận hành mạng (<em>network operations center</em>, NOC) của Đại học
+  Indiana; một trong các màn hình lớn ghi tên Indiana University Internet2 Network Operations Center. Đây
+  là hình ảnh quen thuộc của nghề vận hành: một đội riêng, phòng riêng, theo dõi trạng thái của hệ thống.
+  Bức ảnh chỉ cho thấy vận hành là một nghề có thật với chỗ ngồi riêng, không cho biết đội này làm việc với
+  lập trình viên ra sao.</figcaption>
+</figure>
+
+<p>Chia việc vậy là hợp lý, vì mỗi bên cần kỹ năng khác nhau. Chỗ rắc rối là hai bên bị đánh giá bằng hai
+thước đo kéo ngược nhau. Dev được đánh giá bằng lượng tính năng mới đưa ra, tức là bằng <em>số thay đổi</em>.
+Ops được đánh giá bằng việc hệ thống không sập, mà như Bài 00 đã nói, hệ thống đang chạy tốt chỉ hỏng khi có
+thứ gì đó thay đổi. Nên với ops, mỗi thay đổi là một rủi ro cần hạn chế; còn với dev, mỗi lần bị hạn chế là
+một tính năng chậm ra mắt.</p>
+
+<p>Nỗi lo của ops có cơ sở, và Ảnh 2 kể nó bằng một ví dụ cố tình cường điệu.</p>
+
+<figure class="fig photo small">
+  <img src="img/xkcd-workflow.webp" width="556" height="772" loading="lazy" alt="Ghi chú phát hành của một phần mềm: Changes in version 10.17: The CPU no longer overheats when you hold down spacebar. Bên dưới là bình luận của LongtimeUser4: bản cập nhật làm hỏng cách làm việc của tôi, tôi vẫn giữ phím cách thay cho phím Control. Admin đáp: That's horrifying. Dòng cuối: Every change breaks someone's workflow.">
+  <figcaption><b>Ảnh 2</b> Truyện <em>Workflow</em> của xkcd, số 1172, năm 2013. Bản 10.17 sửa một lỗi: CPU không còn nóng lên khi giữ phím cách. Một người dùng lâu năm phản đối, vì anh đã quen giữ phím cách thay cho phím Control, nhờ một cấu hình đọc nhiệt độ CPU. Dòng dưới cùng nói gọn nỗi lo của ops: <em>every change breaks someone's workflow</em>, thay đổi nào cũng làm hỏng cách làm việc của một ai đó.</figcaption>
+</figure>
+
+<dl class="terms">
+  <dt>Deploy <small>triển khai</small></dt>
+  <dd>Việc đưa một phiên bản mới của ứng dụng lên server để người dùng bắt đầu dùng nó. Tiếng Việt hay
+  nói gọn là "đưa lên" hoặc "triển khai".</dd>
+  <dt>Production <small>môi trường thật</small></dt>
+  <dd>Những server đang phục vụ người dùng thật. Đối lập với máy dev và các server dùng để thử. Một lỗi
+  trên production là lỗi người dùng nhìn thấy.</dd>
+</dl>
+
+<p>Cách hai bên dung hoà thường là gom thay đổi lại cho ít lần deploy hơn. Nhiều tính năng được dồn vào một
+bản phát hành lớn, đưa lên production vài tháng một lần, vào một khung giờ ban đêm đã đặt lịch trước. Dev
+viết xong thì bàn giao một gói phần mềm kèm tài liệu hướng dẫn cài đặt; ops nhận gói đó rồi tự cài lên
+server. Năm 2006, Werner Vogels, giám đốc công nghệ của Amazon, tả lại mô hình này trong một cuộc phỏng vấn
+với tạp chí ACM Queue bằng câu sau:</p>
+
+<blockquote class="pull"><p>"The traditional model is that you take your software to the wall that
+separates development and operations, and throw it over and then forget about it."</p></blockquote>
+
+<p>Câu đó dịch ra là: mô hình truyền thống là mang phần mềm tới bức tường ngăn phát triển với vận hành, ném
+nó qua tường, rồi quên đi. Bức tường ở đây không có thật; đó là hình ảnh của chính Vogels cho việc bàn giao
+một chiều.</p>
+
+<h3 id="nua-ban-do">Khi có sự cố: mỗi bên thấy nửa tấm bản đồ</h3>
+
+<p>Cái giá của bức tường lộ rõ nhất lúc có sự cố. Quay lại tình huống mở đầu Bài 00: web không vào được.
+Dev chỉ thấy code của mình, đọc lại, thấy không đổi gì, kết luận "lỗi ở server". Ops thấy server vẫn chạy,
+firewall đúng luật, kết luận "lỗi ở code". Bên nào cũng đúng với nửa bản đồ mình nhìn thấy, và không bên
+nào nhìn được cả chín chặng. Thời gian trôi mất trong lúc hai bên chứng minh lỗi không phải của mình.</p>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-agile" data-tab="Agile" data-note="2001: tăng tốc một nửa">
+
+<p class="panel-intro">Trước khi có ai nói tới DevOps, giới lập trình đã tự cải cách cách làm của mình.
+Cuộc cải cách đó giải được một nửa bài toán, và nửa còn lại là chỗ DevOps ra đời.</p>
+
+<h2 id="agile">2001: Tuyên ngôn Agile</h2>
+
+<p>Cuối thập niên 1990, nhiều dự án phần mềm vẫn đi theo lối lập kế hoạch kỹ từ đầu: viết đặc tả, rồi thiết
+kế, rồi mới viết code, rồi mới kiểm thử, mỗi bước kéo dài hàng tháng. Khi phần mềm xong thì yêu cầu của khách
+hàng đã đổi. Năm 2001, mười bảy người làm phần mềm cùng ký một văn bản ngắn tên là <em>Manifesto for Agile
+Software Development</em>, tuyên ngôn phát triển phần mềm linh hoạt.</p>
+
+<figure class="fig photo shot">
+  <img src="img/agile-manifesto.webp" width="1280" height="816" loading="lazy" alt="Trang agilemanifesto.org: tiêu đề Manifesto for Agile Software Development và bốn dòng giá trị, hai dòng Working software và Responding to change được khoanh màu.">
+  <figcaption><b>Ảnh 3</b> Bốn giá trị của Tuyên ngôn Agile, nguyên văn trên agilemanifesto.org (bản ghi năm
+  2001). Hai giá trị khoanh màu gần nhất với câu chuyện của phụ lục: khung
+  <span class="kw"><i class="key k-red" aria-hidden="true"></i>đỏ</span>, phần mềm chạy được quan trọng hơn
+  tài liệu đầy đủ; khung <span class="kw"><i class="key k-blue" aria-hidden="true"></i>lam</span>, thích ứng
+  với thay đổi quan trọng hơn bám theo kế hoạch. Cả bốn dòng đều nói về cách <em>phát triển</em> phần mềm;
+  không dòng nào nhắc tới việc vận hành nó.</figcaption>
+</figure>
+
+<p>Từ tuyên ngôn đó, các đội phát triển chuyển sang làm việc theo những vòng ngắn, thường vài tuần một
+vòng: mỗi vòng làm xong một ít tính năng chạy được, cho khách hàng xem, rồi điều chỉnh. Nhờ vậy đội dev ra
+thay đổi nhanh hơn trước rất nhiều.</p>
+
+<h3 id="agile-gioi-han">Giới hạn: tốc độ dừng lại ở bức tường</h3>
+
+<p>Nhưng "làm xong" ở đây là xong ở phía dev. Mã nguồn sẵn sàng sau mỗi vòng hai tuần chưa có nghĩa là người
+dùng được dùng nó sau hai tuần, vì đường từ code xong tới production vẫn đi qua bức tường cũ: bàn giao, xếp
+lịch, cài tay. Ở nhiều tổ chức, dev đã chạy theo nhịp tuần trong khi production vẫn chỉ đổi theo nhịp quý.
+Thay đổi dồn lại phía trước bức tường, và mỗi lần deploy thành một lần lớn, đúng loại thay đổi mà ops muốn
+tránh nhất.</p>
+
+<p>Tám năm sau tuyên ngôn, câu hỏi vẫn còn nguyên. Phần giới thiệu của một bài nói ở hội nghị devopsdays đầu
+tiên năm 2009 (tab sau) mở đầu bằng đúng câu này: <em>"Software development teams have had Agile going for some time. But how
+can operations derive from the same benefits?"</em> Nghĩa là: các đội phát triển có Agile từ lâu rồi, còn
+vận hành thì hưởng lợi từ nó bằng cách nào?</p>
+
+<p>Muốn đi tiếp thì phải dỡ chính bức tường đó. Trong những năm 2006–2009, nhiều nơi bắt đầu làm việc ấy.</p>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-2009" data-tab="2006–2009" data-note="hai nửa nhập lại">
+
+<p class="panel-intro">Không ai phát minh ra DevOps trong một ngày. Nó thành hình qua bốn mốc nối nhau, mỗi
+mốc giải thêm một phần vấn đề ở tab Hai đội.</p>
+
+<h2 id="vogels">2006: "You build it, you run it"</h2>
+
+<p>Trong cùng cuộc phỏng vấn năm 2006 với ACM Queue, ngay sau câu về bức tường, Werner Vogels kể cách Amazon
+làm khác: <em>"Not at Amazon. You build it, you run it."</em> Đội nào viết một dịch vụ thì chính đội đó vận
+hành nó, kể cả trực sự cố. Theo Vogels, việc này đưa lập trình viên tiếp xúc hằng ngày với hoạt động thật
+của phần mềm mình viết, và với khách hàng của nó. Amazon dỡ bức tường bằng cách bỏ hẳn bước bàn giao: hai
+đầu của tấm bản đồ về chung một nhóm.</p>
+
+<h2 id="agile-infra">2008: "Agile Infrastructure"</h2>
+
+<p>Ở hội nghị Agile năm 2008 tại Toronto, Andrew Shafer đề xuất một buổi thảo luận về chủ đề <em>Agile
+Infrastructure</em>: áp tinh thần Agile vào phía hạ tầng. Theo những bài kể lại lịch sử DevOps về sau, chủ
+đề ít người quan tâm tới mức chỉ một người tìm tới: Patrick Debois, một chuyên gia tư vấn người Bỉ từng phải
+đứng giữa đội phát triển và đội vận hành trong một dự án chuyển trung tâm dữ liệu. Hai người bắt đầu trao đổi
+từ đó.</p>
+
+<h2 id="flickr">2009: mười lần deploy một ngày</h2>
+
+<p>Tháng 6 năm 2009, ở hội nghị Velocity, John Allspaw, người phụ trách vận hành, và Paul Hammond, người phụ
+trách kỹ thuật phát triển, của trang chia sẻ ảnh Flickr, trình bày bài nói <em>10+ Deploys per Day: Dev and
+Ops Cooperation at Flickr</em>. Con số trong tiêu đề gây chú ý vì nó ngược hẳn với lối "vài tháng một bản
+phát hành": vào một ngày bình thường, Flickr deploy lên production khoảng mười lần hoặc hơn.</p>
+
+<p>Cái đáng nhớ là lập luận đứng sau con số. Một thay đổi nhỏ thì dễ kiểm tra, dễ hiểu khi nó gây lỗi, và dễ
+gỡ ra. Nên deploy thường xuyên không làm hệ thống kém ổn định đi, nếu đủ hai điều kiện: việc deploy được tự
+động hoá để lần nào cũng giống lần nào, và dev với ops dùng chung công cụ, chung số liệu, cùng nhìn một màn
+hình khi có sự cố. Mâu thuẫn "dev muốn thay đổi, ops muốn ổn định" ở tab đầu hoá ra là mâu thuẫn của những
+thay đổi <em>lớn</em>.</p>
+
+<p>Ảnh 4 cho thấy đi nhanh mà thiếu hai điều kiện đó thì ra sao.</p>
+
+<figure class="fig photo small narrow">
+  <img src="img/xkcd-move-fast.webp" width="483" height="1290" loading="lazy" alt="Một người đi phỏng vấn nói: My motto is move fast and break things. Bên dưới là danh sách Jobs I've been fired from: FedEx driver, crane operator, surgeon, air traffic controller, pharmacist, museum curator, waiter, dog walker, oil tanker captain, violinist, Mars rover driver, massage therapist.">
+  <figcaption><b>Ảnh 4</b> Truyện <em>Move Fast and Break Things</em> của xkcd, số 1428, năm 2014. Người đi phỏng vấn khoe phương châm "đi nhanh và làm vỡ đồ"; bên dưới là danh sách những việc anh đã bị đuổi: tài xế giao hàng, người lái cần cẩu, bác sĩ phẫu thuật, kiểm soát viên không lưu. Ở những nghề ấy không có cách gỡ một thay đổi vừa gây lỗi. Flickr deploy mười lần một ngày được vì mỗi thay đổi nhỏ, kiểm tra được và gỡ ra được.</figcaption>
+</figure>
+
+<h2 id="ghent">Tháng 10 năm 2009: devopsdays ở Ghent</h2>
+
+<p>Patrick Debois không đi được tới Velocity và xem bài nói của Flickr qua video. Được nhiều người trên mạng
+xã hội cổ vũ, anh tự tổ chức một hội nghị ở Ghent, Bỉ, vào tháng 10 năm 2009, đặt tên là
+<strong>devopsdays</strong>: ghép hai chữ development và operations. Chữ <em>devops</em> từ đó thành tên
+chung cho cách làm mà hội nghị bàn tới, và devopsdays về sau được tổ chức ở nhiều thành phố trên thế giới.</p>
+
+<figure class="fig photo shot">
+  <img src="img/devopsdays-ghent-2009.webp" width="1400" height="1215" loading="lazy" alt="Trang chương trình devopsdays Ghent 2009: dòng khẩu hiệu The conference that brings development and operations together ở đầu trang và sáu ô tên bài nói, ba ô được khoanh màu.">
+  <figcaption><b>Ảnh 5</b> Trang chương trình của devopsdays Ghent 2009, vẫn còn trên trang lưu trữ
+  legacy.devopsdays.org. <span class="kw"><i class="key k-red" aria-hidden="true"></i>Khẩu hiệu</span> nói
+  thẳng mục đích: hội nghị đưa phát triển và vận hành lại với nhau. Các bài nói cho thấy hai phía mượn
+  cách làm của nhau: hai ô <span class="kw"><i class="key k-blue" aria-hidden="true"></i>lam</span> là dựng
+  hạ tầng theo lối Agile bằng Puppet và đưa Kanban vào vận hành; ô <span class="kw"><i class="key k-yellow"
+  aria-hidden="true"></i>vàng</span> là tích hợp liên tục, đường ống và deploy, tức tự động hoá đường đi từ
+  code tới production.</figcaption>
+</figure>
+
+<p>Hai cái tên trong Ảnh 5 cần một câu giải thích. Puppet là công cụ cho phép mô tả cấu hình của máy chủ
+trong các tệp văn bản, để máy cấu hình đúng như mô tả thay vì do người gõ tay từng lệnh. Kanban là cách sắp
+việc trên một bảng chung để cả nhóm thấy việc nào đang làm, việc nào đang chờ. Bản thân hai công cụ không
+quan trọng với phụ lục này; cái đáng chú ý là năm 2009 người vận hành đã muốn quản lý máy chủ như quản lý
+code, và người viết code đã muốn tự động hoá đường lên production.</p>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>Ba ý ghép thành DevOps trong khoảng 2006–2009: đội viết ra phần mềm cũng vận hành nó (Amazon); hạ
+  tầng cũng làm theo lối Agile (Toronto 2008); thay đổi nhỏ, deploy tự động và thường xuyên thì vừa nhanh
+  vừa ổn định (Flickr 2009). Hội nghị devopsdays ở Ghent cuối năm 2009 cho cách làm đó một cái tên.</p>
+  <p>Một cái tên thì chưa phải định nghĩa. Vậy rốt cuộc DevOps là gì, và làm sao biết một nhóm đang làm
+  DevOps tốt hay dở?</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-dinh-nghia" data-tab="Định nghĩa" data-note="là gì, đo thế nào">
+
+<p class="panel-intro">Mười hai năm sau hội nghị devopsdays đầu tiên, DevOps có một văn bản chuẩn: IEEE
+2675-2021, năm 2022 được chấp nhận thành chuẩn quốc tế ISO/IEC/IEEE 32675:2022. Ngoài định nghĩa trong
+chuẩn, nghề này còn có một bộ chỉ số được nghiên cứu nhiều năm để đo DevOps.</p>
+
+<h2 id="dinh-nghia">Định nghĩa trong chuẩn</h2>
+
+<div class="callout define">
+  <span class="label">Định nghĩa · IEEE 2675-2021, mục 3.1</span>
+  <p><strong>DevOps</strong> là tập hợp các nguyên tắc và cách làm giúp các bên liên quan giao tiếp và
+  cộng tác tốt hơn, nhằm đặc tả, phát triển và vận hành các sản phẩm và dịch vụ phần mềm và hệ thống, đồng
+  thời cải tiến liên tục mọi khía cạnh trong vòng đời của chúng.</p>
+  <p>Nguyên văn: <em>"DevOps: Set of principles and practices which enable better communication and
+  collaboration between relevant stakeholders for the purpose of specifying, developing, and operating
+  software and systems products and services, and continuous improvements in all aspects of the life
+  cycle."</em></p>
+</div>
+
+<p>Các bên liên quan (<em>stakeholders</em>) là những người có phần trong việc phần mềm được làm ra và chạy
+ra sao; trong câu chuyện của phụ lục, đó trước hết là hai đội ở tab Hai đội. Chính chuẩn cũng kể lại thuật
+ngữ ra đời từ đâu (mục 5.1), và lời kể đó khớp với những gì tab đầu đã kể. Theo chuẩn, thuật ngữ DevOps hình
+thành khi đã có sẵn những công cụ tự động hoá hoàn toàn việc build, đóng gói và deploy ứng dụng, cùng với
+nhận thức rằng các tổ chức công nghệ thông tin chưa sẵn sàng dùng những công cụ đó cho hiệu quả. Chuẩn viết
+tiếp rằng lập trình viên và người vận hành, theo truyền thống, có những góc nhìn khác nhau, có lúc mâu thuẫn
+nhau.</p>
+
+<p>Chuẩn cũng nêu bức tranh quen thuộc: lập trình viên muốn đi nhanh, còn đội vận hành lo giữ độ tin cậy và
+bảo đảm an ninh mạng. Nhưng chính chuẩn gọi bức tranh đó là một mô tả cực đoan, đơn giản hoá quá mức
+(<em>"an extreme, oversimplified characterization"</em>). Nên hai thước đo ngược nhau ở tab Hai đội chỉ nên
+hiểu là một cách mô tả để thấy vì sao hai phía kéo về hai hướng, chưa phải mô tả đúng cho mọi công ty.</p>
+
+<div class="callout">
+  <span class="label">Cách phụ lục này tóm lại</span>
+  <p>Để nối định nghĩa của chuẩn với các mốc ở tab trước, mình dùng một cách nói ngắn và hẹp hơn, của riêng
+  mình: DevOps là cách tổ chức để một nhóm chịu trách nhiệm cho phần mềm từ lúc viết tới lúc nó chạy ổn
+  định, dựa trên ba trụ là <em>chung trách nhiệm</em>, <em>tự động hoá</em> những bước lặp lại giữa code và
+  production, và <em>đo lường</em>.</p>
+</div>
+
+<p>Đây là lời của phụ lục, không trích từ chuẩn. Ba trụ đó khớp với các mốc ở tab trước: chung trách nhiệm là
+"you build it, you run it"; tự động hoá là điều kiện để Flickr deploy mười lần một ngày; đo lường là cách
+biết có cải tiến liên tục hay không, điều mà định nghĩa của chuẩn nhắc tới, và là phần tab này kể tiếp.</p>
+
+<h2 id="dora">Đo DevOps: năm chỉ số của DORA</h2>
+
+<p>DevOps hứa "vừa nhanh vừa ổn định" thì phải có cách đo cả hai. Chương trình nghiên cứu
+<strong>DORA</strong> (<em>DevOps Research and Assessment</em>), nay do Google Cloud điều hành, nhiều năm
+khảo sát các nhóm phần mềm và rút ra một bộ chỉ số đo <em>hiệu quả giao phần mềm</em>. Bộ hiện hành gồm năm
+chỉ số, chia hai nhóm: nhóm <em>throughput</em> đo tốc độ thay đổi đi tới production, nhóm
+<em>instability</em> đo mức thay đổi gây ra rắc rối (Bảng 1).</p>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 1</b> Năm chỉ số của DORA, chia hai nhóm: ba chỉ số đo tốc độ, hai chỉ số đo mức bất
+  ổn. Cột định nghĩa trích nguyên văn, cột cuối là nghĩa tiếng Việt. Nguồn:
+  <a href="https://dora.dev/guides/dora-metrics/">DORA, <em>DORA’s software delivery performance
+  metrics</em></a>, mục Throughput and instability, đọc ngày 03/10/2026.</caption>
+  <thead><tr><th>Nhóm</th><th>Chỉ số</th><th>Định nghĩa của DORA</th><th>Nghĩa</th></tr></thead>
+  <tbody>
+    <tr><td rowspan="3">Throughput (tốc độ)</td><td lang="en">Change lead time</td><td lang="en">The amount of time it takes for a change to go from committed to version control to deployed in production.</td><td>Thời gian từ lúc một thay đổi được lưu vào kho mã tới lúc lên production.</td></tr>
+    <tr><td lang="en">Deployment frequency</td><td lang="en">The number of deployments over a given period or the time between deployments.</td><td>Số lần deploy trong một khoảng thời gian, hoặc khoảng cách giữa hai lần deploy.</td></tr>
+    <tr><td lang="en">Failed deployment recovery time</td><td lang="en">The time it takes to recover from a deployment that fails and requires immediate intervention.</td><td>Thời gian khôi phục sau một lần deploy hỏng, phải can thiệp ngay.</td></tr>
+  </tbody>
+  <tbody>
+    <tr><td rowspan="2">Instability (bất ổn)</td><td lang="en">Change fail rate</td><td lang="en">The ratio of deployments that require immediate intervention following a deployment. Likely resulting in a rollback of the changes or a “hotfix” to quickly remediate any issues.</td><td>Tỉ lệ lần deploy phải can thiệp gấp ngay sau đó, thường bằng cách gỡ thay đổi ra hoặc sửa gấp.</td></tr>
+    <tr><td lang="en">Deployment rework rate</td><td lang="en">The ratio of deployments that are unplanned but happen as a result of an incident in production.</td><td>Tỉ lệ lần deploy ngoài kế hoạch, phát sinh vì một sự cố trên production.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Đặt năm chỉ số cạnh nhau, DORA rút ra một kết luận về quan hệ giữa hai nhóm.</p>
+
+<figure class="fig">
+<blockquote class="src" lang="en">
+<p>DORA’s research has repeatedly demonstrated that speed and stability are not tradeoffs. In fact, we see
+that the metrics are correlated for most teams. Top performers do well across all five metrics, and low
+performers do poorly.</p>
+</blockquote>
+<figcaption><b>Hình 1</b> Kết luận của chính DORA: nghiên cứu của họ nhiều lần cho thấy tốc độ và độ ổn
+định không phải hai thứ đánh đổi nhau. Trích nguyên văn
+<a href="https://dora.dev/guides/dora-metrics/">dora.dev</a>, mục Key insights, đọc ngày
+03/10/2026.</figcaption>
+</figure>
+
+<p>Kết luận ở Hình 1 trả lời thẳng mâu thuẫn ở tab Hai đội. Thước đo của dev (thay đổi nhiều, nhanh) và
+thước đo của ops (ít sự cố, khôi phục nhanh) được đặt chung trong một bảng điểm, và dữ liệu của DORA cho thấy
+ở phần lớn các nhóm, hai nhóm chỉ số đi cùng chiều: nhóm làm tốt thường tốt ở cả năm, nhóm làm kém thường
+kém ở cả năm. Nên một nhóm DevOps không chọn giữa nhanh và ổn định; nó được đo trên cả hai.</p>
+
+<h2 id="khong-phai">DevOps không phải là gì</h2>
+
+<p>Cái tên lan nhanh hơn cách hiểu, nên có ba hiểu lầm hay gặp. 1 là DevOps không phải một công cụ để mua:
+Docker, GitLab hay Kubernetes là những công cụ giúp làm DevOps, nhưng một công ty dùng đủ cả ba mà vẫn bàn
+giao qua bức tường thì vẫn là mô hình cũ. 2 là DevOps không có nghĩa lập trình viên tự làm hết việc của vận
+hành; nó có nghĩa hai phía chung mục tiêu và chung trách nhiệm, còn chuyên môn sâu về mạng hay cơ sở dữ liệu
+vẫn cần người giỏi việc đó. 3 là "DevOps engineer" ngày nay là một chức danh tuyển dụng phổ biến, và nhiều
+người trong nghề chỉ ra một nghịch lý: lập một "đội DevOps" riêng đứng giữa dev và ops dễ dựng thêm một bức
+tường thứ hai, đúng điều phong trào muốn tránh.</p>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>Chuẩn IEEE 2675-2021 định nghĩa DevOps là tập hợp nguyên tắc và cách làm giúp các bên liên quan cộng
+  tác tốt hơn suốt vòng đời phần mềm; phụ lục tóm lại thành ba trụ: chung trách nhiệm, tự động hoá và đo
+  lường. DORA đo DevOps bằng năm chỉ số tốc độ và độ ổn định, và thấy hai thứ đi cùng chiều chứ không đánh
+  đổi.</p>
+  <p>Những ý tưởng của năm 2009 giờ nằm ở đâu trong công việc hằng ngày, và trong lộ trình này?</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-dau-vet" data-tab="Dấu vết" data-note="trong lộ trình này">
+
+<p class="panel-intro">Mỗi vấn đề của thời hai đội để lại một lời giải, và lời giải nào cũng là một phần
+của lộ trình bạn đang học. Bảng dưới nối chúng lại.</p>
+
+<h2 id="dau-vet">Từ vấn đề cũ tới các module của lộ trình</h2>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 2</b> Vấn đề của mô hình hai đội, lời giải DevOps đưa ra, và nơi lộ trình dạy lời giải đó.</caption>
+  <thead><tr><th>Vấn đề cũ</th><th>Lời giải</th><th>Trong lộ trình</th></tr></thead>
+  <tbody>
+    <tr><td>Mỗi bên chỉ thấy nửa tấm bản đồ khi có sự cố</td><td>Người viết ứng dụng hiểu cả chín chặng và đọc được triệu chứng của từng chặng</td><td>Bài 00–04</td></tr>
+    <tr><td>Chạy được trên máy dev nhưng hỏng trên server, vì hai nơi cài đặt khác nhau</td><td>Đóng gói ứng dụng cùng mọi thứ nó cần, để nó chạy giống nhau ở mọi máy</td><td>Module 1 (Docker)</td></tr>
+    <tr><td>Bàn giao bằng tay, deploy hiếm và lớn</td><td>Làm tay một lần cho hiểu, rồi tự động hoá đường từ code tới production để deploy nhỏ và thường xuyên</td><td>Module 2 (làm tay), Module 3 (GitLab CI/CD)</td></tr>
+    <tr><td>Không ai ngồi trước server lúc nửa đêm</td><td>Phần mềm trông coi tự dựng ứng dụng dậy; số liệu và cảnh báo báo cho người khi cần</td><td>Bài 03 (service), Module 4 và 5</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Dòng đầu của Bảng 2 giải thích vì sao lộ trình mở bằng một tấm bản đồ và cách đọc lỗi, không mở bằng một
+công cụ. Mọi lời giải ở các dòng sau đều giả định người làm đã nhìn được cả chín chặng: không tự động hoá
+được việc deploy lên một server mình không hiểu, và không chịu trách nhiệm được cho một chặng mà mình không
+biết nó hỏng trông ra sao.</p>
+
+<h2 id="noi-ve-bai-00">Nối về Bài 00</h2>
+
+<div class="callout">
+  <span class="label">Điều phụ lục này muốn để lại</span>
+  <p>Câu "trong cả đường đi, chỉ ứng dụng là code bạn viết" của Bài 00 từng là ranh giới giữa hai đội: bên
+  này tường là dev, bên kia là ops. DevOps không xoá ranh giới đó khỏi bản đồ, ứng dụng vẫn là code của bạn.
+  Cái đổi là cách chịu trách nhiệm: cả chín chặng giờ là việc chung của những người cùng làm ra và vận hành
+  phần mềm, và lộ trình này dạy bạn đủ để góp vào việc chung đó.</p>
+</div>
+
+<p>Quay lại <a href="index.html#devops">bài giảng Bài 00</a>, hoặc đi tiếp tới
+<a href="../01-ip-port-listen-firewall/">Bài 01</a>.</p>
+
+<h2 id="nguon">Nguồn đọc thêm</h2>
+
+<ol class="refs">
+  <li>Manifesto for Agile Software Development, 2001.
+  <a href="https://agilemanifesto.org/">agilemanifesto.org</a></li>
+  <li>Jim Gray — <em>A Conversation with Werner Vogels</em>, ACM Queue, tập 4 số 4, 2006. Nguồn của hai câu
+  về bức tường và "you build it, you run it".
+  <a href="https://queue.acm.org/detail.cfm?id=1142065">queue.acm.org/detail.cfm?id=1142065</a></li>
+  <li>John Allspaw, Paul Hammond — <em>10+ Deploys per Day: Dev and Ops Cooperation at Flickr</em>, Velocity
+  2009. Trang bài viết của Allspaw kèm slide.
+  <a href="https://www.kitchensoap.com/2009/06/23/slides-for-velocity-talk-2009/">kitchensoap.com/2009/06/23/slides-for-velocity-talk-2009</a></li>
+  <li>Steve Mezak — <em>The Origins of DevOps: What's in a Name?</em>, DevOps.com, 2018. Bài kể lại buổi
+  thảo luận ở Toronto năm 2008 và việc Debois xem bài nói của Flickr qua video.
+  <a href="https://devops.com/the-origins-of-devops-whats-in-a-name/">devops.com/the-origins-of-devops-whats-in-a-name</a></li>
+  <li>devopsdays — trang giới thiệu và lịch sử hội nghị.
+  <a href="https://devopsdays.org/about/">devopsdays.org/about</a></li>
+  <li>devopsdays Ghent 2009 — chương trình, trang lưu trữ.
+  <a href="http://legacy.devopsdays.org/events/2009-ghent/program/">legacy.devopsdays.org/events/2009-ghent/program</a></li>
+  <li>DORA — <em>DORA's software delivery performance metrics</em>.
+  <a href="https://dora.dev/guides/dora-metrics/">dora.dev/guides/dora-metrics</a></li>
+  <li>IEEE 2675-2021 — <em>IEEE Standard for DevOps: Building Reliable and Secure Systems Including
+  Application Build, Package, and Deployment</em>. Nguồn của định nghĩa ở tab Định nghĩa; trang giới thiệu
+  chính thức, toàn văn phải trả phí.
+  <a href="https://standards.ieee.org/ieee/2675/6830/">standards.ieee.org/ieee/2675/6830</a></li>
+  <li>ISO/IEC/IEEE 32675:2022 — bản chuẩn quốc tế được chấp nhận từ IEEE 2675-2021; trang giới thiệu
+  chính thức, toàn văn phải trả phí.
+  <a href="https://www.iso.org/standard/83670.html">iso.org/standard/83670.html</a></li>
+</ol>
+
+<h2 id="nguon-anh">Nguồn ảnh</h2>
+<p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở dòng của nó; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang. Ảnh chụp màn hình do mình tự chụp; các khung màu là phần đánh dấu thêm vào. Truyện tranh của xkcd dùng theo giấy phép phi thương mại ghi ở từng dòng; đã phóng to và chuyển sang đen trắng.</p>
+<ol class="photo-credits">
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:NOC-IUPUI.jpg">Trung tâm vận hành mạng của Đại học Indiana</a> — Alan Levine, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://xkcd.com/1172/">Workflow</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 3</b>Bốn giá trị của Tuyên ngôn Agile — chụp màn hình <a href="https://agilemanifesto.org/">agilemanifesto.org</a>, 03/10/2026; đã bỏ ảnh nền phía sau chữ và cắt bớt khoảng trống dưới tiêu đề.</li>
+  <li><b>Ảnh 4</b><a href="https://xkcd.com/1428/">Move Fast and Break Things</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 5</b>Chương trình devopsdays Ghent 2009 — chụp màn hình <a href="http://legacy.devopsdays.org/events/2009-ghent/program/">legacy.devopsdays.org</a>, 03/10/2026.</li>
+</ol>
+
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="index.html">
+    <span class="dir">Quay lại</span>
+    <span class="t">Bài giảng 00</span>
+  </a>
+  <a class="next" href="../01-ip-port-listen-firewall/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">01 · IP, port, listen, firewall</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 00 · Phụ lục · Lịch sử DevOps · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>
