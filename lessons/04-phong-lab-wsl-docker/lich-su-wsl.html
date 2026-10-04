@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phụ lục — Lịch sử WSL</title>
+<meta name="description" content="Vì sao Windows chạy được Linux: máy ảo đầy đủ, Cygwin và MSYS2, WSL 1 dịch syscall, rồi WSL 2 với kernel Linux thật — mỗi bước giải quyết vấn đề gì mà bước trước chưa giải quyết được.">
+<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="04-wsl">
+
+<nav class="topbar"><div class="topbar-inner">
+  <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-04 / lich-su-wsl</span>
+  <span class="spacer"></span>
+</div></nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Bài 04 · Phụ lục · đọc thêm, không bắt buộc</p>
+  <h1>Lịch sử WSL: <span class="hl">vì sao Windows chạy được Linux</span></h1>
+  <p class="lede">Bài 04 dùng WSL2 để có một kernel Linux thật trên máy Windows. Phụ lục này kể lại con đường
+  dẫn tới đó: bốn cách giải nối tiếp nhau, mỗi cách ra đời để gỡ đúng giới hạn mà cách trước để lại.</p>
+  <div class="meta">
+    <span class="chip violet">Phụ lục · Lịch sử WSL</span>
+    <a class="chip" href="index.html"><i class="ic ic-l" aria-hidden="true"></i> Bài giảng 04</a>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của phụ lục lịch sử WSL">
+
+<!-- ================================================================== -->
+<section class="tab" id="t-van-de" data-tab="Vấn đề" data-note="chương trình Linux, kernel Windows">
+
+<p class="panel-intro">Phụ lục trả lời một câu nảy ra ở tab WSL2 của Bài 04: đã có ba cách được thử để chạy
+chương trình Linux trên Windows, vậy vì sao hai cách đầu không đủ, và WSL2 khác chúng ở đâu?</p>
+
+<h2 id="hai-the-gioi">Hai kernel, hai bộ syscall khác nhau</h2>
+
+<p>Vấn đề có từ lâu trước WSL. Phần lớn server chạy hệ điều hành kiểu Unix, ngày nay chủ yếu là Linux; công cụ
+của người làm hạ tầng, như bash, <code>grep</code>, <code>ssh</code> hay trình biên dịch C, sinh ra trong thế giới
+đó. Trong khi đó, máy làm việc của rất nhiều developer chạy Windows. Người ta muốn dùng công cụ của server ngay trên
+máy mình, để thứ chạy trên laptop giống thứ chạy trên server.</p>
+
+<p>Bài 03 đã cho thấy vì sao chuyện này không đơn giản. Một chương trình không tự làm gì với phần cứng; nó xin
+kernel qua syscall. Chương trình biên dịch cho Linux là một tệp theo định dạng <strong>ELF</strong>, định dạng tệp
+chạy được của Linux, và bên trong nó là các lời gọi theo đúng bộ syscall của Linux: số hiệu, tham số, ý nghĩa. Kernel
+Windows có định dạng tệp chạy được riêng và bộ lời gọi riêng, quen gọi là NT API theo tên dòng kernel Windows NT.
+Đặt một tệp ELF lên Windows thì Windows không chạy nó, và kể cả nếu chạy, các syscall của nó cũng không ai hiểu.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  chương trình Linux (tệp ELF)        chương trình Windows (tệp .exe)
+       │                                   │
+       │ syscall Linux                     │ NT API
+       ▼                                   ▼
+  kernel Linux                        kernel Windows</code></pre>
+  <figcaption><b>Hình 1</b> Hai cặp chương trình và kernel. Vấn đề là nối được mũi tên từ cột trái sang kernel ở cột
+  phải, hoặc đưa một kernel Linux vào máy đang chạy Windows.</figcaption>
+</figure>
+
+<p>Có ba hướng để giải, và cả ba đều đã được thử. Một là đặt một kernel Linux thật bên cạnh, trong máy ảo. Hai là
+biên dịch lại chương trình Linux thành chương trình Windows, kèm một lớp thư viện bắt chước những gì Linux cung cấp.
+Ba là để chương trình Linux nguyên bản chạy, rồi dịch từng syscall của nó sang lời gọi của Windows. WSL2 cuối cùng
+quay về hướng thứ nhất, nhưng sửa đúng những điểm yếu đã khiến người ta phải tìm hai hướng kia.</p>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-may-ao" data-tab="Máy ảo đầy đủ" data-note="chạy được, nhưng nặng">
+
+<p class="panel-intro">Cách giải đầu tiên cũng là cách hiển nhiên nhất: chạy hẳn một máy Linux bên trong máy ảo.
+Nó chạy được, nhưng chưa đủ.</p>
+
+<h2 id="may-ao-truyen-thong">Máy ảo truyền thống</h2>
+
+<p>Cách thẳng nhất là đặt hẳn một máy Linux bên cạnh Windows. Có hai dạng. Dạng thứ nhất là
+cài song song hai hệ điều hành trên cùng ổ đĩa và chọn một trong hai mỗi lần bật máy, gọi là <em>dual boot</em>;
+cách này cho Linux thật trên phần cứng thật, nhưng muốn dùng Linux thì phải tắt Windows. Dạng thứ hai là máy ảo như
+Bài 04 đã định nghĩa: một phần mềm như VirtualBox hay VMware Workstation dựng một máy tính ảo, và bên trong nó chạy một
+bản Linux đầy đủ với kernel của riêng nó.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  Windows                           máy ảo (VirtualBox, VMware…)
+  ─────────────────────────────     ─────────────────────────────
+  trình duyệt, IDE, Git Bash        Linux đầy đủ: kernel, bash…
+                                    ổ đĩa ảo riêng, mạng ảo riêng
+                                    cửa sổ riêng, tự bật, tự tắt</code></pre>
+  <figcaption><b>Hình 2</b> Máy ảo truyền thống: hai máy tính đứng cạnh nhau trên cùng phần cứng, mỗi máy có ổ đĩa,
+  mạng và vòng đời riêng.</figcaption>
+</figure>
+
+<p>Về kỹ thuật, máy ảo giải quyết trọn vấn đề: chương trình Linux nói chuyện với kernel Linux thật, không có gì phải
+dịch. Giới hạn nằm ở chỗ khác, và tài liệu của Microsoft tóm tắt nó trong một câu: trải nghiệm máy ảo truyền thống
+"có thể khởi động chậm, bị cô lập, tốn nhiều tài nguyên, và đòi hỏi thời gian của bạn để quản lý nó". Cô lập ở đây
+nghĩa là hai hệ thống khó dùng chung: tệp nằm trong ổ đĩa ảo, muốn mở bằng IDE trên Windows phải dựng thư mục chia sẻ;
+máy ảo có địa chỉ mạng riêng; RAM cấp cho máy ảo thường bị giữ chỗ dù không dùng tới.</p>
+
+<p>Tính cô lập ấy cũng là lý do nhiều người khác cần máy ảo. Ảnh 1 là một ví dụ được đẩy tới mức buồn cười.</p>
+
+<figure class="fig photo wide">
+  <a href="img/xkcd-network.webp"><img src="img/xkcd-network.webp" width="1480" height="828" loading="lazy" alt="Truyện năm khung. Một màn hình lớn hiện nhiều ô vuông nối nhau bằng đường kẻ. Pretty, isn't it? What is it? I've got a bunch of virtual Windows machines networked together, hooked up to an incoming pipe from the net. They execute email attachments, share files, and have no security patches. Between them they have practically every virus. There are mail trojans, Warhol worms, and all sorts of exotic polymorphics. A monitoring system adds and wipes machines at random. The display shows the viruses as they move through the network, growing and struggling. You know, normal people just have aquariums. Good morning, Blaster. Are you and W32.Welchia getting along? Who's a good virus? You are! Yes, you are!"></a>
+  <figcaption><b>Ảnh 1</b> Truyện <em>Network</em> của xkcd, số 350, năm 2007. Một người nối nhiều máy ảo Windows không vá lỗi với nhau, mở cho chúng nhận mọi thứ từ Internet, rồi ngắm virus lây qua lại trên màn hình như người ta ngắm bể cá. Trò này chỉ làm được vì máy ảo cô lập: thứ chạy bên trong không chạm được vào máy thật.</figcaption>
+</figure>
+
+<p>Nhưng với người chỉ cần gõ vài lệnh
+<code>grep</code> lên tệp của mình, chi phí đó quá lớn, nên người ta tìm cách nhẹ hơn.</p>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-cygwin" data-tab="Cygwin, MSYS2" data-note="biên dịch lại cho Windows">
+
+<p class="panel-intro">Hướng thứ hai nhẹ hơn máy ảo nhiều, và nó để lại một dấu vết bạn đã dùng mỗi ngày từ Bài
+00 mà có thể không để ý: chính Git Bash.</p>
+
+<h2 id="cygwin">Cygwin: mang công cụ Unix sang, bằng cách biên dịch lại</h2>
+
+<p>Muốn tránh máy ảo, phải để chương trình chạy thẳng trên kernel Windows. Cygwin đi theo hướng đó. Theo trang chính
+thức của dự án, Cygwin là "một bộ sưu tập lớn các công cụ GNU và mã nguồn mở, cho chức năng tương tự một bản phân phối
+Linux trên Windows", kèm một thư viện <code>cygwin1.dll</code> "cung cấp phần lớn chức năng của POSIX API". POSIX là
+bộ chuẩn mô tả những hàm mà một hệ điều hành kiểu Unix phải cung cấp cho chương trình: mở tệp, tạo process, gửi
+signal. <code>cygwin1.dll</code> hiện thực các hàm đó bằng những gì Windows có.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  mã nguồn chương trình Unix (C)
+       │
+       │ biên dịch lại cho Windows
+       ▼
+  tệp .exe của Windows ──► cygwin1.dll ──► NT API ──► kernel Windows
+                          (hàm POSIX dựng
+                           bằng hàm Windows)</code></pre>
+  <figcaption><b>Hình 3</b> Cách của Cygwin. Chương trình không còn là tệp ELF của Linux; nó là tệp .exe của Windows
+  được biên dịch lại, và gọi hàm POSIX qua một thư viện trung gian.</figcaption>
+</figure>
+
+<p>Cái giá nằm ngay trong trang của dự án, ở mục Cygwin <em>không</em> là gì: không phải "một cách để chạy ứng dụng
+Linux nguyên bản trên Windows", và "bạn phải biên dịch lại ứng dụng từ mã nguồn nếu muốn nó chạy trên Windows". Mỗi
+chương trình phải được ai đó biên dịch lại; chương trình chỉ có bản Linux đã biên dịch sẵn thì không dùng được. Và vì
+bên dưới vẫn là kernel Windows, những gì thuộc riêng kernel Linux không có cách nào xuất hiện: không OOM killer, không
+<code>dmesg</code>, không systemd.</p>
+
+<h2 id="msys2-git-bash">MSYS2, và Git Bash</h2>
+
+<p>MSYS2 là một dự án đi sau, theo tài liệu của nó "các công cụ kiểu Unix trong MSYS2 dựa trực tiếp trên Cygwin", nhưng
+mục tiêu khác: cho developer quen Linux một môi trường dễ chịu trên Windows để xây dựng <em>chương trình Windows</em>.
+MSYS2 chia công cụ của mình thành nhiều môi trường. Môi trường MSYS, đặt ở <code>/usr</code>, chứa các công cụ kiểu
+Unix dựng trên nền Cygwin; môi trường MINGW64, đặt ở <code>/mingw64</code>, chứa chương trình Windows thuần, gọi thẳng
+hàm của Windows.</p>
+
+<p>Git for Windows, theo trang kỹ thuật của chính nó, "về cơ bản là một tập con của MSYS2 với một bộ gói được cài
+sẵn". Git Bash bạn dùng từ Bài 00 chính là bash của MSYS2. Điều này giải thích hai chuyện lạ đã gặp. Ở
+<a href="../00-ban-do-toan-canh/phan-tich-output.html#t-curl-ket-noi">trang phân tích output của Bài 00</a>,
+<code>which curl</code> trả về <code>/mingw64/bin/curl</code>: <code>curl</code> của Git Bash là chương trình Windows
+thuần trong môi trường MINGW64, được dựng với thư viện TLS của Windows, nên không in thông tin chứng chỉ như bản Linux.
+Bài 03 phải viết <code>taskkill //F</code> với hai dấu gạch: theo tài liệu của MSYS2, khi gọi một chương trình Windows
+từ môi trường dựng trên Cygwin, mọi tham số "trông giống đường dẫn Unix" được tự động đổi sang đường dẫn Windows, và
+<code>/F</code> trông đúng như một đường dẫn.</p>
+
+<div class="callout">
+  <span class="label">Nối về Bài 04</span>
+  <p>Đây là lý do tab WSL2 của Bài 04 viết "Git Bash ra đời theo cách này". Git Bash cho bạn bash và các lệnh quen thuộc,
+  nhưng mỗi lệnh là một chương trình Windows; kernel bên dưới vẫn là Windows. Vì thế lab của Bài 03 chỉ thấy được bản
+  tương đương của signal, và <code>dmesg</code> báo <code>command not found</code>.</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-wsl1" data-tab="WSL 1" data-note="2016: dịch syscall">
+
+<p class="panel-intro">Hướng thứ ba không biên dịch lại gì cả: nó dịch từng syscall ngay lúc chương trình
+chạy.</p>
+
+<h2 id="wsl1-dich-syscall">WSL 1: chạy tệp ELF nguyên bản, dịch từng syscall</h2>
+
+<p>Năm 2016, Microsoft đưa vào Windows 10 một thành phần mới, Windows Subsystem for Linux, ra mắt cùng bản cập nhật
+Anniversary Update năm đó. Bài tổng quan trên blog của nhóm WSL, đăng ngày 22/04/2016, mô tả WSL là "một tập các thành
+phần cho phép tệp ELF64 Linux nguyên bản chạy trên Windows". Chữ "nguyên bản" là điểm khác Cygwin: không ai
+phải biên dịch lại gì; bash của Ubuntu, nguyên tệp như trên server, chạy được trên Windows.</p>
+
+<p>Microsoft công bố việc này tại hội nghị Build ngày 30/03/2016; truyện ở Ảnh 2 ra ngay hôm sau.</p>
+
+<figure class="fig photo">
+  <img src="img/truyen-bash-on-windows.webp" width="1200" height="1000" loading="lazy" alt="Truyện ba khung. When I was little and refused to eat, my mom used to put a cherry on top of the food, and it worked! Forty years later, I can see Microsoft and Mom have something in common. Khung cuối: một người đứng trên sân khấu, màn hình sau lưng vẽ logo Windows, dấu bằng và một ngôi nhà, dòng chữ Bash coming to Windows.">
+  <figcaption><b>Ảnh 2</b> Truyện <em>Bash on Windows</em> của Daniel Stori, turnoff.us, ngày 31/03/2016. Hồi bé không chịu ăn thì mẹ đặt một quả anh đào lên đĩa; bốn mươi năm sau, người vẽ thấy Microsoft làm y như vậy với "Bash coming to Windows". Đó là cách nhìn của một người dùng Linux lúc ấy: Bash là thứ đặt thêm lên để lập trình viên chịu ở lại với Windows. Phần còn lại của tab này cho thấy thứ đặt thêm ấy được làm ra thế nào.</figcaption>
+</figure>
+
+<p>Phần cốt lõi của WSL thế hệ đầu là hai
+<strong>driver</strong>, tức chương trình được nạp vào chạy ngay bên trong kernel Windows, ở kernel mode.</p>
+
+<figure class="fig">
+  <blockquote class="src" lang="en">
+    <p>WSL is a collection of components that enables native Linux ELF64 binaries to run on Windows. It contains both
+    user mode and kernel mode components. It is primarily comprised of:</p>
+    <ol>
+      <li>User mode session manager service that handles the Linux instance life cycle</li>
+      <li>Pico provider drivers (lxss.sys, lxcore.sys) that emulate a Linux kernel by translating Linux syscalls</li>
+      <li>Pico processes that host the unmodified user mode Linux (e.g. /bin/bash)</li>
+    </ol>
+    <p>It is the space between the user mode Linux binaries and the Windows kernel components where the magic happens.
+    By placing unmodified Linux binaries in Pico processes we enable Linux system calls to be directed into the Windows
+    kernel. <strong>The lxss.sys and lxcore.sys drivers translate the Linux system calls into NT APIs and emulate the
+    Linux kernel.</strong></p>
+  </blockquote>
+  <figcaption><b>Hình 4</b> Đoạn đầu mục <em>Windows Subsystem for Linux</em> trong bài tổng quan năm 2016, nay nằm
+  trong kho lưu trữ blog của Microsoft. Tạm dịch: WSL gồm ba thành phần chính, một service ở user mode lo vòng đời của
+  phiên bản Linux đang chạy, hai driver <code>lxss.sys</code> và <code>lxcore.sys</code> giả lập kernel Linux bằng cách dịch syscall
+  Linux, và các Pico process chứa chương trình Linux không sửa đổi như <code>/bin/bash</code>. Câu in đậm là cơ chế:
+  hai driver dịch system call của Linux sang NT API và giả lập kernel Linux. Trích nguyên văn
+  <a href="https://learn.microsoft.com/en-us/archive/blogs/wsl/windows-subsystem-for-linux-overview">Windows Subsystem
+  for Linux Overview</a>, đọc ngày 03/10/2026.</figcaption>
+</figure>
+
+<p>Cơ chế trong Hình 4 diễn ra như sau. Chương trình Linux chạy trong một loại process đặc biệt của Windows gọi là
+<em>Pico process</em>, một process gần như trống, không mang theo những thứ một process Windows thường có. Mỗi khi
+chương trình gọi một syscall Linux, kernel Windows chuyển lời gọi đó tới hai driver <code>lxss.sys</code> và
+<code>lxcore.sys</code>; hai driver này đóng vai kernel Linux, tìm lời gọi Windows tương ứng, thực hiện, rồi trả kết quả
+theo đúng cách kernel Linux sẽ trả. Chương trình không biết mình đang chạy trên Windows.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>  bash của Ubuntu (tệp ELF nguyên bản), trong một Pico process
+       │
+       │ syscall Linux
+       ▼
+  lxss.sys, lxcore.sys      dịch syscall Linux sang NT API
+       │
+       │ NT API
+       ▼
+  kernel Windows</code></pre>
+  <figcaption><b>Hình 5</b> Cách của WSL 1. Không có kernel Linux nào; hai driver đứng giữa, đóng vai kernel Linux.</figcaption>
+</figure>
+
+<p>Ảnh 3 là một phiên Bash trên Windows 10 chụp tháng 1/2017, hơn hai năm trước khi WSL 2 được công bố, tức là lúc chỉ
+có WSL 1.</p>
+
+<figure class="fig photo shot">
+  <img src="img/bash-tren-windows-2017.webp" width="931" height="563" loading="lazy" alt="Cửa sổ dòng lệnh nền vàng nhạt trên Windows 10. Lệnh uname -a in ra Linux HAL4000 3.4.0+; tiếp theo là ls, cat hello.c, cc hello.c, chạy ./a.out in Hello, world!, và lệnh cal in lịch tháng 1 năm 2017.">
+  <figcaption><b>Ảnh 3</b> Bash chạy trên Windows 10 qua WSL 1, tháng 1/2017. Người dùng biên dịch một chương trình C bằng
+  <code>cc</code> rồi chạy nó; <code>cc</code>, <code>ls</code>, <code>cal</code> đều là tệp ELF của Linux, không ai
+  biên dịch lại cho Windows. Dòng đầu đáng nhìn nhất: <code>uname -a</code>, lệnh hỏi kernel tên và phiên bản của nó,
+  nhận được câu trả lời <code>Linux … 3.4.0+</code>, dù trên máy không có kernel Linux nào. Câu trả lời ấy do lớp
+  dịch viết ra, đúng vai "giả lập kernel Linux" trong Hình 4.</figcaption>
+</figure>
+
+<h2 id="gioi-han-wsl1">Giới hạn của việc dịch</h2>
+
+<p>Cách dịch phải theo kịp toàn bộ những gì kernel Linux cung cấp. Linux có vài trăm syscall, mỗi cái có những trường hợp riêng, và kernel
+Linux còn cung cấp những thứ không phải syscall đơn lẻ mà là cả một cơ chế. Syscall nào chưa được dịch, hoặc dịch chưa
+đúng từng chi tiết, thì chương trình cần nó hỏng. Bài công bố WSL 2 năm 2019 nói thẳng hai yêu cầu lớn nhất của người
+dùng WSL 1: tăng hiệu năng hệ thống tệp, và "làm nhiều ứng dụng chạy được hơn trong WSL", tức tương thích syscall tốt
+hơn. Ví dụ rõ nhất là Docker: nó dựa vào những tính năng của kernel Linux mà lớp dịch không có, nên không chạy được
+trong WSL 1. Bảng so sánh chính thức của Microsoft hôm nay vẫn ghi WSL 1 không có kernel Linux đầy đủ và không tương
+thích syscall đầy đủ.</p>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-wsl2" data-tab="WSL 2" data-note="2019: kernel Linux thật">
+
+<p class="panel-intro">Bước cuối quay về máy ảo, nhưng là một máy ảo đã bỏ phần lớn những điểm yếu nêu ở tab
+Máy ảo đầy đủ.</p>
+
+<h2 id="wsl2-cong-bo">Ngày 6/5/2019: một kernel Linux thật trong Windows</h2>
+
+<p>Ngày 6/5/2019, nhóm WSL công bố WSL 2 với một câu kết luận gọn (Hình 6): "WSL 2 dùng một kiến trúc hoàn toàn mới, dùng một kernel
+Linux thật". Cùng ngày, một bài khác của nhóm, <em>Shipping a Linux Kernel with Windows</em>, nói rằng đây là "lần đầu
+tiên kernel Linux được đưa vào như một thành phần của Windows". Kernel ấy ban đầu dựa trên bản 4.19, bản ổn định dài
+hạn mới nhất của Linux lúc đó, được công bố mã nguồn đầy đủ, và tinh chỉnh để khởi động nhanh, tốn ít bộ nhớ.</p>
+
+<figure class="fig">
+  <blockquote class="src" lang="en">
+    <p>Today we’re unveiling the newest architecture for the Windows Subsystem for Linux: WSL 2! Changes in this new
+    architecture will allow for: dramatic file system performance increases, and <strong>full system call
+    compatibility, meaning you can run more Linux apps in WSL 2 such as Docker</strong>.</p>
+    <p>[…]</p>
+    <p>Our top requests from the WSL community have been to increase the file system performance, and make more apps
+    work inside of WSL (i.e: introduce better system call compatibility). We have heard your feedback, and are glad to
+    announce that WSL 2 helps solve these issues.</p>
+    <p>WSL 2 is a new version of the architecture that powers the Windows Subsystem for Linux to run ELF64 Linux
+    binaries on Windows. This new architecture changes how these Linux binaries interact with Windows and your
+    computer’s hardware, but still provides the same user experience as in WSL 1 (the current widely available
+    version). Individual Linux distros can be run either as a WSL 1 distro, or as a WSL 2 distro, can be upgraded or
+    downgraded at any time, and you can run WSL 1 and WSL 2 distros side by side. <strong>WSL 2 uses an entirely new
+    architecture that uses a real Linux kernel.</strong></p>
+  </blockquote>
+  <figcaption><b>Hình 6</b> Ba đoạn đầu bài <em>Announcing WSL 2</em> trên blog Windows Command Line, đăng ngày
+  6/5/2019; bỏ dòng tiêu đề mục <em>What exactly is WSL 2?</em> giữa đoạn một và đoạn hai. Đoạn mở đầu hứa hai điều:
+  hiệu năng hệ thống tệp tăng mạnh, và, ở phần in đậm thứ nhất, tương thích system call đầy đủ, "nghĩa là bạn chạy
+  được nhiều ứng dụng Linux hơn trong WSL 2, chẳng hạn Docker". Đoạn hai cho biết đó là hai yêu cầu hàng đầu của cộng
+  đồng WSL. Phần in đậm thứ hai là lời giải: WSL 2 dùng một kiến trúc hoàn toàn mới, dùng một kernel Linux thật. Trích
+  nguyên văn <a href="https://devblogs.microsoft.com/commandline/announcing-wsl-2/">Announcing WSL 2</a> trên
+  devblogs.microsoft.com, đọc ngày 03/10/2026.</figcaption>
+</figure>
+
+<p>WSL 2 khác máy ảo truyền thống ở cách máy ảo được quản lý. Máy ảo vẫn có, nhưng Windows tự bật, tự tắt và tự
+quản lý nó; theo tài liệu của Microsoft, WSL 2 "giữ trải nghiệm người dùng như WSL 1" và "không cần cấu hình hay quản
+lý máy ảo". Bạn không mở cửa sổ máy ảo nào, không cấp RAM cố định; bạn chỉ mở Ubuntu và gõ lệnh như trước. So với tab
+Máy ảo đầy đủ, ba điểm yếu "khởi động chậm, tốn tài nguyên, phải tự quản lý" đã được gỡ; điểm thứ tư, "cô lập", được
+làm mềm bằng cách cho Windows và Linux gọi chương trình và đọc tệp của nhau.</p>
+
+<p>Ảnh 4 chụp đúng cảnh đó, hơn sáu năm sau Ảnh 3; dòng chào của Ubuntu cho thấy thứ đã đổi ở bên dưới.</p>
+
+<figure class="fig photo shot">
+  <img src="img/ubuntu-wsl2-2023.webp" width="952" height="652" loading="lazy" alt="Cửa sổ Windows Terminal nền tím sẫm, một tab Ubuntu. Dòng chào: Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.90.1-microsoft-standard-WSL2 x86_64), rồi tới dấu nhắc lệnh.">
+  <figcaption><b>Ảnh 4</b> Ubuntu 22.04 trên Windows 11 qua WSL 2, tháng 5/2023, do cùng một người chụp với Ảnh 3. Với
+  người dùng, mọi thứ vẫn là một cửa sổ có dấu nhắc lệnh. Khác biệt nằm trong ngoặc ở dòng chào:
+  <code>5.15.90.1-microsoft-standard-WSL2</code> là phiên bản của một kernel Linux thật do Microsoft biên dịch, thay
+  cho câu trả lời <code>3.4.0+</code> của lớp dịch ở Ảnh 3.</figcaption>
+</figure>
+
+<p>WSL 2 phát hành chính thức cùng Windows 10 bản 2004, năm 2020. Bài thông báo của nhóm WSL ngày 13/03/2020 còn cho
+biết một thay đổi về cách phân phối: kernel Linux được tách khỏi bản cài Windows và gửi tới máy người dùng qua Windows
+Update, "giống như cách cài driver của bên thứ ba". Về sau, chính WSL cũng được tách thành một gói trên Microsoft Store
+để cập nhật nhanh hơn; lệnh <code>wsl --update</code> kéo bản mới nhất về.</p>
+
+<h2 id="wsl2-doi-gi">Giới hạn của WSL 2</h2>
+
+<p>Vì tệp của Linux giờ nằm trong ổ đĩa ảo của máy ảo, việc đọc tệp qua lại giữa hai hệ
+điều hành chậm hơn WSL 1. Ngay dưới bảng so sánh chính thức, Microsoft viết rằng WSL 2 hơn WSL 1 ở nhiều mặt, trừ
+hiệu năng đọc tệp giữa hai hệ điều hành, và khuyên đặt tệp dự án cùng phía với công cụ dùng nó. Máy cũng phải hỗ
+trợ và bật ảo hoá phần cứng, điều WSL 1 không cần. Đổi lại, mọi thứ thuộc kernel Linux có mặt đầy đủ: signal thật, OOM killer, <code>dmesg</code>, và về sau cả systemd.</p>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-dau-vet" data-tab="Dấu vết" data-note="hôm nay, và Bài 04">
+
+<h2 id="con-lai">Những gì còn lại tới hôm nay</h2>
+
+<p>Cả bốn cách vẫn đang được dùng, mỗi cách hợp với một việc. Bảng 1 đặt
+chúng cạnh nhau theo ba câu hỏi đã dẫn đường cho cả phụ lục.</p>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 1</b> Bốn cách chạy chương trình Linux trên Windows.</caption>
+  <thead><tr><th>Cách</th><th>Chương trình Linux có phải biên dịch lại?</th><th>Ai trả lời syscall?</th><th>Còn gặp ở đâu hôm nay</th></tr></thead>
+  <tbody>
+    <tr><td>Máy ảo đầy đủ</td><td>Không</td><td>Kernel Linux trong máy ảo</td><td>VirtualBox, VMware; phần lớn VPS bạn thuê</td></tr>
+    <tr><td>Cygwin, MSYS2</td><td>Có</td><td>Kernel Windows, qua thư viện POSIX</td><td>Git Bash</td></tr>
+    <tr><td>WSL 1</td><td>Không</td><td>Kernel Windows, qua driver dịch syscall</td><td><code>wsl --set-version &lt;distro&gt; 1</code>, khi cần đọc tệp Windows nhanh</td></tr>
+    <tr><td>WSL 2</td><td>Không</td><td>Kernel Linux thật trong máy ảo nhẹ</td><td>Mặc định của WSL; nền của Docker Desktop</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Dòng cuối nối lịch sử này với lộ trình. Docker Desktop trên Windows không tự dựng máy ảo riêng như
+VirtualBox; theo tài liệu của Docker, nó chạy trong distro WSL riêng tên <code>docker-desktop</code>, tức dựa thẳng
+vào kernel Linux mà WSL 2 mang tới, chạy trong chính máy ảo nhẹ mà Windows tự quản.</p>
+
+<h2 id="noi-ve-bai-chinh">Nối về bài chính</h2>
+
+<p>Câu hỏi của <a href="index.html">Bài 04</a> là làm sao có một máy Linux thật trên máy Windows để thấy process, signal
+và lỗi đúng như trên server. Phụ lục cho thấy vì sao chữ "thật" ở đây quan trọng: Git Bash và WSL 1 đều cho bạn bash, nhưng
+chỉ WSL 2 cho bạn kernel Linux, và mọi thứ Bài 03 muốn quan sát đều nằm trong kernel. Từ đây, quay lại
+<a href="index.html#wsl2">tab WSL2 của Bài 04</a> để xem máy ảo đó hoạt động thế nào, hoặc đi thẳng tới
+<a href="index.html#lab">Lab</a> để dựng nó.</p>
+
+<h2 id="nguon">Nguồn đọc thêm</h2>
+
+<ol class="refs">
+  <li>Windows Developer Blog — <em>Run Bash on Ubuntu on Windows</em> (30/03/2016), bài công bố ở hội nghị Build 2016.
+  <a href="https://blogs.windows.com/windowsdeveloper/2016/03/30/run-bash-on-ubuntu-on-windows/">blogs.windows.com</a></li>
+  <li>Microsoft — <em>Windows Subsystem for Linux Overview</em> (22/04/2016), kho lưu trữ blog.
+  <a href="https://learn.microsoft.com/en-us/archive/blogs/wsl/windows-subsystem-for-linux-overview">learn.microsoft.com</a></li>
+  <li>Microsoft Command Line blog — <em>Announcing WSL 2</em> (06/05/2019).
+  <a href="https://devblogs.microsoft.com/commandline/announcing-wsl-2/">devblogs.microsoft.com</a></li>
+  <li>Microsoft Command Line blog — <em>Shipping a Linux Kernel with Windows</em> (06/05/2019).
+  <a href="https://devblogs.microsoft.com/commandline/shipping-a-linux-kernel-with-windows/">devblogs.microsoft.com</a></li>
+  <li>Microsoft Command Line blog — <em>WSL 2 will be generally available in Windows 10, version 2004</em> (13/03/2020).
+  <a href="https://devblogs.microsoft.com/commandline/wsl2-will-be-generally-available-in-windows-10-version-2004/">devblogs.microsoft.com</a></li>
+  <li>Microsoft Learn — <em>Comparing WSL Versions</em>.
+  <a href="https://learn.microsoft.com/en-us/windows/wsl/compare-versions">learn.microsoft.com</a></li>
+  <li>Cygwin — trang chính thức.
+  <a href="https://www.cygwin.com/">cygwin.com</a></li>
+  <li>MSYS2 — <em>What is MSYS2?</em>, <em>Environments</em>, <em>Filesystem Paths</em>.
+  <a href="https://www.msys2.org/docs/what-is-msys2/">msys2.org/docs/what-is-msys2</a> ·
+  <a href="https://www.msys2.org/docs/environments/">environments</a> ·
+  <a href="https://www.msys2.org/docs/filesystem-paths/">filesystem-paths</a></li>
+  <li>Git for Windows — <em>Technical overview</em>.
+  <a href="https://gitforwindows.org/technical-overview">gitforwindows.org</a></li>
+  <li>Docker Docs — <em>WSL 2 backend on Windows</em>.
+  <a href="https://docs.docker.com/desktop/features/wsl/">docs.docker.com/…/wsl</a></li>
+</ol>
+
+<h2 id="nguon-anh">Nguồn ảnh</h2>
+<p class="photo-credits-note">Hai ảnh chụp màn hình lấy từ Wikimedia Commons theo giấy phép ghi ở từng dòng; giữ nguyên
+màu và kích thước, chỉ đổi định dạng tệp. Hai truyện tranh, của xkcd và của turnoff.us, dùng theo giấy phép phi thương mại ghi ở từng dòng; đã đổi cỡ và chuyển sang đen trắng.</p>
+<ol class="photo-credits">
+  <li><b>Ảnh 1</b><a href="https://xkcd.com/350/">Network</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://turnoff.us/geek/bash-on-windows/">Bash on Windows</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Linux_on_Windows_10.png">Linux on Windows 10</a> — François-Dominique, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Ubuntu_on_Windows.png">Ubuntu on Windows</a> — François-Dominique, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+</ol>
+
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="index.html">
+    <span class="dir">Quay lại</span>
+    <span class="t">Bài giảng 04</span>
+  </a>
+  <a class="next" href="../05-container-dau-tien/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">05 · Container đầu tiên</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 04 · Phụ lục · Lịch sử WSL · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fd81593b"></script>
+</body>
+</html>
