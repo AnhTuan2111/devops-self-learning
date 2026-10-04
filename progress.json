@@ -14,6 +14,11 @@
       "status": "done",
       "date": "2026-09-24",
       "note": "Học trong buổi Bài 00 gộp: bảng triệu chứng có cột ai viết ra, ba nguyên tắc chẩn đoán."
+    },
+    "03": {
+      "status": "done",
+      "date": "2026-10-03",
+      "note": "Học theo đối thoại, 6 phần và 6 lab. Sửa được 11 chỗ hiểu sai. Thêm bước tự gây lỗi EADDRINUSE và thí nghiệm $$/$PPID."
     }
   }
 }
