@@ -35,12 +35,13 @@
 <!-- ================================================================== -->
 <section class="tab" id="van-de" data-tab="Vấn đề" data-note="ba ảnh chụp, ba chỗ hỏng">
 
-<p><a href="../01-ip-port-listen-firewall/#cau-hoi-tiep">Bài 01</a> kết thúc ở một câu hỏi:
-<strong>"Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết
-chặng nào đang hỏng?"</strong> Bài 01 đã chỉ ra rằng thiếu một trong ba điều kiện thì phía gọi chỉ nhận được
-<code>refused</code> hoặc <code>timeout</code>, không kèm con số HTTP nào. Nhưng phần lớn sự cố người dùng
-báo về lại có một con số: 502, 500, 504, 404. Những con số đó chỉ xuất hiện khi kết nối <em>đã mở thành
-công</em>, tức vấn đề nằm xa hơn trên bản đồ.</p>
+<p><a href="../01-ip-port-listen-firewall/#cau-hoi-tiep">Bài 01</a> dừng ở câu hỏi:
+<strong>"Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết chặng nào
+đang hỏng?"</strong></p>
+
+<p>Ở Bài 01, thiếu một trong ba điều kiện thì phía gọi chỉ nhận <code>refused</code> hoặc <code>timeout</code>,
+không kèm con số HTTP nào. Còn phần lớn sự cố người dùng báo về lại có một con số: 502, 500, 504, 404. Những
+con số đó chỉ xuất hiện khi kết nối <em>đã mở thành công</em>, tức chỗ hỏng nằm xa hơn trên bản đồ.</p>
 
 <div class="callout story">
   <span class="label">Tình huống</span>
@@ -54,8 +55,14 @@ công</em>, tức vấn đề nằm xa hơn trên bản đồ.</p>
   code.</p>
 </div>
 
-<p>Đọc kỹ một thông báo lỗi là một kỹ năng học được: nhận ra <em>ai đã viết ra nó</em>, rồi từ đó suy ra
-request đã đi tới chặng nào. Bài này dựng kỹ năng đó qua bốn câu hỏi con.</p>
+<p>Hồi học, mình bị hỏi một ca gần giống thế này: VPS còn sống, firewall còn mở port 443, mà Nginx chết hẳn.
+Người dùng thấy gì? Mình trả lời 502. Lúc đó mình loại <code>timeout</code> vì firewall đang mở, loại
+<code>refused</code> vì "VPS vẫn sống", và nói thẳng là chưa hiểu Nginx thật ra là gì nên không suy ra được.
+Sai đúng chỗ <code>refused</code>: nó chỉ xảy ra khi máy còn sống. Câu kế tiếp, tới lượt Spring Boot chết còn
+Nginx sống, mình tự quay lại sửa câu trước.</p>
+
+<p>Đọc kỹ một thông báo lỗi là một kỹ năng học được: nhận ra <em>ai đã viết ra nó</em>, rồi suy ra request đã
+đi tới chặng nào. Bài này dựng kỹ năng đó qua bốn câu hỏi con.</p>
 
 <div class="callout">
   <span class="label">Câu hỏi của bài</span>
@@ -69,13 +76,10 @@ request đã đi tới chặng nào. Bài này dựng kỹ năng đó qua bốn 
   </ol>
 </div>
 
-<p>Bốn tab giữa trả lời bốn câu này theo đúng thứ tự trên; tab Lab kiểm chứng các câu trả lời bằng output
-thật.</p>
-
 <h2 id="can-hoc-truoc">Cần đã học trước</h2>
 
-<p>Bài này dùng lại những khái niệm dưới đây mà không định nghĩa lại. Dòng nào còn mơ hồ thì quay lại đúng
-mục được chỉ trước khi đọc tiếp.</p>
+<p>Bài này dùng lại mấy khái niệm dưới đây mà không định nghĩa lại. Dòng nào còn mơ hồ thì quay lại đúng mục
+được chỉ.</p>
 
 <ul>
   <li><strong>Bản đồ chín chặng</strong>: nửa đường đầu, từ lúc trình duyệt tách URL tới lúc gửi request
@@ -100,9 +104,8 @@ mục được chỉ trước khi đọc tiếp.</p>
 <!-- ================================================================== -->
 <section class="tab" id="ma-trang-thai" data-tab="Mã trạng thái" data-note="có mã là đã có người trả lời">
 
-<p>Trong ba ảnh chụp ở tình huống, hai ảnh có một con số và một ảnh thì không. Chỗ khác đó dẫn tới câu hỏi
-con đầu tiên: <strong>mã trạng thái HTTP nói gì, và nhận được một mã chứng minh điều gì?</strong> Câu trả
-lời dùng lại request và response của Bài 00, đặt cạnh refused và timeout của Bài 01.</p>
+<p>Trong ba ảnh chụp ở tình huống, hai ảnh có một con số và một ảnh thì không. Chỗ khác đó là điểm xuất phát:
+<strong>mã trạng thái HTTP nói gì, và nhận được một mã chứng minh điều gì?</strong></p>
 
 <h2 id="dong-trang-thai">Mỗi response mở đầu bằng một con số</h2>
 
@@ -159,11 +162,11 @@ dụng viết. Phân biệt tác giả là việc của tab sau.</p>
 
 <h2 id="co-ma-la-gi">Nhận được một mã chứng minh điều gì</h2>
 
-<p>Đây là điểm quan trọng nhất của tab này. Muốn trả về một mã trạng thái thì phải có một chương trình nói
-HTTP <em>đã đọc được request</em>. Mà để request tới được chương trình đó, mọi bước phía trước trên bản đồ
-đều phải đã chạy xong: DNS đã đổi tên miền ra địa chỉ, kết nối TCP đã mở, bước bắt tay TLS đã thoả thuận
-xong cách mã hoá, request HTTP đã được gửi đi, và gói tin đã qua firewall của server. Tóm lại <strong>một
-con số HTTP là bằng chứng rằng mọi bước trước khi request tới Nginx đã thông</strong>.</p>
+<p>Chỗ này quan trọng nhất cả tab. Muốn trả về một mã trạng thái thì phải có một chương trình nói HTTP
+<em>đã đọc được request</em>. Mà để request tới được chương trình đó, mọi bước phía trước trên bản đồ đều phải
+chạy xong: DNS đã đổi tên miền ra địa chỉ, kết nối TCP đã mở, bắt tay TLS đã thoả thuận xong cách mã hoá,
+request HTTP đã gửi đi, và gói tin đã qua firewall của server. Nên <strong>một con số HTTP là bằng chứng mọi
+bước trước khi request tới Nginx đã thông</strong>.</p>
 
 <p>Ngược lại, lỗi xảy ra trước khi có cuộc trao đổi HTTP thì không bao giờ mang mã trạng thái. Bài 01 đã gặp
 hai lỗi như vậy là refused và timeout. Cùng loại với chúng còn hai lỗi nữa: không tìm thấy tên miền, khi DNS
@@ -184,9 +187,9 @@ giới của cuộc trao đổi HTTP: phía trên, lỗi chỉ là thông báo c
 trả lời đều mang một mã trạng thái.</figcaption>
 </figure>
 
-<p>Ví dụ thật, mình chạy bằng Git Bash ngày 03/10/2026: lệnh <code>curl -i</code> in cả phần đầu của
-response (cờ <code>-i</code> nghĩa là kèm các header). Gọi trang chủ của <code>example.com</code> và một
-đường dẫn không tồn tại trên cùng tên miền, ta được hai dòng trạng thái khác nhau, nhưng cả hai đều
+<p>Ví dụ thật, chạy trên máy mình bằng Git Bash ngày 03/10/2026: lệnh <code>curl -i</code> in cả phần đầu của
+response (cờ <code>-i</code> nghĩa là kèm các header). Gọi trang chủ của <code>example.com</code> và một đường
+dẫn không tồn tại trên cùng tên miền, ta được hai dòng trạng thái khác nhau, nhưng cả hai đều
 <em>có</em> dòng trạng thái:</p>
 
 <pre><code>$ curl -sS -i https://example.com/
@@ -213,9 +216,8 @@ curl: (6) Could not resolve host: khong-ton-tai-dau-nhe-12345.com</code></pre>
 <!-- ================================================================== -->
 <section class="tab" id="ai-viet-ra" data-tab="Ai viết ra" data-note="mỗi lỗi có một tác giả">
 
-<p>Con số cho biết request đã được đọc nhưng không cho biết ai đọc. Nên câu hỏi con thứ hai là: <strong>ai
-viết ra mỗi trang lỗi, và nhận ra người viết bằng cách nào?</strong> Manh mối nằm ở vị trí của Nginx và ứng
-dụng trên bản đồ của Bài 00: Nginx nhận request trước, ứng dụng đứng sau nó.</p>
+<p>Con số cho biết request đã được đọc, không cho biết ai đọc. Manh mối nằm ở vị trí của Nginx và ứng dụng
+trên bản đồ Bài 00: Nginx nhận request trước, ứng dụng đứng sau nó.</p>
 
 <h2 id="tac-gia">Mỗi thông báo lỗi có một tác giả</h2>
 
@@ -241,7 +243,7 @@ nào?".</p>
 trên máy người dùng; Nginx ở cửa server; ứng dụng Spring Boot đứng sau Nginx; và một trường hợp đặc biệt,
 không ai cả.</p>
 
-<h3 id="tac-gia-trinh-duyet">Tác giả thứ nhất: trình duyệt, khi không có response nào</h3>
+<h3 id="tac-gia-trinh-duyet">Trình duyệt, khi không có response nào</h3>
 
 <p>Khi request dừng lại trước khi tới Nginx, không chương trình nào phía server viết được gì, nên chính trình
 duyệt phải tự vẽ một trang để báo cho người dùng. Ảnh 1 là hai trang như thế, do trình duyệt Edge vẽ ra khi
@@ -266,7 +268,7 @@ không máy chủ web nào của bạn được hỏi tới. Lỗi ở bước b
 khi chứng chỉ hết hạn, cũng thuộc nhóm này: trình duyệt tự kiểm tra chứng chỉ, tự từ chối và tự viết trang báo
 lỗi.</p>
 
-<h3 id="tac-gia-nginx">Tác giả thứ hai: Nginx</h3>
+<h3 id="tac-gia-nginx">Nginx</h3>
 
 <p>Nginx làm nhiều hơn việc chuyển request vào trong: bản thân nó là một chương trình HTTP đầy đủ, tự trả lời
 được mà không cần ứng dụng nào phía sau. Trang chào mặc định ở <a href="../00-ban-do-toan-canh/#chang-7">Bài
@@ -291,7 +293,7 @@ thích từng tình huống).</p>
   Hình 1.</figcaption>
 </figure>
 
-<h3 id="tac-gia-ung-dung">Tác giả thứ ba: ứng dụng</h3>
+<h3 id="tac-gia-ung-dung">Ứng dụng</h3>
 
 <p>Spring Boot cũng có trang lỗi mặc định của riêng nó, và nhiều khả năng bạn đã gặp nó khi code: trình duyệt
 gọi tới thì nhận trang <em>Whitelabel Error Page</em>, còn một chương trình gọi API thì nhận một đối tượng
@@ -356,8 +358,8 @@ lặng lẽ bỏ gói tin.</p>
 
 <h2 id="bang-trieu-chung">Bảng tra triệu chứng, kèm cột "ai viết ra"</h2>
 
-<p>Gom bốn nhóm tác giả lại là ra công cụ chính của bài: một bảng đi ngược từ thứ người dùng thấy về chặng
-đang hỏng, với cột "ai viết ra" là cột quyết định.</p>
+<p>Gom bốn nhóm tác giả lại thành công cụ chính của bài: một bảng đi ngược từ thứ người dùng thấy về chặng
+đang hỏng, mà cột quyết định là "ai viết ra".</p>
 
 <div class="table-scroll">
 <table>
@@ -392,33 +394,24 @@ phải đọc log của ứng dụng.</p>
   <a href="#lab-chu-ky">Lab 4</a> có một ví dụ thật.</p>
 </div>
 
-<div class="callout ok">
-  <span class="label">Chốt</span>
-  <p>Có bốn nhóm tác giả: trình duyệt (khi request chưa tới chương trình HTTP nào), Nginx, ứng dụng, và
-  "không ai cả" với timeout. <strong>Tác giả viết được lỗi nghĩa là nó còn sống và request đã tới nó</strong>,
-  nên biết tác giả là biết request đã đi tới đâu. Nhận ra tác giả bằng chữ ký, không bằng con số.</p>
-  <p>Trong các mã do Nginx và ứng dụng viết, ba mã gặp nhiều nhất là 502, 504 và 500. Mỗi mã nói chính xác
-  điều gì về đoạn Nginx chuyển request vào ứng dụng?</p>
-</div>
-
 </section>
 
 <!-- ================================================================== -->
 <section class="tab" id="hai-ma-loi" data-tab="502 và 500" data-note="hai con số, hai hướng điều tra">
 
-<p>Biết tác giả rồi thì đọc chính những con số. Trên một server mà Spring Boot đứng sau Nginx, ba mã gặp
-nhiều nhất là 502, 504 và 500, nên câu hỏi con thứ ba là: <strong>chúng khác nhau thế nào, và mỗi mã chỉ về
-chặng nào?</strong> Câu trả lời ghép hai điều đã có: Nginx chuyển request vào ứng dụng (Bài 00), và refused,
-timeout là hai cách một kết nối thất bại (Bài 01).</p>
+<p>Biết tác giả rồi thì đọc chính những con số. Ba mã gặp nhiều nhất trên server có Spring Boot đứng sau Nginx là
+502, 504 và 500: <strong>chúng khác nhau thế nào, và mỗi mã chỉ về chặng nào?</strong> Câu trả lời ghép hai
+thứ đã có: Nginx chuyển request vào ứng dụng (Bài 00), và refused, timeout là hai cách một kết nối thất bại
+(Bài 01).</p>
 
 <h2 id="nginx-goi-vao-trong">Nginx cũng là một bên đi gọi</h2>
 
 <p>Nginx đứng trước để nhận mọi request từ Internet thay cho ứng dụng, giấu ứng dụng ở phía trong; các lý do
-đầy đủ học ở Bài 19. Muốn hiểu 502 và 504, hãy nhìn Nginx từ phía ứng
-dụng: với người dùng, Nginx là bên trả lời; với ứng dụng, Nginx lại là <em>bên đi gọi</em>. Khi nhận được
-request, Nginx mở một kết nối mới tới ứng dụng, thường là <code>127.0.0.1:8080</code> trên cùng máy. Kết nối
-thứ hai này phải thoả đúng ba điều kiện của Bài 01 và có thể thất bại theo đúng những cách Bài 01 đã mô tả;
-chỉ khác là bên gặp thất bại giờ là Nginx, và Nginx báo lại cho người dùng bằng một mã trạng thái.</p>
+đầy đủ học ở Bài 19. Muốn hiểu 502 và 504, nhìn Nginx từ phía ứng dụng: với người dùng, Nginx là bên trả lời;
+với ứng dụng, Nginx là <em>bên đi gọi</em>. Nhận được request, Nginx mở một kết nối mới tới ứng dụng, thường là
+<code>127.0.0.1:8080</code> trên cùng máy. Kết nối thứ hai này phải thoả đúng ba điều kiện của Bài 01 và hỏng
+theo đúng những cách Bài 01 đã mô tả, chỉ khác là bên gặp thất bại giờ là Nginx, và Nginx báo lại cho người
+dùng bằng một mã trạng thái.</p>
 
 <p>Ảnh 4 vẽ hai kết nối đó: một từ Internet tới bên đứng giữa, một từ bên đứng giữa vào máy chủ phía trong.</p>
 
@@ -476,8 +469,8 @@ trong định nghĩa "phía sau" ở trên. Trích nguyên văn <a href="https:/
 
 <h2 id="ba-ket-cuc">Ba kết cục khi Nginx gọi vào trong</h2>
 
-<p>Ghép cơ chế "Nginx là bên đi gọi" với các định nghĩa, ta có đúng ba kết cục, và mỗi kết cục sinh ra một
-mã khác nhau. Hình 6 đặt chúng cạnh nhau.</p>
+<p>Ghép cơ chế "Nginx là bên đi gọi" với các định nghĩa thì có đúng ba kết cục, mỗi kết cục một mã khác nhau.
+Hình 6 đặt chúng cạnh nhau.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  Nginx mở kết nối tới ứng dụng ở 127.0.0.1:8080
@@ -561,17 +554,14 @@ quả nên quay ra báo khách.</p>
   lời tới. Ẩn dụ giúp nhớ <em>ai viết ra trang lỗi</em>; nó không mô tả đúng cách Nginx chịu tải.</p>
 </div>
 
-<p>Những phân biệt này đủ cho các lỗi đã có trong bảng. Còn khi gặp một lỗi lạ, hoặc một hệ thống tự hỏng dù
-không ai đụng vào, thì suy luận theo cách nào?</p>
-
 </section>
 
 <!-- ================================================================== -->
 <section class="tab" id="nguyen-tac" data-tab="Ba nguyên tắc" data-note="cách suy luận đứng sau bảng tra">
 
-<p>Bảng 2 tra được những lỗi đã biết. Nhưng sự cố thật nhiều khi không khớp dòng nào trong bảng, và có những
-sự cố xảy ra khi không ai đụng vào gì. Câu hỏi con thứ tư vì vậy là về cách suy luận đứng sau bảng:
-<strong>ba nguyên tắc nào giúp khoanh vùng chặng hỏng, kể cả khi không ai đụng vào hệ thống?</strong></p>
+<p>Bảng 2 tra được những lỗi đã biết, nhưng sự cố thật nhiều khi không khớp dòng nào trong bảng, và có sự cố
+xảy ra khi không ai đụng vào gì. Nên cần cách suy luận đứng sau bảng: <strong>ba nguyên tắc nào giúp khoanh
+vùng chặng hỏng, kể cả khi không ai đụng vào hệ thống?</strong></p>
 
 <h2 id="ba-nguyen-tac">Ba nguyên tắc chẩn đoán</h2>
 
@@ -636,9 +626,9 @@ lúc nó thật sự nhận được request. Spring Boot không listen port 808
 phải nạp cấu hình, tạo các bean, mở kết nối tới database, và việc đó thường mất từ 15 tới 60 giây. Trong suốt
 khoảng đó, ứng dụng đã chạy nhưng chưa có ai listen ở 8080.</p>
 
-<p>Câu này mình trả lời đúng ngay khi được hỏi vì sao người dùng vào đúng lúc vừa deploy thì thấy 502 mà một
-lúc sau vào lại được: app cần chừng 30 giây để khởi chạy, nginx gọi vào thì thấy app không phản hồi nên trả
-lời 502, tới khi app khởi động xong thì vào được.</p>
+<p>Cái này mình trả lời đúng ngay khi được hỏi vì sao người dùng vào đúng lúc vừa deploy thì thấy 502, mà một
+lúc sau vào lại được: app cần chừng 30 giây để khởi chạy, nginx gọi vào thì thấy app không phản hồi nên trả lời
+502, tới khi app khởi động xong thì vào được.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  t = 0 s    ứng dụng được bật lại (sau một lần cập nhật)
@@ -669,7 +659,7 @@ Bài 30.</p>
 
 <figure class="fig photo shot">
   <img src="img/chung-chi-het-han.webp" width="1512" height="820" loading="lazy" alt="Trang cảnh báo của trình duyệt Edge: một tam giác đỏ có dấu chấm than, tiêu đề Your connection isn't private, dòng Attackers might be trying to steal your information from expired.badssl.com, mã NET::ERR_CERT_DATE_INVALID, và hai nút Advanced, Go back.">
-  <figcaption><b>Ảnh 7</b> Trang cảnh báo Edge tự vẽ khi chứng chỉ của máy chủ đã hết hạn. Mình chụp ngày 04/10/2026
+  <figcaption><b>Ảnh 7</b> Trang cảnh báo Edge tự vẽ khi chứng chỉ của máy chủ đã hết hạn. Chụp ngày 04/10/2026
   tại <code>expired.badssl.com</code>, một trang thử công khai có chứng chỉ hết hạn từ ngày 12/04/2015. Trang không
   có mã trạng thái HTTP nào; dòng xám <code>NET::ERR_CERT_DATE_INVALID</code> là mã lỗi của trình duyệt, cùng loại
   với hai trang ở Ảnh 1. Bắt tay TLS dừng ở bước kiểm tra chứng chỉ, nên request HTTP chưa hề được gửi
@@ -708,16 +698,6 @@ Bài 38).</p>
 <div class="callout">
   <span class="label">Câu hỏi để tự kiểm tra một hệ thống</span>
   <p><strong>"Cái gì trong hệ thống này sẽ tự hỏng nếu tôi không động vào nó trong sáu tháng?"</strong></p>
-</div>
-
-<div class="callout ok">
-  <span class="label">Chốt</span>
-  <p>Ba nguyên tắc: <strong>có mã là đã có người đọc request</strong>, nên một câu hỏi chia đôi bản đồ;
-  <strong>triệu chứng chứng minh các bước trước</strong>, nên mỗi lỗi loại bớt nghi ngờ; <strong>sửa một
-  tầng thì triệu chứng đổi</strong>, nên sửa từng thứ một và đọc triệu chứng mới. Thời gian cũng làm hỏng
-  được: ở thang giây là cửa sổ 502 khi ứng dụng khởi động, ở thang tháng là những thứ hết hạn.</p>
-  <p>Còn lại là áp các nguyên tắc đó vào output thật: tự chạy lệnh, đọc từng dòng và chỉ ra tác giả của
-  nó.</p>
 </div>
 
 </section>
@@ -850,6 +830,7 @@ trình HTTP nào), dòng nào có mã trạng thái (đã có người đọc re
   <thead><tr><th>Dễ nghĩ là</th><th>Thực tế</th><th></th></tr></thead>
   <tbody>
     <tr><td>Lỗi chứng chỉ chắc là do DNS không dịch được tên</td><td>Lỗi chứng chỉ <strong>chứng minh</strong> DNS đã trả về một địa chỉ và kết nối đã mở. DNS hỏng thì trình duyệt đã dừng ngay ở bước hỏi DNS, với lỗi không tìm thấy tên</td><td><a href="#ba-nguyen-tac">xem lại</a></td></tr>
+    <tr><td>Nginx chết hẳn thì người dùng thấy 502, vì máy vẫn sống</td><td>Nginx chết thì không còn ai listen ở port 443, nên người dùng thấy <code>refused</code>. Trang 502 là do một Nginx <em>còn sống</em> viết ra, sau khi gọi vào ứng dụng mà bị từ chối</td><td><a href="#bang-trieu-chung">xem lại</a></td></tr>
     <tr><td>Thấy 502 thì mở code ra đọc</td><td>Với 502 ứng dụng không nhận được request, log ứng dụng trống. Việc cần làm là xem ứng dụng còn chạy và còn listen không</td><td><a href="#502-500">xem lại</a></td></tr>
     <tr><td>Thấy 500 là Nginx hỏng</td><td>500 do <strong>ứng dụng</strong> viết; Nginx chỉ chuyển nguyên vẹn ra ngoài</td><td><a href="#ba-ket-cuc">xem lại</a></td></tr>
     <tr><td>Mã 502 thì chắc chắn do Nginx viết</td><td>Con số ai cũng gửi được; ứng dụng cũng trả được 502. Xem chữ ký: giao diện trang, header <code>Server</code></td><td><a href="#lab-chu-ky">xem lại</a></td></tr>
