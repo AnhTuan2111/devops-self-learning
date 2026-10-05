@@ -48,20 +48,20 @@
   lỗi, không biết hỏng từ lúc nào.</p>
 </div>
 
-<p>Mở IDE đọc lại code là phản xạ dễ hiểu nhất, vì code là thứ bạn viết, hiểu từng dòng và sửa được
-ngay. Nhưng nếu từ hôm qua tới giờ code không đổi dòng nào, mà hôm qua web vẫn chạy, thì lỗi nhiều khả năng
-không nằm ở code. Một hệ thống đang chạy tốt chỉ hỏng khi <em>có thứ gì đó thay đổi</em>; thứ bạn viết
-không đổi thì thứ đã đổi phải ở chỗ khác.</p>
+<p>Mở IDE đọc lại code là phản xạ dễ hiểu nhất, vì code là thứ bạn viết, hiểu từng dòng và sửa được ngay. Nhưng
+nếu từ hôm qua tới giờ code không đổi dòng nào mà hôm qua web vẫn chạy, thì lỗi nhiều khả năng không nằm ở
+code. Hệ thống đang chạy tốt chỉ hỏng khi có thứ gì đó thay đổi. Thứ bạn viết không đổi, vậy cái đã đổi ở chỗ
+khác.</p>
 
-<p>Chỗ khác đó có tên chung là <strong>hạ tầng</strong> (infrastructure): mọi thứ nằm giữa người dùng và
-code của bạn, gồm đường mạng, các máy chủ, và những chương trình chạy trước hoặc sau ứng dụng. Chưa hình
-dung được một request phải đi qua những gì trước khi tới controller thì gặp sự cố ta chỉ biết tìm ở chỗ mình
-quen. Cái còn thiếu là một tấm bản đồ của đường đi đó, và bài này vẽ nó.</p>
+<p>Chỗ khác đó tên chung là <strong>hạ tầng</strong> (infrastructure): mọi thứ nằm giữa người dùng và code của
+bạn, gồm đường mạng, các máy chủ, và những chương trình chạy trước hoặc sau ứng dụng. Chưa hình dung được một
+request phải đi qua những gì trước khi tới controller thì gặp sự cố chỉ biết tìm ở chỗ quen. Cái thiếu là một
+tấm bản đồ của đường đi đó, và bài này vẽ nó.</p>
 
-<p>Cái "lời yêu cầu" ở trên có tên chuẩn là <strong>request</strong>: thông điệp trình duyệt gửi đi để
-xin một thứ gì đó, ví dụ "cho tôi dữ liệu của người dùng số 42". Bạn viết code xử lý request hằng ngày, còn
-bài này nhìn nó từ phía ngược lại: đi theo request từ lúc nó được tạo ra trên máy người dùng. Mỗi bước
-request phải đi qua, mình gọi là một <strong>chặng</strong>.</p>
+<p>Cái "lời yêu cầu" ở trên tên chuẩn là <strong>request</strong>: thông điệp trình duyệt gửi đi để xin một thứ
+gì đó, ví dụ "cho tôi dữ liệu của người dùng số 42". Code xử lý request thì bạn viết hằng ngày; bài này nhìn
+nó từ phía ngược lại, đi theo request từ lúc nó sinh ra trên máy người dùng. Mỗi bước request phải đi qua,
+mình gọi là một <strong>chặng</strong>.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  người dùng gõ                               code bạn viết
@@ -75,11 +75,10 @@ request phải đi qua, mình gọi là một <strong>chặng</strong>.</p>
 
 <div class="callout" id="chu-devops">
   <span class="label">Chữ DevOps trong tên khoá học</span>
-  <p><strong>DevOps</strong> ghép từ development (phát triển, tức viết phần mềm) và operations (vận hành,
-  tức giữ cho phần mềm chạy). Muốn hai việc đó làm cùng nhau được thì phải nhìn được trọn khoảng giữa, tức
-  hiểu cả code lẫn những thứ nằm quanh nó. Định nghĩa đầy đủ, lấy từ chuẩn quốc tế, nằm ở tab
-  <a href="#devops">Phía server</a>, sau khi bản đồ vẽ xong và bạn thấy rõ phần nào không phải code của
-  mình.</p>
+  <p><strong>DevOps</strong> ghép từ development (phát triển, tức viết phần mềm) và operations (vận hành, tức
+  giữ cho phần mềm chạy). Hai việc đó làm chung được thì phải nhìn được trọn khoảng giữa, tức hiểu cả code lẫn
+  những thứ quanh nó. Định nghĩa đầy đủ, lấy từ chuẩn quốc tế, nằm ở tab <a href="#devops">Phía server</a>,
+  sau khi vẽ xong bản đồ và thấy rõ phần nào không phải code của bạn.</p>
 </div>
 
 <h2 id="cau-hoi-bai">Câu hỏi của bài</h2>
@@ -87,7 +86,7 @@ request phải đi qua, mình gọi là một <strong>chặng</strong>.</p>
 <p class="lede">Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi
 qua những chặng nào, và chặng nào thật sự là code của bạn?</p>
 
-<p>Câu hỏi lớn đó tách ra ba câu nhỏ:</p>
+<p>Chia ra ba câu nhỏ cho dễ trả lời:</p>
 
 <ol>
   <li><strong>Một URL nói gì</strong>, phần nào dành cho hạ tầng, phần nào dành cho code?</li>
@@ -97,15 +96,14 @@ qua những chặng nào, và chặng nào thật sự là code của bạn?</p>
   ai lo phần còn lại?</li>
 </ol>
 
-<p>Mấy tab sau trả lời lần lượt ba câu đó, rồi tab Lab cho bạn tự xem từng chặng bằng output thật.</p>
+
 
 <h2 id="can-hoc-truoc">Cần đã học trước</h2>
 
-<p>Đây là bài đầu tiên, nên chỉ cần biết viết và chạy một ứng dụng Spring Boot trên máy mình: viết được
-một controller có <code>@GetMapping</code>, chạy ứng dụng, rồi mở <code>http://localhost:8080</code> trong
-trình duyệt để xem kết quả. Mình bắt đầu khoá này với đúng chừng ấy: viết Spring Boot hằng ngày, nhưng chưa
-biết gì về những thứ nằm ngoài code. Thuật ngữ hạ tầng nào khác được giới thiệu ngay trong bài, đúng chỗ nó
-xuất hiện lần đầu.</p>
+<p>Đây là bài đầu nên chỉ cần biết viết và chạy một ứng dụng Spring Boot trên máy: viết được một controller có
+<code>@GetMapping</code>, chạy ứng dụng, mở <code>http://localhost:8080</code> trong trình duyệt xem kết quả.
+Mình bắt đầu khoá này với đúng chừng đó: viết Spring Boot hằng ngày, chưa biết gì về những thứ nằm ngoài code.
+Thuật ngữ hạ tầng nào khác được giới thiệu ngay trong bài, đúng chỗ nó xuất hiện lần đầu.</p>
 
 </section>
 
@@ -114,13 +112,12 @@ xuất hiện lần đầu.</p>
      ===================================================================== -->
 <section class="tab" id="url" data-tab="URL" data-note="phần nào cho hạ tầng, phần nào cho code">
 
-<p>Request nào cũng bắt đầu từ chuỗi người dùng gõ vào thanh địa chỉ, nên bản đồ cũng bắt đầu từ đó: một
-URL nói gì, và phần nào trong đó là việc của bạn?</p>
+<p>Request nào cũng bắt đầu từ chuỗi người dùng gõ vào thanh địa chỉ, nên bản đồ cũng bắt đầu từ đó.</p>
 
 <h2 id="client-server">Hai đầu của một request: client và server</h2>
 
-<p>Request nào cũng có hai phía. Phía gửi đi là chương trình người dùng đang dùng, phía nhận và trả lời là
-một chương trình chạy trên máy ở xa. Hai vai này có tên chuẩn, và từ đây bài dùng đúng hai tên đó.</p>
+<p>Request nào cũng có hai phía. Phía gửi đi là chương trình người dùng đang dùng, phía nhận và trả lời là một
+chương trình chạy trên máy ở xa. Hai vai này có tên chuẩn, từ đây bài dùng đúng hai tên đó.</p>
 
 <dl class="terms">
   <dt>Client <small>máy khách</small></dt>
@@ -133,9 +130,8 @@ một chương trình chạy trên máy ở xa. Hai vai này có tên chuẩn, v
 
 <h2 id="doc-url">Đọc cho đúng một URL</h2>
 
-<p>URL (<em>Uniform Resource Locator</em>, địa chỉ tài nguyên) nhìn như một khối liền, nhưng client đọc nó
-thành năm phần, và mỗi phần do một bộ phận khác nhau lo. Hiểu đúng sự phân công này là bước đầu để biết một
-lỗi thuộc về ai.</p>
+<p>URL (<em>Uniform Resource Locator</em>, địa chỉ tài nguyên) nhìn như một khối liền, nhưng client đọc nó thành
+năm phần, và mỗi phần do một bộ phận khác nhau lo. Biết ai lo phần nào thì mới biết một lỗi thuộc về ai.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  https://api.example.com:443/users/42?active=true
@@ -172,50 +168,42 @@ code Spring Boot của bạn thực sự đọc tới.</figcaption>
   mục trong trang.</figcaption>
 </figure>
 
-<p>Trong năm phần đó có ba chỗ đáng để ý, và chỗ nào cũng dẫn tới một chặng trên bản đồ ở tab sau.</p>
+<p>Năm phần đó có ba chỗ đáng dừng lại, và chỗ nào cũng dẫn tới một chặng trên bản đồ ở tab sau.</p>
 
 <h3 id="host-la-ten">Host là một cái tên, còn mạng cần một địa chỉ</h3>
 
-<p>Mạng không chuyển dữ liệu tới một cái tên, nó chỉ chuyển tới một <strong>địa chỉ IP</strong>: con số
-định danh một máy trên mạng. Loại địa chỉ phổ biến nhất viết thành bốn số, ví dụ
-<code>104.20.23.154</code>, một trong các địa chỉ của <code>example.com</code> mà bạn sẽ thấy ở tab Lab.
-Nói chính xác hơn thì địa chỉ IP gắn với từng card mạng của máy, ví dụ card WiFi, chứ không gắn với cả cái
-máy; Bài 01 đi sâu chỗ này.</p>
+<p>Mạng không chuyển dữ liệu tới một cái tên, chỉ chuyển tới một <strong>địa chỉ IP</strong>: con số định
+danh một máy trên mạng. Loại phổ biến nhất viết thành bốn số, ví dụ <code>104.20.23.154</code>, một trong các
+địa chỉ của <code>example.com</code> bạn sẽ thấy ở tab Lab. Nói chính xác hơn thì địa chỉ IP gắn với từng card
+mạng của máy (card WiFi chẳng hạn), không gắn với cả máy; Bài 01 đi sâu chỗ này.</p>
 
-<p>Nên giữa lúc người dùng gõ tên và lúc client gửi được dữ liệu đầu tiên luôn có một bước dịch tên thành
-địa chỉ. Bước đó do một hệ thống riêng lo, gọi là <strong>DNS</strong> (<em>Domain Name System</em>, hệ
-thống tên miền): mạng lưới máy chủ trải khắp thế giới, chuyên trả lời câu hỏi "tên này ứng với địa chỉ
-nào". Vì vậy DNS là một chặng có thể hỏng riêng, không liên quan gì tới phần còn lại. Tên miền quên gia hạn,
-hay nhà cung cấp DNS gặp sự cố, đều làm web "không vào được" dù server và code vẫn khoẻ.</p>
+<p>Nên giữa lúc người dùng gõ tên và lúc client gửi được dữ liệu đầu tiên luôn có một bước dịch tên thành địa
+chỉ. Bước đó do một hệ thống riêng lo, gọi là <strong>DNS</strong> (<em>Domain Name System</em>, hệ thống tên
+miền): mạng lưới máy chủ trải khắp thế giới, chuyên trả lời câu hỏi "tên này ứng với địa chỉ nào". DNS là một
+chặng có thể hỏng riêng, không liên quan gì tới phần còn lại: tên miền quên gia hạn, hay nhà cung cấp DNS gặp
+sự cố, đều làm web "không vào được" dù server và code vẫn khoẻ.</p>
 
 <h3 id="scheme-port">Scheme quyết định port mặc định</h3>
 
 <p>Khi URL không ghi port, client tự điền theo scheme: <code>http://</code> đi với port <code>80</code>,
-<code>https://</code> đi với port <code>443</code>. Quy ước này nằm trong chuẩn HTTP (RFC 9110). Vì vậy vào
-website công cộng bạn không phải gõ port, còn chạy Spring Boot trên máy mình thì phải gõ
-<code>:8080</code>: ứng dụng của bạn nhận request ở một port không mặc định nên trình duyệt không đoán được.
-Ở tab Phía server, bạn sẽ thấy ai đứng ở port 443 trên một server thật, và vì sao người dùng không bao giờ
-phải biết số 8080.</p>
+<code>https://</code> đi với port <code>443</code>. Quy ước này nằm trong chuẩn HTTP (RFC 9110). Nên vào website
+công cộng bạn không phải gõ port, còn chạy Spring Boot trên máy mình thì phải gõ <code>:8080</code>, vì ứng dụng
+nhận request ở một port không mặc định và trình duyệt không đoán được. Ai đứng ở port 443 trên một server thật,
+và vì sao người dùng không bao giờ phải biết số 8080, tab Phía server trả lời.</p>
 
 <h3 id="path-cho-code">Path và query là phần hạ tầng không đọc</h3>
 
-<p>Không thành phần hạ tầng nào hiểu <code>/users/42</code> là "người dùng số 42". DNS chỉ cần host, còn
-phần lớn chương trình trung gian chuyển nguyên path vào trong. Chỉ ứng dụng, tức code bạn viết, mới gán ý
-nghĩa cho path và query. Tóm lại URL chia làm hai: ba phần đầu là việc của hạ tầng, hai phần cuối là việc
-của bạn.</p>
+<p>Không thành phần hạ tầng nào hiểu <code>/users/42</code> là "người dùng số 42". DNS chỉ cần host, còn phần
+lớn chương trình trung gian chuyển nguyên path vào trong. Chỉ ứng dụng, tức code bạn viết, mới gán ý nghĩa cho
+path và query. Vậy URL chia làm hai: ba phần đầu (scheme, host, port) là việc của hạ tầng, vì chúng quyết định
+request có được mã hoá không, đi tới máy nào và vào chương trình nào trên máy đó; hai phần cuối là việc của
+bạn.</p>
 
 <div class="callout">
   <span class="label">Nối với thứ bạn đã biết</span>
   <p>Khi viết <code>@GetMapping("/users/{id}")</code>, thứ bạn khai báo <strong>chỉ là phần path</strong>.
   Ba phần đứng trước, cùng việc tìm ra và kết nối tới đúng máy, đã được xử lý xong ở đâu đó
   <em>trước khi</em> request chạm tới controller của bạn.</p>
-</div>
-
-<div class="callout ok">
-  <span class="label">Chốt</span>
-  <p>Một URL có năm phần. Scheme, host và port là việc của hạ tầng, vì chúng quyết định request có được mã
-  hoá không, đi tới máy nào, và vào chương trình nào trên máy đó. Path và query là việc của code bạn.</p>
-  <p>Hạ tầng xử lý ba phần đầu qua những bước nào, theo thứ tự nào?</p>
 </div>
 
 </section>
@@ -225,9 +213,9 @@ của bạn.</p>
      ===================================================================== -->
 <section class="tab" id="ban-do" data-tab="Bản đồ" data-note="chín chặng, hai nửa">
 
-<p>Biết URL nói gì rồi thì đi theo request một vòng: từ lúc trình duyệt tách xong URL tới lúc controller của
-bạn chạy, nó ghé qua những đâu? Hình 4 trả lời ở mức toàn cảnh. Bạn sẽ gặp lại hình này ở gần như mọi bài
-sau, vì công cụ nào của lộ trình cũng gắn vào một hoặc vài chặng trên đó.</p>
+<p>Từ lúc trình duyệt tách xong URL tới lúc controller của bạn chạy, request ghé qua những đâu? Hình 4 trả lời
+ở mức toàn cảnh. Hình này sẽ gặp lại ở gần như mọi bài sau, vì công cụ nào của lộ trình cũng gắn vào một hoặc
+vài chặng trên đó.</p>
 
 <h2 id="vi-sao-chin-chang">Vì sao trên máy bạn chỉ thấy vài bước, còn trên server thật có chín</h2>
 
@@ -242,8 +230,7 @@ không ai mã hoá, không ai chặn ở giữa.</p>
 </figure>
 
 <p>Đưa ứng dụng lên server cho người dùng thật vào qua Internet thì khoảng cách xa hơn, và môi trường không
-còn an toàn như máy bạn. Phải thêm bốn thành phần, và mỗi cái tồn tại để giải quyết đúng một vấn đề mà máy
-dev chưa có.</p>
+còn an toàn như máy bạn. Phải thêm bốn thành phần, mỗi cái giải quyết đúng một vấn đề mà máy dev chưa có.</p>
 
 <div class="table-scroll">
 <table>
@@ -260,9 +247,8 @@ dev chưa có.</p>
 
 <h2 id="hinh-ban-do">Tấm bản đồ chín chặng</h2>
 
-<p>Ghép bốn thành phần đó với những gì đã có là ra tấm bản đồ đầy đủ ở Hình 4. Đọc từ trên xuống, theo đúng
-thứ tự request đi qua: nửa trên chạy trên máy người dùng, nửa dưới chạy trên server, ở giữa là
-Internet.</p>
+<p>Ghép bốn thành phần đó với những gì đã có thì ra tấm bản đồ đầy đủ ở Hình 4. Đọc từ trên xuống theo đúng
+thứ tự request đi qua: nửa trên chạy trên máy người dùng, nửa dưới chạy trên server, ở giữa là Internet.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  ┌─────────────────── máy người dùng ──────────────────────┐
@@ -288,9 +274,9 @@ request đi qua. Năm chặng trong khung trên chạy trên máy người dùng
 server. Địa chỉ <code>203.0.113.10</code> thuộc một dải dành riêng cho ví dụ trong tài liệu.</figcaption>
 </figure>
 
-<p>Mỗi chặng có một thành phần lo và một kiểu hỏng riêng, và mỗi chặng được học kỹ ở một bài của lộ trình.
-Bảng 2 tóm tắt từng chặng bằng một câu để các tên trong Hình 4 có nghĩa ngay từ giờ; hai tab sau giải thích
-đủ để hiểu bản đồ.</p>
+<p>Mỗi chặng có một thành phần lo và một kiểu hỏng riêng, và được học kỹ ở một bài của lộ trình. Bảng 2 tóm
+tắt từng chặng bằng một câu để các tên trong Hình 4 có nghĩa ngay từ giờ; hai tab sau giải thích đủ để hiểu
+bản đồ.</p>
 
 <div class="table-scroll">
 <table>
@@ -312,15 +298,15 @@ Bảng 2 tóm tắt từng chặng bằng một câu để các tên trong Hình
 
 <h2 id="thu-tu">Vì sao thứ tự là TCP, rồi TLS, rồi HTTP</h2>
 
-<p>Ba bước mở kết nối TCP, bắt tay TLS và gửi request HTTP đi theo một thứ tự cố định, vì bước sau chạy bên
-trên bước trước và cần bước trước xong. Kết nối TCP phải mở xong trước, vì TLS là cuộc trao đổi diễn ra bên
-trong kết nối đó. TLS bật mã hoá xong thì trình duyệt mới gửi dòng <code>GET /users/42</code>. Nên path và
-các header của request, kể cả cookie đăng nhập, đi qua Internet ở dạng đã mã hoá.</p>
+<p>Mở kết nối TCP, bắt tay TLS, gửi request HTTP đi theo một thứ tự cố định, vì bước sau chạy bên trên bước
+trước và cần bước trước xong. TCP phải mở xong trước, vì TLS là cuộc trao đổi diễn ra bên trong kết nối đó.
+TLS bật mã hoá xong thì trình duyệt mới gửi dòng <code>GET /users/42</code>. Nên path và các header của
+request, kể cả cookie đăng nhập, đi qua Internet ở dạng đã mã hoá.</p>
 
-<p>Cách tổ chức này có tên là <strong>phân tầng</strong> (layering): mỗi tầng chỉ dựa vào dịch vụ của tầng
-ngay bên dưới, nên sửa hay thay một tầng mà không phải viết lại các tầng khác. Vì vậy TCP, TLS và HTTP có
-ba văn bản chuẩn riêng, viết độc lập với nhau; số hiệu từng văn bản, cùng văn bản chuẩn của DNS, nằm ở mục
-Nguồn đọc thêm cuối bài.</p>
+<p>Cách tổ chức này tên là <strong>phân tầng</strong> (layering): mỗi tầng chỉ dựa vào dịch vụ của tầng ngay
+bên dưới, nên sửa hay thay một tầng mà không phải viết lại các tầng khác. Vì vậy TCP, TLS và HTTP có ba văn bản
+chuẩn riêng, viết độc lập với nhau; số hiệu từng văn bản, cùng văn bản chuẩn của DNS, nằm ở mục Nguồn đọc thêm
+cuối bài.</p>
 
 </section>
 
@@ -330,8 +316,8 @@ Nguồn đọc thêm cuối bài.</p>
 <section class="tab" id="may-nguoi-dung" data-tab="Máy người dùng" data-note="từ URL tới request HTTP">
 
 <p>Năm chặng trong khung trên của Hình 4 chạy ngay trên máy người dùng, trước khi một byte nào của request
-tới được server. Phần này đi chậm qua từng chặng, mục tiêu là nhận ra chặng nào đang hỏng khi gặp nó. Học
-kỹ từng chặng thì để các bài sau.</p>
+tới được server. Phần này đi chậm qua từng chặng để nhận ra chặng nào hỏng khi gặp nó; học kỹ thì để các bài
+sau.</p>
 
 <h2 id="chang-1">Trình duyệt tách URL</h2>
 
@@ -447,6 +433,10 @@ cấp cho ai (<code>subject</code>), ai ký (<code>issuer</code>), hiệu lực 
 nên một website có thể hỏng ở bước bắt tay TLS đúng ngày chứng chỉ hết hạn, dù không ai đụng vào gì. Vì sao
 cấp ngắn hạn như vậy, và gia hạn tự động ra sao, là nội dung của Bài 20.</p>
 
+<p>Có lần mình đoán một website hết chứng chỉ đúng thứ Hai là vì ai đó đăng ký nó vào một hôm nào trong quá
+khứ rồi tình cờ trùng. Không tình cờ: hạn là ngày cấp cộng 90 ngày, nên chứng chỉ hết vào một ngày biết trước
+được, và nếu tới ngày đó chưa ai gia hạn thì web hỏng.</p>
+
 <h2 id="chang-5">Gửi request HTTP</h2>
 
 <p>Chỉ khi DNS đã trả lời, kết nối TCP đã mở và TLS đã bật mã hoá thì trình duyệt mới gửi request.
@@ -475,9 +465,7 @@ này dành cho website nào. Ở tab sau bạn sẽ thấy Nginx dùng đúng d�
      ===================================================================== -->
 <section class="tab" id="phia-server" data-tab="Phía server" data-note="từ firewall tới database, và code của bạn">
 
-<p>Request đã rời máy người dùng. Phần này theo nó qua Internet, firewall, Nginx, ứng dụng và database trên
-server, rồi trả lời câu còn lại của bài: trong chín chặng đó, chặng nào là của bạn, và ai lo những chặng
-kia?</p>
+<p>Request đã rời máy người dùng, giờ đi qua Internet, firewall, Nginx, ứng dụng và database.</p>
 
 <h2 id="internet">Internet: phần bạn không kiểm soát</h2>
 
@@ -539,11 +527,10 @@ Internet, về trình duyệt.</p>
 
 <h2 id="chang-cua-ban">Chặng nào là code của bạn</h2>
 
-<p>Giờ trả lời được chặng nào là code của bạn. Trong cả đường đi, chỉ ứng dụng là code bạn viết. Tám chặng
-còn lại là hạ tầng: chương trình của người khác, cấu hình của người vận hành, hoặc mạng của các nhà cung
-cấp. Chặng nào cũng hỏng được mà code của bạn không đổi một dòng. Nên khi nhận tin nhắn "web không vào được"
-mà code không đổi dòng nào từ hôm qua, nghi tám chặng hạ tầng trước, rồi mới tới phần code bạn quen
-nhất.</p>
+<p>Trong cả đường đi, chỉ ứng dụng là code bạn viết. Tám chặng còn lại là hạ tầng: chương trình của người
+khác, cấu hình của người vận hành, hoặc mạng của các nhà cung cấp. Chặng nào cũng hỏng được mà code bạn không
+đổi một dòng. Nên nhận tin "web không vào được" mà code không đổi từ hôm qua thì nghi tám chặng hạ tầng
+trước, rồi mới tới phần code quen tay nhất.</p>
 
 <p>Truyện ở Ảnh 6 vẽ cùng ý đó: phần của bạn nằm trên rất nhiều phần của người khác.</p>
 
@@ -554,12 +541,11 @@ nhất.</p>
 
 <h2 id="devops">DevOps: ai lo cho tám chặng còn lại</h2>
 
-<p>Câu trả lời đó kéo theo câu khác: nếu tám chặng không phải code của bạn thì ai lo chúng? Trong một thời
-gian dài, câu trả lời thường là một đội khác. Đội phát triển (<em>development</em>, gọi tắt là dev) viết ứng
-dụng; đội vận hành (<em>operations</em>, gọi tắt là ops) giữ server, mạng, firewall, Nginx và database. Dev
-viết xong thì bàn giao, ops nhận về rồi đưa lên server. Cách chia này lộ điểm yếu đúng lúc có sự cố: dev chỉ
-thấy code của mình nên kết luận "lỗi ở server", ops thấy server vẫn chạy nên kết luận "lỗi ở code", và không
-ai nhìn được cả chín chặng cùng lúc.</p>
+<p>Nếu tám chặng kia không phải code của bạn thì ai lo chúng? Một thời gian dài, câu trả lời là một đội khác.
+Đội phát triển (<em>development</em>, gọi tắt là dev) viết ứng dụng; đội vận hành (<em>operations</em>, gọi tắt
+là ops) giữ server, mạng, firewall, Nginx và database. Dev viết xong thì bàn giao, ops nhận về rồi đưa lên
+server. Cách chia này lộ điểm yếu đúng lúc có sự cố: dev chỉ thấy code mình nên kết luận "lỗi ở server", ops
+thấy server vẫn chạy nên kết luận "lỗi ở code", và không ai nhìn được cả chín chặng cùng lúc.</p>
 
 <div class="callout define">
   <span class="label">Định nghĩa trong chuẩn</span>
@@ -578,13 +564,12 @@ ai nhìn được cả chín chặng cùng lúc.</p>
 được, và ngày nay người ta đo DevOps bằng gì, mình kể trong phụ lục
 <a href="lich-su-devops.html">Lịch sử DevOps</a>.</p>
 
-<p>Đọc định nghĩa trên tấm bản đồ thì <em>các bên liên quan</em> (stakeholders, những người có phần trong
-việc phần mềm được làm ra và chạy ra sao) trước hết là người viết ứng dụng và người giữ cho phần còn lại
-của đường đi chạy được: server, firewall, Nginx, database. Trong công việc hằng ngày, sự cộng tác giữa họ
-hay hiện ra thành ba việc. Người viết ứng dụng hiểu và cùng chịu trách nhiệm cho hạ tầng mà ứng dụng chạy
-trên đó. Những bước lặp lại giữa code và server được tự động hoá. Hệ thống được đo đạc để biết nó đang tốt
-lên hay xấu đi, để có căn cứ cho việc cải tiến liên tục mà định nghĩa nhắc tới. Ba việc này là lời diễn giải
-của bài, không trích từ chuẩn.</p>
+<p>Đọc định nghĩa lên bản đồ: <em>các bên liên quan</em> (stakeholders, những người có phần trong việc phần
+mềm được làm ra và chạy ra sao) trước hết là người viết ứng dụng và người giữ cho phần còn lại của đường đi
+chạy được: server, firewall, Nginx, database. Hằng ngày, sự cộng tác của họ hay hiện ra thành ba việc. Người
+viết ứng dụng hiểu và cùng chịu trách nhiệm cho hạ tầng mà ứng dụng chạy trên đó. Những bước lặp lại giữa code
+và server được tự động hoá. Hệ thống được đo đạc để biết nó đang tốt lên hay xấu đi, làm căn cứ cho việc cải
+tiến liên tục mà định nghĩa nhắc tới. Ba việc này là diễn giải của bài, không trích từ chuẩn.</p>
 
 <p>Mục 5.2 của chuẩn liệt kê các nguyên tắc của DevOps, và một nguyên tắc gắn thẳng với bài này: <em>tư duy
 hệ thống</em> (systems thinking, mục 5.2.4). Theo chuẩn, nguyên tắc này chống lối làm việc thiển cận là dùng
@@ -605,7 +590,6 @@ nó nằm ở đâu và hỏng ra sao.</p>
   khi code không đổi mà web vẫn hỏng. DevOps, theo chuẩn IEEE 2675-2021, là các nguyên tắc và cách làm để
   người viết phần mềm và người giữ nó chạy cộng tác suốt vòng đời, bắt đầu từ việc cùng hiểu trọn đường đi
   này.</p>
-  <p>Làm sao thấy tận mắt những chặng không phải code của mình, ngay trên máy bạn?</p>
 </div>
 
 </section>
@@ -727,10 +711,9 @@ trên máy người dùng, bốn chặng sau trên server, ở giữa là Intern
 bạn viết; tám chặng còn lại là hạ tầng, và khi code không đổi mà web hỏng thì đó là chỗ cần nghi trước.</p>
 
 <p>Chuẩn IEEE 2675-2021 định nghĩa DevOps là tập hợp các nguyên tắc và cách làm giúp các bên liên quan cộng
-tác tốt hơn để đặc tả, phát triển và vận hành phần mềm, đồng thời cải tiến liên tục suốt vòng đời của nó.
-Một trong các nguyên tắc ấy, tư duy hệ thống, khuyến khích hiểu trọn hệ thống từ đầu tới cuối; tấm bản đồ
-chín chặng là bước đầu của việc đó, và lộ trình này đi qua từng chặng một. Từ nay, công cụ nào của lộ trình
-cũng được gắn vào một chỗ cụ thể trên tấm bản đồ, kèm trách nhiệm và kiểu hỏng của nó.</p>
+tác tốt hơn để đặc tả, phát triển và vận hành phần mềm, đồng thời cải tiến liên tục suốt vòng đời của nó. Một
+trong các nguyên tắc ấy, tư duy hệ thống, khuyến khích hiểu trọn hệ thống từ đầu tới cuối; tấm bản đồ chín
+chặng là bước đầu của việc đó, và lộ trình này đi qua từng chặng một.</p>
 
 <div class="callout" id="cau-hoi-tiep">
   <span class="label">Câu hỏi cho bài sau</span>
