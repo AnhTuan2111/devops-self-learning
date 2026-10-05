@@ -90,7 +90,9 @@ router cho thuê địa chỉ qua DHCP.
 
 Trích nguyên văn từ buổi học, để dùng làm chất liệu khi viết lại bài.
 
-- Câu trả lời đầu tiên cho câu hỏi của bài: "do firewall, tôi đi tắt firewall trên máy tôi hoặc là cho phép máy khác gửi gói tin tới máy tôi là bên bình vào được"
+- Câu trả lời đầu tiên cho câu hỏi của bài (21/09/2026): "chắc là đổi localhost thành địa chỉ mình tự custom à ? mở địa chỉ đó và cổng trên máy mình và để đồng nghiệp vào ?", kèm "tôi chỉ hiểu cơ bản thế thôi, hơi mơ màng"
+- Hỏi lại sau khi được sửa (22/09/2026): "chỗ 2 tôi mặc dù hiểu đôi chút nhưng chưa thực sự hiểu bạn đang nói về việc gì, lấy ví dụ về câu hỏi gốc của bạn ấy để tôi hiểu"; "chỗ 3 bản chất của host là gì nhỉ? lúc thì bắt đầu bằng 127 hoặc là 192, rồi lại ở máy mình hoặc card wifi nữa"
+- Trả lời câu "đồng nghiệp gặp timeout thì nghi ở đâu" (22/09/2026): "do firewall, tôi đi tắt firewall trên máy tôi hoặc là cho phép máy khác gửi gói tin tới máy tôi là bên bình vào được". Chẩn đoán đúng; chỗ sai là "tắt firewall" và tin là mở xong thì vào được.
 - Khi gặp con số 2 giây của refused trên Windows, ghi lại: "Refused tới chính máy mình mà mất hơn 2 giây"
 
 ---

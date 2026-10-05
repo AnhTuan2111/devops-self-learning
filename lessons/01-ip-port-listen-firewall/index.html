@@ -39,13 +39,16 @@
      ===================================================================== -->
 <section class="tab" id="van-de" data-tab="Vấn đề" data-note="localhost được, người khác không">
 
-<p>Bài 00 kết thúc ở một câu hỏi
-(<a href="../00-ban-do-toan-canh/#cau-hoi-tiep">xem lại</a>): <em>App chạy bình thường khi gọi bằng
+<p>Bài 00 dừng ở câu hỏi này (<a href="../00-ban-do-toan-canh/#cau-hoi-tiep">xem lại</a>): <em>App chạy bình thường khi gọi bằng
 localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở
-đâu?</em> Trên bản đồ chín chặng, bước mở kết nối chỉ được tả bằng một dòng: máy người dùng mở một kết nối
-tới máy chủ. Dòng đó đủ để vẽ bản đồ nhưng chưa đủ để sửa lỗi, vì "mở kết nối tới máy chủ" gồm hai
-việc nhỏ hơn: tìm tới <em>đúng máy</em>, rồi trong máy đó tìm tới <em>đúng chương trình</em>. Bài này đi sâu
-vào bước đó và chỉ ra những điều kiện nó cần.</p>
+đâu?</em></p>
+
+<p>Lúc đầu mình trả lời câu này hơi mơ màng. Đại ý là đổi <code>localhost</code> thành một địa chỉ khác,
+rồi mở cổng đó trên máy mình cho đồng nghiệp vào. Nghe xuôi, nhưng hai cụm "địa chỉ của máy" với "mở cổng"
+đều gồm nhiều thứ hơn mình tưởng, và bài này là đi gỡ từng thứ.</p>
+
+<p>Trên bản đồ Bài 00, bước mở kết nối chỉ là một dòng: máy người dùng mở một kết nối tới máy chủ. Dòng đó
+gồm hai việc, tìm tới đúng máy, rồi tìm tới đúng chương trình trong máy.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  Trình duyệt → DNS → [ mở kết nối ] → Mã hoá → Gửi request → …
@@ -53,34 +56,30 @@ vào bước đó và chỉ ra những điều kiện nó cần.</p>
                         ├─ gọi đúng địa chỉ                    (địa chỉ IP)
                         ├─ firewall cho qua                    (firewall)
                         └─ có chương trình listen đúng địa chỉ (port, listen)</code></pre>
-<figcaption><b>Hình 1</b> Bài này đi sâu vào bước mở kết nối trên bản đồ của Bài 00. Bước đó chỉ thành
-công khi đủ ba điều kiện, xếp theo thứ tự gói tin gặp chúng; trong ngoặc là khái niệm mà mỗi điều kiện
-dựa vào.</figcaption>
+<figcaption><b>Hình 1</b> Bước mở kết nối trên bản đồ Bài 00, nhìn gần hơn. Muốn kết nối được thì đủ cả ba điều kiện; trong ngoặc là khái niệm mà mỗi điều kiện dựa vào, xếp theo thứ tự gói tin gặp chúng.</figcaption>
 </figure>
 
 <div class="callout story">
   <span class="label">Tình huống</span>
-  <p>Giả sử bạn chạy app Spring Boot trên laptop, mở <code>http://localhost:8080</code> thấy trang hiện ra
-  bình thường, rồi gửi đúng đường link đó cho đồng nghiệp ngồi bàn bên thử. Họ báo không vào được. Bạn sửa
-  link thành địa chỉ mạng của laptop, họ thử lại: vẫn không được, nhưng lần này trình duyệt quay một lúc lâu
-  rồi mới báo lỗi. Code không đổi dòng nào, app vẫn chạy bình thường trên máy bạn.</p>
+  <p>Giả sử bạn chạy app Spring Boot trên laptop, mở <code>http://localhost:8080</code> thấy trang hiện ra,
+  rồi gửi đúng link đó cho đồng nghiệp ngồi bên cạnh. Họ bấm vào, báo lỗi ngay. Bạn đổi link thành địa chỉ
+  mạng của laptop, họ thử lại, vẫn không vào được, nhưng lần này trình duyệt quay khá lâu mới báo lỗi. Code
+  chưa đổi dòng nào, app vẫn chạy bình thường trên máy bạn.</p>
 </div>
 
 <figure class="fig photo">
   <img src="img/xkcd-networking-problems.webp" width="1170" height="964" loading="lazy" alt="Một trục ngang: Types of computer problems by how much debugging them makes your brain stop working, từ None tới A lot. Normal problems nằm ở nửa trái; Networking problems đứng riêng ở đầu A lot. Bên dưới, một người ngồi giữa đống thiết bị mạng nói: trước buổi trưa các gói tin số lẻ bị chậm, sau buổi trưa tới lượt gói số chẵn, ngược hẳn hôm qua. Người kia hỏi: Are you sure you're okay? Người ngồi đáp: I'm fine and I believe in ghosts now!">
-  <figcaption><b>Ảnh 1</b> Truyện <em>Networking Problems</em> của xkcd, số 2259, năm 2020. Trục ngang xếp các loại lỗi máy tính theo mức độ chúng làm người gỡ lỗi mất tỉnh táo; lỗi mạng đứng riêng ở đầu "rất nhiều", và nhân vật trong truyện đã đi tới chỗ tin là có ma. Bài này đi đường khác: bước mở kết nối chỉ cần ba điều kiện, và mỗi triệu chứng chỉ ra điều kiện nào đang thiếu.</figcaption>
+  <figcaption><b>Ảnh 1</b> Truyện <em>Networking Problems</em> của xkcd, số 2259, năm 2020. Trục ngang xếp các loại lỗi máy tính theo mức làm người gỡ lỗi mất tỉnh táo; lỗi mạng đứng riêng ở đầu "rất nhiều", và nhân vật trong truyện đã tới chỗ tin là có ma. Truyện nói quá cho vui, nhưng cảm giác thì có thật. Bài này đi đường khác: bước mở kết nối chỉ cần ba điều kiện, và mỗi triệu chứng chỉ ra điều kiện nào đang thiếu.</figcaption>
 </figure>
 
-<p>Gặp cảnh này rất dễ rơi vào Ảnh 1: thử đủ thứ mà không theo thứ tự nào, tắt firewall, đổi port, khởi động
-lại máy, và nếu may thì một cách có tác dụng mà không ai biết vì sao. Lần đầu gặp câu hỏi này mình cũng trả
-lời theo kiểu đó: do firewall, tắt nó đi hoặc cho máy khác gửi gói tin tới máy mình là người kia vào được.
-Cái đoán đó giải thích được lần thứ hai, còn lần đầu thì không. Hai lần thất bại có hai triệu chứng khác
-nhau (một lần báo lỗi ngay, một lần chờ lâu), và hai triệu chứng khác nhau thường có hai lý do khác nhau.
-Muốn đọc được triệu chứng thì phải biết bước mở kết nối gồm những gì. Câu hỏi của bài là:</p>
+<p>Hai lần đều là "không vào được", mà một lần báo ngay, một lần chờ lâu. Hai triệu chứng khác nhau thì
+thường là hai lý do khác nhau.</p>
 
-<blockquote class="pull"><p>App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu?</p></blockquote>
+<p>Không biết lý do thì dễ thành Ảnh 1: tắt firewall, đổi port, khởi động lại máy, cái nào ăn thì thôi. Mình
+cũng từng nói luôn là tắt firewall đi cho nhanh (chỗ này học được là sai, ở tab Firewall).</p>
 
-<p>Câu hỏi đó tách ra bốn câu nhỏ hơn:</p>
+<p>Học tới đây mình hỏi lại: bản chất của host là gì nhỉ? Lúc thì thấy 127, lúc thì 192, rồi lại nghe
+nói card WiFi, mình chả biết đó là một thứ hay nhiều thứ. Câu hỏi của bài tách ra như sau:</p>
 
 <ol>
   <li>Một máy có những địa chỉ IP nào, và vì sao <code>localhost</code> luôn trỏ về máy của chính
@@ -91,14 +90,12 @@ Muốn đọc được triệu chứng thì phải biết bước mở kết n�
   <code>timeout</code> ra sao?</li>
 </ol>
 
-<p>Bốn tab tiếp theo trả lời lần lượt từng câu.</p>
-
 <h2 id="can-hoc-truoc">Cần đã học trước</h2>
 
-<p>Bài này dùng lại những gì Bài 00 đã giới thiệu, và đi sâu hơn vào bước mở kết nối:</p>
+<p>Bài này dùng lại mấy thứ của Bài 00, và đi sâu hơn vào bước mở kết nối:</p>
 
 <ul>
-  <li><strong>Bản đồ chín chặng</strong>, và vị trí của bước mở kết nối trên đó
+  <li><strong>Bản đồ chín chặng</strong>, và chỗ của bước mở kết nối trên đó
   (<a href="../00-ban-do-toan-canh/#ban-do">Bài 00, tab Bản đồ</a>).</li>
   <li><strong>URL và hai phần host, port</strong>: host là tên máy, port là con số đi sau dấu hai chấm
   (<a href="../00-ban-do-toan-canh/#url">Bài 00, tab URL</a>).</li>
@@ -116,16 +113,15 @@ Muốn đọc được triệu chứng thì phải biết bước mở kết n�
      ===================================================================== -->
 <section class="tab" id="dia-chi-ip" data-tab="Địa chỉ IP" data-note="một máy, nhiều địa chỉ">
 
-<p class="panel-intro">Lần gửi link đầu tiên hỏng vì nó đưa đồng nghiệp tới sai máy. Để thấy vì sao, nhớ lại
-điều Bài 00 đã nói: DNS dịch một cái tên thành địa chỉ IP, và mạng chỉ chuyển gói tin tới địa chỉ đó. Nên
-câu cần trả lời trước là: một máy có những địa chỉ IP nào, và vì sao <code>localhost</code> luôn trỏ về máy
-của người gõ?</p>
+<p class="panel-intro">Lần gửi link đầu hỏng vì nó đưa đồng nghiệp về chính máy của họ, không tới máy bạn. Muốn hiểu chỗ
+đó thì phải biết một máy có những địa chỉ IP nào, và vì sao <code>localhost</code> lúc nào cũng quay về máy của
+người gõ.</p>
 
 <h2 id="mot-may-nhieu-ip">Một máy có nhiều địa chỉ IP</h2>
 
-<p>Trong tình huống mở bài, lần sửa link là thay <code>localhost</code> bằng "địa chỉ của laptop". Câu đó
-ngầm giả định mỗi máy chỉ có đúng một địa chỉ, và giả định này sai. Nhiều nhầm lẫn ở bước mở kết nối bắt đầu
-từ đó, nên trước hết cần định nghĩa chính xác địa chỉ IP được gắn vào đâu.</p>
+<p>Lần sửa link đầu tiên là thay <code>localhost</code> bằng "địa chỉ của laptop", như thể laptop chỉ có một
+địa chỉ. Mình cũng từng gọi <code>127.0.0.1</code> là "IPv4 mặc định của máy". Cả hai đều sai, nên định nghĩa cho
+chuẩn trước đã.</p>
 
 <dl class="terms">
   <dt>IP address <small>địa chỉ IP</small></dt>
@@ -145,11 +141,11 @@ từ đó, nên trước hết cần định nghĩa chính xác địa chỉ IP 
   <figcaption><b>Ảnh 2</b> Card mạng máy chủ Intel X540-T2 với hai cổng cắm cáp mạng. Hệ điều hành thấy đây là hai giao diện mạng riêng biệt, và mỗi giao diện mang một địa chỉ IP riêng: địa chỉ gắn với giao diện, không gắn với cả cái máy.</figcaption>
 </figure>
 
-<p>Địa chỉ IP gắn với từng giao diện mạng chứ không gắn với cả cái máy, nên một chiếc laptop bình thường có
-ít nhất hai, thường là ba bốn địa chỉ cùng lúc. Nó có địa chỉ loopback; nó có địa chỉ của card WiFi do
-router trong nhà cấp; và nếu đang bật VPN, tức phần mềm nối máy vào một mạng ở xa qua Internet như thể đang
-ngồi trong mạng đó, thì nó có thêm một địa chỉ trên một card ảo nữa. Hình 2 vẽ ba địa chỉ đó trên cùng một
-máy.</p>
+<p>Địa chỉ gắn với từng giao diện mạng, không gắn với cả máy. Nên một cái laptop bình thường có ít nhất hai,
+hay gặp là ba bốn địa chỉ cùng lúc: loopback; card WiFi, địa chỉ do router trong nhà cấp; và nếu đang bật VPN
+(phần mềm nối máy vào một mạng ở xa qua Internet, như thể đang ngồi trong mạng đó) thì thêm một card ảo nữa.
+Trên máy mình ngày 22/09, <code>ipconfig</code> in ra hai cái, WiFi và một card ảo; cộng loopback
+(<code>ipconfig</code> không liệt kê nó) là ba. Hình 2 vẽ ba địa chỉ đó.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>             một cái laptop
@@ -167,22 +163,23 @@ máy.</p>
 được từ phạm vi ghi bên cạnh nó.</figcaption>
 </figure>
 
-<p>Ba địa chỉ trong Hình 2 cùng dẫn tới một máy nhưng không thay nhau được, vì mỗi địa chỉ chỉ có nghĩa
-trong một phạm vi: <code>127.0.0.1</code> chỉ chính máy đó gọi được, <code>192.168.10.38</code> chỉ máy cùng
-mạng WiFi gọi được, <code>10.8.0.2</code> chỉ máy trong mạng VPN gọi được. Đồng nghiệp ngồi cùng WiFi với bạn
-nên chỉ có một địa chỉ dùng được: địa chỉ WiFi của laptop bạn.</p>
+<p>Ba địa chỉ cùng dẫn vào một máy mà không thay nhau được, vì mỗi cái chỉ có nghĩa trong một phạm vi.
+<code>127.0.0.1</code> thì chỉ chính máy đó gọi được, <code>192.168.10.38</code> thì máy cùng WiFi, và
+<code>10.8.0.2</code> thì máy trong mạng VPN. Đồng nghiệp ngồi cùng WiFi nên chỉ có một địa chỉ dùng được, là
+địa chỉ WiFi của laptop bạn.</p>
 
-<p>Địa chỉ WiFi còn có thể đổi. Router cấp địa chỉ cho máy theo kiểu cho thuê, có thời hạn, bằng một cơ chế
-tên là DHCP; hết hạn hoặc đổi mạng thì địa chỉ có thể khác đi. Trong mấy ngày học bài này, cùng chiếc laptop
-của mình đã mang hai địa chỉ <code>192.168.110.203</code> và <code>192.168.10.38</code> ở hai lần đo. Nên
-đừng ghi cứng địa chỉ mạng nội bộ vào tài liệu hay cấu hình; máy chủ thật cần một địa chỉ cố định, và người
-dùng gọi nó bằng tên miền.</p>
+<p>Hồi học, mình được hỏi máy đang có mấy địa chỉ thì trả lời bằng chuyện dải 127 có bao nhiêu địa chỉ, tức
+trả lời sang một câu khác. Chính cái địa chỉ WiFi mình bỏ sót lại là cái làm đồng nghiệp vào được.</p>
+
+<p>Địa chỉ WiFi còn đổi được. Router cho máy thuê địa chỉ, có thời hạn, bằng một cơ chế tên là DHCP; hết hạn
+hoặc đổi mạng thì có thể ra địa chỉ khác. Mấy ngày học bài này, cùng chiếc laptop mà mình đo ra hai địa chỉ
+<code>192.168.110.203</code> và <code>192.168.10.38</code> ở hai lần. Nên đừng ghi cứng địa chỉ mạng nội bộ vào
+tài liệu hay cấu hình. Máy chủ thật cần địa chỉ cố định, còn người dùng thì gọi nó bằng tên miền.</p>
 
 <h2 id="ba-dai">Ba dải địa chỉ đặc biệt</h2>
 
-<p>Một số dải địa chỉ được dành riêng cho mục đích đặc biệt, và theo quy ước, router trên Internet không bao
-giờ chuyển gói tin mang các địa chỉ đó ra ngoài. Ba dải bạn sẽ gặp nhiều nhất khác nhau ở phạm vi mà chúng
-có nghĩa.</p>
+<p>Vài dải địa chỉ được để riêng cho mục đích đặc biệt, và theo quy ước thì router trên Internet không chuyển
+gói tin mang các địa chỉ đó ra ngoài. Ba dải hay gặp nhất khác nhau ở phạm vi mà chúng có nghĩa.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  127.0.0.1    →  chỉ trong máy này             (loopback)
@@ -194,27 +191,29 @@ có nghĩa.</p>
 được chuyển ra Internet.</figcaption>
 </figure>
 
-<p>Dòng thứ hai của Hình 3 viết theo kiểu khác hẳn, vì nó là địa chỉ IPv6: thế hệ địa chỉ mới dài 128 bit,
-viết bằng các nhóm số thập lục phân ngăn cách bởi dấu hai chấm. Bài này chỉ cần biết IPv6 cũng có loopback,
-viết là <code>::1</code> và tương đương <code>127.0.0.1</code>. Vì sao có hai thế hệ địa chỉ song song thì
-phụ lục <a href="ipv4-vs-ipv6.html">Lịch sử địa chỉ IP</a> kể lại đầy đủ.</p>
+<p>Dòng thứ hai của Hình 3 viết khác hẳn vì nó là địa chỉ IPv6, thế hệ địa chỉ mới dài 128 bit, viết bằng
+các nhóm số thập lục phân ngăn cách bằng dấu hai chấm. Bài này chỉ cần biết IPv6 cũng có loopback, viết là
+<code>::1</code>, tương đương <code>127.0.0.1</code>. Vì sao có hai thế hệ địa chỉ chạy song song thì
+<a href="ipv4-vs-ipv6.html">Lịch sử địa chỉ IP</a> kể đầy đủ.</p>
 
-<p>Loại địa chỉ IPv6 thứ hai cần nhận ra là các địa chỉ bắt đầu bằng <code>fe80</code>, gọi là địa chỉ
-<em>link-local</em>: chúng chỉ có nghĩa giữa các thiết bị nối trực tiếp với nhau, ví dụ giữa laptop và router
-WiFi, và không đi xa hơn router đó. Lab Bài 00 đã gặp một địa chỉ như vậy khi <code>nslookup</code> in ra địa
-chỉ của router.</p>
+<p>Địa chỉ IPv6 bắt đầu bằng <code>fe80</code> là loại <em>link-local</em>: chỉ có nghĩa giữa các thiết bị nối
+trực tiếp với nhau, kiểu laptop với router WiFi, và không đi qua router đó. Lab Bài 00 đã gặp một cái khi
+<code>nslookup</code> in ra địa chỉ của router.</p>
+
+<p>Về dải 127, mình từng tính nó có 127⁴ địa chỉ. Sai: số đầu trong bốn số của địa chỉ bị khóa cứng là 127,
+ba số còn lại tự do, mỗi số 8 bit, tổng 24 bit, ra 2²⁴ tức khoảng 16,7 triệu. Ảnh 3 cho thấy con số đó nằm
+ở đâu.</p>
 
 <figure class="fig photo shot">
   <img src="img/iana-ipv4.webp" width="928" height="1046" loading="lazy" alt="Bảng sổ đăng ký IPv4 của IANA, mỗi dòng một khối địa chỉ; hai dòng 010/8 Private Use và 127/8 Loopback được khoanh màu.">
   <figcaption><b>Ảnh 3</b> Sổ đăng ký không gian địa chỉ IPv4 của IANA, tổ chức quản lý số hiệu của Internet. Mỗi dòng là một khối có chung 8 bit đầu, gồm khoảng 16,7 triệu địa chỉ; cách ghi <code>/8</code> chính là "8 bit đầu cố định". Hai dòng khoanh là hai dải vừa gặp: <span class="kw"><i class="key k-red" aria-hidden="true"></i><code>10.0.0.0/8</code></span> dành cho mạng riêng và <span class="kw"><i class="key k-blue" aria-hidden="true"></i><code>127.0.0.0/8</code></span> dành cho loopback. Cả khối 127 đều là loopback, dù máy thường chỉ dùng một địa chỉ trong đó là <code>127.0.0.1</code>.</figcaption>
 </figure>
 
-<p>Chuyện các dải mạng riêng không ra Internet kéo theo một điều lớn. Đồng nghiệp cùng WiFi gọi được tới
-<code>192.168.10.38</code>, còn một người ở nhà riêng, ngoài Internet, thì không bao giờ gọi được, vì không
-router nào trên đường đi chịu chuyển gói tin tới một địa chỉ mạng riêng. Đó là lý do một server thật phải
-đặt ở nơi có địa chỉ IP công khai, như một máy chủ thuê trong trung tâm dữ liệu, không chạy trên laptop ở
-nhà. Lịch sử dẫn tới tình trạng này, tức chuyện địa chỉ IPv4 cạn kiệt và cách router gia đình cho cả nhà
-dùng chung một địa chỉ, nằm ở phụ lục <a href="ipv4-vs-ipv6.html#t-gia-nat">Lịch sử địa chỉ IP</a>.</p>
+<p>Các dải mạng riêng không ra Internet, nên đồng nghiệp cùng WiFi gọi được <code>192.168.10.38</code> còn
+người ở nhà riêng thì không bao giờ gọi được: không router nào trên đường đi chịu chuyển gói tin tới một địa
+chỉ mạng riêng. Vì vậy server thật phải nằm ở chỗ có địa chỉ IP công khai, kiểu máy chủ thuê trong trung tâm
+dữ liệu, chứ không chạy trên laptop ở nhà. Lịch sử dẫn tới chuyện này (địa chỉ IPv4 hết dần, router gia đình
+cho cả nhà dùng chung một địa chỉ) nằm ở <a href="ipv4-vs-ipv6.html#t-gia-nat">Lịch sử địa chỉ IP</a>.</p>
 
 <div class="callout deep">
   <span class="label">Đào sâu · các dải này được quy định ở đâu</span>
@@ -230,12 +229,11 @@ dùng chung một địa chỉ, nằm ở phụ lục <a href="ipv4-vs-ipv6.html
 
 <h2 id="localhost">Vì sao <code>localhost</code> là một từ tương đối</h2>
 
-<p>Giờ giải thích được lần gửi link đầu tiên trong tình huống mở bài. <code>localhost</code> là một cái
-tên, và máy nào cũng dịch cái tên đó về địa chỉ loopback <em>của chính nó</em>: <code>127.0.0.1</code>,
-hoặc trên nhiều hệ thống hiện đại là <code>::1</code> trước. Khi đồng nghiệp gõ
-<code>http://localhost:8080</code>, máy của họ dịch tên đó thành loopback của máy họ, và gói tin đi vòng
-qua giao diện loopback rồi quay lại chính máy họ, không bao giờ rời khỏi bàn của họ. Trên máy họ không có app
-nào ở port 8080, nên họ nhận lời từ chối ngay tại máy mình.</p>
+<p>Giờ giải thích được lần gửi link đầu. <code>localhost</code> là một cái tên, và máy nào cũng dịch nó về
+loopback <em>của chính nó</em>: <code>127.0.0.1</code>, hoặc <code>::1</code> trước trên nhiều hệ thống mới.
+Đồng nghiệp gõ <code>http://localhost:8080</code> thì máy họ dịch ra loopback của máy họ, gói tin đi một vòng
+qua giao diện loopback rồi quay lại chính máy họ, chưa bao giờ ra khỏi bàn của họ. Máy họ không có app nào ở
+port 8080 nên họ bị từ chối ngay tại đó.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  máy bạn                              máy đồng nghiệp
@@ -251,14 +249,9 @@ nào ở port 8080, nên họ nhận lời từ chối ngay tại máy mình.</p
 <code>localhost</code> quay về chính máy đó.</figcaption>
 </figure>
 
-<p>Tóm lại <code>localhost</code> không chỉ một máy cố định trên mạng. Nó là một tên tương đối, máy nào dịch
-nó thì nó chỉ về chính máy đó. Muốn người khác gọi tới máy mình thì phải đưa cho họ một địa chỉ của máy mình
-mà họ gọi tới được, tức địa chỉ trong mạng chung của hai người.</p>
-
-<p>Tới đây điều kiện <strong>gọi đúng địa chỉ</strong> đã rõ: địa chỉ IP định danh một giao diện mạng, mỗi
-địa chỉ chỉ gọi tới được từ phạm vi của nó, và <code>localhost</code> luôn là máy của người gõ. Lần sửa thứ
-hai đã đưa đồng nghiệp tới đúng máy mà vẫn không được. Trong một máy có hàng chục chương trình đang chạy,
-kết nối được giao cho chương trình nào?</p>
+<p><code>localhost</code> không chỉ một máy cố định nào. Nó giống chữ "ở đây": ai nói thì "ở đây" là chỗ người
+đó đang đứng. Gửi cho đồng nghiệp chữ "ở đây" thì họ hiểu là chỗ họ ngồi. Muốn họ gọi tới máy mình thì phải
+đưa một địa chỉ của máy mình mà họ với tới được, tức địa chỉ trong mạng chung của hai người.</p>
 
 </section>
 
@@ -267,16 +260,11 @@ kết nối được giao cho chương trình nào?</p>
      ===================================================================== -->
 <section class="tab" id="port-listen" data-tab="Port &amp; listen" data-note="tới đúng chương trình">
 
-<p class="panel-intro">Tới đúng máy mới là một nửa. Trên máy đó có trình duyệt, IDE, database, có khi vài app
-cùng chạy, và kết nối phải tới đúng một trong số đó. Con số port mà Bài 00 đã chỉ ra trong URL làm việc
-này; phần dưới cho thấy con số đó nằm ở đâu, và ai đọc nó.</p>
-
 <h2 id="port">Port: con số chọn chương trình</h2>
 
 <p>Một máy chủ bình thường chạy cùng lúc nhiều chương trình nhận kết nối từ mạng: một web server, một app
-Spring Boot, một database PostgreSQL. Địa chỉ IP chỉ đưa gói tin tới máy, không nói gì về chương trình nào
-bên trong máy sẽ nhận nó. Nên mỗi gói tin cần mang thêm một con số thứ hai để hệ điều hành biết giao nó cho
-ai.</p>
+Spring Boot, một database PostgreSQL. Địa chỉ IP chỉ đưa gói tin tới máy, không nói chương trình nào trong máy
+sẽ nhận. Nên mỗi gói tin phải mang thêm con số thứ hai để hệ điều hành biết giao cho ai.</p>
 
 <dl class="terms">
   <dt>Port <small>cổng</small></dt>
@@ -290,15 +278,15 @@ ai.</p>
   <figcaption><b>Ảnh 4</b> Phần đầu của một gói tin TCP, trong văn bản chuẩn RFC 9293. Mỗi hàng rộng 32 bit; <span class="kw"><i class="key k-red" aria-hidden="true"></i>hàng</span> đầu tiên được chia đôi cho hai con số 16 bit: <em>Source Port</em> (port của bên gửi) và <em>Destination Port</em> (port của bên nhận). Port không phải một thứ có sẵn trong máy; nó chỉ là con số nằm ở đây, trong từng gói tin.</figcaption>
 </figure>
 
-<p>Port chỉ là một trường số 16 bit nên không thể lớn hơn 65535. Một vài con số được quy ước cho những dịch
-vụ quen thuộc: 80 cho HTTP, 443 cho HTTPS, 5432 cho PostgreSQL. Còn 8080 chỉ là thói quen của lập trình viên
-web khi chạy app trên máy mình, vì nó dễ nhớ và không đụng tới các con số quy ước kia.</p>
+<p>Port chỉ là một trường số 16 bit nên không lớn hơn 65535. Vài con số được quy ước cho dịch vụ quen: 80 cho
+HTTP, 443 cho HTTPS, 5432 cho PostgreSQL. Còn 8080 chỉ là thói quen của dân web khi chạy app trên máy mình, vì
+dễ nhớ và không đụng mấy con số quy ước kia.</p>
 
 <h2 id="listen">Listen: chương trình xin nhận kết nối</h2>
 
-<p>Một gói tin tới port 8080 chỉ có chỗ đi nếu trước đó đã có một chương trình nói với hệ điều hành rằng nó
-muốn nhận các kết nối tới port 8080. Hành động "đăng ký nhận" đó có tên riêng, và điều kiện <strong>có
-chương trình listen đúng địa chỉ</strong> trong Hình 1 nói về chính hành động này.</p>
+<p>Gói tin tới port 8080 chỉ có chỗ đi nếu trước đó đã có chương trình nói với hệ điều hành là nó muốn nhận
+kết nối tới port 8080. Việc "đăng ký nhận" đó có tên riêng, và điều kiện <strong>có chương trình listen đúng
+địa chỉ</strong> trong Hình 1 nói đúng về nó.</p>
 
 <dl class="terms">
   <dt>Listen <small>lắng nghe</small></dt>
@@ -307,12 +295,11 @@ chương trình listen đúng địa chỉ</strong> trong Hình 1 nói về chí
   port thì port đó không có trong bảng.</dd>
 </dl>
 
-<p>Bảng đó do phần lõi của hệ điều hành giữ; phần lõi đó tên là kernel, và
-<a href="../03-may-tinh-va-he-dieu-hanh/#kernel">Bài 03</a> sẽ học kỹ nó. Ở bài này chỉ cần biết kết quả:
-khi một kết nối tới, hệ điều hành tra bảng xem port đích có trong đó không. Có thì giao kết nối cho chương
-trình tương ứng, không có thì từ chối. Trên Windows, lệnh <code>netstat -ano</code> in ra chính cái bảng
-đó; mỗi dòng <code>LISTENING</code> là một port đang có chương trình nhận, và cột cuối là PID, con số mà hệ
-điều hành gán cho mỗi chương trình đang chạy (Bài 03 cũng giải thích con số này).</p>
+<p>Bảng đó do phần lõi của hệ điều hành giữ, tên là kernel, <a href="../03-may-tinh-va-he-dieu-hanh/#kernel">Bài
+03</a> học kỹ. Ở bài này chỉ cần biết kết quả: khi kết nối tới, hệ điều hành tra bảng xem port đích có trong
+đó không. Có thì giao cho chương trình tương ứng, không có thì từ chối. Trên Windows, <code>netstat -ano</code>
+in đúng cái bảng đó; mỗi dòng <code>LISTENING</code> là một port đang có chương trình nhận, còn cột cuối là PID,
+số mà hệ điều hành gán cho mỗi chương trình đang chạy (Bài 03 cũng giải thích).</p>
 
 <figure class="fig">
 <pre><code>$ netstat -ano | grep ":8080 " | grep LISTEN
@@ -321,16 +308,16 @@ trình tương ứng, không có thì từ chối. Trên Windows, lệnh <code>n
 nhưng chỉ trên địa chỉ <code>127.0.0.1</code>. Chạy trên máy mình, Git Bash, 03/10/2026.</figcaption>
 </figure>
 
-<p>Hai chương trình không thể cùng listen một port trên cùng một địa chỉ, vì hệ điều hành sẽ không biết giao
-kết nối cho ai. Chương trình đến sau bị từ chối ngay khi xin, với thông báo lỗi
-<code>address already in use</code>. Bạn sẽ tự gặp lỗi này trong lab của
-<a href="../03-may-tinh-va-he-dieu-hanh/">Bài 03</a>, khi chạy hai server cùng giành port 8080.</p>
+<p>Hai chương trình không thể cùng listen một port trên cùng một địa chỉ, vì hệ điều hành không biết giao kết
+nối cho ai. Chương trình đến sau bị từ chối ngay lúc xin, kèm lỗi <code>address already in use</code>. Lỗi này
+bạn sẽ tự gặp ở lab của <a href="../03-may-tinh-va-he-dieu-hanh/">Bài 03</a>, khi chạy hai server cùng giành
+port 8080.</p>
 
 <h2 id="listen-address">Listen address: nhận kết nối gọi tới địa chỉ nào</h2>
 
-<p>Dòng <code>LISTENING</code> trong Hình 5 ghi cả địa chỉ lẫn port: <code>127.0.0.1:8080</code>. Lý do là
-khi xin listen, chương trình còn chọn luôn nó nhận kết nối gọi tới địa chỉ nào của máy. Tab trước đã cho thấy
-một máy có nhiều địa chỉ; chương trình có quyền chỉ nhận ở một vài địa chỉ trong số đó.</p>
+<p>Dòng <code>LISTENING</code> ở Hình 5 ghi cả địa chỉ lẫn port: <code>127.0.0.1:8080</code>. Lý do là lúc xin
+listen, chương trình còn chọn luôn nó nhận kết nối gọi tới địa chỉ nào của máy. Tab trước đã cho thấy một máy
+có nhiều địa chỉ, và chương trình được quyền chỉ nhận ở vài địa chỉ trong số đó.</p>
 
 <dl class="terms">
   <dt>Listen address <small>địa chỉ listen</small></dt>
@@ -340,12 +327,11 @@ một máy có nhiều địa chỉ; chương trình có quyền chỉ nhận �
   <code>0.0.0.0</code> nghĩa là nhận kết nối gọi tới <em>mọi</em> địa chỉ của máy.</dd>
 </dl>
 
-<p>Nên điều kiện có chương trình listen đúng địa chỉ phát biểu chính xác là: kết nối gọi tới
-<code>192.168.10.38:8080</code> được giao cho một chương trình khi và chỉ khi có chương trình đang listen
-port 8080 trên <code>192.168.10.38</code> hoặc trên <code>0.0.0.0</code>. Một chương trình listen
-<code>127.0.0.1:8080</code> thì không nhận kết nối này, dù nó đang chạy bình thường và dù chính bạn gọi
-<code>localhost:8080</code> vẫn thấy trang. Ví dụ thật dưới đây chạy cùng một server nhỏ hai lần, chỉ đổi địa
-chỉ listen:</p>
+<p>Nên điều kiện listen phát biểu chính xác là: kết nối gọi tới <code>192.168.10.38:8080</code> được giao cho
+một chương trình khi và chỉ khi có chương trình đang listen port 8080 trên <code>192.168.10.38</code> hoặc trên
+<code>0.0.0.0</code>. Chương trình listen <code>127.0.0.1:8080</code> thì không nhận kết nối này, dù nó vẫn chạy
+bình thường và bạn gọi <code>localhost:8080</code> vẫn thấy trang. Ví dụ thật bên dưới chạy cùng một server nhỏ
+hai lần, chỉ đổi địa chỉ listen:</p>
 
 <figure class="fig">
 <pre><code>listen 127.0.0.1                   listen 0.0.0.0
@@ -361,13 +347,10 @@ gọn; địa chỉ mạng nội bộ thật được thay bằng <code>192.168.
 làm lại thí nghiệm này.</figcaption>
 </figure>
 
-<p>Spring Boot mặc định listen trên mọi địa chỉ của máy, nhưng thuộc tính <code>server.address</code> đổi
-được điều đó chỉ bằng một dòng cấu hình; còn nhiều database và công cụ dev mặc định chỉ listen
-<code>127.0.0.1</code> cho an toàn. Địa chỉ listen còn quay lại ở Bài
-06, khi nó quyết định một app có gọi tới được hay không.</p>
-
-<p>Còn một chỗ nữa: kể cả khi đúng máy, đúng port và app listen trên mọi địa chỉ, người khác vẫn có thể không
-vào được. Gói tin còn bị chặn ở đâu trước khi tới bảng listen?</p>
+<p>Spring Boot mặc định listen trên mọi địa chỉ của máy, nhưng thuộc tính <code>server.address</code> đổi được
+chuyện đó bằng một dòng cấu hình. Ngược lại nhiều database và công cụ dev mặc định chỉ listen
+<code>127.0.0.1</code> cho an toàn. Địa chỉ listen còn quay lại ở Bài 06, lúc nó quyết định một app có gọi tới
+được hay không.</p>
 
 </section>
 
@@ -376,16 +359,16 @@ vào được. Gói tin còn bị chặn ở đâu trước khi tới bảng lis
      ===================================================================== -->
 <section class="tab" id="firewall" data-tab="Firewall" data-note="ba điều kiện">
 
-<p class="panel-intro">Hai điều kiện đã có: gọi đúng địa chỉ, và có chương trình listen đúng địa chỉ. Điều
-kiện còn lại nằm giữa hai cái đó trên đường đi của gói tin. Ghép đủ ba là trả lời được câu hỏi: firewall chặn
-ở đâu, và vì sao phải đủ ba điều kiện thì người khác mới gọi tới được.</p>
+<p class="panel-intro">Hai điều kiện đã có: gọi đúng địa chỉ, và có chương trình listen đúng địa chỉ. Điều kiện
+còn lại nằm giữa hai cái đó trên đường đi của gói tin. Ghép đủ ba thì trả lời được: firewall chặn ở đâu, và vì
+sao phải đủ ba người khác mới gọi tới được.</p>
 
 <h2 id="firewall-la-gi">Firewall: lớp chặn đứng trước chương trình</h2>
 
-<p>Một máy nối mạng nhận gói tin từ mọi phía, kể cả từ những máy nó không hề quen. Để không phải để lộ mọi
-chương trình đang listen cho bất kỳ máy nào gửi tới, hệ điều hành và các thiết bị mạng có thêm một lớp lọc
-đứng trước bảng listen. Windows bật sẵn lớp lọc này từ khi cài máy, và nó là lý do thường gặp khiến lần thử
-thứ hai trong tình huống mở bài phải chờ lâu.</p>
+<p>Một máy nối mạng nhận gói tin từ mọi phía, cả từ những máy nó không quen. Để khỏi lộ mọi chương trình đang
+listen cho bất kỳ ai gửi tới, hệ điều hành và thiết bị mạng có thêm một lớp lọc đứng trước bảng listen. Windows
+bật sẵn lớp này từ lúc cài máy, và nó là lý do hay gặp nhất khiến lần thử thứ hai ở tình huống mở bài phải
+chờ lâu.</p>
 
 <dl class="terms">
   <dt>Firewall <small>tường lửa</small></dt>
@@ -400,18 +383,17 @@ thứ hai trong tình huống mở bài phải chờ lâu.</p>
   <figcaption><b>Ảnh 5</b> Một firewall dạng thiết bị riêng, Netgear FVS336G. Mặt trước chia rõ hai phía: hai cổng WAN nối ra Internet và bốn cổng LAN nối vào mạng bên trong; mọi gói tin đi giữa hai phía phải qua bộ luật của nó. Firewall trên laptop làm đúng việc đó, chỉ khác là nó là phần mềm và đứng giữa mạng với các chương trình trong máy.</figcaption>
 </figure>
 
-<p>Firewall có hai cách chặn một gói tin, và hai cách này để lại hai triệu chứng khác nhau ở phía người gọi.
-Cách thứ nhất là <em>vứt bỏ lặng lẽ</em> (drop): gói tin biến mất, không có gì gửi lại. Cách thứ hai là
-<em>từ chối</em> (reject): firewall gửi lại một lời báo rằng kết nối không được phép. Firewall của Windows mặc
-định vứt bỏ lặng lẽ các kết nối đi vào không có luật cho phép, và nhiều firewall khác cũng vậy, vì làm thế
-thì người lạ không biết có máy nào ở đó. Tab sau giải thích vì sao "vứt bỏ lặng lẽ" biến thành một lần chờ
-lâu.</p>
+<p>Firewall có hai cách chặn một gói tin, và hai cách để lại hai triệu chứng khác nhau ở phía người gọi. Cách
+một là <em>vứt bỏ lặng lẽ</em> (drop): gói tin biến mất, không có gì gửi lại. Cách hai là <em>từ chối</em>
+(reject): firewall gửi lại lời báo kết nối không được phép. Firewall Windows mặc định vứt lặng lẽ các kết nối đi
+vào mà không có luật cho phép, nhiều firewall khác cũng vậy, vì làm thế thì người lạ không biết ở đó có máy
+nào. Vì sao "vứt lặng lẽ" thành một lần chờ lâu thì tab sau giải thích.</p>
 
 <h2 id="ba-dieu-kien">Ba điều kiện để người khác gọi tới được</h2>
 
-<p>Giờ đã đủ cả ba điều kiện của bước mở kết nối. Một gói tin từ máy đồng nghiệp đi tới app của bạn gặp
-chúng theo đúng thứ tự trong Hình 7: gọi đúng địa chỉ, firewall cho qua, có chương trình listen đúng địa
-chỉ. Thiếu điều kiện nào thì kết nối thất bại, và mỗi điều kiện thất bại theo một kiểu riêng.</p>
+<p>Tới đây đã đủ ba điều kiện của bước mở kết nối. Gói tin từ máy đồng nghiệp tới app của bạn gặp chúng theo
+đúng thứ tự Hình 7: gọi đúng địa chỉ, firewall cho qua, có chương trình listen đúng địa chỉ. Thiếu cái nào thì
+kết nối hỏng, và mỗi cái hỏng theo một kiểu.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  máy đồng nghiệp
@@ -443,25 +425,24 @@ theo đúng thứ tự từ trên xuống.</figcaption>
 </table>
 </div>
 
-<p>Bảng 1 giải thích trọn tình huống mở bài. Lần gửi link <code>localhost</code> thiếu điều kiện gọi đúng
-địa chỉ: đồng nghiệp gọi vào chính máy họ và bị từ chối ngay. Lần gửi địa chỉ WiFi đã gọi đúng địa chỉ, nhưng
-firewall của laptop bạn vứt gói tin lặng lẽ nên trình duyệt của đồng nghiệp phải chờ: lần này thiếu điều
-kiện firewall cho qua. Bảng cũng có một cái bẫy: gọi sai địa chỉ và không có chương trình listen đúng địa
-chỉ cho ra cùng một triệu chứng <code>refused</code>, nên gặp <code>refused</code> thì phải kiểm cả
-hai.</p>
+<p>Bảng 1 giải thích trọn tình huống mở bài. Link <code>localhost</code> thiếu điều kiện gọi đúng địa chỉ:
+đồng nghiệp gọi vào chính máy họ và bị từ chối ngay. Link địa chỉ WiFi gọi đúng địa chỉ rồi, nhưng firewall
+laptop bạn vứt gói tin lặng lẽ nên trình duyệt của họ phải chờ, tức thiếu điều kiện firewall cho qua. Bảng còn
+một cái bẫy: gọi sai địa chỉ và không có chương trình listen cho ra cùng triệu chứng <code>refused</code>, nên
+gặp <code>refused</code> phải kiểm cả hai.</p>
 
-<p>Bảng 1 còn cho cách kiểm một lần sửa. Giả sử bạn mở firewall cho port 8080 mà đồng nghiệp vẫn không vào
-được. Nếu triệu chứng đổi từ <code>timeout</code> sang <code>refused</code> thì firewall đã được sửa đúng:
-gói tin giờ qua được firewall và dừng ở điều kiện kế tiếp, tức app đang chỉ listen <code>127.0.0.1</code>.
-Mỗi lần sửa đúng một điều kiện, triệu chứng đổi sang triệu chứng của điều kiện kế tiếp, và chính sự đổi đó là
-bằng chứng điều kiện vừa sửa đã đạt.</p>
+<p>Bảng 1 cũng dùng để kiểm một lần sửa. Mình từng nghĩ mở firewall xong là đồng nghiệp vào được. Không chắc:
+giả sử bạn mở firewall cho port 8080 mà họ vẫn không vào. Nếu triệu chứng đổi từ <code>timeout</code> sang
+<code>refused</code> thì firewall đã sửa đúng, gói tin giờ qua được và dừng ở điều kiện kế tiếp, tức app đang
+chỉ listen <code>127.0.0.1</code>. Mỗi lần sửa đúng một điều kiện thì triệu chứng đổi sang triệu chứng của điều
+kiện kế tiếp, và chính sự đổi đó là bằng chứng điều kiện vừa sửa đã đạt.</p>
 
 <div class="callout warn">
   <span class="label">Một thói quen nên tập ngay từ máy dev</span>
-  <p>Gặp lỗi mạng, đừng tắt firewall cho nhanh. Hãy <strong>mở đúng một port, cho đúng nguồn cần
-  thiết</strong>. Trên Windows, lệnh dưới đây chạy trong PowerShell (cửa sổ dòng lệnh của
-  Windows, mở bằng quyền quản trị). Nó chỉ cho phép các máy trong cùng mạng với máy bạn gọi vào port 8080
-  (đó là nghĩa của <code>LocalSubnet</code>), còn mọi thứ khác vẫn bị chặn như cũ:</p>
+  <p>Gặp lỗi mạng thì đừng tắt firewall cho nhanh (mình cũng từng nói vậy). Hãy <strong>mở đúng một port, cho
+  đúng nguồn cần thiết</strong>. Trên Windows, lệnh dưới chạy trong PowerShell (cửa sổ dòng lệnh của Windows, mở
+  bằng quyền quản trị). Nó chỉ cho các máy cùng mạng với máy bạn gọi vào port 8080 (nghĩa của
+  <code>LocalSubnet</code>), mọi thứ khác vẫn bị chặn như cũ:</p>
   <pre><code>New-NetFirewallRule -DisplayName "Spring Boot dev 8080" `
   -Direction Inbound -LocalPort 8080 -Protocol TCP `
   -RemoteAddress LocalSubnet -Action Allow</code></pre>
@@ -471,9 +452,8 @@ bằng chứng điều kiện vừa sửa đã đạt.</p>
 
 <h3 id="an-du-toa-nha">Ẩn dụ hỗ trợ ghi nhớ: một tòa nhà</h3>
 
-<p>Tới đây cả bốn khái niệm đã có định nghĩa chính xác và ví dụ thật. Phép so sánh dưới đây không phải định
-nghĩa; nó chỉ giúp giữ bốn vai tách bạch trong trí nhớ, để khi gặp lỗi bạn hỏi đúng bốn câu theo đúng thứ
-tự.</p>
+<p>Cả bốn khái niệm đã có định nghĩa và ví dụ thật. Phép so sánh dưới đây không phải định nghĩa, chỉ để giữ
+bốn vai tách nhau trong đầu, để gặp lỗi thì hỏi đúng bốn câu theo đúng thứ tự.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  địa chỉ IP           =  một lối vào của tòa nhà (tòa nhà có nhiều lối vào)
@@ -499,8 +479,6 @@ riêng.</figcaption>
   chỉ, firewall cho qua, có chương trình listen đúng địa chỉ. Gọi sai địa chỉ hoặc không có chương trình
   listen cho ra <code>refused</code>; firewall chặn thường cho ra <code>timeout</code>. Sửa đúng một điều
   kiện thì triệu chứng đổi.</p>
-  <p>Hai chữ <code>refused</code> và <code>timeout</code> vừa được dùng như nhãn. Chúng là gì,
-  và vì sao một cái báo lỗi ngay, còn một cái bắt người gọi phải chờ?</p>
 </div>
 
 </section>
@@ -510,16 +488,12 @@ riêng.</figcaption>
      ===================================================================== -->
 <section class="tab" id="ket-noi-tcp" data-tab="Kết nối TCP" data-note="refused hay timeout">
 
-<p class="panel-intro">Bài 00 giới thiệu TCP là giao thức mở một đường truyền tin cậy giữa hai máy.
-<code>refused</code> lẫn <code>timeout</code> đều xảy ra đúng lúc đường truyền đó được mở, nên muốn biết vì
-sao một triệu chứng báo lỗi ngay còn triệu chứng kia bắt người gọi chờ thì phải nhìn chậm lại khoảnh khắc
-đó.</p>
-
 <h2 id="bat-tay">Một kết nối TCP được mở bằng ba gói tin</h2>
 
-<p>Trước khi gửi một byte dữ liệu nào, hai máy dùng TCP phải thoả thuận với nhau rằng cả hai đều sẵn sàng.
-Thoả thuận đó là một trao đổi gồm ba gói tin, và chính trao đổi này là thứ có thể thất bại theo hai kiểu
-khác nhau.</p>
+<p>TCP là giao thức mở một đường truyền tin cậy giữa hai máy (Bài 00). Trước khi gửi byte dữ liệu nào, hai máy
+phải thoả thuận là cả hai đã sẵn sàng. Thoả thuận đó là ba gói tin trao đổi qua lại, và chỗ này có thể hỏng theo
+hai kiểu khác nhau: một kiểu báo lỗi ngay, một kiểu bắt người gọi chờ. Hai kiểu đó là <code>refused</code> và
+<code>timeout</code>.</p>
 
 <dl class="terms">
   <dt>Three-way handshake <small>bắt tay ba bước</small></dt>
@@ -541,12 +515,12 @@ khác nhau.</p>
 </figure>
 
 <p>Một kết nối đã mở được nhận diện bằng bốn con số: địa chỉ và port của bên gọi, địa chỉ và port của bên
-nhận. Người ta gọi đó là <em>bộ bốn</em>. Port của bên nhận phải cố định và được biết trước, như 443 hay
-8080, vì nếu không thì bên gọi không biết gọi vào đâu.</p>
+nhận, gọi là <em>bộ bốn</em>. Port bên nhận phải cố định và biết trước, như 443 hay 8080, vì không thì bên gọi
+không biết gọi vào đâu.</p>
 
-<p>Còn port của bên gọi thì chương trình không tự chọn: hệ điều hành lấy một số còn trống, gắn vào kết nối,
-và thu hồi khi kết nối đóng, nên người ta gọi nó là <em>ephemeral port</em>, port tạm. Dòng dưới đây trong
-output <code>curl -v</code> ở lab Bài 00 in ra đủ bộ bốn của một kết nối thật:</p>
+<p>Port của bên gọi thì chương trình không tự chọn. Hệ điều hành lấy một số còn trống gắn vào kết nối, đóng
+kết nối thì thu hồi, nên gọi là <em>ephemeral port</em>, port tạm. Dòng dưới trong output <code>curl -v</code> ở
+lab Bài 00 in đủ bộ bốn của một kết nối thật:</p>
 
 <figure class="fig">
 <pre class="diagram"><code>* Established connection to example.com (104.20.23.154 port 443)
@@ -559,15 +533,14 @@ output <code>curl -v</code> ở lab Bài 00 in ra đủ bộ bốn của một k
 chạy trên máy mình ngày 24/09/2026.</figcaption>
 </figure>
 
-<p>Nhờ port tạm, mười tab trình duyệt cùng mở <code>example.com</code> vẫn là mười kết nối riêng biệt, vì
-mỗi tab có một port tạm khác. Bộ bốn còn quay lại ở Bài 17, khi đọc
-danh sách kết nối đang mở trên một máy chủ thật.</p>
+<p>Nhờ port tạm, mười tab trình duyệt cùng mở <code>example.com</code> vẫn là mười kết nối riêng, vì mỗi tab
+một port tạm khác. Bộ bốn còn quay lại ở Bài 17, lúc đọc danh sách kết nối đang mở trên một máy chủ thật.</p>
 
 <h2 id="refused">Refused: có người trả lời "không"</h2>
 
-<p>Giờ xét trường hợp gói <code>SYN</code> tới đúng một máy đang chạy, nhưng không chương trình nào listen
-port đích. Máy đó không im lặng. Phần lõi hệ điều hành của nó, tức kernel, chủ động gửi lại một gói đặc biệt
-để bên gọi biết kết nối không thể mở.</p>
+<p>Giờ xét trường hợp gói <code>SYN</code> tới đúng một máy đang chạy mà không chương trình nào listen port
+đích. Máy đó không im. Kernel của nó, phần lõi hệ điều hành, chủ động gửi lại một gói đặc biệt để bên gọi biết
+kết nối không mở được.</p>
 
 <dl class="terms">
   <dt>RST <small>gói reset</small></dt>
@@ -578,19 +551,17 @@ port đích. Máy đó không im lặng. Phần lõi hệ điều hành của n�
   <em>Connection refused</em>, và <code>curl</code> in ra mã lỗi <code>(7)</code>.</dd>
 </dl>
 
-<p>Điều quan trọng nhất rút ra từ cơ chế này: <strong><code>refused</code> chỉ xảy ra khi máy đích còn
-sống</strong>, vì phải có một hệ điều hành đang chạy mới gửi được gói <code>RST</code>. Mình từng nghĩ
-ngược lại, rằng máy còn sống thì không bao giờ bị refused. Nhận được <code>refused</code> chứng minh gói tin
-đã tới được một máy đang chạy, và trên máy đó không có chương trình nào listen port ấy, trên địa chỉ ấy.
-Trong Bảng 1, đó là trường hợp gọi sai địa chỉ (gói tin tới một máy khác, ví dụ chính máy người gọi) hoặc
-trường hợp không có chương trình listen đúng địa chỉ.</p>
+<p>Chỗ cần nhớ nhất: <strong><code>refused</code> chỉ xảy ra khi máy đích còn sống</strong>, vì phải có hệ
+điều hành đang chạy mới gửi được gói <code>RST</code>. Mình từng nghĩ ngược lại, rằng máy còn sống thì không
+bao giờ bị refused. Nhận <code>refused</code> là bằng chứng gói tin đã tới một máy đang chạy, và trên máy đó
+không có chương trình nào listen port ấy trên địa chỉ ấy. Trong Bảng 1 thì đó là trường hợp gọi sai địa chỉ
+(gói tin tới một máy khác, ví dụ chính máy người gọi) hoặc không có chương trình listen đúng địa chỉ.</p>
 
 <h2 id="timeout">Timeout: không ai trả lời cả</h2>
 
-<p>Trường hợp còn lại là gói <code>SYN</code> đi rồi không có gì quay về: firewall đã vứt nó lặng lẽ, hoặc
-không có máy nào mang địa chỉ đó. Bên gọi không biết chuyện gì đã xảy ra, nên nó làm điều duy nhất có thể
-làm: gửi lại <code>SYN</code> theo những khoảng chờ dài dần, cho tới khi hết thời gian chờ mà chính nó
-đặt ra.</p>
+<p>Trường hợp còn lại là gói <code>SYN</code> đi rồi không có gì quay về: firewall đã vứt lặng lẽ, hoặc không
+có máy nào mang địa chỉ đó. Bên gọi không biết chuyện gì xảy ra, nên chỉ làm được một việc là gửi lại
+<code>SYN</code> theo những khoảng chờ dài dần, tới khi hết thời gian chờ do chính nó đặt.</p>
 
 <dl class="terms">
   <dt>Timeout <small>hết giờ chờ</small></dt>
@@ -615,12 +586,12 @@ làm: gửi lại <code>SYN</code> theo những khoảng chờ dài dần, cho t
 
 <h3 id="ai-quyet-dinh">Phân biệt bằng người quyết định dừng, không bằng tốc độ</h3>
 
-<p>Cách phân biệt tự nhiên nhất là dựa vào tốc độ: <code>refused</code> thì nhanh, <code>timeout</code> thì
-chậm. Tiêu chí này nghe hợp lý nhưng không đáng tin, và lab của bài cho thấy vì sao: trên Windows, một lần
-<code>refused</code> tới chính máy mình mất hơn hai giây. Tiêu chí vững hơn là hỏi <em>ai quyết định lúc
-dừng</em>. <code>refused</code> dừng vì bên gọi đã nhận được câu trả lời, nên nó có điểm kết thúc của riêng
-mình, đặt <code>--max-time</code> bao nhiêu cũng vậy. <code>timeout</code> dừng vì bên gọi tự bảo mình thôi
-chờ, nên thời gian của nó chính là con số bạn đặt, khớp tới từng mili-giây.</p>
+<p>Cách phân biệt tự nhiên nhất là theo tốc độ: <code>refused</code> nhanh, <code>timeout</code> chậm. Nghe
+hợp lý nhưng không đáng tin, và lab cho thấy lý do: trên Windows, một lần <code>refused</code> tới chính máy
+mình mất hơn hai giây. Tiêu chí vững hơn là hỏi <em>ai quyết định lúc dừng</em>. <code>refused</code> dừng vì
+bên gọi nhận được câu trả lời, nên nó có điểm kết thúc riêng, đặt <code>--max-time</code> bao nhiêu cũng vậy.
+<code>timeout</code> dừng vì bên gọi tự bảo mình thôi chờ, nên thời gian của nó đúng bằng con số bạn đặt, khớp
+từng mili-giây.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  refused  →  curl dừng vì nhận được câu trả lời
@@ -632,10 +603,10 @@ chờ, nên thời gian của nó chính là con số bạn đặt, khớp tới
 thời gian của lệnh nào thay đổi theo.</figcaption>
 </figure>
 
-<p>Quy tắc này có một ngoại lệ. Một số firewall được cấu hình để từ chối thay vì vứt bỏ, và khi đó chúng tự
-gửi lời từ chối thay cho máy đích, nên bên gọi cũng thấy <code>refused</code>. Nên quy tắc chính xác là:
-<code>timeout</code> <em>thường</em> chỉ về firewall vứt lặng lẽ hoặc một địa chỉ không có máy nào, còn
-<code>refused</code> <em>thường</em> chỉ về một máy còn sống mà không ai listen port đó.</p>
+<p>Quy tắc này có một ngoại lệ. Vài firewall được cấu hình từ chối thay vì vứt, tự gửi lời từ chối thay cho
+máy đích, nên bên gọi cũng thấy <code>refused</code>. Vậy nói cho chính xác: <code>timeout</code>
+<em>thường</em> chỉ về firewall vứt lặng lẽ hoặc một địa chỉ không có máy nào, còn <code>refused</code>
+<em>thường</em> chỉ về một máy còn sống mà không ai listen port đó.</p>
 
 <div class="callout deep">
   <span class="label">Đào sâu · RST trong đặc tả TCP</span>
@@ -646,15 +617,6 @@ gửi lời từ chối thay cho máy đích, nên bên gọi cũng thấy <code
   database.</p>
 </div>
 
-<div class="callout ok">
-  <span class="label">Chốt</span>
-  <p><code>refused</code> nghĩa là một máy đang chạy đã trả lời "không có ai listen ở đây";
-  <code>timeout</code> nghĩa là không có câu trả lời nào. Refused chỉ về gọi sai địa chỉ hoặc không có
-  chương trình listen đúng địa chỉ; timeout thường chỉ về firewall chặn hoặc một địa chỉ không có máy.
-  Phân biệt chúng bằng việc ai quyết định lúc dừng, không bằng tốc độ.</p>
-  <p>Mấy điều đó đều đo được: tự gây ra từng triệu chứng trên máy mình rồi đo thời gian của nó.</p>
-</div>
-
 </section>
 
 <!-- =====================================================================
@@ -662,19 +624,18 @@ gửi lời từ chối thay cho máy đích, nên bên gọi cũng thấy <code
      ===================================================================== -->
 <section class="tab" id="lab" data-tab="Lab" data-note="đo refused và timeout">
 
-<p class="panel-intro">Ba lab dưới đây biến bốn câu hỏi của bài thành số đo. Output là của máy mình: Lab 1
-chạy ngày 24/09/2026, Lab 2 và Lab 3 chạy ngày 03/10/2026, tất cả trong Git Bash trên Windows. Con số trên
-máy bạn sẽ hơi khác.</p>
+<p class="panel-intro">Ba lab dưới đây đổi bốn câu hỏi của bài thành số đo. Lab 1 là output buổi học ngày
+24/09/2026; Lab 2 và Lab 3 chạy lại trên cùng máy ngày 03/10/2026 khi tách bài. Tất cả trong Git Bash trên
+Windows. Con số trên máy bạn sẽ hơi khác.</p>
 
 <h2 id="lab-1">Lab 1 — tự gây <code>refused</code>, rồi tự gây <code>timeout</code></h2>
 
-<p>Lệnh thứ nhất gọi port 9999 của chính máy mình: máy chắc chắn đang sống, nhưng không có chương trình nào
-listen port đó. Lệnh thứ hai gọi địa chỉ <code>10.255.255.1</code>: địa chỉ này thuộc dải mạng riêng
-<code>10.x</code>, nhưng trong một mạng gia đình bình thường không có máy nào mang nó, nên gói <code>SYN</code>
-không tới được máy nào và không có gì quay về. Đây là cách an toàn để tự tạo một <code>timeout</code> mà
-không làm phiền máy của ai. Cờ <code>-4</code> buộc <code>curl</code> chỉ dùng IPv4, <code>-o /dev/null</code>
-bỏ phần nội dung nhận được (Bài 04 sẽ giải thích ký hiệu này), và <code>time</code> đo tổng thời gian
-chạy.</p>
+<p>Lệnh đầu gọi port 9999 của chính máy mình: máy chắc chắn đang sống, nhưng không chương trình nào listen
+port đó. Lệnh hai gọi <code>10.255.255.1</code>: địa chỉ thuộc dải mạng riêng <code>10.x</code>, mà trong mạng
+gia đình bình thường không có máy nào mang nó, nên <code>SYN</code> không tới máy nào và không có gì quay về.
+Đây là cách an toàn để tự tạo một <code>timeout</code> mà không làm phiền máy của ai. Cờ <code>-4</code> buộc
+<code>curl</code> chỉ dùng IPv4, <code>-o /dev/null</code> bỏ phần nội dung nhận được (Bài 04 giải thích ký hiệu
+này), còn <code>time</code> đo tổng thời gian chạy.</p>
 
 <pre><code>time curl -4 -o /dev/null http://127.0.0.1:9999
 time curl -4 -o /dev/null --max-time 5 http://10.255.255.1:9999</code></pre>
@@ -686,27 +647,26 @@ time curl -4 -o /dev/null --max-time 5 http://10.255.255.1:9999</code></pre>
 một dòng.</figcaption>
 </figure>
 
-<p>Mã <code>(7)</code> là "không kết nối được", mã <code>(28)</code> là "hết giờ chờ"; tên chính thức của
-chúng trong thư viện của <code>curl</code> là <code>CURLE_COULDNT_CONNECT</code> và
-<code>CURLE_OPERATION_TIMEDOUT</code>. Để ý con số <code>2076 ms</code> của lệnh <code>refused</code>: chậm
-hơn nhiều so với lý thuyết "có người trả lời ngay".</p>
+<p>Mã <code>(7)</code> là "không kết nối được", mã <code>(28)</code> là "hết giờ chờ"; tên chính thức trong thư
+viện của <code>curl</code> là <code>CURLE_COULDNT_CONNECT</code> và <code>CURLE_OPERATION_TIMEDOUT</code>. Nhìn
+con số <code>2076 ms</code> của lệnh <code>refused</code>: chậm hơn nhiều so với lý thuyết "có người trả lời
+ngay". Mình ghi lại đúng chỗ này: refused tới chính máy mình mà mất hơn 2 giây.</p>
 
 <h3 id="windows-2-giay">Vì sao Windows mất hai giây cho một lần bị từ chối</h3>
 
-<p>Trên Linux, khi nhận được gói <code>RST</code> từ chính máy mình, hệ điều hành báo lỗi cho chương trình
-gần như tức thì, thường chỉ vài mili-giây. Windows có một hành vi khác đã được quan sát rộng rãi: nó
-<strong>thử lại vài lần</strong> trước khi kết luận kết nối bị từ chối, kể cả khi đích là chính máy mình. Trang
-này không dẫn được tài liệu chính thức của Microsoft cho con số hai giây, nên coi nó là một quan sát đo được,
-chưa phải một quy định. Lệnh trên đã dùng <code>-4</code> và gõ thẳng <code>127.0.0.1</code>, nên chuyện
-<code>localhost</code> được thử bằng <code>::1</code> trước không áp dụng ở đây. Con số 2,155 giây là của
-Windows; phép đo đối chứng trên một máy Linux thật sẽ làm ở
-<a href="../04-phong-lab-wsl-docker/#lab">Bài 04</a>, khi phòng lab Linux được dựng.</p>
+<p>Trên Linux, nhận gói <code>RST</code> từ chính máy mình thì hệ điều hành báo lỗi cho chương trình gần như
+ngay, thường vài mili-giây. Windows có hành vi khác mà nhiều người đã quan sát: nó <strong>thử lại vài
+lần</strong> trước khi kết luận kết nối bị từ chối, kể cả khi đích là chính máy mình. Trang này không dẫn được
+tài liệu chính thức của Microsoft cho con số hai giây, nên coi đó là quan sát đo được, chưa phải quy định. Lệnh
+trên đã dùng <code>-4</code> và gõ thẳng <code>127.0.0.1</code>, nên chuyện <code>localhost</code> thử
+<code>::1</code> trước không áp dụng. 2,155 giây là của Windows; phép đo đối chứng trên máy Linux thật làm ở
+<a href="../04-phong-lab-wsl-docker/#lab">Bài 04</a>, khi phòng lab Linux dựng xong.</p>
 
 <h2 id="lab-2">Lab 2 — chứng minh <code>timeout</code> do ta quyết định</h2>
 
-<p>Chỉ đổi con số <code>5</code> thành <code>15</code>, và chạy lại cả hai lệnh với cùng một thời hạn chờ.
-Theo Hình 11, lệnh <code>timeout</code> phải kéo dài đúng 15 giây, còn lệnh <code>refused</code> vẫn dừng ở
-khoảng hai giây.</p>
+<p>Chỉ đổi <code>5</code> thành <code>15</code> rồi chạy lại cả hai lệnh với cùng thời hạn chờ. Theo Hình 11,
+lệnh <code>timeout</code> phải kéo dài đúng 15 giây, còn lệnh <code>refused</code> vẫn dừng ở khoảng hai
+giây.</p>
 
 <pre><code>time curl -4 -o /dev/null --max-time 15 http://10.255.255.1:9999
 time curl -4 -o /dev/null --max-time 15 http://127.0.0.1:9999</code></pre>
@@ -721,17 +681,17 @@ real    0m2.082s</code></pre>
 <code>--max-time</code> tới từng mili-giây; refused không đổi.</figcaption>
 </figure>
 
-<p>Kết quả khớp đúng dự đoán. Nếu lệnh thứ nhất dừng sớm với <code>No route to host</code>, nghĩa là mạng của
-bạn chủ động từ chối đường tới dải <code>10.x</code>: đó là một lời từ chối, không phải sự im lặng. Ghi nó
-vào <code>notes.md</code> của bạn.</p>
+<p>Kết quả khớp dự đoán. Nếu lệnh đầu dừng sớm với <code>No route to host</code> thì mạng của bạn chủ động từ
+chối đường tới dải <code>10.x</code>: đó là một lời từ chối chứ không phải im lặng. Ghi vào <code>notes.md</code>
+của bạn.</p>
 
 <h2 id="lab-3">Lab 3 — tự gây lỗi: app listen sai địa chỉ</h2>
 
-<p>Lab này dựng lại Hình 6 trên máy bạn. Tệp <a href="lab/nghe.js"><code>lab/nghe.js</code></a> là một
-server nhỏ viết bằng JavaScript, chạy bằng Node (chương trình chạy JavaScript ngoài trình duyệt, bạn sẽ dùng
-lại nó ở lab Bài 03); server listen port 8080 trên địa chỉ bạn truyền vào. Trước hết tìm địa chỉ của máy
-trong mạng WiFi bằng lệnh <code>ipconfig</code> của Windows: dòng <code>IPv4 Address</code> dưới mục card
-WiFi. Rồi mở hai cửa sổ Git Bash, đứng ở thư mục của bài.</p>
+<p>Lab này dựng lại Hình 6 trên máy bạn. <a href="lab/nghe.js"><code>lab/nghe.js</code></a> là một server nhỏ
+viết bằng JavaScript, chạy bằng Node (chương trình chạy JavaScript ngoài trình duyệt, Bài 03 dùng lại), listen
+port 8080 trên địa chỉ bạn truyền vào. Trước hết tìm địa chỉ máy trong mạng WiFi bằng <code>ipconfig</code> của
+Windows: dòng <code>IPv4 Address</code> dưới mục card WiFi. Rồi mở hai cửa sổ Git Bash, đứng ở thư mục của
+bài.</p>
 
 <pre><code># Cửa sổ 1 — chỉ listen trên loopback
 node lab/nghe.js 127.0.0.1
@@ -742,28 +702,28 @@ curl http://127.0.0.1:8080
 curl http://192.168.x.y:8080</code></pre>
 
 <p>Kỳ vọng: <code>netstat</code> in ra <code>127.0.0.1:8080 … LISTENING</code>, gọi bằng
-<code>127.0.0.1</code> thì nhận được <code>xin chao tu 127.0.0.1</code>, còn gọi bằng địa chỉ WiFi thì
-<code>curl: (7)</code>, tức <code>refused</code>. App chạy hoàn toàn bình thường; nó chỉ không nhận kết nối
-gọi tới địa chỉ WiFi. Đây là trường hợp thiếu điều kiện có chương trình listen đúng địa chỉ: có chương trình
-listen port 8080, nhưng không phải trên địa chỉ được gọi.</p>
+<code>127.0.0.1</code> nhận <code>xin chao tu 127.0.0.1</code>, còn gọi bằng địa chỉ WiFi thì
+<code>curl: (7)</code>, tức <code>refused</code>. App vẫn chạy bình thường, chỉ không nhận kết nối gọi tới địa
+chỉ WiFi. Đây là thiếu điều kiện có chương trình listen đúng địa chỉ: có chương trình listen port 8080 nhưng
+không phải trên địa chỉ được gọi.</p>
 
-<p>Giờ sửa: bấm Ctrl+C ở cửa sổ 1, chạy lại với <code>node lab/nghe.js 0.0.0.0</code>, rồi lặp lại ba lệnh
-ở cửa sổ 2. Dòng <code>netstat</code> đổi thành <code>0.0.0.0:8080</code>, và cả hai lệnh <code>curl</code>
-đều nhận được câu trả lời.</p>
+<p>Giờ sửa: Ctrl+C ở cửa sổ 1, chạy lại với <code>node lab/nghe.js 0.0.0.0</code>, rồi lặp lại ba lệnh ở cửa
+sổ 2. Dòng <code>netstat</code> đổi thành <code>0.0.0.0:8080</code>, và cả hai lệnh <code>curl</code> đều có câu
+trả lời.</p>
 
-<p>Bước cuối, nếu có một máy thứ hai hoặc một điện thoại cùng mạng WiFi, mở <code>http://192.168.x.y:8080</code>
-từ đó. Nếu nó quay một lúc rồi báo lỗi thì bạn đang thiếu điều kiện firewall cho qua: firewall của Windows
-vứt lặng lẽ kết nối đi vào. Thêm luật cho port 8080 bằng lệnh ở <a href="#firewall">tab Firewall</a>, thử lại,
-và khi xong lab thì gỡ luật đi:</p>
+<p>Bước cuối, nếu có máy thứ hai hoặc điện thoại cùng WiFi, mở <code>http://192.168.x.y:8080</code> từ đó. Nó
+quay một lúc rồi báo lỗi thì bạn đang thiếu điều kiện firewall cho qua: firewall Windows vứt lặng lẽ kết nối đi
+vào. Thêm luật cho port 8080 bằng lệnh ở <a href="#firewall">tab Firewall</a>, thử lại, xong lab thì gỡ luật
+đi:</p>
 
 <pre><code>Remove-NetFirewallRule -DisplayName "Spring Boot dev 8080"</code></pre>
 
 <div class="callout warn">
   <span class="label">Vì sao gọi địa chỉ WiFi từ chính máy mình không thử được firewall</span>
-  <p>Gói tin gửi từ máy bạn tới chính địa chỉ WiFi của máy bạn không thật sự đi ra mạng; hệ điều hành
-  chuyển nó ngay bên trong máy, và firewall thường không coi đó là một kết nối đi vào từ bên ngoài. Nên
-  hai lệnh <code>curl</code> trong cửa sổ 2 chỉ kiểm được app có listen đúng địa chỉ hay không, và không
-  nói gì về firewall. Muốn kiểm firewall thì gói tin phải thật sự đến từ một máy khác.</p>
+  <p>Gói tin từ máy bạn tới chính địa chỉ WiFi của máy bạn không thật sự ra mạng; hệ điều hành chuyển nó ngay
+  trong máy, và firewall thường không coi đó là kết nối đi vào từ bên ngoài. Nên hai lệnh <code>curl</code> ở
+  cửa sổ 2 chỉ kiểm được app có listen đúng địa chỉ hay không, không nói gì về firewall. Muốn kiểm firewall thì
+  gói tin phải thật sự đến từ một máy khác.</p>
 </div>
 
 </section>
@@ -790,8 +750,8 @@ và khi xong lab thì gỡ luật đi:</p>
 
 <h2 id="hieu-sai">Những chỗ mình từng hiểu sai</h2>
 
-<p>Mỗi dòng dưới đây là một chỗ mình đã hiểu sai khi học bước mở kết nối. Cách nghĩ nào cũng nghe hợp lý,
-nhưng sai ở một chỗ; bạn đang nghĩ giống cột đầu thì link ở cột cuối dẫn về đúng mục đã giảng.</p>
+<p>Mỗi dòng dưới đây là một chỗ mình đã hiểu sai khi học bước mở kết nối. Cách nghĩ nào nghe cũng hợp lý, nhưng
+sai ở một chỗ. Bạn đang nghĩ giống cột đầu thì link ở cột cuối dẫn về đúng mục đã giảng.</p>
 
 <div class="table-scroll">
 <table>
@@ -810,21 +770,20 @@ nhưng sai ở một chỗ; bạn đang nghĩ giống cột đầu thì link ở
 
 <h2 id="ket-lai">Kết lại</h2>
 
-<p>Câu hỏi của bài là: app chạy bình thường khi gọi bằng <code>localhost:8080</code> trên chính máy mình,
-nhưng người khác gọi vào thì không được, vậy bước mở kết nối hỏng ở đâu. Câu trả lời là: muốn gọi tới được
-cần đủ ba điều kiện, theo đúng thứ tự gói tin gặp chúng. Trước hết phải <strong>gọi đúng địa chỉ</strong>,
-tức một địa chỉ của máy đích mà người gọi tới được, không phải <code>localhost</code>. Sau đó
-<strong>firewall cho qua</strong>. Cuối cùng phải <strong>có chương trình listen đúng địa chỉ</strong>, tức
-listen port đó trên đúng địa chỉ được gọi tới. Hai triệu chứng <code>refused</code> và <code>timeout</code>
-cho biết điều kiện nào đang thiếu: <code>refused</code> nghĩa là đã tới một máy đang sống nhưng không ai
-listen ở đó, còn <code>timeout</code> nghĩa là không có câu trả lời nào, thường vì firewall vứt gói tin lặng
-lẽ.</p>
+<p>Câu hỏi của bài: app chạy bình thường khi gọi bằng <code>localhost:8080</code> trên chính máy mình mà người
+khác gọi vào thì không được, vậy bước mở kết nối hỏng ở đâu. Trả lời: muốn gọi tới được cần đủ ba điều kiện,
+theo đúng thứ tự gói tin gặp chúng. Một là <strong>gọi đúng địa chỉ</strong>, tức một địa chỉ của máy đích mà
+người gọi tới được, không phải <code>localhost</code>. Hai là <strong>firewall cho qua</strong>. Ba là
+<strong>có chương trình listen đúng địa chỉ</strong>, tức listen port đó trên đúng địa chỉ được gọi tới. Hai
+triệu chứng <code>refused</code> và <code>timeout</code> cho biết thiếu điều kiện nào: <code>refused</code> là
+đã tới một máy đang sống mà không ai listen ở đó, <code>timeout</code> là không có câu trả lời nào, thường vì
+firewall vứt gói tin lặng lẽ.</p>
 
 <div class="callout" id="cau-hoi-tiep">
   <span class="label">Câu hỏi cho bài sau</span>
-  <p>Khi đủ ba điều kiện, bắt tay ba bước thành công và kết nối được mở: <code>refused</code> và
-  <code>timeout</code> biến mất. Nhưng có kết nối chưa có nghĩa là có câu trả lời đúng. Trình duyệt giờ
-  nhận được một trang, và trang đó có thể là một trang lỗi mang một con số. Từ đó ra câu hỏi:</p>
+  <p>Đủ ba điều kiện thì bắt tay ba bước thành công, kết nối mở, và <code>refused</code> với
+  <code>timeout</code> biến mất. Nhưng có kết nối chưa có nghĩa là có câu trả lời đúng. Trình duyệt giờ nhận
+  được một trang, mà trang đó có thể là trang lỗi mang một con số. Từ đó ra câu hỏi:</p>
   <p><strong>Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết
   chặng nào đang hỏng?</strong></p>
   <p><a href="../02-chan-doan-theo-chang/">Bài 02 — Chẩn đoán theo chặng</a> trả lời câu này.</p>
