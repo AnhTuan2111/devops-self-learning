@@ -853,6 +853,7 @@ footer.page code { font-size: 12px; }
   border-bottom: 1px solid var(--line);
 }
 .lesson:hover { background: var(--yellow); color: var(--ink); }
+div.lesson:hover { background: none; }   /* bài chưa có trang: không phải link, không đổi màu khi rê chuột */
 .lesson .num {
   grid-row: span 2;
   display: grid; place-items: center; width: 40px; height: 40px; padding-top: 3px;

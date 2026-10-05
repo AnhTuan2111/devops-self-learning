@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 02 — Chẩn đoán theo chặng</title>
 <meta name="description" content="Kết nối tới được rồi mà trang vẫn báo lỗi: đọc mã trạng thái HTTP, nhận ra ai đã viết ra trang lỗi, phân biệt 502, 504 với 500, và dùng ba nguyên tắc để khoanh vùng chặng hỏng, kể cả khi không ai đụng vào hệ thống.">
-<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="stylesheet" href="../../assets/style.css?v=227913a6">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="02">
@@ -414,7 +414,7 @@ timeout là hai cách một kết nối thất bại (Bài 01).</p>
 <h2 id="nginx-goi-vao-trong">Nginx cũng là một bên đi gọi</h2>
 
 <p>Nginx đứng trước để nhận mọi request từ Internet thay cho ứng dụng, giấu ứng dụng ở phía trong; các lý do
-đầy đủ học ở <a href="../19-reverse-proxy/">Bài 19</a>. Muốn hiểu 502 và 504, hãy nhìn Nginx từ phía ứng
+đầy đủ học ở Bài 19. Muốn hiểu 502 và 504, hãy nhìn Nginx từ phía ứng
 dụng: với người dùng, Nginx là bên trả lời; với ứng dụng, Nginx lại là <em>bên đi gọi</em>. Khi nhận được
 request, Nginx mở một kết nối mới tới ứng dụng, thường là <code>127.0.0.1:8080</code> trên cùng máy. Kết nối
 thứ hai này phải thoả đúng ba điều kiện của Bài 01 và có thể thất bại theo đúng những cách Bài 01 đã mô tả;
@@ -501,7 +501,7 @@ từ chối, như đã đo ở lab của <a href="../01-ip-port-listen-firewall/
 giữa chừng, như ứng dụng tắt đột ngột khi đang gửi dữ liệu, cũng thành 502.</p>
 
 <p>Kết cục b là 504: có chương trình listen ở 8080, nhưng câu trả lời không tới trong khoảng Nginx chịu chờ
-(mặc định 60 giây; cách chỉnh học ở <a href="../19-reverse-proxy/">Bài 19</a>). Người bỏ cuộc là Nginx, và
+(mặc định 60 giây; cách chỉnh học ở Bài 19). Người bỏ cuộc là Nginx, và
 nó vẫn kịp viết một mã để báo lại. Nghi ngờ đầu tiên của 504 vì vậy là "ứng dụng còn sống nhưng chậm": truy
 vấn database quá lâu, một lời gọi sang dịch vụ khác bị treo, hoặc máy quá tải. Kết cục c là nơi 500 xuất
 hiện: ứng dụng chạy code, gặp exception, Spring Boot viết trang lỗi, Nginx chuyển ra ngoài nguyên vẹn.</p>
@@ -654,8 +654,8 @@ request.</figcaption>
 <p>Đặt cạnh Bảng 2, đây chính là lý do thứ ba của dòng 502: "ứng dụng chưa khởi động xong". <strong>Lần cập
 nhật ứng dụng nào cũng có cửa sổ này</strong>, vì phần mềm nào cũng cần thời gian khởi động trước khi listen.
 Cập nhật lúc hai giờ sáng chỉ làm ít người gặp nó hơn; cách giải là bắt hệ thống đợi ứng dụng báo "đã sẵn
-sàng" rồi mới chuyển request vào, việc sẽ học ở <a href="../13-docker-compose/">Bài 13</a> và
-<a href="../30-probe-va-tai-nguyen/">Bài 30</a>.</p>
+sàng" rồi mới chuyển request vào, việc sẽ học ở Bài 13 và
+Bài 30.</p>
 
 <h2 id="tu-hong">Hệ thống hỏng mà không ai đụng vào</h2>
 
@@ -702,8 +702,8 @@ hỏng (cột cuối).</figcaption>
 
 <p>Cả sáu loại nằm ngoài tầm với của code review và unit test, vì không có dòng code nào sai và test không
 chạy liên tục ba tháng. Chống chúng cần hai thứ khác: tự động hoá việc định kỳ như gia hạn chứng chỉ (học ở
-<a href="../20-ten-mien-va-https/">Bài 20</a>), và cảnh báo trước khi hạn tới (học ở
-<a href="../38-log-va-canh-bao/">Bài 38</a>).</p>
+Bài 20), và cảnh báo trước khi hạn tới (học ở
+Bài 38).</p>
 
 <div class="callout">
   <span class="label">Câu hỏi để tự kiểm tra một hệ thống</span>
@@ -941,6 +941,6 @@ xkcd dùng theo giấy phép phi thương mại ghi ở từng dòng; đã phón
 
 </div>
 
-<script src="../../assets/app.js?v=fd81593b"></script>
+<script src="../../assets/app.js?v=227913a6"></script>
 </body>
 </html>

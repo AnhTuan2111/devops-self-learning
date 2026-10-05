@@ -286,7 +286,7 @@ như `sleep` hay bash. Bước 3 của hello-world nói daemon đã tạo một 
 **hello-world vừa chạy "trong một container". Container là một máy ảo nhỏ như WSL2, hay chỉ là một
 process như ở Bài 03?**
 
-[Bài 05 — Container đầu tiên](../05-container-dau-tien/) trả lời câu này.
+Bài 05 — Container đầu tiên trả lời câu này.
 
 ## Nguồn đọc thêm
 

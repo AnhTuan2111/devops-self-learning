@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phụ lục — Lịch sử địa chỉ IP</title>
 <meta name="description" content="Vì sao Internet có dải địa chỉ mạng riêng và vì sao server không đặt ở nhà: IPv4 năm 1981, chia lớp, CIDR, NAT, cái giá của NAT, và IPv6 — mỗi bước giải quyết vấn đề gì mà bước trước chưa giải quyết được.">
-<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="stylesheet" href="../../assets/style.css?v=227913a6">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01-ipv6">
@@ -396,10 +396,10 @@ câu trả lời của Bài 01.</p>
   <caption><b>Bảng 3</b> Mỗi dấu vết của lịch sử địa chỉ IP, và nơi lộ trình gặp lại nó.</caption>
   <thead><tr><th>Dấu vết</th><th>Sinh ra từ</th><th>Gặp lại ở</th></tr></thead>
   <tbody>
-    <tr><td>Máy ở nhà không ai gọi tới được; server phải có địa chỉ công khai</td><td>NAT, CGNAT</td><td><a href="index.html#ba-dai">Bài 01</a>, <a href="../18-deploy-thu-cong/">Bài 18</a></td></tr>
-    <tr><td>Ký hiệu <code>/8</code>, <code>/24</code> trong sổ đăng ký và trong luật firewall</td><td>CIDR</td><td><a href="index.html#ba-dai">Bài 01</a>, <a href="../17-linux-tren-server/">Bài 17</a></td></tr>
-    <tr><td>Tên miền có hai loại bản ghi địa chỉ: một cho IPv4, một cho IPv6</td><td>dual-stack</td><td><a href="../20-ten-mien-va-https/">Bài 20</a></td></tr>
-    <tr><td>Firewall giữ hai bộ luật riêng cho IPv4 và IPv6</td><td>dual-stack</td><td><a href="../17-linux-tren-server/">Bài 17</a></td></tr>
+    <tr><td>Máy ở nhà không ai gọi tới được; server phải có địa chỉ công khai</td><td>NAT, CGNAT</td><td><a href="index.html#ba-dai">Bài 01</a>, Bài 18</td></tr>
+    <tr><td>Ký hiệu <code>/8</code>, <code>/24</code> trong sổ đăng ký và trong luật firewall</td><td>CIDR</td><td><a href="index.html#ba-dai">Bài 01</a>, Bài 17</td></tr>
+    <tr><td>Tên miền có hai loại bản ghi địa chỉ: một cho IPv4, một cho IPv6</td><td>dual-stack</td><td>Bài 20</td></tr>
+    <tr><td>Firewall giữ hai bộ luật riêng cho IPv4 và IPv6</td><td>dual-stack</td><td>Bài 17</td></tr>
   </tbody>
 </table>
 </div>
@@ -408,7 +408,7 @@ câu trả lời của Bài 01.</p>
   <span class="label">Dấu vết dễ bỏ sót nhất</span>
   <p>Firewall trên Linux giữ hai bộ luật riêng cho IPv4 và IPv6. Chặn kỹ bộ này mà quên bộ kia thì máy chủ
   vẫn mở ra Internet qua IPv6 mà người quản trị không biết. Lộ trình kiểm tra đúng chỗ này khi đi một
-  vòng máy chủ ở <a href="../17-linux-tren-server/">Bài 17</a>.</p>
+  vòng máy chủ ở Bài 17.</p>
 </div>
 
 <h2 id="noi-ve-bai-01">Nối về câu hỏi của Bài 01</h2>
@@ -477,6 +477,6 @@ module sau của lộ trình đưa ứng dụng lên một máy chủ có địa
 
 </div>
 
-<script src="../../assets/app.js?v=fd81593b"></script>
+<script src="../../assets/app.js?v=227913a6"></script>
 </body>
 </html>

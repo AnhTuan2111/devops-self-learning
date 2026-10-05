@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 03 — Máy tính, hệ điều hành, process</title>
 <meta name="description" content="502 nghĩa là phía sau Nginx không còn ai trả lời. Bài này cho thấy app thật ra là một process do kernel quản lý, vì sao nó bị giết khi hết RAM, vì sao nó chết thì website sập, và vì sao phải biến nó thành service.">
-<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="stylesheet" href="../../assets/style.css?v=227913a6">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="03">
@@ -465,11 +465,11 @@ nhau, và process A không đọc được mật khẩu nằm trong RAM của pr
   con nhận một <em>bản sao</em> biến môi trường của cha lúc được sinh ra; từ đó hai bản sống độc lập.
   Nên <code>export</code> trong một terminal không ảnh hưởng terminal khác (Lab 6), và đây là cách
   mật khẩu hay địa chỉ database được đưa vào ứng dụng mà không ghi cứng trong code.
-  <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../10-cau-hinh-va-secret/">Bài 10</a>.</p>
+  <i class="ic ic-r" role="img" aria-label="sang"></i> Bài 10.</p>
   <p><strong>User chạy process quyết định nó phá được gì.</strong> Mọi quyết định cho phép hay từ
   chối truy cập file đều được kernel đưa ra dựa trên user của process. App chạy bằng
   <code>root</code> mà có lỗ hổng thì kẻ tấn công có cả máy; app chạy bằng một user riêng thì kẻ tấn
-  công chỉ có đúng phần của user đó. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../09-dockerfile-production/">Bài 09</a>.</p>
+  công chỉ có đúng phần của user đó. <i class="ic ic-r" role="img" aria-label="sang"></i> Bài 09.</p>
 </div>
 
 <h3 id="thread">Process và thread</h3>
@@ -1109,7 +1109,7 @@ echo $BI_MAT        # → (trống)</code></pre>
 <p>Cùng một máy, cùng một user, nhưng biến chỉ tồn tại trong <strong>process bash</strong> nơi bạn đặt nó, và
 trong những process con mà bash đó sinh ra sau lúc <code>export</code>. Cửa sổ thứ hai là một process bash
 khác, với bản sao biến môi trường riêng của nó. Đây là nền tảng của toàn bộ cách quản lý cấu hình và secret
-sau này. <i class="ic ic-r" role="img" aria-label="sang"></i> <a href="../10-cau-hinh-va-secret/">Bài 10</a>.</p>
+sau này. <i class="ic ic-r" role="img" aria-label="sang"></i> Bài 10.</p>
 
 <p>Câu "những process con mà bash đó sinh ra sau lúc <code>export</code>" kiểm chứng được ngay. Mỗi lệnh gõ
 vào bash đều chạy thành một process con của nó, kể cả khi lệnh đó là chính <code>bash</code>. Trong các lệnh
@@ -1287,6 +1287,6 @@ process sống nhờ RAM và CPU, được kernel cấp PID và port, và chết
 
 </div>
 
-<script src="../../assets/app.js?v=fd81593b"></script>
+<script src="../../assets/app.js?v=227913a6"></script>
 </body>
 </html>

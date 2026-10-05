@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 01 — IP, port, listen, firewall: vì sao gọi không tới</title>
 <meta name="description" content="Vì sao app gọi được bằng localhost mà người khác gọi vào thì không: địa chỉ IP, port, listen address, firewall, và cách đọc refused với timeout.">
-<link rel="stylesheet" href="../../assets/style.css?v=fd81593b">
+<link rel="stylesheet" href="../../assets/style.css?v=227913a6">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01">
@@ -363,8 +363,8 @@ làm lại thí nghiệm này.</figcaption>
 
 <p>Spring Boot mặc định listen trên mọi địa chỉ của máy, nhưng thuộc tính <code>server.address</code> đổi
 được điều đó chỉ bằng một dòng cấu hình; còn nhiều database và công cụ dev mặc định chỉ listen
-<code>127.0.0.1</code> cho an toàn. Địa chỉ listen còn quay lại ở <a href="../06-port-va-publish/">Bài
-06</a>, khi nó quyết định một app có gọi tới được hay không.</p>
+<code>127.0.0.1</code> cho an toàn. Địa chỉ listen còn quay lại ở Bài
+06, khi nó quyết định một app có gọi tới được hay không.</p>
 
 <p>Còn một chỗ nữa: kể cả khi đúng máy, đúng port và app listen trên mọi địa chỉ, người khác vẫn có thể không
 vào được. Gói tin còn bị chặn ở đâu trước khi tới bảng listen?</p>
@@ -560,7 +560,7 @@ chạy trên máy mình ngày 24/09/2026.</figcaption>
 </figure>
 
 <p>Nhờ port tạm, mười tab trình duyệt cùng mở <code>example.com</code> vẫn là mười kết nối riêng biệt, vì
-mỗi tab có một port tạm khác. Bộ bốn còn quay lại ở <a href="../17-linux-tren-server/">Bài 17</a>, khi đọc
+mỗi tab có một port tạm khác. Bộ bốn còn quay lại ở Bài 17, khi đọc
 danh sách kết nối đang mở trên một máy chủ thật.</p>
 
 <h2 id="refused">Refused: có người trả lời "không"</h2>
@@ -894,6 +894,6 @@ lẽ.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=fd81593b"></script>
+<script src="../../assets/app.js?v=227913a6"></script>
 </body>
 </html>

@@ -7,7 +7,9 @@
  * Tạo ra:
  *   index.html            — trang chủ: hero, băng chữ chạy, thẻ lộ trình, 3 tab
  *   README.md             — mục lục dạng markdown cho GitHub
- *   lessons/NN-slug/      — thư mục từng bài, kèm README.md khung (KHÔNG ghi đè nếu đã có)
+ *
+ * Trang từng bài (lessons/NN-slug/) do tay viết khi học tới bài đó; script KHÔNG sinh trang khung.
+ * Bài nào chưa có thư mục thì trang chủ và README chỉ ghi tên, không đặt link.
  *
  * Nguyên tắc: file này chỉ ĐỌC curriculum.json và progress.json.
  * Muốn sửa nội dung lộ trình thì sửa curriculum.json rồi chạy lại script.
@@ -69,6 +71,7 @@ for (const l of allLessons) {
 const statusOf = (id) => progress.lessons?.[id]?.status ?? 'todo';
 const dateOf = (id) => progress.lessons?.[id]?.date ?? null;
 const dirOf = (l) => `lessons/${l.id}-${l.slug}`;
+const hasPage = (l) => existsSync(join(ROOT, dirOf(l), 'index.html'));
 
 // Trạng thái mang hình, không chỉ mang màu: tròn đặc = xong · tam giác = đang học · vòng rỗng = chưa học.
 // Hình VẼ bằng CSS (.stt-*), không dùng ký tự bàn phím làm icon.
@@ -131,7 +134,9 @@ const posterHtml = moduleStats
       .map((l) => {
         const st = statusOf(l.id);
         const label = `Bài ${l.id} · ${l.title} — ${STATUS_TEXT[st]}`;
-        return `<a class="ptile ${st}" href="${dirOf(l)}/" title="${esc(label)}" aria-label="${esc(label)}">${Bauhaus.tile(l.id)}</a>`;
+        return hasPage(l)
+          ? `<a class="ptile ${st}" href="${dirOf(l)}/" title="${esc(label)}" aria-label="${esc(label)}">${Bauhaus.tile(l.id)}</a>`
+          : `<span class="ptile ${st}" title="${esc(label)}" aria-label="${esc(label)}">${Bauhaus.tile(l.id)}</span>`;
       })
       .join('');
     return `        <li class="prow">
@@ -148,14 +153,16 @@ const modulesHtml = moduleStats
         const st = statusOf(l.id);
         const d = dateOf(l.id);
         const sub = `${esc(l.question)} · ${hrs(l)}${d ? ` · học ${viDate(d)}` : ''}`;
-        return `        <a class="lesson ${st}" href="${dirOf(l)}/">
+        const tag = hasPage(l) ? 'a' : 'div';
+        const href = hasPage(l) ? ` href="${dirOf(l)}/"` : '';
+        return `        <${tag} class="lesson ${st}"${href}>
           <span class="num">${l.id}</span>
           <span class="txt">
             <span class="title">${esc(l.title)}</span>
             <span class="sub">${sub}</span>
           </span>
           <span class="status chip ${STATUS_CHIP[st]}">${STATUS_LABEL[st]}</span>
-        </a>`;
+        </${tag}>`;
       })
       .join('\n');
 
@@ -368,7 +375,8 @@ const readmeModules = curriculum.modules
         const st = statusOf(l.id);
         const d = dateOf(l.id);
         const state = st === 'done' ? `xong ${viDate(d)}` : st === 'doing' ? 'đang học' : '—';
-        return `| \`${l.id}\` | [${l.title}](${dirOf(l)}/) | ${l.question} | ${hrs(l)} | ${state} |`;
+        const name = hasPage(l) ? `[${l.title}](${dirOf(l)}/)` : l.title;
+        return `| \`${l.id}\` | ${name} | ${l.question} | ${hrs(l)} | ${state} |`;
       })
       .join('\n');
     return `### ${m.id} · ${m.title}
@@ -451,217 +459,10 @@ writeFileSync(join(ROOT, 'README.md'), readme, 'utf8');
 /* Thư mục từng bài (không ghi đè file đã có)                          */
 /* ------------------------------------------------------------------ */
 
-/**
- * Mỗi thư mục bài PHẢI có index.html, nếu không GitHub Pages sẽ tự render
- * README.md bằng Jekyll — ra một trang HTML trần, không có CSS của ta.
- *
- * File sinh tự động mang dấu SENTINEL ở dòng 2. Chạy lại script thì file có
- * dấu đó sẽ được ghi đè (để cập nhật theo curriculum.json), còn file viết tay
- * (như bài 00) thì KHÔNG bao giờ bị đụng tới.
- */
-const SENTINEL = '<!-- devops-selflearning:generated-stub -->';
-
-function stubHtml(l, prev, next) {
-  const st = statusOf(l.id);
-  const mod = curriculum.modules.find((m) => m.id === l.moduleId);
-  const link = (x, dir, cls) =>
-    x
-      ? `  <a${cls} href="../${x.id}-${x.slug}/">
-    <span class="dir">${dir}</span>
-    <span class="t">${x.id} · ${esc(x.title.split(':')[0])}</span>
-  </a>`
-      : `  <a${cls} href="../../">
-    <span class="dir">${dir}</span>
-    <span class="t">Mục lục</span>
-  </a>`;
-  const [t1, t2] = l.title.includes(':') ? [l.title.slice(0, l.title.indexOf(':') + 1), l.title.slice(l.title.indexOf(':') + 1).trim()] : [l.title, ''];
-
-  return head({ title: `Bài ${l.id} — ${l.title}`, desc: l.goal, base: '../../' }).replace('<!doctype html>', `<!doctype html>\n${SENTINEL}`) + `
-<body data-lesson="${l.id}">
-
-<nav class="topbar">
-  <div class="topbar-inner">
-    <a class="home" href="../../">devops-self-learning</a>
-    <span class="crumb">/ bai-${l.id}</span>
-    <span class="spacer"></span>
-    <a class="nav" href="../../#${l.moduleId}">Module ${l.moduleId.slice(1)}</a>
-  </div>
-</nav>
-
-<div class="wrap">
-
-<header class="hero">
-  <p class="eyebrow">Module ${l.moduleId.slice(1)} · Bài ${l.id}</p>
-  <h1>${esc(t1)}${t2 ? ` <span class="hl">${esc(t2)}</span>` : ''}</h1>
-  <p class="lede">${esc(l.question)}</p>
-  <div class="meta">
-    <span class="chip ${STATUS_CHIP[st]}">${STATUS_LABEL[st]}</span>
-    <span class="chip">${hrs(l)}</span>
-    <span class="chip">${esc(l.moduleTitle.split(' — ')[0])}</span>
-  </div>
-</header>
-
-<main class="tabs" data-tabs="Các phần của Bài ${l.id}">
-
-<section class="tab" id="tong-quan" data-tab="Tổng quan" data-note="Khung bài">
-  <div class="callout${st === 'done' ? ' ok' : ''}">
-    <span class="label">${st === 'done' ? 'Đã học, chưa viết lại' : 'Trang này mới là khung'}</span>
-    <p>${
-      st === 'done'
-        ? 'Bài này đã học xong nhưng chưa được viết lại đầy đủ.'
-        : 'Bài này chưa học. Trang mới có khung: câu hỏi, khái niệm, lab và tự kiểm tra.'
-    }</p>
-  </div>
-${prev ? `
-  <h2 id="tu-bai-truoc">Từ bài trước</h2>
-  <p><a href="../${prev.id}-${prev.slug}/">Bài ${prev.id}</a> kết luận: ${esc(prev.answer)}</p>
-` : ''}
-  <h2 id="dap-an">Bài này dẫn tới</h2>
-  <p>${esc(l.answer)}</p>
-${next ? `
-  <h2 id="cau-hoi-tiep">Câu hỏi cho bài sau</h2>
-  <p>${esc(next.question)} <a href="../${next.id}-${next.slug}/">Bài ${next.id}</a> trả lời câu này.</p>
-` : ''}${(l.needs ?? []).length ? `
-  <h2 id="can-hoc-truoc">Cần đã học trước</h2>
-  <p>Bài này dùng lại kiến thức của:</p>
-  <ul>
-${l.needs.map((n) => `    <li><a href="../${n}-${lessonById[n].slug}/">Bài ${n} · ${esc(lessonById[n].title)}</a></li>`).join('\n')}
-  </ul>
-` : ''}
-  <h2 id="khai-niem">Khái niệm sẽ gặp</h2>
-  <ul>
-${l.concepts.map((c) => `    <li>${esc(c)}</li>`).join('\n')}
-  </ul>
-</section>
-
-<section class="tab" id="bai-lab" data-tab="Lab" data-note="Dự kiến">
-  <h2 id="lab">Bài lab dự kiến</h2>
-  <p>${esc(l.lab)}</p>
-  <div class="callout warn">
-    <span class="label">Luật của mọi bài lab</span>
-    <p>Có ít nhất một bước cố tình làm hỏng, rồi tự sửa.</p>
-  </div>
-</section>
-
-<section class="tab" id="tu-kiem-tra" data-tab="Tự kiểm tra" data-note="${l.checklist.length} mục">
-  <p>Học xong, tự làm được những việc dưới đây mà không nhìn tài liệu. Bấm vào dòng để đánh dấu.</p>
-  <ul class="check">
-${l.checklist.map((c) => `    <li>${esc(c)}</li>`).join('\n')}
-  </ul>
-</section>
-
-</main>
-
-<nav class="prevnext">
-${link(prev, 'Bài trước', '')}
-${link(next, 'Bài tiếp', ' class="next"')}
-</nav>
-
-<footer class="page">
-  <p>Bài ${l.id} · Module ${l.moduleId} — ${esc(l.moduleTitle)} · DevOps Self-Learning</p>
-</footer>
-
-</div>
-
-<script src="../../assets/app.js?v=${ASSET_V}"></script>
-</body>
-</html>
-`;
-}
-
 // .nojekyll: chặn GitHub Pages chạy Jekyll. Không có file này, Jekyll sẽ render
 // README.md thành HTML trần và trỏ CSS vào assets/css/style.css của theme —
 // đè lên thư mục assets/ của chính ta.
 writeFileSync(join(ROOT, '.nojekyll'), '');
-
-// Dòng siêu dữ liệu của README khung — máy sinh, nên được làm mới mỗi lần chạy (xem bên dưới)
-const stubMetaLine = (l) => `> Ước lượng: ${hrs(l)} học (đọc trước, đối thoại, lab, ghi chép) · Trạng thái: \`${statusOf(l.id)}\``;
-const STUB_META_RE = /^> Ước lượng: [^\n]*· Trạng thái: `\w+`$/m;
-
-let created = 0;
-let stubs = 0;
-let refreshed = 0;
-for (const [i, l] of allLessons.entries()) {
-  const dir = join(ROOT, dirOf(l));
-  mkdirSync(join(dir, 'lab'), { recursive: true });
-
-  const gitkeep = join(dir, 'lab', '.gitkeep');
-  if (!existsSync(gitkeep)) writeFileSync(gitkeep, '');
-
-  const htmlPath = join(dir, 'index.html');
-  const handWritten =
-    existsSync(htmlPath) && !readFileSync(htmlPath, 'utf8').includes(SENTINEL);
-  if (!handWritten) {
-    writeFileSync(htmlPath, stubHtml(l, allLessons[i - 1], allLessons[i + 1]), 'utf8');
-    stubs++;
-  }
-
-  const readmePath = join(dir, 'README.md');
-  if (existsSync(readmePath)) {
-    // README khung chỉ tạo một lần, nhưng dòng siêu dữ liệu do máy sinh thì phải theo curriculum.json.
-    // Chỉ đụng tới đúng dòng còn nguyên mẫu máy sinh; README viết tay không có dòng này.
-    const old = readFileSync(readmePath, 'utf8');
-    const upd = old.replace(STUB_META_RE, stubMetaLine(l));
-    if (upd !== old) { writeFileSync(readmePath, upd, 'utf8'); refreshed++; }
-  } else {
-    const body = `# Bài ${l.id} — ${l.title}
-
-${glyphImg(l.id)}
-
-> **Module ${l.moduleId}** · ${l.moduleTitle}
-${stubMetaLine(l)}
-
-${allLessons[i - 1] ? `## Từ bài trước
-
-[Bài ${allLessons[i - 1].id}](../${allLessons[i - 1].id}-${allLessons[i - 1].slug}/) kết luận: ${allLessons[i - 1].answer}
-
-` : ''}## Câu hỏi của bài
-
-**${l.question}**
-
-## Bài này dẫn tới
-
-${l.answer}
-${allLessons[i + 1] ? `
-## Câu hỏi cho bài sau
-
-${allLessons[i + 1].question} [Bài ${allLessons[i + 1].id}](../${allLessons[i + 1].id}-${allLessons[i + 1].slug}/) trả lời câu này.
-` : ''}${(l.needs ?? []).length ? `
-## Cần đã học trước
-
-${l.needs.map((n) => `- [Bài ${n} · ${lessonById[n].title}](../${n}-${lessonById[n].slug}/)`).join('\n')}
-` : ''}
-## Khái niệm sẽ gặp
-
-${l.concepts.map((c) => `- ${c}`).join('\n')}
-
-## Bài lab
-
-${l.lab}
-
-## Tự kiểm tra
-
-Học xong phải tự làm được, không nhìn tài liệu:
-
-${l.checklist.map((c) => `- [ ] ${c}`).join('\n')}
-
----
-
-*Bài này chưa học. Nội dung đầy đủ sẽ được viết khi học tới bài này.*
-`;
-    writeFileSync(readmePath, body, 'utf8');
-    created++;
-  }
-
-  const notesPath = join(dir, 'notes.md');
-  if (!existsSync(notesPath)) {
-    writeFileSync(
-      notesPath,
-      `# Ghi chú — Bài ${l.id}\n\n## Lỗi đã gặp\n\n_(chưa có)_\n\n## Câu hỏi còn treo\n\n_(chưa có)_\n\n## Lệnh muốn nhớ\n\n_(chưa có)_\n`,
-      'utf8'
-    );
-  }
-}
 
 // Trang viết tay: chỉ cập nhật đúng tham số ?v= trong hai đường dẫn tài sản, không đụng nội dung.
 let versioned = 0;
@@ -677,7 +478,6 @@ for (const d of readdirSync(join(ROOT, 'lessons'))) {
 console.log(`OK  index.html + README.md + .nojekyll + ${artCount} ảnh README (assets/readme/) đã cập nhật`);
 console.log(
   `OK  ${allLessons.length} bài · ${doneCount} xong (${pct}%) · ` +
-    `${created} README mới${refreshed ? ` · làm mới dòng ước lượng ở ${refreshed} README khung` : ''} · ${stubs} trang HTML sinh tự động ` +
-    `(${allLessons.length - stubs} viết tay, không đụng tới nội dung)` +
+    `${allLessons.filter(hasPage).length} bài đã có trang viết tay` +
     ` · tài sản v=${ASSET_V}${versioned ? ` (cập nhật đường dẫn ở ${versioned} trang)` : ''}`
 );
