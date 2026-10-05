@@ -162,13 +162,12 @@ Không màn hình (<em>headless</em>) nghĩa là bạn điều khiển nó qua m
 
 <h2 id="bon-thu">Bốn tài nguyên của một máy tính</h2>
 
-<p>Hai phương án ở tình huống mở bài khác nhau ở ba con số, nên câu hỏi đầu tiên là: ba con số đó đo cái gì,
-và cái nào hết trước? Trả lời được câu đó thì cũng giải thích được vì sao hết CPU thì app chậm còn hết RAM
-thì app chết. Server là một máy tính bình thường, và một máy tính, dù là laptop hay server, cung cấp cho phần
-mềm đúng bốn loại tài nguyên. Chương trình nào chạy cũng bằng cách tiêu thụ bốn thứ này, và rất nhiều sự cố
-hiệu năng quy về việc <em>một trong bốn thứ hết</em>. Ba con số ở Hình 1 là ba trong bốn, cộng thêm băng
-thông mạng. Chương trình không tự lấy tài nguyên cho mình: bên chia chúng là <strong>kernel</strong>, phần
-lõi của hệ điều hành, thứ duy nhất nắm quyền trên phần cứng; tab Kernel sẽ cho thấy vì sao phải có nó.</p>
+<p>Hai phương án ở tình huống mở bài chênh nhau ở ba con số. Ba con số đó đo cái gì, và cái nào hết trước?
+Server là một máy tính bình thường, và máy tính nào, laptop hay server, cũng cấp cho phần mềm đúng bốn loại tài
+nguyên. Chương trình nào chạy cũng bằng cách tiêu thụ bốn thứ đó, và rất nhiều sự cố hiệu năng quy về việc
+<em>một trong bốn thứ hết</em>. Ba con số ở Hình 1 là ba trong bốn, thiếu băng thông mạng. Chương trình không
+tự lấy tài nguyên cho mình: bên chia chúng là <strong>kernel</strong>, phần lõi của hệ điều hành, thứ duy nhất
+nắm quyền trên phần cứng; tab Kernel cho thấy vì sao phải có nó.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>     CPU             RAM            Disk         Network
@@ -318,13 +317,9 @@ thời gian CPU của một ứng dụng web nhỏ ngồi chờ database và m�
 "luôn luôn": một ứng dụng xử lý ảnh hay mã hoá nặng có thể hết CPU trước, và cách duy nhất để biết chắc là đo,
 việc ta sẽ học ở Bài 37.</p>
 
-<div class="callout ok">
-  <span class="label">Chốt</span>
-  <p>Với Spring Boot và PostgreSQL, con số thường hết trước là RAM. CPU chia nhau theo lượt, nên hết CPU chỉ
-  sinh ra chờ đợi: app chậm, Nginx viết 504. RAM là thứ chiếm giữ, nên hết RAM thì kernel phải giết một
-  chương trình: app chết, Nginx viết 502.</p>
-  <p>Nhưng "chương trình" bị kernel giết thật ra là gì, và vì sao nó chết thì port 8080 trống ngay?</p>
-</div>
+<p>Với Spring Boot và PostgreSQL, con số thường hết trước là RAM. CPU chia nhau theo lượt, nên hết CPU chỉ sinh
+ra chờ đợi: app chậm, Nginx viết 504. RAM là thứ chiếm giữ, nên hết RAM thì kernel phải giết một chương trình:
+app chết, Nginx viết 502.</p>
 
 </section>
 
@@ -511,11 +506,10 @@ một API xuất báo cáo nạp cả bảng dữ liệu vào bộ nhớ) cũng 
 khác vốn hoàn toàn khoẻ. Không có vách ngăn nào giữa các thread về mặt bộ nhớ; đó là cái giá của việc chúng
 chia sẻ bộ nhớ để trao đổi dữ liệu nhanh.</p>
 
-<p>Tóm lại <strong>"app" là một process</strong>: chương trình <code>app.jar</code> khi đang chạy, được kernel
-cấp một PID, một vùng RAM riêng, một danh sách file và kết nối đang mở, trong đó có port 8080 mà Nginx gọi
-tới. Spring Boot là một process chứa nhiều thread dùng chung vùng nhớ, nên giết process là giết mọi request
-đang xử lý dở. Vậy ai là bên cấp PID, cấp RAM, ghi nhận port 8080 thuộc về process nào, và có quyền giết
-process?</p>
+<p>Vậy <strong>"app" là một process</strong>: chương trình <code>app.jar</code> khi đang chạy, được kernel cấp
+một PID, một vùng RAM riêng, một danh sách file và kết nối đang mở, trong đó có port 8080 mà Nginx gọi tới.
+Spring Boot là một process chứa nhiều thread dùng chung vùng nhớ, nên giết process là giết mọi request đang xử
+lý dở.</p>
 
 </section>
 
@@ -609,14 +603,9 @@ lời giải thích ở đây:</p>
   <span class="label">Đào sâu · <code>Address already in use</code> nhìn từ phía kernel</span>
   <p>Khi <code>bind()</code> thất bại vì port đã có process khác listen, kernel không trả về một câu chữ mà trả về
   một mã lỗi tên <code>EADDRINUSE</code>. Dòng <code>Address already in use</code> mà Spring Boot in ra
-  chỉ là mã đó được dịch sang chữ cho người đọc. Tóm lại dòng lỗi này là câu trả lời của
+  chỉ là mã đó được dịch sang chữ cho người đọc. Nên dòng lỗi này là câu trả lời của
   kernel sau khi tra bảng các port đang listen, đi qua nhiều lớp thư viện rồi mới tới log của bạn.</p>
 </div>
-
-<p>Tóm lại <strong>kernel</strong> là phần lõi của hệ điều hành, thứ duy nhất được chạm vào phần cứng; process
-nào cũng chỉ xin được qua syscall, kể cả process chạy bằng root. Kernel cấp PID và RAM, và giữ bảng các port
-đang listen: process chết thì dòng của nó bị xoá ngay, nên kết nối tới port đó bị từ chối. Còn lại hai câu
-hỏi: process có thể chết theo những cách nào, và khi hết RAM, kernel chọn process nào để giết?</p>
 
 </section>
 
@@ -625,12 +614,11 @@ hỏi: process có thể chết theo những cách nào, và khi hết RAM, kern
 
 <h2 id="nam-cach">Process chết: được báo trước, hay bị ép</h2>
 
-<p>Hai câu hỏi còn dở đều quy về lúc một process chết: khi hết RAM thì ai giết process và giết thế nào, và từ
-cái chết đó tới con số 502 là chuỗi nào. <em>Cách</em> một process chết quyết định hệ thống còn lại trong
-trạng thái nào: Spring Boot đang giữ connection tới database, transaction đang dở, log còn trong bộ đệm chưa
-ghi xuống đĩa. Được báo trước thì nó dọn dẹp được; không thì những thứ đó bị bỏ lại giữa chừng. Process sống
-trong user space và không tự biết chuyện bên ngoài nó, nên lời báo phải đi qua kernel, và kênh kernel dùng để
-báo cho một process gọi là <strong>signal</strong>.</p>
+<p>Hai câu còn dở đều quy về lúc một process chết: hết RAM thì ai giết process và giết thế nào, và từ cái chết
+đó tới 502 là chuỗi nào. <em>Cách</em> process chết quyết định hệ thống còn lại trong trạng thái nào: Spring
+Boot đang giữ connection tới database, transaction đang dở, log còn trong bộ đệm chưa ghi xuống đĩa. Được báo
+trước thì nó dọn dẹp được, không thì những thứ đó bị bỏ lại giữa chừng. Process sống trong user space và không
+tự biết chuyện bên ngoài, nên lời báo phải đi qua kernel, qua kênh gọi là <strong>signal</strong>.</p>
 
 <dl class="terms">
   <dt>Signal <small>tín hiệu</small></dt>
@@ -793,14 +781,6 @@ một khái niệm đã gặp trong bài này hoặc ở các bài trước.</p>
   lại.</p>
 </div>
 
-<div class="callout ok">
-  <span class="label">Chốt</span>
-  <p>Khi hết RAM, OOM killer của kernel chấm điểm process chủ yếu theo lượng RAM đang giữ, chọn process lớn
-  nhất (trên server Spring Boot thường là JVM) và giết bằng SIGKILL, nên app không kịp dọn dẹp và log ứng
-  dụng trống trơn. Process chết thì kernel xoá dòng của port 8080, Nginx xin kết nối bị từ chối và viết 502.</p>
-  <p>Chuỗi bảy bước để lại một câu hỏi: app đã chết rồi thì ai dựng nó dậy?</p>
-</div>
-
 </section>
 
 <!-- ================================================================== -->
@@ -808,10 +788,14 @@ một khái niệm đã gặp trong bài này hoặc ở các bài trước.</p>
 
 <h2 id="process-vs-service">Process và service: khác nhau ở bên trông coi</h2>
 
-<p>Chuỗi bảy bước ở tab trước kết thúc với một ứng dụng đã chết và một website trả 502. Câu hỏi tiếp theo là:
-<em>ai sẽ dựng nó dậy?</em> Với một process bình thường, câu trả lời là không ai cả. Một process sau khi chết
-là hết; không có cơ chế nào trong bản thân process khiến nó tự sống lại, cũng như không có cơ chế nào khiến
-nó tự khởi động khi máy bật lên. Đây là chỗ khái niệm <strong>service</strong> xuất hiện.</p>
+<p>Chuỗi bảy bước ở tab trước dừng ở một ứng dụng đã chết và một website trả 502. Vậy ai dựng nó dậy? Với một
+process bình thường thì không ai cả. Process chết là hết; không có cơ chế nào trong bản thân nó khiến nó tự
+sống lại, cũng không có cơ chế nào khiến nó tự khởi động khi máy bật. Chỗ này khái niệm <strong>service</strong>
+xuất hiện.</p>
+
+<p>Lúc học tới đây mình đoán người dựng app dậy là một process có PID 1, và chỉ biết là khi có thứ theo dõi
+app, ở đây là systemd, thì app chết nó tự bật lại. Đúng hướng nhưng thiếu một nửa: là con của systemd chưa đủ,
+phải khai báo với nó thì app mới thành service.</p>
 
 <figure class="fig photo shot">
   <img src="img/systemd-restart.webp" width="1118" height="892" loading="lazy" alt="Bảng 1 trong man page systemd.service: hàng là các kiểu process chết, cột là các giá trị Restart=, dấu X cho biết systemd có khởi động lại hay không.">
@@ -882,16 +866,6 @@ trông coi.</p>
   <img src="img/xkcd-hard-reboot.webp" width="930" height="452" loading="lazy" alt="Hai ô. Ô trái: Figuring out why my home server keeps running out of swap space and crashing: 1-10 hours. Ô phải, hình một ổ cắm hẹn giờ: Plugging it into a light timer so it reboots every 24 hours: 5 minutes. Dòng dưới: Why everything I have is broken.">
   <figcaption><b>Ảnh 8</b> Truyện <em>Hard Reboot</em> của xkcd, số 1495, năm 2015. Tìm ra vì sao server ở nhà cứ hết bộ nhớ rồi treo: từ một tới mười giờ. Cắm nó vào ổ hẹn giờ để cứ 24 giờ lại khởi động lại: năm phút. (Swap trong truyện là phần ổ đĩa hệ điều hành dùng thêm khi RAM đầy.) Dòng cuối, "vì sao mọi thứ tôi có đều hỏng", là cái giá: khởi động lại định kỳ che triệu chứng, còn gốc vẫn ở đó, giống một service cứ chết rồi lại được dựng dậy.</figcaption>
 </figure>
-
-<div class="callout ok">
-  <span class="label">Chốt</span>
-  <p><strong>Service</strong> là một process cộng với một process khác trông coi nó, trong tay có bản
-  mô tả "chạy chương trình nào, bằng user nào, chết thì làm gì". Trên Linux, bên trông coi mặc định là
-  systemd (PID 1): nó chạy app khi máy bật và dựng app dậy khi app chết. Tự dựng dậy chữa triệu chứng
-  chứ không chữa được lý do app chết.</p>
-  <p>Phần lớn những điều trên thấy được tận mắt ngay trên máy bạn: tab Lab cho bạn tự sinh ra, tìm và
-  giết một process.</p>
-</div>
 
 </section>
 
@@ -1001,9 +975,10 @@ nối mà <code>curl</code> vừa mở rồi đóng, đang chờ kernel dọn h�
 
 <h3 id="lab-2-tranh-phong">Tự gây lỗi: hai process tranh một port</h3>
 
-<p>Lúc process ở trên vẫn đang chạy, mở thêm một cửa sổ và chạy lại <code>node lab/server.js</code>. Trước
-khi chạy, thử dự đoán bằng bảng các port đang listen ở tab Kernel: process mới sẽ ra sao, và process cũ có bị
-ảnh hưởng gì không?</p>
+<p>Lúc process ở trên vẫn đang chạy, mở thêm một cửa sổ và chạy lại <code>node lab/server.js</code>. Trước khi
+chạy, thử dự đoán bằng bảng các port đang listen ở tab Kernel: process mới sẽ ra sao, và process cũ có bị ảnh
+hưởng gì không? Mình quên bước này, chạy trước rồi mới nhớ ra là chưa đoán, nên bạn cứ đoán trước rồi hãy
+chạy.</p>
 
 <pre><code>Error: listen EADDRINUSE: address already in use :::8080
   code: 'EADDRINUSE',
@@ -1185,15 +1160,14 @@ thích được điều đó cho người khác bằng lời của mình; đọc
 
 <h2 id="ket">Kết lại</h2>
 
-<p>Câu hỏi của bài là: 502 nghĩa là phía sau Nginx không còn ai trả lời, nhưng "app" thật ra là gì, vì sao
-nó có thể chết, và vì sao nó chết thì website sập. Giờ câu trả lời đã trọn. <strong>App là một process do
-kernel quản lý.</strong> Hết RAM thì kernel giết process lớn nhất (trên server Spring Boot thường là chính
-app) bằng SIGKILL, nên app không kịp dọn dẹp. Process chết thì kernel xoá dòng của port 8080, Nginx bị từ
-chối và viết 502. Muốn app tự sống lại thì phải giao nó cho một process khác trông coi, tức biến nó thành
-<strong>service</strong>.</p>
+<p>Câu hỏi của bài: 502 nghĩa là phía sau Nginx không còn ai trả lời, nhưng "app" thật ra là gì, vì sao nó chết
+được, và vì sao nó chết thì website sập. Trả lời: <strong>app là một process do kernel quản lý.</strong> Hết RAM
+thì kernel giết process lớn nhất (trên server Spring Boot thường là chính app) bằng SIGKILL, nên app không kịp
+dọn dẹp. Process chết thì kernel xoá dòng của port 8080, Nginx bị từ chối và viết 502. Muốn app tự sống lại thì
+phải giao nó cho một process khác trông coi, tức biến nó thành <strong>service</strong>.</p>
 
-<p>Ghép với ba bài trước: dù là máy chủ web, ứng dụng hay database, mỗi chặng ở phía server đều là một
-process sống nhờ RAM và CPU, được kernel cấp PID và port, và chết theo những cách giờ bạn đã gọi được tên.</p>
+<p>Ghép với ba bài trước thì phía server chỉ còn một thứ: máy chủ web, ứng dụng hay database đều là process,
+sống nhờ RAM và CPU, được kernel cấp PID và port, và chết theo những cách giờ bạn gọi được tên.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  Bài 00–02  Bản đồ và triệu chứng — request đi qua đâu, hỏng ở chặng nào

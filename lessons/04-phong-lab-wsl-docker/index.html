@@ -94,16 +94,13 @@ Docker, công cụ của Module 1, đứng ngay sau vì nó cũng cần kernel �
 <div class="callout">
   <span class="label">Bài này trả lời bốn câu</span>
   <ol>
-    <li>Máy ảo là gì, và WSL2 đặt một kernel Linux thật vào máy mình bằng cách nào? Lab 1 cài Ubuntu và tìm
-    bằng chứng của kernel Linux; Lab 4 gửi signal thật.</li>
-    <li>Điều khiển máy Linux đó bằng gì: terminal, shell, lệnh, và cách đi lại giữa các thư mục? Lab 2 đi lại
-    giữa các thư mục và sửa tệp.</li>
+    <li>Máy ảo là gì, và WSL2 đặt một kernel Linux thật vào máy mình bằng cách nào?</li>
+    <li>Điều khiển máy Linux đó bằng gì: terminal, shell, lệnh, và cách đi lại giữa các thư mục?</li>
     <li>Output và lỗi của một lệnh đi đâu, và các ký hiệu <code>&gt;</code>, <code>2&gt;/dev/null</code>,
-    <code>|</code> đã gặp ở Bài 00, 01, 03 nghĩa là gì? Lab 3 tách kết quả khỏi lỗi.</li>
+    <code>|</code> đã gặp ở Bài 00, 01, 03 nghĩa là gì?</li>
     <li>Docker Desktop đặt Docker ở đâu trong máy Linux đó, và vì sao lệnh <code>docker</code> có thể báo không gọi
-    được daemon? Lab 5 chạy hello-world; Lab 6 tắt daemon rồi sửa.</li>
+    được daemon?</li>
   </ol>
-  <p>Cột phải của Hình 1 được điền ở Lab 7, phép đo đối chứng.</p>
 </div>
 
 <h2 id="can-hoc-truoc">Cần đã học trước</h2>
@@ -124,10 +121,9 @@ Docker, công cụ của Module 1, đứng ngay sau vì nó cũng cần kernel �
 <!-- ================================================================== -->
 <section class="tab" id="wsl2" data-tab="WSL2" data-note="kernel Linux trong máy ảo nhẹ">
 
-<p>Muốn có Linux thật trên một máy đang chạy Windows, trước hết phải hiểu vì sao hai thứ đó không chạy chung
-được một cách đơn giản. Câu trả lời nằm ở hai kết luận của <a href="../03-may-tinh-va-he-dieu-hanh/#kernel">Bài
-03</a>: kernel là thành phần duy nhất được chạm phần cứng, và chương trình phải xin kernel làm hộ qua
-syscall.</p>
+<p>Để có Linux thật trên máy đang chạy Windows, trước hết phải hiểu vì sao hai thứ đó không chạy chung đơn giản
+được. Đáp án nằm ở hai kết luận của <a href="../03-may-tinh-va-he-dieu-hanh/#kernel">Bài 03</a>: kernel là thành
+phần duy nhất được chạm phần cứng, và chương trình phải xin kernel làm hộ qua syscall.</p>
 
 <h2 id="vi-sao-kernel-linux">Vì sao phải là chính kernel Linux</h2>
 
@@ -269,13 +265,9 @@ ngay cả service do systemd quản lý cũng không giữ máy ảo sống. Tr�
 <a href="../00-ban-do-toan-canh/#phia-server">Bài 00</a>, WSL2 là chỗ dựng lại nửa phía server: từ Bài 05, Nginx,
 ứng dụng và database sẽ chạy trong máy ảo này, trước khi lên server thật ở Module 2.</p>
 
-<div class="callout ok">
-  <span class="label">Chốt</span>
-  <p>Máy ảo là máy tính dựng bằng phần mềm, có kernel riêng; hypervisor dựa vào ảo hoá phần cứng của CPU để
-  chia một máy thật cho nhiều kernel. WSL2 là một máy ảo nhẹ do Windows tự quản, chạy kernel Linux thật do Microsoft
-  biên dịch; Ubuntu là distro đặt bộ chương trình lên kernel đó.</p>
-  <p>Nhưng máy này không có cửa sổ, cũng không có chuột. Ra lệnh cho nó bằng gì?</p>
-</div>
+<p>Máy ảo là máy tính dựng bằng phần mềm, có kernel riêng; hypervisor dựa vào ảo hoá phần cứng của CPU để chia
+một máy thật cho nhiều kernel. WSL2 là một máy ảo nhẹ do Windows tự quản, chạy kernel Linux thật do Microsoft
+biên dịch; Ubuntu là distro đặt bộ chương trình lên kernel đó.</p>
 
 </section>
 
@@ -438,12 +430,6 @@ lỗi thì lỗi đó có quyền với cả máy, nên chỉ thêm <code>sudo</
   chối, lần sau có <code>sudo</code> đứng trước thì được làm: lệnh không đổi, chỉ user chạy nó đổi thành root. Truyện
   bỏ qua một bước của sudo thật, là kiểm tra bạn có được phép không và hỏi mật khẩu trước khi làm.</figcaption>
 </figure>
-
-<p>Tóm lại terminal hiện chữ và chuyển phím; bash đọc dòng lệnh, tách thành tên lệnh và tham số, tìm chương
-trình theo PATH, rồi nhờ kernel sinh process con chạy nó và lấy exit status. Đường dẫn tương đối tính từ thư
-mục làm việc của process, nên <code>cd</code> phải là builtin; <code>sudo</code> chạy đúng một lệnh bằng root.
-Còn một chuyện chưa nói: process con in kết quả ra đâu, và vì sao lệnh đọc chứng chỉ ở Bài 00 phải thêm
-<code>2&gt;/dev/null</code>?</p>
 
 </section>
 
@@ -646,12 +632,6 @@ A required privilege is not held by the client.</code></pre>
   <figcaption><b>Ảnh 6</b> <em>Inside the Linux Kernel</em> của Daniel Stori, turnoff.us, năm 2016 (bấm vào ảnh để xem cỡ lớn). Mỗi chim cánh cụt là một process, số trên ngực là PID. Những thứ đã học: các terminal (tty) ở tầng trên, nơi process đọc và ghi; chồng ống ở giữa nhà là pipe; con đứng ở cửa số 80 là một web server đang listen port 80, con ở cửa 22 là chương trình nhận kết nối SSH. Cái bàn có nhãn <em>process table</em> là một trò chơi chữ: table vừa là bàn, vừa là bảng process mà kernel giữ. Tranh đặt mọi process vào trong kernel cho dễ nhìn; thật ra process chạy ở user space, còn kernel là bên giữ bảng, cửa và đường ống. Các nhãn còn lại (cron, watchdog, filesystem) thuộc những bài sau.</figcaption>
 </figure>
 
-<p>Tóm lại mỗi process khởi đầu với ba file descriptor, 0 stdin, 1 stdout, 2 stderr, thừa kế từ bash và mặc định
-trỏ vào terminal. Chuyển hướng là bash đổi đích của một số trước khi chạy lệnh: <code>&gt;</code> đổi số 1,
-<code>2&gt;</code> đổi số 2, <code>/dev/null</code> vứt mọi thứ ghi vào; pipe nối số 1 của lệnh trái vào số 0
-của lệnh phải. Đã có Linux và bash. Mảnh cuối của phòng lab là Docker: lệnh <code>docker</code> gọi tới đâu, và
-vì sao nó báo lỗi khi Docker Desktop chưa bật?</p>
-
 </section>
 
 <!-- ================================================================== -->
@@ -767,15 +747,11 @@ không có Docker Desktop. Người ta cài thẳng Docker Engine, tức daemon 
 như một service do systemd trông coi, và client gọi nó qua cùng <code>/var/run/docker.sock</code>. Trên bản đồ,
 Docker không thêm chặng nào; nó là cách đóng gói và chạy Nginx, ứng dụng và database.</p>
 
-<div class="callout ok">
-  <span class="label">Chốt</span>
-  <p>Docker Desktop chạy daemon <code>dockerd</code> trong distro riêng <code>docker-desktop</code> của máy ảo
-  WSL2; lệnh <code>docker</code> chỉ là client gửi request Docker API tới daemon qua một địa chỉ, named pipe trên
-  Windows hay Unix socket trên Linux. Docker Desktop tắt thì client vẫn chạy nhưng đầu bên kia không có ai, nên lỗi
-  "không kết nối được tới daemon" cùng nghĩa với <code>refused</code> ở Bài 01: ở địa chỉ đó không có process nào
-  trả lời.</p>
-  <p>Tab Lab cho bạn tự kiểm từng điều trên chính máy mình.</p>
-</div>
+<p>Docker Desktop chạy daemon <code>dockerd</code> trong distro riêng <code>docker-desktop</code> của máy ảo
+WSL2; lệnh <code>docker</code> chỉ là client gửi request Docker API tới daemon qua một địa chỉ, named pipe trên
+Windows hay Unix socket trên Linux. Docker Desktop tắt thì client vẫn chạy nhưng đầu bên kia không có ai, nên lỗi
+"không kết nối được tới daemon" cùng nghĩa với <code>refused</code> ở Bài 01: ở địa chỉ đó không có process nào
+trả lời.</p>
 
 </section>
 
@@ -1006,11 +982,11 @@ nhau, nên chênh lệch là chênh lệch giữa hai kernel.</p>
 
 <h2 id="ket-lai">Kết lại</h2>
 
-<p>Câu hỏi của bài là làm sao có một máy Linux thật ngay trên máy mình. Câu trả lời: WSL2 chạy một kernel Linux thật
-trong một máy ảo nhẹ, và Ubuntu đặt lên đó một bộ chương trình. Bash và vài lệnh tối thiểu đủ để điều khiển máy ấy:
-đi lại, đọc và sửa tệp, đưa output và lỗi tới đúng nơi bằng ba luồng chuẩn, chuyển hướng và pipe; signal giờ là
-signal thật. Docker Desktop dùng chính máy Linux đó để chạy daemon, nơi container được chạy, còn lệnh
-<code>docker</code> chỉ là client gọi tới daemon; và lệnh <code>docker run hello-world</code> đầu tiên đã chạy được.</p>
+<p>Câu hỏi của bài: làm sao có một máy Linux thật ngay trên máy mình. WSL2 chạy một kernel Linux thật trong một
+máy ảo nhẹ, Ubuntu đặt lên đó một bộ chương trình. Bash với vài lệnh tối thiểu đủ để điều khiển máy ấy: đi lại,
+đọc và sửa tệp, đưa output và lỗi tới đúng nơi bằng ba luồng chuẩn, chuyển hướng và pipe; signal giờ là signal
+thật. Docker Desktop dùng chính máy Linux đó để chạy daemon, nơi container được chạy, còn lệnh
+<code>docker</code> chỉ là client gọi tới daemon; <code>docker run hello-world</code> đầu tiên đã chạy được.</p>
 
 <div class="callout" id="cau-hoi-tiep">
   <span class="label">Câu hỏi cho bài sau</span>
