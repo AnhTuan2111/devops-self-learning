@@ -1,8 +1,8 @@
-# Ghi chú — Bài 02
+# Ghi chú Bài 02
 
-**Ngày học:** 21–24/09/2026, trong buổi học đối thoại khi bài này còn là phần chẩn đoán của Bài 00 gộp.
+**Ngày học:** 21-24/09/2026, trong buổi học đối thoại khi bài này còn là phần chẩn đoán của Bài 00 gộp.
 Tách thành bài riêng ngày 03/10/2026.
-**Hình thức:** đối thoại thầy–trò; lab đọc output theo câu hỏi "ai viết ra dòng này".
+**Hình thức:** đối thoại thầy trò; lab đọc output theo câu hỏi "ai viết ra dòng này".
 
 ---
 
@@ -22,11 +22,11 @@ curl: (28) Connection timed out after 5007 milliseconds
 
 ---
 
-## Lab 2–4 (thêm khi tách bài, chưa làm)
+## Lab 2-4 (thêm khi tách bài, chưa làm)
 
 Dán output thật của bạn vào đây.
 
-### Lab 2 — `curl -sS -i https://example.com/` và `.../khong-ton-tai`
+### Lab 2: `curl -sS -i https://example.com/` và `.../khong-ton-tai`
 
 ```
 (chưa có)
@@ -34,7 +34,7 @@ Dán output thật của bạn vào đây.
 
 Mã trạng thái thấy được: ____ và ____. Header `Server` ghi: ____.
 
-### Lab 3 — gõ sai tên, gọi sai port
+### Lab 3: gõ sai tên, gọi sai port
 
 ```
 (chưa có)
@@ -42,7 +42,7 @@ Mã trạng thái thấy được: ____ và ____. Header `Server` ghi: ____.
 
 Có dòng `HTTP/...` nào không? ____ Vì sao? ____
 
-### Lab 4 — `httpbin.org/status/502`
+### Lab 4: `httpbin.org/status/502`
 
 ```
 (chưa có)

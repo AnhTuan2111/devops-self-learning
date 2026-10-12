@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bài 02 — Chẩn đoán theo chặng</title>
+<title>Bài 02: Chẩn đoán theo chặng</title>
 <meta name="description" content="Kết nối tới được rồi mà trang vẫn báo lỗi: đọc mã trạng thái HTTP, nhận ra ai đã viết ra trang lỗi, phân biệt 502, 504 với 500, và dùng ba nguyên tắc để khoanh vùng chặng hỏng, kể cả khi không ai đụng vào hệ thống.">
-<link rel="stylesheet" href="../../assets/style.css?v=227913a6">
+<link rel="stylesheet" href="../../assets/style.css?v=31a8c472">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="02">
@@ -25,7 +25,7 @@
   ra nó, và chặng nào trên bản đồ đang hỏng?</p>
   <div class="meta">
     <span class="chip lime"><i class="stt stt-done" aria-hidden="true"></i>Đã xong</span>
-    <span class="chip">3–5 giờ học</span>
+    <span class="chip">3-5 giờ học</span>
     <span class="chip">Lab: Git Bash + curl</span>
   </div>
 </header>
@@ -419,7 +419,7 @@ biết vì sao thì phải đọc log của ứng dụng.</p>
 
 <div class="callout warn">
   <span class="label">Con số không phải là chữ ký</span>
-  <p>Chương trình HTTP nào cũng gửi được bất kỳ mã nào. Ứng dụng hoàn toàn có thể tự trả về 502. Hãy xác định tác giả
+  <p>Chương trình HTTP nào cũng gửi được bất kỳ mã nào. Ứng dụng hoàn toàn có thể tự trả về 502. Vì vậy phải xác định tác giả
   bằng chữ ký trước (giao diện trang, header <code>Server</code>, dòng ký tên), rồi mới dùng con số.
   <a href="#lab-chu-ky">Lab 4</a> có một ví dụ thật.</p>
 </div>
@@ -944,17 +944,17 @@ Server: gunicorn/19.9.0</code></pre>
 <h2 id="nguon">Nguồn đọc thêm</h2>
 
 <ol class="refs">
-  <li>RFC 9110 — <em>HTTP Semantics</em>, mục 15: ý nghĩa chuẩn của các mã trạng thái.
+  <li>RFC 9110, <em>HTTP Semantics</em>, mục 15: ý nghĩa chuẩn của các mã trạng thái.
   <a href="https://www.rfc-editor.org/rfc/rfc9110.html#name-status-codes">rfc-editor.org/rfc/rfc9110</a></li>
-  <li>MDN Web Docs — <em>HTTP response status codes</em>: tra nhanh từng mã.
+  <li>MDN Web Docs, <em>HTTP response status codes</em>: tra nhanh từng mã.
   <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">developer.mozilla.org</a></li>
-  <li>MDN Web Docs — header <em>Server</em>.
+  <li>MDN Web Docs, header <em>Server</em>.
   <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Server">developer.mozilla.org</a></li>
-  <li>Nginx — <em>ngx_http_proxy_module</em>: cách Nginx chuyển request tới phía sau và các thời gian chờ.
+  <li>Nginx, <em>ngx_http_proxy_module</em>: cách Nginx chuyển request tới phía sau và các thời gian chờ.
   <a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html">nginx.org/en/docs</a></li>
-  <li>Spring Boot — <em>Error Handling</em>: trang Whitelabel và cách Spring Boot viết trang lỗi.
+  <li>Spring Boot, <em>Error Handling</em>: trang Whitelabel và cách Spring Boot viết trang lỗi.
   <a href="https://docs.spring.io/spring-boot/reference/web/servlet.html#web.servlet.spring-mvc.error-handling">docs.spring.io</a></li>
-  <li>curl — trang hướng dẫn, gồm ý nghĩa các cờ <code>-i</code>, <code>-s</code>, <code>-S</code> và mã lỗi của curl.
+  <li>curl, trang hướng dẫn, gồm ý nghĩa các cờ <code>-i</code>, <code>-s</code>, <code>-S</code> và mã lỗi của curl.
   <a href="https://curl.se/docs/manpage.html">curl.se/docs/manpage.html</a></li>
 </ol>
 
@@ -963,13 +963,13 @@ Server: gunicorn/19.9.0</code></pre>
 xkcd dùng theo giấy phép phi thương mại ghi ở từng dòng; đã phóng to và chuyển sang đen trắng. Các ảnh còn lại là
 ảnh chụp màn hình do mình tự chụp, từ trình duyệt và từ phần mềm chạy thật.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b>Trang lỗi của trình duyệt Edge khi bị từ chối và khi tên miền không tồn tại — chụp màn hình Edge trên máy mình, 03/10/2026.</li>
-  <li><b>Ảnh 2</b>Trang lỗi 404, 502 và 504 của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy mình, 30/09/2026.</li>
-  <li><b>Ảnh 3</b>Trang lỗi Whitelabel 404 và 500 của Spring Boot — chụp màn hình một ứng dụng Spring Boot 4.1 mình dựng để thử, 03/10/2026; cắt bớt khoảng trắng bên dưới.</li>
-  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Reverse_proxy_h2g2bob.svg">Reverse proxy</a> — H2g2bob, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
-  <li><b>Ảnh 5</b><a href="https://xkcd.com/2200/">Unreachable State</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
-  <li><b>Ảnh 6</b><a href="https://xkcd.com/1739/">Fixing Problems</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
-  <li><b>Ảnh 7</b>Trang cảnh báo của Edge khi chứng chỉ hết hạn — chụp màn hình Edge trên máy mình tại <a href="https://expired.badssl.com/">expired.badssl.com</a>, 04/10/2026; cắt sát vùng nội dung.</li>
+  <li><b>Ảnh 1</b>Trang lỗi của trình duyệt Edge khi bị từ chối và khi tên miền không tồn tại, chụp màn hình Edge trên máy mình, 03/10/2026.</li>
+  <li><b>Ảnh 2</b>Trang lỗi 404, 502 và 504 của Nginx, chụp màn hình Nginx 1.30.5 chạy trên máy mình, 30/09/2026.</li>
+  <li><b>Ảnh 3</b>Trang lỗi Whitelabel 404 và 500 của Spring Boot, chụp màn hình một ứng dụng Spring Boot 4.1 mình dựng để thử, 03/10/2026; cắt bớt khoảng trắng bên dưới.</li>
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Reverse_proxy_h2g2bob.svg">Reverse proxy</a>, H2g2bob, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
+  <li><b>Ảnh 5</b><a href="https://xkcd.com/2200/">Unreachable State</a>, Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 6</b><a href="https://xkcd.com/1739/">Fixing Problems</a>, Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 7</b>Trang cảnh báo của Edge khi chứng chỉ hết hạn, chụp màn hình Edge trên máy mình tại <a href="https://expired.badssl.com/">expired.badssl.com</a>, 04/10/2026; cắt sát vùng nội dung.</li>
 </ol>
 
 </section>
@@ -988,11 +988,11 @@ xkcd dùng theo giấy phép phi thương mại ghi ở từng dòng; đã phón
 </nav>
 
 <footer class="page">
-  <p>Bài 02 · Module M0 — Nền tảng tối thiểu · DevOps Self-Learning</p>
+  <p>Bài 02 · Module M0: Nền tảng tối thiểu · DevOps Self-Learning</p>
 </footer>
 
 </div>
 
-<script src="../../assets/app.js?v=227913a6"></script>
+<script src="../../assets/app.js?v=31a8c472"></script>
 </body>
 </html>
