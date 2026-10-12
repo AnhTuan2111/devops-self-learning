@@ -26,6 +26,16 @@ sinh từ ảnh CC BY-SA được chia sẻ lại theo cùng giấy phép đó.
 | Ảnh 3 | `router-gia-dinh.webp` | [File:Linksys-Wireless-G-Router.jpg](https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg) | Evan-Amos | Public domain | tách nền bằng mô hình rembg (isnet-general-use) — `tach-nen.py --cach mo-hinh`; chuyển hai tông mực/mặt đọc (xám, kéo tương phản), đặt vào khung đệm màu mặt đọc |
 | Ảnh 4 | `xkcd-nanobots.webp` | [xkcd 865, Nanobots (2011)](https://xkcd.com/865/) | Randall Munroe | [CC BY-NC 2.5](https://creativecommons.org/licenses/by-nc/2.5/) | truyện tranh; phóng 2 lần, chuyển hai tông |
 
+## Phụ lục `mang-va-thiet-bi.html`
+
+| Ảnh | Tệp | Nguồn | Tác giả | Giấy phép | Đã chỉnh |
+|---|---|---|---|---|---|
+| Ảnh 1 | `switch-8-cong.webp` | [File:Lancom GS-1108-3486.jpg](https://commons.wikimedia.org/wiki/File:Lancom_GS-1108-3486.jpg) | Raimond Spekking | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | tách nền trắng bằng `tach-nen.py --cach nen-tron`; đặt vào khung 1200×560, chuyển hai tông (`hau-ky.py --fit 1200x560 --dem 0.04`) |
+| Ảnh 2 | `access-point.webp` | [File:Unifi AC Lite Access Point.jpg](https://commons.wikimedia.org/wiki/File:Unifi_AC_Lite_Access_Point.jpg) | ServerGuruBrisbane | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | ảnh chụp cảnh nên không tách nền; cắt còn access point và sợi cáp (bỏ trần nhà phía trên và tủ thiết bị phía dưới), chuyển hai tông |
+| Ảnh 3 | `router-mat-sau.webp` | [File:Asus WL-500G Premium rear.jpeg](https://commons.wikimedia.org/wiki/File:Asus_WL-500G_Premium_rear.jpeg) | Zuzu | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | cắt còn dải cổng ở mặt sau (bỏ nền gạch và cây ăng-ten đặt phía trước), chuyển hai tông, thu về rộng 1400; vẽ thêm khung đỏ quanh cổng WAN và khung lam quanh bốn cổng LAN, không vẽ chữ vào ảnh |
+
+Cả ba ảnh của phụ lục này được người tải lên ghi là "Own work" trên trang tệp của Commons (kiểm ngày 12/10/2026).
+
 Truyện tranh của xkcd (CC BY-NC 2.5) và turnoff.us (CC BY-NC-SA 4.0) chỉ được dùng phi thương mại; trang này
 không thu tiền nên dùng được, và phải giữ tên tác giả cùng link về trang gốc. Bản đã chuyển hai tông của truyện
 turnoff.us là ảnh phái sinh, chia sẻ lại theo đúng giấy phép CC BY-NC-SA 4.0.
