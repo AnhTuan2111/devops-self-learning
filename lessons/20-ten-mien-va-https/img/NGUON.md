@@ -9,4 +9,4 @@ chia sẻ lại theo cùng giấy phép đó.
 
 | Tệp | Nguồn | Tác giả | Giấy phép | Đã chỉnh |
 |---|---|---|---|---|
-| `img/crtsh-example-com.webp` | tự chụp | — | — | chụp màn hình crt.sh 30/09/2026, mật độ 2×; ẩn hai cột Common Name, Matching Identities và các dòng sau dòng thứ 7; khung đánh dấu thêm vào, không nhãn chữ |
+| `img/crtsh-example-com.webp` | tự chụp | mình | không cần | chụp màn hình crt.sh 30/09/2026, mật độ 2×; ẩn hai cột Common Name, Matching Identities và các dòng sau dòng thứ 7; khung đánh dấu thêm vào, không nhãn chữ |

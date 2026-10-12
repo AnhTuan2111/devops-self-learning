@@ -5,17 +5,17 @@
  *   node scripts/generate.mjs
  *
  * Tạo ra:
- *   index.html            — trang chủ: hero, băng chữ chạy, thẻ lộ trình, 3 tab
- *   README.md             — mục lục dạng markdown cho GitHub
+ *   index.html:             trang chủ: hero, băng chữ chạy, thẻ lộ trình, 3 tab
+ *   README.md:              mục lục dạng markdown cho GitHub
  *
  * Trang từng bài (lessons/NN-slug/) do tay viết khi học tới bài đó; script KHÔNG sinh trang khung.
  * Bài nào chưa có thư mục thì trang chủ và README chỉ ghi tên, không đặt link.
  *
  * Nguyên tắc: file này chỉ ĐỌC curriculum.json và progress.json.
  * Muốn sửa nội dung lộ trình thì sửa curriculum.json rồi chạy lại script.
- *   assets/readme/        — ảnh SVG cho README (xem scripts/readme-art.mjs)
+ *   assets/readme/:         ảnh SVG cho README (xem scripts/readme-art.mjs)
  *
- * Giao diện theo hệ "Bauhaus" trong assets/style.css — đọc bảng luật ở đầu file đó.
+ * Giao diện theo hệ "Bauhaus" trong assets/style.css, đọc bảng luật ở đầu file đó.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
@@ -31,7 +31,7 @@ const Bauhaus = createRequire(import.meta.url)('../assets/app.js');
 
 // Số phiên bản tài sản = hash nội dung style.css + app.js. Gắn vào đường dẫn (?v=…) để khi CSS/JS
 // đổi, trình duyệt buộc phải tải bản mới. Không có nó, GitHub Pages cho trình duyệt giữ bản cũ tới
-// 10 phút (Cache-Control: max-age=600) và HTML mới bị vẽ bằng CSS cũ — người học đã gặp 30/09/2026.
+// 10 phút (Cache-Control: max-age=600) và HTML mới bị vẽ bằng CSS cũ, người học đã gặp 30/09/2026.
 const ASSET_V = createHash('sha1')
   .update(readFileSync(new URL('../assets/style.css', import.meta.url)))
   .update(readFileSync(new URL('../assets/app.js', import.meta.url)))
@@ -83,17 +83,17 @@ const doneCount = allLessons.filter((l) => statusOf(l.id) === 'done').length;
 const current = allLessons.find((l) => statusOf(l.id) === 'doing') ?? allLessons.find((l) => statusOf(l.id) === 'todo');
 const pct = Math.round((doneCount / allLessons.length) * 100);
 // Thời lượng: giờ học THẬT cho trọn một bài (đọc trước, đối thoại, lab có bước tự gây lỗi, ghi
-// chép), ghi thành khoảng [ít, nhiều] trong curriculum.json — không phải thời gian giảng.
-const hrs = (l) => `${l.hours[0]}–${l.hours[1]} giờ`;
+// chép), ghi thành khoảng [ít, nhiều] trong curriculum.json, không phải thời gian giảng.
+const hrs = (l) => `${l.hours[0]}-${l.hours[1]} giờ`;
 const hoursLo = allLessons.reduce((s, l) => s + l.hours[0], 0);
 const hoursHi = allLessons.reduce((s, l) => s + l.hours[1], 0);
-const totalHours = Math.round((hoursLo + hoursHi) / 20) * 10;   // số giữa, làm tròn chục — cho ô số liệu
+const totalHours = Math.round((hoursLo + hoursHi) / 20) * 10;   // số giữa, làm tròn chục, cho ô số liệu
 const SITE = 'https://anhtuan2111.github.io/devops-self-learning/';
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const pad2 = (n) => String(n).padStart(2, '0');
-const shortTitle = (m) => m.title.split(' — ')[0];
+const shortTitle = (m) => m.title.split(': ')[0];
 // Ấn ký của bài ở đầu README của bài (ảnh do readme-art.mjs vẽ)
 const glyphImg = (id) => `<img src="../../assets/readme/glyph/${id}.svg" width="132" align="right" alt="Ấn ký của Bài ${id}">`;
 const viDate = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
@@ -133,7 +133,7 @@ const posterHtml = moduleStats
     const tiles = s.m.lessons
       .map((l) => {
         const st = statusOf(l.id);
-        const label = `Bài ${l.id} · ${l.title} — ${STATUS_TEXT[st]}`;
+        const label = `Bài ${l.id} · ${l.title}, ${STATUS_TEXT[st]}`;
         return hasPage(l)
           ? `<a class="ptile ${st}" href="${dirOf(l)}/" title="${esc(label)}" aria-label="${esc(label)}">${Bauhaus.tile(l.id)}</a>`
           : `<span class="ptile ${st}" title="${esc(label)}" aria-label="${esc(label)}">${Bauhaus.tile(l.id)}</span>`;
@@ -283,16 +283,16 @@ ${modulesHtml}
       <caption><b>Bảng 2</b> Tài liệu gốc của các công cụ trong lộ trình.</caption>
       <thead><tr><th>Chủ đề</th><th>Nguồn</th></tr></thead>
       <tbody>
-        <tr><td>Docker — Get started</td><td><a href="https://docs.docker.com/get-started/">docs.docker.com/get-started</a></td></tr>
+        <tr><td>Docker, Get started</td><td><a href="https://docs.docker.com/get-started/">docs.docker.com/get-started</a></td></tr>
         <tr><td>Dockerfile reference</td><td><a href="https://docs.docker.com/reference/dockerfile/">docs.docker.com/reference/dockerfile</a></td></tr>
         <tr><td>Docker Compose</td><td><a href="https://docs.docker.com/compose/">docs.docker.com/compose</a></td></tr>
         <tr><td>The Twelve-Factor App</td><td><a href="https://12factor.net/">12factor.net</a></td></tr>
-        <tr><td>Nginx — Beginner's Guide</td><td><a href="https://nginx.org/en/docs/beginners_guide.html">nginx.org/en/docs/beginners_guide.html</a></td></tr>
+        <tr><td>Nginx, Beginner's Guide</td><td><a href="https://nginx.org/en/docs/beginners_guide.html">nginx.org/en/docs/beginners_guide.html</a></td></tr>
         <tr><td>Let's Encrypt / Certbot</td><td><a href="https://certbot.eff.org/">certbot.eff.org</a></td></tr>
         <tr><td>GitLab CI/CD</td><td><a href="https://docs.gitlab.com/ci/">docs.gitlab.com/ci</a></td></tr>
         <tr><td>Cú pháp <code>.gitlab-ci.yml</code></td><td><a href="https://docs.gitlab.com/ci/yaml/">docs.gitlab.com/ci/yaml</a></td></tr>
         <tr><td>Kubernetes</td><td><a href="https://kubernetes.io/docs/home/">kubernetes.io/docs</a></td></tr>
-        <tr><td>k3d — cụm Kubernetes học trên máy</td><td><a href="https://k3d.io/">k3d.io</a></td></tr>
+        <tr><td>k3d, cụm Kubernetes học trên máy</td><td><a href="https://k3d.io/">k3d.io</a></td></tr>
         <tr><td>Helm</td><td><a href="https://helm.sh/docs/">helm.sh/docs</a></td></tr>
         <tr><td>cert-manager</td><td><a href="https://cert-manager.io/docs/">cert-manager.io/docs</a></td></tr>
         <tr><td>Rancher</td><td><a href="https://ranchermanager.docs.rancher.com/">ranchermanager.docs.rancher.com</a></td></tr>
@@ -356,7 +356,7 @@ const artCount = makeArt(ROOT, Bauhaus).write({
     done: doneCount,
     total: allLessons.length,
     modules: curriculum.modules.length,
-    hoursRange: `${hoursLo}–${hoursHi}`,
+    hoursRange: `${hoursLo}-${hoursHi}`,
     current: currentLesson && {
       id: currentLesson.id,
       status: statusOf(currentLesson.id),
@@ -373,7 +373,7 @@ const readmeModules = curriculum.modules
       .map((l) => {
         const st = statusOf(l.id);
         const d = dateOf(l.id);
-        const state = st === 'done' ? `xong ${viDate(d)}` : st === 'doing' ? 'đang học' : '—';
+        const state = st === 'done' ? `xong ${viDate(d)}` : st === 'doing' ? 'đang học' : 'chưa học';
         const name = hasPage(l) ? `[${l.title}](${SITE}${dirOf(l)}/)` : l.title;
         return `| \`${l.id}\` | ${name} | ${l.question} | ${hrs(l)} | ${state} |`;
       })
@@ -402,7 +402,7 @@ ${meta.what}
 |---|---|
 | **Công cụ** | ${meta.stack} |
 | **Môi trường** | ${meta.env} |
-| **Quy mô** | ${allLessons.length} bài · ${curriculum.modules.length} module · khoảng ${hoursLo}–${hoursHi} giờ học |
+| **Quy mô** | ${allLessons.length} bài · ${curriculum.modules.length} module · khoảng ${hoursLo}-${hoursHi} giờ học |
 | **Tiến độ** | ${doneCount}/${allLessons.length} bài đã xong |
 
 Mỗi bài đi từ một **vấn đề có thật**, tới **khái niệm**, rồi mới tới **công cụ**. Bài nào cũng có
@@ -428,16 +428,16 @@ ${readmeModules}
 
 | Chủ đề | Link |
 |---|---|
-| Docker — Get started | https://docs.docker.com/get-started/ |
-| Docker — Dockerfile reference | https://docs.docker.com/reference/dockerfile/ |
+| Docker, Get started | https://docs.docker.com/get-started/ |
+| Docker, Dockerfile reference | https://docs.docker.com/reference/dockerfile/ |
 | Docker Compose | https://docs.docker.com/compose/ |
 | The Twelve-Factor App | https://12factor.net/ |
-| Nginx — Beginner's Guide | https://nginx.org/en/docs/beginners_guide.html |
+| Nginx, Beginner's Guide | https://nginx.org/en/docs/beginners_guide.html |
 | Let's Encrypt / Certbot | https://certbot.eff.org/ |
 | GitLab CI/CD | https://docs.gitlab.com/ci/ |
 | Cú pháp \`.gitlab-ci.yml\` | https://docs.gitlab.com/ci/yaml/ |
 | Kubernetes | https://kubernetes.io/docs/home/ |
-| k3d — cụm Kubernetes học trên máy | https://k3d.io/ |
+| k3d, cụm Kubernetes học trên máy | https://k3d.io/ |
 | Helm | https://helm.sh/docs/ |
 | cert-manager | https://cert-manager.io/docs/ |
 | Rancher | https://ranchermanager.docs.rancher.com/ |
@@ -458,7 +458,7 @@ writeFileSync(join(ROOT, 'README.md'), readme, 'utf8');
 /* ------------------------------------------------------------------ */
 
 // .nojekyll: chặn GitHub Pages chạy Jekyll. Không có file này, Jekyll sẽ render
-// README.md thành HTML trần và trỏ CSS vào assets/css/style.css của theme —
+// README.md thành HTML trần và trỏ CSS vào assets/css/style.css của theme,
 // đè lên thư mục assets/ của chính ta.
 writeFileSync(join(ROOT, '.nojekyll'), '');
 

@@ -1,24 +1,24 @@
 /* =========================================================================
-   DevOps Self-Learning — hệ thiết kế "Bauhaus"
+   DevOps Self-Learning,  hệ thiết kế "Bauhaus"
    Dùng chung cho index.html và mọi trang bài học (index + trang phụ).
    Một kiểu duy nhất: không chế độ tối, không bảng màu thay thế.
    =========================================================================
 
-   LUẬT CỦA HỆ (rút từ nguồn — xem CLAUDE.md § Hệ thiết kế):
+   LUẬT CỦA HỆ (rút từ nguồn,  xem CLAUDE.md § Hệ thiết kế):
      · PHẲNG. Không bóng đổ, không gradient trang trí, không hiệu ứng chiều sâu.
-       Các phần tách nhau bằng KÍCH THƯỚC, MÀU và THANH KẺ ĐEN — không bằng bóng.
+       Các phần tách nhau bằng KÍCH THƯỚC, MÀU và THANH KẺ ĐEN,  không bằng bóng.
      · BA MÀU CƠ BẢN + ĐEN + TRẮNG. Đỏ, vàng, lam; nền là giấy ngà, chữ là đen.
      · HÌNH HỌC CƠ BẢN mang CHỨC NĂNG, không trang trí: tròn, vuông, tam giác.
-     · CHỮ THƯỜNG cho chữ hiển thị (h1, h2, tab, nhãn) — theo chủ trương của
+     · CHỮ THƯỜNG cho chữ hiển thị (h1, h2, tab, nhãn),  theo chủ trương của
        Herbert Bayer. Thân bài viết hoa/thường bình thường để đọc dài.
      · BỐ CỤC BẤT ĐỐI XỨNG trên lưới: cột tab hẹp bên trái, cột đọc rộng bên phải.
      · Không gì chuyển động nếu chuyển động không mang thông tin.
 
-   HÌNH + MÀU = NGHĨA (theo bảng tương ứng của Kandinsky: vàng–tam giác,
-   đỏ–vuông, lam–tròn). Mỗi loại khối chú thích có MỘT cặp cố định:
+   HÌNH + MÀU = NGHĨA (theo bảng tương ứng của Kandinsky: vàng với tam giác,
+   đỏ với vuông, lam với tròn). Mỗi loại khối chú thích có MỘT cặp cố định:
      tam giác vàng    cảnh báo · vấn đề · thói quen phải bỏ   .callout.warn
                 (tam giác vàng cũng là biển cảnh báo giao thông)
-     vuông đỏ         định nghĩa — viên gạch nền móng          .callout.define
+     vuông đỏ         định nghĩa,  viên gạch nền móng          .callout.define
      tròn lam         nối với kiến thức cũ · mẹo · ghi chú      .callout
      khối đen         ghim lại · nguyên tắc (khối đảo nền đen)  .callout.ok
      vòng rỗng        đào sâu học thuật · lịch sử · chuẩn RFC  .callout.deep
@@ -26,17 +26,17 @@
    Hình luôn đi kèm chữ, nên người mù màu vẫn phân biệt được.
 
    PHÔNG: cả ba có subset vietnamese (kiểm tra trên Google Fonts 28/09/2026).
-     League Spartan — hiển thị: sans HÌNH HỌC, dựng theo tinh thần Futura.
+     League Spartan,  hiển thị: sans HÌNH HỌC, dựng theo tinh thần Futura.
                       Lưu ý: Futura (1927) chỉ LẤY CẢM HỨNG từ Bauhaus; chính Bauhaus
-                      dùng các grotesk có sẵn. Không dùng font "ITC Bauhaus" — đó là
+                      dùng các grotesk có sẵn. Không dùng font "ITC Bauhaus",  đó là
                       phỏng theo, không phải thật.
-     Be Vietnam Pro — thân bài: grotesk TRUNG TÍNH, vẽ riêng cho dấu tiếng Việt.
+     Be Vietnam Pro,  thân bài: grotesk TRUNG TÍNH, vẽ riêng cho dấu tiếng Việt.
                       "Tính dễ đọc không bao giờ được hy sinh cho một thẩm mỹ định sẵn"
                       (Moholy-Nagy, 1923).
-     JetBrains Mono — code, sơ đồ ASCII. TỰ HOST bản ĐẦY ĐỦ (assets/fonts/, v2.304, OFL),
+     JetBrains Mono,  code, sơ đồ ASCII. TỰ HOST bản ĐẦY ĐỦ (assets/fonts/, v2.304, OFL),
                       KHÔNG lấy từ Google Fonts: mọi subset của Google đều thiếu ký tự
                       kẻ khung và mũi tên, nên trình duyệt phải mượn một font monospace
-                      khác có ô chữ hẹp hơn — dòng toàn nét kẻ ngắn lại, khung sơ đồ lệch.
+                      khác có ô chữ hẹp hơn,  dòng toàn nét kẻ ngắn lại, khung sơ đồ lệch.
                       Phát hiện 30/09/2026 khi người học chỉ ra khung Hình 2 Bài 01 bị vỡ.
    ========================================================================= */
 
@@ -49,7 +49,7 @@
   color-scheme: light;
 
   /* ---------- Nền ---------- */
-  --paper:   #f3eee4;   /* giấy ngà — nền trang */
+  --paper:   #f3eee4;   /* giấy ngà,  nền trang */
   --surface: #fffdf8;   /* mặt đọc */
   --sunk:    #ebe5d9;   /* nền code nội dòng */
   --line:    #d6cebf;   /* kẻ mảnh trong lòng bảng */
@@ -86,7 +86,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html, body { overflow-x: clip; }   /* clip, không phải hidden — hidden phá sticky */
+html, body { overflow-x: clip; }   /* clip, không phải hidden,  hidden phá sticky */
 html { -webkit-text-size-adjust: 100%; }
 
 body {
@@ -144,7 +144,7 @@ h4 { font-weight: 700; font-size: 17px; margin: 24px 0 6px; }
 h1 code, h2 code, h3 code, .ph-t code { text-transform: none; font-size: .78em; }
 
 /* =========================================================================
-   Topbar — giấy, thanh kẻ đen dày, logo ba hình
+   Topbar,  giấy, thanh kẻ đen dày, logo ba hình
    ========================================================================= */
 
 .topbar {
@@ -175,10 +175,10 @@ h1 code, h2 code, h3 code, .ph-t code { text-transform: none; font-size: .78em; 
   padding: 2px 0; border-bottom: var(--rule-s) solid transparent;
 }
 .topbar a.nav:hover { background: none; color: var(--ink); border-bottom-color: var(--red); }
-.theme-btn, .palette-btn { display: none; }   /* nút của hệ cũ — hệ này chỉ có một kiểu */
+.theme-btn, .palette-btn { display: none; }   /* nút của hệ cũ,  hệ này chỉ có một kiểu */
 
 /* =========================================================================
-   Đầu trang bài — bố cục bất đối xứng: chữ bên trái, ô số bài bên phải
+   Đầu trang bài,  bố cục bất đối xứng: chữ bên trái, ô số bài bên phải
    ========================================================================= */
 
 .hero, header.page {
@@ -205,7 +205,7 @@ h1 code, h2 code, h3 code, .ph-t code { text-transform: none; font-size: .78em; 
 .hero-mark .gn { font-family: var(--f-display); font-weight: 900; font-size: 124px; fill: #fff; letter-spacing: -2px; }
 
 /* =========================================================================
-   ICON — luôn VẼ (mặt nạ SVG tô bằng currentColor hoặc hình CSS).
+   ICON,  luôn VẼ (mặt nạ SVG tô bằng currentColor hoặc hình CSS).
    Cấm dùng ký tự bàn phím làm icon: mũi tên, chấm, tam giác, dấu tick, emoji,
    số khoanh tròn. Ngoại lệ duy nhất: nét vẽ bên trong sơ đồ ASCII <pre>.
    ========================================================================= */
@@ -243,14 +243,14 @@ td .ic-yes, td .ic-no { margin-right: 4px; }
 th .stg { background: #fff; color: var(--ink); }
 .callout.ok .stg { background: var(--yellow); color: var(--ink); }
 
-/* Màu cho SVG sinh ra — viết bằng class để CSS đổi được trạng thái */
+/* Màu cho SVG sinh ra,  viết bằng class để CSS đổi được trạng thái */
 .b-paper { fill: var(--surface); } .b-ink { fill: var(--ink); } .b-red { fill: var(--red); } .b-blue { fill: var(--blue); } .b-yellow { fill: var(--yellow); }
 .f-paper { fill: var(--surface); } .f-ink { fill: var(--ink); } .f-red { fill: var(--red); } .f-blue { fill: var(--blue); } .f-yellow { fill: var(--yellow); }
 .r { fill: none; }
 .r-paper { stroke: var(--surface); } .r-ink { stroke: var(--ink); } .r-red { stroke: var(--red); } .r-blue { stroke: var(--blue); } .r-yellow { stroke: var(--yellow); }
 
 /* =========================================================================
-   Họ hình mang số — .shp .s-0 … .s-8
+   Họ hình mang số,  .shp .s-0 … .s-8
    Tab và đầu tab xoay vòng 6 hình đầu; mỗi module một hình riêng (có sẵn tới chín hình),
    lặp lại ở mọi nơi nhắc tới module đó (lộ trình, đầu module).
    Kích thước do nơi dùng quyết định; ở đây chỉ có HÌNH và MÀU.
@@ -298,7 +298,7 @@ th .stg { background: #fff; color: var(--ink); }
 .corner-nav .cn-t { display: none; max-width: 150px; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
 
 /* =========================================================================
-   Chip — chữ nhật phẳng, chữ thường
+   Chip,  chữ nhật phẳng, chữ thường
    ========================================================================= */
 
 .chip, .pill {
@@ -323,7 +323,7 @@ a.chip:hover, .pill:has(a):hover { background: var(--yellow); border-color: var(
 .chip.ink, .chip.violet             { background: var(--ink); border-color: var(--ink); color: #fff; }
 
 /* =========================================================================
-   TAB — chỉ bật khi JS đã dựng xong (.is-ready). Không JS thì các phần
+   TAB,  chỉ bật khi JS đã dựng xong (.is-ready). Không JS thì các phần
    hiện nối tiếp như một trang dài.
    Điện thoại: dải tab ngang dính trên cùng. Máy tính: cột tab dọc bên trái.
    ========================================================================= */
@@ -382,7 +382,7 @@ section.tab > h2:first-of-type { margin-top: 30px; }
 }
 
 /* =========================================================================
-   Nút lớn — khối phẳng; nút "tiếp" là lam (hành động chính), rê chuột thì vàng
+   Nút lớn,  khối phẳng; nút "tiếp" là lam (hành động chính), rê chuột thì vàng
    ========================================================================= */
 
 .prevnext { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 10px 0 0; }
@@ -416,9 +416,9 @@ section.tab > h2:first-of-type { margin-top: 30px; }
 .prevnext .next, .panel-foot .next { text-align: right; }
 
 /* =========================================================================
-   Khối chú thích — THANH KẺ DÀY Ở LỀ TRÁI, như Moholy-Nagy dùng trong
+   Khối chú thích,  THANH KẺ DÀY Ở LỀ TRÁI, như Moholy-Nagy dùng trong
    "Malerei, Photographie, Film" (1925) cho đoạn cần chú ý. Màu bão hoà chỉ
-   chiếm thanh kẻ và ô nhãn nhỏ — "tương phản diện tích" của Itten: một mảng
+   chiếm thanh kẻ và ô nhãn nhỏ,  "tương phản diện tích" của Itten: một mảng
    màu mạnh nhỏ cân với một mảng lớn trung tính.
    ========================================================================= */
 
@@ -437,7 +437,7 @@ section.tab > h2:first-of-type { margin-top: 30px; }
   font-family: var(--f-display); font-weight: 700; font-size: 15px; line-height: 1.35;
   text-transform: lowercase;
 }
-.callout > .label::before {               /* hình của loại khối — mặc định là tròn */
+.callout > .label::before {               /* hình của loại khối,  mặc định là tròn */
   content: ""; flex: none; width: 12px; height: 12px;
   background: currentColor; border-radius: 50%;
 }
@@ -451,7 +451,7 @@ section.tab > h2:first-of-type { margin-top: 30px; }
 .callout.warn { --c: var(--yellow); --c-ink: var(--ink); }
 .callout.warn > .label::before { border-radius: 0; width: 14px; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
 
-/* Ghim lại: khối đảo nền đen — mảng lớn tạo "nhịp" (tempo) giữa các đoạn chữ dày */
+/* Ghim lại: khối đảo nền đen,  mảng lớn tạo "nhịp" (tempo) giữa các đoạn chữ dày */
 .callout.ok { --c: var(--yellow); --c-ink: var(--ink); background: var(--ink); color: #f3eee4; }
 .callout.ok > .label::before { border-radius: 0; }
 .callout.ok strong, .callout.ok b { color: #fff; }
@@ -463,13 +463,13 @@ section.tab > h2:first-of-type { margin-top: 30px; }
 .callout.ok figcaption { color: #c9c1b3; }
 .callout.ok figcaption b { background: var(--yellow); color: var(--ink); }
 
-/* Đào sâu: như chú thích cuối trang — thanh kẻ mảnh, chữ nhỏ hơn, dấu chấm rỗng
+/* Đào sâu: như chú thích cuối trang,  thanh kẻ mảnh, chữ nhỏ hơn, dấu chấm rỗng
    (Moholy-Nagy đánh dấu chú thích bằng chấm tròn nhỏ) */
 .callout.deep { --c: var(--ink); background: var(--surface); border-left-width: 4px; font-size: .95em; }
 .callout.deep > .label { background: transparent; color: var(--ink); padding-left: 0; }
 .callout.deep > .label::before { background: transparent; border: 3px solid var(--ink); width: 13px; height: 13px; }
 
-/* Tình huống: không thanh kẻ — một chấm đỏ lớn, chữ to hơn, như mở màn */
+/* Tình huống: không thanh kẻ,  một chấm đỏ lớn, chữ to hơn, như mở màn */
 .callout.story {
   background: var(--surface);
   display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 18px;
@@ -500,7 +500,7 @@ dl.terms dt small {
 dl.terms dd { margin: 2px 0 0; padding: 0 0 12px; color: var(--ink-2); }
 
 /* =========================================================================
-   Code — lệnh là khối đen phẳng, sơ đồ là giấy kẻ lưới
+   Code,  lệnh là khối đen phẳng, sơ đồ là giấy kẻ lưới
    ========================================================================= */
 
 code, kbd {
@@ -554,8 +554,8 @@ figure.fig figcaption b, table caption b {
 }
 
 /* =========================================================================
-   ẢNH MINH HOẠ — đánh số riêng "Ảnh N" (sơ đồ là "Hình N").
-   Ảnh chụp thật đã hậu kỳ hai tông mực/mặt đọc (nhiếp ảnh đen trắng kiểu Bauhaus) — tông sáng
+   ẢNH MINH HOẠ,  đánh số riêng "Ảnh N" (sơ đồ là "Hình N").
+   Ảnh chụp thật đã hậu kỳ hai tông mực/mặt đọc (nhiếp ảnh đen trắng kiểu Bauhaus),  tông sáng
    trùng --surface của khung tab, nên nền ảnh vật thể (đã tách nền) biến mất vào trang;
    ảnh chụp màn hình giữ màu. Nguồn ảnh gom ở mục "Nguồn ảnh" cuối bài, không đặt dưới ảnh.
    Không bóng, không bo góc: một thanh kẻ đen phía trên là đủ để tách ảnh khỏi chữ.
@@ -580,7 +580,7 @@ ol.photo-credits li b { font-family: var(--f-display); font-weight: 700; text-tr
 
 /* =========================================================================
    NHỊP ĐỌC KIỂU SÁCH / TẠP CHÍ
-   Chữ, bảng, sơ đồ, khối chú thích dùng TRỌN cột đọc — cả trang chỉ có một mép phải.
+   Chữ, bảng, sơ đồ, khối chú thích dùng TRỌN cột đọc,  cả trang chỉ có một mép phải.
    Chỉ ẢNH là không chiếm hết bề ngang (xem "Ảnh trên lưới 2/3" bên dưới).
    ========================================================================= */
 
@@ -652,7 +652,7 @@ blockquote.src ul, blockquote.src ol { margin: .4em 0; color: var(--ink-2); }
   figure.photo.wide { display: block; }
   figure.photo.wide > figcaption { margin-top: 10px; padding-top: 0; border-top: 0; }
 }
-/* Ảnh bên lề: chỉ ở màn rộng mới lệch phải cho chữ chảy quanh — bố cục bất đối xứng */
+/* Ảnh bên lề: chỉ ở màn rộng mới lệch phải cho chữ chảy quanh,  bố cục bất đối xứng */
 @media (min-width: 64rem) {
   figure.photo.side { display: block; float: right; width: 40%; margin: 6px 0 22px 30px; }
   figure.photo.side.narrow { width: 32%; }
@@ -661,7 +661,7 @@ blockquote.src ul, blockquote.src ol { margin: .4em 0; color: var(--ink-2); }
 }
 
 /* =========================================================================
-   Bảng — đầu bảng đen, lòng bảng kẻ mảnh, không khung ngoài
+   Bảng,  đầu bảng đen, lòng bảng kẻ mảnh, không khung ngoài
    ========================================================================= */
 
 .table-scroll { overflow-x: auto; margin: 24px 0 28px; background: var(--surface); }
@@ -776,7 +776,7 @@ footer.page code { font-size: 12px; }
 .hh-stats .st-t b { font-size: 32px; }
 .hh-stats .st-t small { font-size: 12px; }
 
-/* Dải công cụ — thông tin tĩnh, không chạy */
+/* Dải công cụ,  thông tin tĩnh, không chạy */
 .toolstrip {
   display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 20px;
   margin: 0; padding: 14px 0;
@@ -785,7 +785,7 @@ footer.page code { font-size: 12px; }
 }
 .toolstrip .lbl { font-weight: 800; color: var(--red); }
 
-/* Lộ trình — BỨC TRANH TỰ TÔ MÀU: mỗi hàng một module, mỗi ô một bài.
+/* Lộ trình,  BỨC TRANH TỰ TÔ MÀU: mỗi hàng một module, mỗi ô một bài.
    Ô là mảnh đầu tiên của ấn ký bài đó. Chưa học: chỉ còn nét viền. Học xong: tô màu.
    Rê chuột vào ô chưa học để xem trước màu của nó. */
 .roadmap { margin: 36px 0 0; }
@@ -799,7 +799,7 @@ footer.page code { font-size: 12px; }
 .roadmap-count .lbl { font-family: var(--f-display); font-weight: 600; font-size: 16px; text-transform: lowercase; margin: 6px 0 14px; }
 .poster {
   /* 11 = số bài của module dài nhất (Docker): mọi module nằm gọn trên một hàng.
-     generate.mjs báo nếu lộ trình có module dài hơn — khi đó sửa số 11 ở đây và bên dưới. */
+     generate.mjs báo nếu lộ trình có module dài hơn,  khi đó sửa số 11 ở đây và bên dưới. */
   --tile: min(46px, calc((100vw - 32px) / 11));
   list-style: none; margin: 0; padding: 18px 0 20px;
 }
@@ -867,7 +867,7 @@ div.lesson:hover { background: none; }   /* bài chưa có trang: không phải 
 .lesson .status { grid-column: 2; justify-self: start; }
 
 /* =========================================================================
-   Điểm ngắt — mobile-first, chỉ dùng min-width
+   Điểm ngắt,  mobile-first, chỉ dùng min-width
    ========================================================================= */
 
 @media (min-width: 40rem) {
@@ -886,7 +886,7 @@ div.lesson:hover { background: none; }   /* bài chưa có trang: không phải 
   .callout.story { padding: 22px 24px; }
 }
 
-/* Máy tính: cột tab dọc bên trái, cột đọc bên phải — bố cục bất đối xứng */
+/* Máy tính: cột tab dọc bên trái, cột đọc bên phải,  bố cục bất đối xứng */
 @media (min-width: 64rem) {
   .tabs.is-ready { display: grid; grid-template-columns: 250px minmax(0, 1fr); column-gap: 44px; align-items: start; }
   .tabs.is-ready > .tabbar {

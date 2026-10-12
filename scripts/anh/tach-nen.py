@@ -1,11 +1,11 @@
 """
-Tách vật thể khỏi nền cũ của ảnh chụp sản phẩm — bước 2a của quy trình ảnh minh hoạ, chạy TRƯỚC hau-ky.py.
+Tách vật thể khỏi nền cũ của ảnh chụp sản phẩm, bước 2a của quy trình ảnh minh hoạ, chạy TRƯỚC hau-ky.py.
 
   python scripts/anh/tach-nen.py VAO.jpg RA.png --cach mo-hinh|nen-tron|phong|mau [--hue 160-215] [--cat-de]
   python scripts/anh/hau-ky.py RA.png BAI.webp --fit 800x600        # rồi chuyển hai tông như mọi ảnh khác
 
 Ra: RA.png trong suốt, cắt sát vật thể, kèm RA-mask.png để soát. hau-ky.py đặt nó lên nền trắng, nên sau
-khi chuyển hai tông, chỗ từng là nền cũ thành đúng màu mặt đọc (#fffdf8) — hết cảnh "ô nền" lạc trên trang.
+khi chuyển hai tông, chỗ từng là nền cũ thành đúng màu mặt đọc (#fffdf8), hết cảnh "ô nền" lạc trên trang.
 
 Bốn cách, chọn theo ảnh. Cách nào cũng phải XEM TẬN MẮT mặt nạ trước khi dùng:
   mo-hinh   Mô hình rembg (isnet-general-use), chạy cục bộ. Hợp: một vật thể rõ trên nền studio (SSD, card

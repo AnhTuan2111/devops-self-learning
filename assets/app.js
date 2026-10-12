@@ -1,5 +1,5 @@
-/* DevOps Self-Learning — hành vi dùng chung cho mọi trang (hệ "Bauhaus", một kiểu duy nhất).
-   0. Bộ sinh hình Bauhaus — hàm thuần, không đụng DOM. scripts/generate.mjs cũng require
+/* DevOps Self-Learning, hành vi dùng chung cho mọi trang (hệ "Bauhaus", một kiểu duy nhất).
+   0. Bộ sinh hình Bauhaus, hàm thuần, không đụng DOM. scripts/generate.mjs cũng require
       chính file này, nên ô của một bài ở trang chủ và ấn ký ở đầu trang bài luôn khớp nhau.
    1. Ấn ký của bài ở đầu trang (lưới 4×4 ô hình học, sinh cố định từ số bài)
    2. Nút bài trước / bài sau ở góc phải topbar
@@ -7,17 +7,17 @@
    4. Danh sách "Tự kiểm tra" bấm được, nhớ theo trang, có thước đếm
    5. Nút chép lệnh trên mọi <pre> không phải sơ đồ
    Không có JS thì trang vẫn đọc được trọn vẹn: mọi tab hiện nối tiếp nhau.
-   Mọi truy cập localStorage đều bọc try/catch — chế độ ẩn danh có thể chặn nó. */
+   Mọi truy cập localStorage đều bọc try/catch, chế độ ẩn danh có thể chặn nó. */
 
 (function (G) {
   // ---- 0. Bộ sinh hình ----
-  // Mỗi ô vuông = một nền + một hình cơ bản đã xoay. Vốn hình mở rộng từ tròn–vuông–tam giác
-  // sang nửa tròn, phần tư tròn, vòng khuyên, vòm, thoi, sọc, lá — đều dựng từ cung và đoạn thẳng.
+  // Mỗi ô vuông = một nền + một hình cơ bản đã xoay. Vốn hình mở rộng từ tròn, vuông, tam giác
+  // sang nửa tròn, phần tư tròn, vòng khuyên, vòm, thoi, sọc, lá, đều dựng từ cung và đoạn thẳng.
   // Màu viết bằng CLASS (f-red, b-ink…), không viết mã màu, để CSS đổi được trạng thái (ô chưa học
   // chỉ còn nét viền) mà không phải sinh lại SVG.
   var Bauhaus = (function () {
     var KINDS = ['circle', 'dot', 'ring', 'half', 'quarter', 'tri', 'bars', 'arch', 'diamond', 'square', 'leaf'];
-    var BG = ['paper', 'paper', 'paper', 'ink', 'red', 'blue', 'yellow'];   // giấy chiếm ưu thế — Itten
+    var BG = ['paper', 'paper', 'paper', 'ink', 'red', 'blue', 'yellow'];   // giấy chiếm ưu thế, Itten
     var COLS = ['ink', 'red', 'blue', 'yellow', 'paper'];
 
     function hash(s) {

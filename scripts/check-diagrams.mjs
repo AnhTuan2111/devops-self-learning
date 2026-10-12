@@ -6,7 +6,7 @@
  *   node scripts/check-diagrams.mjs --fix    # tự bù/bớt dấu cách trước cạnh bị lệch
  *
  * Giả định mọi ký tự trong sơ đồ rộng đúng 1 ô. Điều đó chỉ đúng khi font code là JetBrains
- * Mono bản ĐẦY ĐỦ tự host (assets/fonts/) và sơ đồ KHÔNG dùng ký tự font đó không có — nhất là
+ * Mono bản ĐẦY ĐỦ tự host (assets/fonts/) và sơ đồ KHÔNG dùng ký tự font đó không có, nhất là
  * số khoanh tròn: font phải mượn chỗ khác để vẽ chúng, ô chữ rộng khác, khung lệch.
  */
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
@@ -43,7 +43,7 @@ function checkBlock(text, where) {
         if (VERT.test(chars[b.r - dlt] || '')) found = b.r - dlt;
         else if (VERT.test(chars[b.r + dlt] || '')) found = b.r + dlt;
       }
-      if (found < 0) continue;                       // dòng đi xuyên khung (mũi tên nối) — bỏ qua
+      if (found < 0) continue;                       // dòng đi xuyên khung (mũi tên nối), bỏ qua
       const k = b.r - found;                         // >0: cạnh bị lệch trái, cần thêm dấu cách
       report.push(`${where} dòng ${i + 1}: cạnh phải ở cột ${found}, đúng phải là ${b.r} (${k > 0 ? 'thiếu' : 'thừa'} ${Math.abs(k)})`);
       if (k > 0) chars.splice(found, 0, ...' '.repeat(k));

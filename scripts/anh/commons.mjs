@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Tìm và tải ảnh từ Wikimedia Commons KÈM giấy phép — bước 1 của quy trình ảnh minh hoạ
+ * Tìm và tải ảnh từ Wikimedia Commons KÈM giấy phép, bước 1 của quy trình ảnh minh hoạ
  * (xem CLAUDE.md § Ảnh minh hoạ).
  *
  *   node scripts/anh/commons.mjs tim "server rack data center" [số-kết-quả]
@@ -8,7 +8,7 @@
  *
  * "lay" ghi <tên-ra>.<đuôi> và <tên-ra>.json (title, page, license, licenseUrl, artist…).
  * Đọc giấy phép TRƯỚC khi dùng: chỉ nhận CC0, public domain, CC BY, CC BY-SA.
- * Tải về thư mục nháp, không tải thẳng vào repo — chỉ bản đã hậu kỳ mới vào lessons/NN/img/.
+ * Tải về thư mục nháp, không tải thẳng vào repo, chỉ bản đã hậu kỳ mới vào lessons/NN/img/.
  */
 import { writeFileSync } from 'node:fs';
 

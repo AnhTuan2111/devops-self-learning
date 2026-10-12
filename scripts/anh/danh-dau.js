@@ -1,12 +1,12 @@
 /**
- * Đánh dấu tài liệu thật trước khi chụp màn hình — bước 2 của quy trình ảnh minh hoạ.
+ * Đánh dấu tài liệu thật trước khi chụp màn hình, bước 2 của quy trình ảnh minh hoạ.
  * Nạp vào trang bằng Playwright: await page.addScriptTag({ path: 'scripts/anh/danh-dau.js' }),
  * rồi: const r = await page.evaluate(() => window.__annotate({ marks, clipFrom, clipTo }));
  *      await page.screenshot({ path, clip: r.clip, fullPage: true });
  *   marks: [{ find, label?, color?: red|blue|yellow, occurrence?, leftOf?, spanTo?, spanOcc? }]
  *   clipFrom / clipTo: chuỗi mở đầu / kết thúc vùng cần chụp. Mặc định (spanClip) vùng chụp bao trọn
- *   MỌI dòng ở giữa — dòng giữa thường dài hơn dòng đầu/cuối, chỉ lấy hai dòng biên sẽ cắt mất mép phải.
- *   label: KHÔNG dùng cho ảnh trong bài — ảnh hiện ở 2/3 cột nên chữ vẽ trong ảnh không đọc được;
+ *   MỌI dòng ở giữa, dòng giữa thường dài hơn dòng đầu/cuối, chỉ lấy hai dòng biên sẽ cắt mất mép phải.
+ *   label: KHÔNG dùng cho ảnh trong bài, ảnh hiện ở 2/3 cột nên chữ vẽ trong ảnh không đọc được;
  *   nói khung nào là gì bằng ô màu .key trong chú thích (xem CLAUDE.md, mục Ảnh minh hoạ).
  *   Chụp với deviceScaleFactor: 2 để chữ trong ảnh còn nét.
  * Khung màu đỏ/lam/vàng, đúng màu của hệ Bauhaus.

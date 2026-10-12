@@ -12,17 +12,17 @@
     "time": {
       "unit": "Giờ học thật cho trọn một bài, không phải thời gian giảng",
       "parts": [
-        ["Đọc trước index.html và README.md", "1–2 giờ"],
-        ["Học đối thoại: trả lời câu hỏi, sửa chỗ hiểu sai", "1,5–3 giờ"],
-        ["Lab, kể cả bước tự gây lỗi rồi tự sửa", "1–3 giờ"],
-        ["Ghi notes.md và bồi tài liệu lượt hai", "0,5–1 giờ"]
+        ["Đọc trước index.html và README.md", "1-2 giờ"],
+        ["Học đối thoại: trả lời câu hỏi, sửa chỗ hiểu sai", "1,5-3 giờ"],
+        ["Lab, kể cả bước tự gây lỗi rồi tự sửa", "1-3 giờ"],
+        ["Ghi notes.md và bồi tài liệu lượt hai", "0,5-1 giờ"]
       ]
     }
   },
   "modules": [
     {
       "id": "M0",
-      "title": "Nền tảng tối thiểu — Request, process và phòng lab",
+      "title": "Nền tảng tối thiểu: Request, process và phòng lab",
       "why": "Vừa đủ nền để Docker có nghĩa: một request đi qua những đâu, process là gì, và một máy Linux để thực hành.",
       "lessons": [
         {
@@ -84,7 +84,7 @@
           "question": "Server thật chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình, để thấy process, signal và lỗi đúng như trên server?",
           "answer": "WSL2 chạy một kernel Linux thật trong một máy ảo nhẹ; bash và vài lệnh tối thiểu đủ để điều khiển nó. Docker Desktop dùng chính máy Linux đó để chạy container, và lệnh docker run hello-world đầu tiên đã chạy được.",
           "goal": "Có một máy Linux thật ngay trong Windows, Docker chạy được trong đó, và đủ vài lệnh shell để đi lại, đọc và sửa tệp.",
-          "concepts": ["WSL2: một máy ảo Linux nhẹ chạy trong Windows", "Máy ảo (VM) là gì — để bài sau so với container", "Terminal, shell, bash; lệnh, tham số, PATH", "Đi lại và đọc tệp: pwd, ls, cd, cat, less, nano", "Pipe | và chuyển hướng: ba luồng vào/ra chuẩn (0 stdin, 1 stdout, 2 stderr), >, 2>/dev/null — giải nghĩa lệnh openssl … 2>/dev/null ở Bài 00", "Process và signal thật trên Linux: ps, kill, kill -9 (thấy lại Bài 03)", "Docker Desktop với WSL backend: docker version, docker run hello-world"],
+          "concepts": ["WSL2: một máy ảo Linux nhẹ chạy trong Windows", "Máy ảo (VM) là gì, để bài sau so với container", "Terminal, shell, bash; lệnh, tham số, PATH", "Đi lại và đọc tệp: pwd, ls, cd, cat, less, nano", "Pipe | và chuyển hướng: ba luồng vào/ra chuẩn (0 stdin, 1 stdout, 2 stderr), >, 2>/dev/null, giải nghĩa lệnh openssl … 2>/dev/null ở Bài 00", "Process và signal thật trên Linux: ps, kill, kill -9 (thấy lại Bài 03)", "Docker Desktop với WSL backend: docker version, docker run hello-world"],
           "lab": "Cài Ubuntu trên WSL2, bật Docker Desktop, chạy hello-world. Cố tình tắt Docker Desktop rồi chạy lại lệnh docker để gặp lỗi \"Cannot connect to the Docker daemon\", rồi tự sửa. Chạy lại kill và kill -9 trên một process Linux thật. Làm nốt phép đo đối chứng đã hứa ở Bài 01: thời gian một kết nối bị từ chối trên Linux so với 2,155 giây đo trên Windows.",
           "checklist": ["Giải thích được WSL2 là một máy ảo có kernel Linux riêng", "Tới một thư mục, xem và sửa một tệp bằng nano mà không cần chuột", "Đọc được lỗi \"Cannot connect to the Docker daemon\" nói lên điều gì, và sửa được", "Dùng pipe để lọc output của một lệnh", "Giải thích được con số 2 trong 2>/dev/null", "Gửi được SIGTERM và SIGKILL tới một process Linux và đọc được khác biệt"],
           "hours": [3, 5],
@@ -94,7 +94,7 @@
     },
     {
       "id": "M1",
-      "title": "Docker — Đóng gói và chạy ứng dụng",
+      "title": "Docker: Đóng gói và chạy ứng dụng",
       "why": "Đóng gói và chạy ứng dụng bằng Docker. Phần Linux và mạng cần tới được dạy ngay trong bài cần nó.",
       "lessons": [
         {
@@ -235,7 +235,7 @@
           "answer": "Có: ps -a, logs, inspect để đọc exit code và OOMKilled, rồi vào bên trong. Mỗi triệu chứng trỏ về một nhóm nguyên nhân trong bảng triệu chứng.",
           "goal": "Có một quy trình chẩn đoán container hỏng thay vì thử bừa.",
           "concepts": ["docker ps -a, logs, inspect, events, stats", "Đọc exit code và OOMKilled trong docker inspect", "Vào xem một container đã chết; docker run --entrypoint sh", "Bảng triệu chứng dẫn tới nguyên nhân cho container", "Image thiếu công cụ gỡ lỗi và cách xoay xở"],
-          "lab": "Tự gây năm kiểu hỏng — sai lệnh khởi động, thiếu biến môi trường, hết bộ nhớ, sai port, sai tên host của database — trộn thứ tự rồi chẩn đoán từng cái theo quy trình, ghi vào bảng triệu chứng.",
+          "lab": "Tự gây năm kiểu hỏng (sai lệnh khởi động, thiếu biến môi trường, hết bộ nhớ, sai port, sai tên host của database), trộn thứ tự rồi chẩn đoán từng cái theo quy trình, ghi vào bảng triệu chứng.",
           "checklist": ["Có một thứ tự lệnh cố định để chẩn đoán container hỏng", "Tìm được nguyên nhân container chết ngay sau khi khởi động", "Đọc được thông tin OOMKilled trong docker inspect", "Tự viết được bảng triệu chứng dẫn tới nguyên nhân của riêng mình"],
           "hours": [4, 7],
           "needs": ["14"]
@@ -244,7 +244,7 @@
     },
     {
       "id": "M2",
-      "title": "Server thật — Deploy lên một máy Linux thật",
+      "title": "Server thật: Deploy lên một máy Linux thật",
       "why": "Tự tay đưa ứng dụng lên một server thật một lần, để biết các module sau đang tự động hoá những gì.",
       "lessons": [
         {
@@ -316,7 +316,7 @@
     },
     {
       "id": "M3",
-      "title": "CI/CD với GitLab — Từ git push tới server",
+      "title": "CI/CD với GitLab: Từ git push tới server",
       "why": "Tự động hoá bằng GitLab CI đúng những bước vừa làm tay ở module trước.",
       "lessons": [
         {
@@ -388,7 +388,7 @@
     },
     {
       "id": "M4",
-      "title": "Kubernetes — Chạy container trên cả một cụm máy",
+      "title": "Kubernetes: Chạy container trên cả một cụm máy",
       "why": "Chạy container trên nhiều máy cùng lúc. Mỗi khái niệm ở đây nối về một bài Docker đã học.",
       "lessons": [
         {
@@ -476,7 +476,7 @@
           "question": "Service mới gọi được từ trong cụm. Đưa app ra ngoài bằng tên miền và HTTPS thì làm thế nào?",
           "answer": "Ingress khai báo luật theo host và path, Ingress controller (một Nginx chạy trong cụm) thực thi luật đó, còn cert-manager tự cấp và tự gia hạn chứng chỉ.",
           "goal": "Đưa service ra ngoài cụm bằng tên miền và HTTPS, chứng chỉ tự gia hạn.",
-          "concepts": ["Ingress và Ingress controller (nối Nginx ở Bài 19)", "Luật theo host và theo path", "Annotation: timeout, kích thước body — 413 và 504 lần nữa", "cert-manager: tự cấp và tự gia hạn chứng chỉ (nối Bài 20)", "Gateway API: thế hệ sau của Ingress"],
+          "concepts": ["Ingress và Ingress controller (nối Nginx ở Bài 19)", "Luật theo host và theo path", "Annotation: timeout, kích thước body, 413 và 504 lần nữa", "cert-manager: tự cấp và tự gia hạn chứng chỉ (nối Bài 20)", "Gateway API: thế hệ sau của Ingress"],
           "lab": "Cài Ingress controller và cert-manager trên cụm học, cấu hình Ingress có HTTPS. Cố tình trỏ Ingress vào một tên Service sai để gặp 503, rồi sửa.",
           "checklist": ["Viết được Ingress đưa một service ra ngoài theo tên miền", "Giải thích được Ingress controller làm việc giống Nginx ở Bài 19 thế nào", "Chứng chỉ trong cụm tự gia hạn", "Chẩn đoán được lỗi 503 từ Ingress"],
           "hours": [5, 8],
@@ -512,7 +512,7 @@
     },
     {
       "id": "M5",
-      "title": "Rancher và vận hành — Quản lý cụm, theo dõi, xử lý sự cố",
+      "title": "Rancher và vận hành: Quản lý cụm, theo dõi, xử lý sự cố",
       "why": "Quản lý cụm bằng Rancher, theo dõi, cảnh báo, xử lý sự cố, rồi tự dựng lại toàn bộ.",
       "lessons": [
         {
@@ -575,7 +575,7 @@
           "answer": "Chẩn đoán theo chặng của bản đồ chín chặng, làm theo runbook, khôi phục dịch vụ trước rồi mới tìm nguyên nhân, và viết postmortem không đổ lỗi.",
           "goal": "Có một quy trình chẩn đoán theo tầng thay vì hoảng loạn thử mọi thứ.",
           "concepts": ["Chẩn đoán theo tầng: DNS, Ingress, Service, pod, app, database (nối bản đồ chín chặng ở Bài 00 và chẩn đoán theo chặng ở Bài 02)", "Đầy đĩa, hết bộ nhớ, cạn connection pool", "Runbook cho từng loại sự cố", "Postmortem không đổ lỗi", "Giao tiếp khi đang có sự cố"],
-          "lab": "Tự gây ba sự cố trên cụm học — database chết, pod bị OOM, Ingress cấu hình sai — xử lý theo quy trình, và viết runbook cho từng loại.",
+          "lab": "Tự gây ba sự cố trên cụm học (database chết, pod bị OOM, Ingress cấu hình sai), xử lý theo quy trình, và viết runbook cho từng loại.",
           "checklist": ["Có một thứ tự chẩn đoán theo tầng và làm theo được khi đang căng thẳng", "Viết được runbook cho một loại sự cố", "Viết được một postmortem không đổ lỗi"],
           "hours": [4, 7],
           "needs": ["33", "38"]

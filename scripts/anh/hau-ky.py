@@ -1,5 +1,5 @@
 """
-Hậu kỳ ảnh chụp thật cho khớp hệ Bauhaus của trang — bước 2 của quy trình ảnh minh hoạ.
+Hậu kỳ ảnh chụp thật cho khớp hệ Bauhaus của trang, bước 2 của quy trình ảnh minh hoạ.
 
   python scripts/anh/hau-ky.py VAO.jpg RA.webp [--fit 800x600 [--dem 0.04]] [--cover 720x960 [--tam 0.5,0.35]]
                                                [--max 1200] [--phong-to 2]
@@ -8,7 +8,7 @@ Hậu kỳ ảnh chụp thật cho khớp hệ Bauhaus của trang — bước 2
 Mặc định: xám -> kéo tương phản -> hai tông mực #151515 / mặt đọc #fffdf8 (nhiếp ảnh đen trắng
 kiểu Bauhaus). Nền trắng của ảnh sản phẩm thành đúng màu khung tab, hoà vào trang.
 Ảnh vật thể có nền cũ (xám, chuyển sắc, có bóng): tách nền trước bằng tach-nen.py, rồi đưa PNG
-trong suốt vào đây — chỗ trong suốt được đặt lên nền trắng nên thành đúng màu mặt đọc.
+trong suốt vào đây, chỗ trong suốt được đặt lên nền trắng nên thành đúng màu mặt đọc.
   --fit WxH       đặt vào khung WxH, đệm màu mặt đọc, KHÔNG cắt mất vật thể (dải nhiều ảnh)
   --dem 0.04      tỉ lệ lề đệm quanh vật thể khi --fit (mặc định 0.06)
   --cover WxH     cắt cho lấp đầy khung WxH (ảnh bên lề, ảnh rộng)
@@ -16,13 +16,13 @@ trong suốt vào đây — chỗ trong suốt được đặt lên nền trắn
   --phong-to 2    phóng ảnh gốc quá nhỏ trước khi xử lý
   --max W         chỉ thu nhỏ nếu rộng hơn W
   --lam-trang T   đẩy vùng xám sáng hơn T về trắng (ảnh chụp trên nền xám)
-  --giu-mau       không chuyển tông (ảnh chụp màn hình) — lưu WebP lossless
+  --giu-mau       không chuyển tông (ảnh chụp màn hình), lưu WebP lossless
 Ghi lại mọi bước đã làm vào cột "Đã chỉnh" của lessons/NN/img/NGUON.md.
 """
 import sys
 from PIL import Image, ImageOps, ImageFilter
 
-# Tông sáng = --surface (#fffdf8), màu của khung tab nơi MỌI ảnh nằm — không phải --paper (#f3eee4) của
+# Tông sáng = --surface (#fffdf8), màu của khung tab nơi MỌI ảnh nằm, không phải --paper (#f3eee4) của
 # nền trang. Dùng --paper thì nền ảnh thành một ô be nhạt trên mặt đọc gần trắng (đã mắc 30/09/2026).
 INK, PAPER = (0x15, 0x15, 0x15), (0xff, 0xfd, 0xf8)
 

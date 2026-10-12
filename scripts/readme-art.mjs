@@ -3,8 +3,8 @@
  * (card.svg) và ấn ký của từng bài.
  *
  * Vì sao phải là ảnh: GitHub không cho CSS trong README, và ảnh SVG hiển thị qua <img>
- * không tải được web font. Nên mọi thứ — màu, hình, và font League Spartan (nhúng base64,
- * giấy phép OFL, xem assets/fonts/OFL-LeagueSpartan.txt) — phải nằm gọn trong từng file SVG.
+ * không tải được web font. Nên mọi thứ, màu, hình, và font League Spartan (nhúng base64,
+ * giấy phép OFL, xem assets/fonts/OFL-LeagueSpartan.txt), phải nằm gọn trong từng file SVG.
  *
  * Hình học lấy từ CHÍNH bộ sinh hình của trang web (Bauhaus trong assets/app.js), nên ấn ký
  * của một bài trên README và trên trang web luôn giống hệt nhau.
@@ -17,7 +17,7 @@ import { join } from 'node:path';
 
 const C = { paper: '#f3eee4', surface: '#fffdf8', ink: '#151515', ink2: '#3a3731', ink3: '#5f5950', line: '#d6cebf', red: '#d42a1f', yellow: '#f5b800', blue: '#1d4f9f', ghost: '#b9b0a0' };
 
-// Màu của ô hình học — cùng tên class với style.css, để SVG của app.js dùng lại được nguyên văn
+// Màu của ô hình học, cùng tên class với style.css, để SVG của app.js dùng lại được nguyên văn
 const SHAPE_CSS = `
 .b-paper,.f-paper{fill:${C.surface}}.b-ink,.f-ink{fill:${C.ink}}.b-red,.f-red{fill:${C.red}}.b-blue,.f-blue{fill:${C.blue}}.b-yellow,.f-yellow{fill:${C.yellow}}
 .r{fill:none}.r-paper{stroke:${C.surface}}.r-ink{stroke:${C.ink}}.r-red{stroke:${C.red}}.r-blue{stroke:${C.blue}}.r-yellow{stroke:${C.yellow}}
@@ -29,11 +29,11 @@ export function makeArt(ROOT, Bauhaus) {
   const font = (name) => readFileSync(join(ROOT, 'assets/fonts', name)).toString('base64');
   const range = (name) => readFileSync(join(ROOT, 'assets/fonts', name), 'utf8').trim();
 
-  // Font đầy đủ (latin + tiếng Việt, trục độ đậm 500–900) cho ảnh có chữ
+  // Font đầy đủ (latin + tiếng Việt, trục độ đậm 500-900) cho ảnh có chữ
   const FULL_FONT = ['latin', 'vietnamese'].map((s) =>
     `@font-face{font-family:'LS';font-weight:500 900;src:url(data:font/woff2;base64,${font(`league-spartan-${s}.woff2`)}) format('woff2');unicode-range:${range(`league-spartan-${s}.range`)}}`
   ).join('');
-  // Chỉ chữ số — cho 43 ảnh ấn ký, mỗi ảnh chỉ cần in số bài
+  // Chỉ chữ số, cho 43 ảnh ấn ký, mỗi ảnh chỉ cần in số bài
   const DIGIT_FONT = `@font-face{font-family:'LS';font-weight:900;src:url(data:font/woff2;base64,${font('league-spartan-digits-900.woff2')}) format('woff2')}`;
 
   const TEXT_CSS = `.t{font-family:'LS','Futura','Century Gothic',sans-serif}`;
@@ -49,7 +49,7 @@ ${body}
 
   // ---------- Thẻ đầu README: một tấm thẻ dẫn sang bản web ----------
   // Cố ý KHÁC trang chủ của bản web (trang chủ đã có tiêu đề lớn, ba hình số liệu và bức tranh lộ
-  // trình): thẻ này chỉ nói ba điều — đang học bài nào, đi được bao xa, và bấm vào đâu để đọc tiếp.
+  // trình): thẻ này chỉ nói ba điều, đang học bài nào, đi được bao xa, và bấm vào đâu để đọc tiếp.
   function card({ done, total, modules, hoursRange, current, strip }) {
     const W = 1000, H = 300, BAND = 236, X = 240;
     let b = `<rect width="${W}" height="${H}" fill="${C.paper}"/>`;
