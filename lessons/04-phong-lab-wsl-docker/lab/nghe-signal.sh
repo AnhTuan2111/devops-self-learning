@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# nghe-signal.sh — mot process dang ky handler cho SIGTERM, nhu Spring Boot
+# nghe-signal.sh, mot process dang ky handler cho SIGTERM, nhu Spring Boot
 # Bai 04, Lab 4. Chay trong Ubuntu (WSL2):  bash nghe-signal.sh
 # Cua so khac:  kill <PID>     -> handler chay, process thoat em (exit status 0)
 #               kill -9 <PID>  -> khong handler nao chay duoc, bash bao "Killed"

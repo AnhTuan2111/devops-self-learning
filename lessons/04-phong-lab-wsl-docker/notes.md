@@ -1,4 +1,4 @@
-# Ghi chú — Bài 04
+# Ghi chú Bài 04
 
 > Chỗ ghi thô. Viết xấu cũng được. Dán **nguyên văn** output trên máy bạn vào các khối trống; sau này
 > đọc lại phần này hữu ích hơn lý thuyết nhiều, vì nó là thứ chính mình đã chạy và đã vấp.
@@ -12,7 +12,7 @@
 
 ## Kết quả lab thật
 
-### Lab 1 — Cài Ubuntu trên WSL2
+### Lab 1: Cài Ubuntu trên WSL2
 
 Lệnh cài đã dùng, và máy có đòi khởi động lại không:
 
@@ -41,7 +41,7 @@ Dòng đầu tiên của `sudo dmesg | less`:
 
 ```
 
-### Lab 2 — Đi lại, đọc và sửa tệp
+### Lab 2: Đi lại, đọc và sửa tệp
 
 ```
 $ pwd
@@ -65,7 +65,7 @@ $ sudo ls /root
 
 ```
 
-### Lab 3 — stdout và stderr
+### Lab 3: stdout và stderr
 
 ```
 $ ls /etc/hostname /khong-co
@@ -80,7 +80,7 @@ $ ls -l /proc/$$/fd
 
 ```
 
-Lệnh `openssl` của Bài 00, **không** có `2>/dev/null` — những dòng nào chen vào?
+Lệnh `openssl` của Bài 00, **không** có `2>/dev/null`, những dòng nào chen vào?
 
 ```
 
@@ -94,7 +94,7 @@ Cùng lệnh, **có** `2>/dev/null`:
 
 Những dòng biến mất (tức `s_client` ghi ra số 2):
 
-### Lab 4 — Signal thật
+### Lab 4: Signal thật
 
 | Gửi | Cửa sổ 1 in gì | `echo $?` | 128 + số signal |
 |---|---|---|---|
@@ -105,7 +105,7 @@ Những dòng biến mất (tức `s_client` ghi ra số 2):
 
 Handler có kịp in dòng `[SIGTERM] duoc bao truoc…` với `kill -9` không?  ☐ Có  ☐ Không
 
-### Lab 5 — Docker Desktop và hello-world
+### Lab 5: Docker Desktop và hello-world
 
 ```
 $ docker version
@@ -124,7 +124,7 @@ PS> wsl -l -v
 
 ```
 
-### Lab 6 — Tắt daemon
+### Lab 6: Tắt daemon
 
 Trong Git Bash:
 

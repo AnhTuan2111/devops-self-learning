@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bài 04 — Phòng lab: WSL2, Docker Desktop và shell tối thiểu</title>
+<title>Bài 04: Phòng lab với WSL2, Docker Desktop và shell tối thiểu</title>
 <meta name="description" content="Dựng một máy Linux thật ngay trong Windows bằng WSL2, điều khiển nó bằng bash, hiểu output và lỗi của một lệnh đi đâu, rồi để Docker Desktop chạy lệnh docker run hello-world đầu tiên.">
-<link rel="stylesheet" href="../../assets/style.css?v=227913a6">
+<link rel="stylesheet" href="../../assets/style.css?v=31a8c472">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="04">
@@ -26,7 +26,7 @@
   chạy lệnh Docker đầu tiên.</p>
   <div class="meta">
     <span class="chip yellow"><i class="stt stt-doing" aria-hidden="true"></i>Đang học</span>
-    <span class="chip">3–5 giờ học</span>
+    <span class="chip">3-5 giờ học</span>
     <span class="chip">Cần quyền quản trị Windows</span>
     <a class="chip" href="lich-su-wsl.html"><i class="ic ic-r" aria-hidden="true"></i> Phụ lục: lịch sử WSL</a>
   </div>
@@ -180,7 +180,7 @@ và Ảnh 1 vẽ hai chỗ đó cạnh nhau.</p>
 <figure class="fig photo">
   <img src="img/hypervisor-hai-kieu.webp" width="1600" height="967" loading="lazy" alt="Sơ đồ hai kiểu hypervisor. Bên trái, type 1: phần cứng ở dưới, hypervisor ở giữa, các hệ điều hành ở trên. Bên phải, type 2: phần cứng, rồi một hệ điều hành, rồi hypervisor chạy trên hệ điều hành đó, rồi các hệ điều hành khách ở trên cùng.">
   <figcaption><b>Ảnh 1</b> Hai chỗ đặt hypervisor. Bên trái là kiểu 1 (<em>native</em>, còn gọi <em>bare metal</em>):
-  hypervisor nằm ngay trên phần cứng, mọi hệ điều hành chạy bên trên nó. Microsoft xếp Hyper-V vào kiểu này. Nên khi
+  hypervisor nằm ngay trên phần cứng, mọi hệ điều hành chạy bên trên nó. Microsoft xếp Hyper-V vào kiểu này, nên khi
   Hyper-V bật, Windows cũng là một hệ điều hành chạy trên hypervisor. Bên phải là kiểu 2 (<em>hosted</em>): hypervisor
   là một chương trình chạy trên một hệ điều hành có sẵn, và các hệ điều hành khách chạy bên trên chương trình đó. Tài
   liệu của VirtualBox tự xếp nó vào kiểu 2.</figcaption>
@@ -551,7 +551,7 @@ một số nguyên nhỏ, không âm, mà process dùng để chỉ một file �
 <figure class="fig photo">
   <img src="img/ba-luong-chuan.webp" width="1400" height="830" loading="lazy" alt="Sơ đồ: một process ở bên trái, một ô Text terminal ở bên phải chứa Keyboard và Display. Mũi tên số 0 stdin đi từ Keyboard tới process; mũi tên số 1 stdout và số 2 stderr đi từ process tới Display.">
   <figcaption><b>Ảnh 4</b> Ba luồng chuẩn của một process chạy trong terminal. Số 0 (stdin) nhận phím gõ từ bàn phím. Số
-  1 (stdout) và số 2 (stderr) cùng đi ra màn hình. Nên nhìn trên màn hình thì không phân biệt được dòng nào là kết
+  1 (stdout) và số 2 (stderr) cùng đi ra màn hình, nên nhìn trên màn hình thì không phân biệt được dòng nào là kết
   quả, dòng nào là lỗi. Ô xám là terminal: bàn phím và màn hình là hai nửa của cùng một thiết bị, như hai máy ở
   Ảnh 2.</figcaption>
 </figure>
@@ -778,7 +778,7 @@ với các distro khác. Nên máy nào đã cài Docker Desktop cũng thấy d�
                                   │    docker (client) ─────────────┘
                                   │      /var/run/docker.sock</code></pre>
   <figcaption><b>Hình 12</b> Một daemon, hai client. Client trên Windows đi qua một <em>named pipe</em>, là điểm nối kiểu
-  file của Windows, dùng trong phạm vi một máy. Client trong Ubuntu đi qua Unix socket, nhờ đường nối mà Docker Desktop
+  file của Windows, chỉ dùng được trong một máy. Client trong Ubuntu đi qua Unix socket, nhờ đường nối mà Docker Desktop
   dựng khi bạn bật WSL Integration.</figcaption>
 </figure>
 
@@ -850,7 +850,7 @@ client và ra stdout của client. Hai bước giữa dùng hai chữ mà bài n
 giáo dục và mã nguồn mở phi thương mại. Doanh nghiệp cũng được dùng miễn phí nếu có dưới 250 nhân viên và dưới 10
 triệu đô la doanh thu mỗi năm, còn tổ chức lớn hơn dùng cho công việc thì phải trả phí.</p>
 
-<p>Điều quan trọng nhất là server Linux thật không có Docker Desktop. Người ta cài thẳng Docker Engine, gồm daemon
+<p>Cần nhớ nhất là server Linux thật không có Docker Desktop. Người ta cài thẳng Docker Engine, gồm daemon
 và client cho Linux. Ở đó <code>dockerd</code> chạy như một service do systemd trông coi, và client gọi nó qua cùng
 địa chỉ <code>/var/run/docker.sock</code>.</p>
 
@@ -986,7 +986,7 @@ bằng <code>nano ~/lab04/nghe-signal.sh</code> (bản sao nằm ở <code>lab/n
 <p>Trong script, <code>trap</code> là một builtin của bash, dùng để đăng ký handler cho một signal.</p>
 
 <pre><code>#!/usr/bin/env bash
-# nghe-signal.sh — mot process dang ky handler cho SIGTERM, nhu Spring Boot
+# nghe-signal.sh, mot process dang ky handler cho SIGTERM, nhu Spring Boot
 echo "PID = $$ · dang chay. Cua so kia: kill $$  hoac  kill -9 $$"
 trap 'echo "[SIGTERM] duoc bao truoc, dang don dep..."; exit 0' TERM
 while true; do
@@ -1141,36 +1141,36 @@ và lỗi tới đúng nơi bằng ba luồng chuẩn, chuyển hướng và pip
 <h2 id="nguon">Nguồn đọc thêm</h2>
 
 <ol class="refs">
-  <li>Microsoft Learn — <em>Install WSL</em>.
+  <li>Microsoft Learn, <em>Install WSL</em>.
   <a href="https://learn.microsoft.com/en-us/windows/wsl/install">learn.microsoft.com/…/install</a></li>
-  <li>Microsoft Learn — <em>Comparing WSL Versions</em>.
+  <li>Microsoft Learn, <em>Comparing WSL Versions</em>.
   <a href="https://learn.microsoft.com/en-us/windows/wsl/compare-versions">learn.microsoft.com</a></li>
-  <li>Microsoft Learn — <em>Hyper-V architecture</em> (câu "Hyper-V features a Type 1 hypervisor-based architecture").
+  <li>Microsoft Learn, <em>Hyper-V architecture</em> (câu "Hyper-V features a Type 1 hypervisor-based architecture").
   <a href="https://learn.microsoft.com/en-us/windows-server/administration/performance-tuning/role/hyper-v-server/architecture">learn.microsoft.com</a></li>
-  <li>Oracle VirtualBox — <em>User Guide</em>, mục Features (VirtualBox là "hosted hypervisor", còn gọi "type 2").
+  <li>Oracle VirtualBox, <em>User Guide</em>, mục Features (VirtualBox là "hosted hypervisor", còn gọi "type 2").
   <a href="https://www.virtualbox.org/manual/topics/Introduction.html">virtualbox.org/manual</a></li>
-  <li>Microsoft Learn — <em>Basic commands for WSL</em>.
+  <li>Microsoft Learn, <em>Basic commands for WSL</em>.
   <a href="https://learn.microsoft.com/en-us/windows/wsl/basic-commands">learn.microsoft.com</a></li>
-  <li>Microsoft Learn — <em>Set up a WSL development environment</em>.
+  <li>Microsoft Learn, <em>Set up a WSL development environment</em>.
   <a href="https://learn.microsoft.com/en-us/windows/wsl/setup/environment">learn.microsoft.com</a></li>
-  <li>Microsoft Learn — <em>Use systemd to manage Linux services with WSL</em>.
+  <li>Microsoft Learn, <em>Use systemd to manage Linux services with WSL</em>.
   <a href="https://learn.microsoft.com/en-us/windows/wsl/systemd">learn.microsoft.com/…/systemd</a></li>
-  <li>Microsoft Learn — <em>Troubleshooting Windows Subsystem for Linux</em>.
+  <li>Microsoft Learn, <em>Troubleshooting Windows Subsystem for Linux</em>.
   <a href="https://learn.microsoft.com/en-us/windows/wsl/troubleshooting">learn.microsoft.com</a></li>
-  <li>GNU — <em>Bash Reference Manual</em>. Chuyển hướng, pipeline, exit status.
+  <li>GNU, <em>Bash Reference Manual</em>. Chuyển hướng, pipeline, exit status.
   <a href="https://www.gnu.org/software/bash/manual/bash.html">gnu.org/software/bash/manual</a></li>
-  <li>man7.org — <a href="https://man7.org/linux/man-pages/man3/stdin.3.html">stdin(3)</a> ·
+  <li>man7.org, <a href="https://man7.org/linux/man-pages/man3/stdin.3.html">stdin(3)</a> ·
   <a href="https://man7.org/linux/man-pages/man4/null.4.html">null(4)</a> ·
   <a href="https://man7.org/linux/man-pages/man7/unix.7.html">unix(7)</a></li>
-  <li>Docker Hub — <em>hello-world</em>, mục Example output.
+  <li>Docker Hub, <em>hello-world</em>, mục Example output.
   <a href="https://hub.docker.com/_/hello-world">hub.docker.com/_/hello-world</a></li>
-  <li>Docker Docs — <em>Docker overview</em>, kiến trúc client và daemon.
+  <li>Docker Docs, <em>Docker overview</em>, kiến trúc client và daemon.
   <a href="https://docs.docker.com/get-started/docker-overview/">docs.docker.com</a></li>
-  <li>Docker Docs — <em>WSL 2 backend on Windows</em>.
+  <li>Docker Docs, <em>WSL 2 backend on Windows</em>.
   <a href="https://docs.docker.com/desktop/features/wsl/">docs.docker.com/…/wsl</a></li>
-  <li>Docker Docs — <em>Troubleshooting the Docker daemon</em>.
+  <li>Docker Docs, <em>Troubleshooting the Docker daemon</em>.
   <a href="https://docs.docker.com/engine/daemon/troubleshoot/">docs.docker.com/…/troubleshoot</a></li>
-  <li>Docker Docs — giấy phép Docker Desktop.
+  <li>Docker Docs, giấy phép Docker Desktop.
   <a href="https://docs.docker.com/subscription/desktop-license/">docs.docker.com</a></li>
 </ol>
 
@@ -1180,16 +1180,16 @@ và lỗi tới đúng nơi bằng ba luồng chuẩn, chuyển hướng và pip
 của xkcd và của turnoff.us dùng theo giấy phép phi thương mại ghi ở từng dòng, đã đổi cỡ và chuyển sang đen trắng. Ảnh
 chụp màn hình do mình tự chụp ngày 03/10/2026, khung màu là phần đánh dấu thêm.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Hyperviseur.svg">Hai kiểu hypervisor</a> — Scsami, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Teletype_Model_33_ASR_(1968)_(14689737122).png">Teletype Model 33 ASR (1968)</a> — Dennis van Zuijlekom, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:DEC_VT100_terminal.jpg">DEC VT100 terminal</a> — Jason Scott, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>.</li>
-  <li><b>Ảnh 3</b><a href="https://xkcd.com/149/">Sandwich</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
-  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Stdstreams-notitle.svg">Ba luồng chuẩn</a> — Danielpr85, theo bản vẽ gốc của TuukkaH, Wikimedia Commons, public domain.</li>
-  <li><b>Ảnh 5</b><a href="https://commons.wikimedia.org/wiki/File:Pipeline.svg">Pipeline</a> — XcepticZP, theo bản vẽ gốc của TuukkaH, Wikimedia Commons, public domain.</li>
-  <li><b>Ảnh 6</b><a href="https://turnoff.us/geek/inside-the-linux-kernel/">Inside the Linux Kernel</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
-  <li><b>Ảnh 7</b>Output của hello-world — chụp màn hình <a href="https://hub.docker.com/_/hello-world">hub.docker.com</a>; bỏ ngắt dòng tự động của khung code.</li>
-  <li><b>Ảnh 8</b><a href="https://turnoff.us/geek/terminal-password-typing/">Terminal password typing</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
-  <li><b>Ảnh 9</b><a href="https://turnoff.us/geek/signals/">Signals</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Hyperviseur.svg">Hai kiểu hypervisor</a>, Scsami, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Teletype_Model_33_ASR_(1968)_(14689737122).png">Teletype Model 33 ASR (1968)</a>, Dennis van Zuijlekom, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:DEC_VT100_terminal.jpg">DEC VT100 terminal</a>, Jason Scott, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://xkcd.com/149/">Sandwich</a>, Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Stdstreams-notitle.svg">Ba luồng chuẩn</a>, Danielpr85, theo bản vẽ gốc của TuukkaH, Wikimedia Commons, public domain.</li>
+  <li><b>Ảnh 5</b><a href="https://commons.wikimedia.org/wiki/File:Pipeline.svg">Pipeline</a>, XcepticZP, theo bản vẽ gốc của TuukkaH, Wikimedia Commons, public domain.</li>
+  <li><b>Ảnh 6</b><a href="https://turnoff.us/geek/inside-the-linux-kernel/">Inside the Linux Kernel</a>, Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 7</b>Output của hello-world, chụp màn hình <a href="https://hub.docker.com/_/hello-world">hub.docker.com</a>; bỏ ngắt dòng tự động của khung code.</li>
+  <li><b>Ảnh 8</b><a href="https://turnoff.us/geek/terminal-password-typing/">Terminal password typing</a>, Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 9</b><a href="https://turnoff.us/geek/signals/">Signals</a>, Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
 </ol>
 
 </section>
@@ -1204,11 +1204,11 @@ chụp màn hình do mình tự chụp ngày 03/10/2026, khung màu là phần �
 </nav>
 
 <footer class="page">
-  <p>Bài 04 · Module M0 — Nền tảng tối thiểu · DevOps Self-Learning</p>
+  <p>Bài 04 · Module M0: Nền tảng tối thiểu · DevOps Self-Learning</p>
 </footer>
 
 </div>
 
-<script src="../../assets/app.js?v=227913a6"></script>
+<script src="../../assets/app.js?v=31a8c472"></script>
 </body>
 </html>
