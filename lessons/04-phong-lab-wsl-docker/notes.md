@@ -165,6 +165,16 @@ Chênh lệch nói lên điều gì về hai kernel?
 
 ---
 
+## Phản ứng thật của mình
+
+Trích nguyên văn từ buổi học (05/10/2026), để dùng làm chất liệu khi viết lại bài.
+
+- Về Git Bash: "lệnh đó đã được biên dịch sang windows để chạy trên máy windows nhưng mà nó cũng chỉ là hàng đè tem thôi chứ không phải linux thật"
+- Trả lời "cần gì để thấy OOM killer": "cần có linux trên máy" (thiếu chữ kernel; được sửa thành kernel Linux, không chỉ các lệnh)
+- Về máy ảo: "máy ảo tách biệt khỏi máy vật lý nhờ việc kernel của nó được cấp phát vùng tài nguyên riêng nên không thể động tới tài nguyên của máy thật được"
+
+---
+
 ## Lỗi đã gặp ngoài kịch bản
 
 | Thấy gì | Ở đâu | Nguyên nhân | Đã sửa bằng |
