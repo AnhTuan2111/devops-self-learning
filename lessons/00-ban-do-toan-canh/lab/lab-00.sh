@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Bài 00 — Lab: nhìn tận mắt từng chặng của một request
+# Bài 00, Lab: nhìn tận mắt từng chặng của một request
 #
 # Chạy trong Git Bash (hoặc một shell Linux). KHÔNG chạy trong cmd.exe:
 # ở đó cú pháp của `|` và `2>/dev/null` khác hẳn.

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bài 00 — Bản đồ toàn cảnh</title>
+<title>Bài 00: Bản đồ toàn cảnh</title>
 <meta name="description" content="Chín chặng một request đi qua, từ lúc gõ địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy: URL gồm những phần nào, chặng nào chạy trên máy người dùng, chặng nào trên server, và vì sao trong cả đường đi chỉ ứng dụng là code bạn viết.">
-<link rel="stylesheet" href="../../assets/style.css?v=227913a6">
+<link rel="stylesheet" href="../../assets/style.css?v=31a8c472">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00">
@@ -26,7 +26,7 @@
   đi qua chín chặng. Bài này vẽ tấm bản đồ đó và chỉ ra chặng nào là code của bạn.</p>
   <div class="meta">
     <span class="chip lime"><i class="stt stt-done" aria-hidden="true"></i>Đã xong</span>
-    <span class="chip">3–5 giờ học</span>
+    <span class="chip">3-5 giờ học</span>
     <span class="chip">Lab: Git Bash</span>
     <a class="chip" href="phan-tich-output.html"><i class="ic ic-r" aria-hidden="true"></i> Đọc output thật</a>
     <a class="chip" href="lich-su-devops.html"><i class="ic ic-r" aria-hidden="true"></i> Phụ lục: lịch sử DevOps</a>
@@ -36,7 +36,7 @@
 <main class="tabs" data-tabs="Các phần của Bài 00">
 
 <!-- =====================================================================
-     TAB 1 — VẤN ĐỀ
+     TAB 1: VẤN ĐỀ
      ===================================================================== -->
 <section class="tab" id="van-de" data-tab="Vấn đề" data-note="web không vào được">
 
@@ -113,7 +113,7 @@ code. Vì vậy thuật ngữ hạ tầng nào cũng được giải nghĩa ngay
 </section>
 
 <!-- =====================================================================
-     TAB 2 — URL
+     TAB 2: URL
      ===================================================================== -->
 <section class="tab" id="url" data-tab="URL" data-note="phần nào cho hạ tầng, phần nào cho code">
 
@@ -226,7 +226,7 @@ có được mã hoá không, đi tới máy nào, và vào chương trình nào
 </section>
 
 <!-- =====================================================================
-     TAB 3 — BẢN ĐỒ
+     TAB 3: BẢN ĐỒ
      ===================================================================== -->
 <section class="tab" id="ban-do" data-tab="Bản đồ" data-note="chín chặng, hai nửa">
 
@@ -331,7 +331,7 @@ mục Nguồn đọc thêm cuối bài, cùng với văn bản chuẩn của DNS
 </section>
 
 <!-- =====================================================================
-     TAB 4 — MÁY NGƯỜI DÙNG (từ tách URL tới gửi request HTTP)
+     TAB 4: MÁY NGƯỜI DÙNG (từ tách URL tới gửi request HTTP)
      ===================================================================== -->
 <section class="tab" id="may-nguoi-dung" data-tab="Máy người dùng" data-note="từ URL tới request HTTP">
 
@@ -374,7 +374,7 @@ Address: 20.205.243.166</code></pre>
 dưới cho biết câu trả lời là gì.</figcaption>
 </figure>
 
-<p>Còn nếu hỏi một tên miền không tồn tại thì sao? Server DNS nói đúng như vậy, và hành trình của request dừng ngay
+<p>Còn nếu hỏi một tên miền không tồn tại thì sao? Server DNS nói đúng như vậy, và đường đi của request dừng ngay
 ở bước hỏi DNS:</p>
 
 <figure class="fig">
@@ -494,7 +494,7 @@ lại tên miền? Vì một server có thể phục vụ nhiều website cùng 
 </section>
 
 <!-- =====================================================================
-     TAB 5 — PHÍA SERVER (từ firewall tới database)
+     TAB 5: PHÍA SERVER (từ firewall tới database)
      ===================================================================== -->
 <section class="tab" id="phia-server" data-tab="Phía server" data-note="từ firewall tới database, và code của bạn">
 
@@ -654,7 +654,7 @@ của việc hiểu trọn đó.</p>
 </section>
 
 <!-- =====================================================================
-     TAB 6 — LAB
+     TAB 6: LAB
      ===================================================================== -->
 <section class="tab" id="lab" data-tab="Lab" data-note="nhìn tận mắt từng chặng">
 
@@ -663,14 +663,14 @@ chúng ngay trên máy mình, bằng output thật: hỏi DNS, mở kết nối 
 reverse proxy ở phía server. Bước tự gây lỗi nằm ở Lab 1, và tất cả chạy trong <strong>Git Bash</strong> trên
 Windows.</p>
 
-<pre><code># Lab 1 — DNS
+<pre><code># Lab 1: DNS
 nslookup github.com
 nslookup khong-ton-tai-dau-nhe-12345.com
 
-# Lab 2 — DNS, TCP, TLS, HTTP và reverse proxy nối tiếp nhau
+# Lab 2: DNS, TCP, TLS, HTTP và reverse proxy nối tiếp nhau
 curl -v https://example.com
 
-# Lab 3 — TLS: đọc chứng chỉ của một website thật
+# Lab 3: TLS, đọc chứng chỉ của một website thật
 echo | openssl s_client -connect example.com:443 -servername example.com 2&gt;/dev/null \
   | openssl x509 -noout -subject -issuer -dates</code></pre>
 
@@ -744,7 +744,7 @@ vì ba lab này không chạm tới firewall, ứng dụng và database.</p>
 </section>
 
 <!-- =====================================================================
-     TAB 7 — KẾT
+     TAB 7: KẾT
      ===================================================================== -->
 <section class="tab" id="ket" data-tab="Kết" data-note="tự kiểm tra, câu hỏi tiếp">
 
@@ -767,7 +767,7 @@ một người chưa học bài này, bằng lời của bạn, kèm một ví d
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 3</b> Những cách hiểu nghe hợp lý nhưng sai, trong phạm vi bài này.</caption>
+  <caption><b>Bảng 3</b> Những cách hiểu nghe hợp lý nhưng sai về các chặng trong bài này.</caption>
   <thead><tr><th>Dễ nghĩ là</th><th>Thực tế</th><th>Xem lại</th></tr></thead>
   <tbody>
     <tr><td>Web không vào được thì mở code ra xem trước.</td><td>Code không đổi thì lỗi thường nằm ở tám chặng hạ tầng.</td><td><a href="#chang-cua-ban">Phía server</a></td></tr>
@@ -809,25 +809,25 @@ trọn hệ thống từ đầu tới cuối. Tấm bản đồ chín chặng l�
 ngay, cứ để đó tra khi cần.</p>
 
 <ol class="refs">
-  <li>RFC 3986 — <em>Uniform Resource Identifier (URI): Generic Syntax</em>. Cấu trúc của URL.
+  <li>RFC 3986, <em>Uniform Resource Identifier (URI): Generic Syntax</em>. Cấu trúc của URL.
   <a href="https://www.rfc-editor.org/rfc/rfc3986">rfc-editor.org/rfc/rfc3986</a></li>
-  <li>RFC 1034 và RFC 1035 — <em>Domain Names</em>. Nền tảng của DNS.
+  <li>RFC 1034 và RFC 1035, <em>Domain Names</em>. Nền tảng của DNS.
   <a href="https://www.rfc-editor.org/rfc/rfc1035">rfc-editor.org/rfc/rfc1035</a></li>
-  <li>RFC 9293 — <em>Transmission Control Protocol (TCP)</em>.
+  <li>RFC 9293, <em>Transmission Control Protocol (TCP)</em>.
   <a href="https://www.rfc-editor.org/rfc/rfc9293">rfc-editor.org/rfc/rfc9293</a></li>
-  <li>RFC 8446 — <em>The Transport Layer Security (TLS) Protocol Version 1.3</em>.
+  <li>RFC 8446, <em>The Transport Layer Security (TLS) Protocol Version 1.3</em>.
   <a href="https://www.rfc-editor.org/rfc/rfc8446">rfc-editor.org/rfc/rfc8446</a></li>
-  <li>RFC 9110 — <em>HTTP Semantics</em>. Phương thức, header, port mặc định của http và https.
+  <li>RFC 9110, <em>HTTP Semantics</em>. Phương thức, header, port mặc định của http và https.
   <a href="https://www.rfc-editor.org/rfc/rfc9110">rfc-editor.org/rfc/rfc9110</a></li>
-  <li>Nginx — <em>Beginner's Guide</em>, tài liệu chính thức.
+  <li>Nginx, <em>Beginner's Guide</em>, tài liệu chính thức.
   <a href="https://nginx.org/en/docs/beginners_guide.html">nginx.org/en/docs/beginners_guide.html</a></li>
-  <li>curl — trang hướng dẫn chính thức, gồm cờ <code>-v</code>.
+  <li>curl, trang hướng dẫn chính thức, gồm cờ <code>-v</code>.
   <a href="https://curl.se/docs/manpage.html">curl.se/docs/manpage.html</a></li>
-  <li>IEEE 2675-2021 — <em>IEEE Standard for DevOps: Building Reliable and Secure Systems Including
+  <li>IEEE 2675-2021, <em>IEEE Standard for DevOps: Building Reliable and Secure Systems Including
   Application Build, Package, and Deployment</em>. Chuẩn định nghĩa DevOps; trang giới thiệu chính thức,
   toàn văn phải trả phí.
   <a href="https://standards.ieee.org/ieee/2675/6830/">standards.ieee.org/ieee/2675/6830</a></li>
-  <li>ISO/IEC/IEEE 32675:2022 — bản chuẩn quốc tế được chấp nhận từ IEEE 2675-2021; trang giới thiệu
+  <li>ISO/IEC/IEEE 32675:2022, bản chuẩn quốc tế được chấp nhận từ IEEE 2675-2021; trang giới thiệu
   chính thức, toàn văn phải trả phí.
   <a href="https://www.iso.org/standard/83670.html">iso.org/standard/83670.html</a></li>
 </ol>
@@ -835,12 +835,12 @@ ngay, cứ để đó tra khi cần.</p>
 <h2 id="nguon-anh">Nguồn ảnh</h2>
 <p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do mình tự chụp. Truyện tranh của xkcd và của turnoff.us dùng theo giấy phép phi thương mại ghi ở từng dòng; đã đổi cỡ và chuyển sang đen trắng.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b>Ví dụ thành phần URI, RFC 3986 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc3986.html">rfc-editor.org</a>, 30/09/2026.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Router gia đình Linksys WRT54G</a> — Evan-Amos, Wikimedia Commons, public domain.</li>
-  <li><b>Ảnh 3</b><a href="https://turnoff.us/geek/we-need-to-talk-about-ssl/">We need to talk about SSL</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
-  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg">Mẫu cáp quang biển</a> — Lonnie Hagadorn, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
-  <li><b>Ảnh 5</b>Trang chào mặc định của Nginx — chụp màn hình Nginx 1.30.5 chạy trên máy mình, 30/09/2026.</li>
-  <li><b>Ảnh 6</b><a href="https://xkcd.com/2347/">Dependency</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 1</b>Ví dụ thành phần URI, RFC 3986, chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc3986.html">rfc-editor.org</a>, 30/09/2026.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg">Router gia đình Linksys WRT54G</a>, Evan-Amos, Wikimedia Commons, public domain.</li>
+  <li><b>Ảnh 3</b><a href="https://turnoff.us/geek/we-need-to-talk-about-ssl/">We need to talk about SSL</a>, Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 4</b><a href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg">Mẫu cáp quang biển</a>, Lonnie Hagadorn, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 5</b>Trang chào mặc định của Nginx, chụp màn hình Nginx 1.30.5 chạy trên máy mình, 30/09/2026.</li>
+  <li><b>Ảnh 6</b><a href="https://xkcd.com/2347/">Dependency</a>, Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
 </ol>
 
 </section>
@@ -859,11 +859,11 @@ ngay, cứ để đó tra khi cần.</p>
 </nav>
 
 <footer class="page">
-  <p>Bài 00 · Module M0 — Nền tảng tối thiểu · DevOps Self-Learning</p>
+  <p>Bài 00 · Module M0: Nền tảng tối thiểu · DevOps Self-Learning</p>
 </footer>
 
 </div>
 
-<script src="../../assets/app.js?v=227913a6"></script>
+<script src="../../assets/app.js?v=31a8c472"></script>
 </body>
 </html>

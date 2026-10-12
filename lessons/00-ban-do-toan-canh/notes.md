@@ -1,6 +1,6 @@
-# Ghi chú — Bài 00
+# Ghi chú Bài 00
 
-**Ngày học:** 21–24/09/2026, học theo đối thoại thầy–trò, ba lab.
+**Ngày học:** 21-24/09/2026, học theo đối thoại thầy trò, ba lab.
 Khi học, nội dung này là phần đầu của một bài lớn; ngày 03/10/2026 bài lớn được tách thành Bài 00
 (bản đồ), Bài 01 (IP, port, listen, firewall) và Bài 02 (chẩn đoán). Ghi chú của hai bài kia nằm trong
 thư mục của chúng.
@@ -9,7 +9,7 @@ thư mục của chúng.
 
 ## Kết quả lab thật
 
-### Lab 1 — `nslookup`
+### Lab 1: `nslookup`
 
 Tên router trong nhà đã được ẩn.
 
@@ -26,7 +26,7 @@ Address: 20.205.243.166
 *** (tên router, đã ẩn) can't find khong-ton-tai-dau-nhe-12345.com: Non-existent domain
 ```
 
-### Lab 2 — `curl -v https://example.com`
+### Lab 2: `curl -v https://example.com`
 
 ```
 * IPv6: 2606:4700:10::ac42:93f3, 2606:4700:10::6814:179a
@@ -39,7 +39,7 @@ Address: 20.205.243.166
 < CF-RAY: a40142dcc8e87164-HKG
 ```
 
-### Lab 3 — chứng chỉ
+### Lab 3: chứng chỉ
 
 ```
 subject=CN=example.com
