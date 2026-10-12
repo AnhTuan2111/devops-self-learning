@@ -1,7 +1,7 @@
-# Ghi chú — Bài 01
+# Ghi chú Bài 01
 
-**Ngày học:** 21–24/09/2026 (học chung buổi với Bài 00, tách thành bài riêng ngày 03/10/2026)
-**Hình thức:** đối thoại thầy–trò + lab trên Git Bash, Windows 11
+**Ngày học:** 21-24/09/2026 (học chung buổi với Bài 00, tách thành bài riêng ngày 03/10/2026)
+**Hình thức:** đối thoại thầy trò + lab trên Git Bash, Windows 11
 
 Ghi chú thô: output lab thật, lỗi đã gặp, chỗ hiểu sai, câu hỏi còn treo. Bài giảng đầy đủ ở
 [`index.html`](index.html).
@@ -10,7 +10,7 @@ Ghi chú thô: output lab thật, lỗi đã gặp, chỗ hiểu sai, câu hỏi
 
 ## Kết quả lab thật
 
-### Lab 1 — refused và timeout (24/09/2026)
+### Lab 1: refused và timeout (24/09/2026)
 
 ```
 127.0.0.1:9999      → curl: (7)  after 2076 ms     real 2.155s
@@ -20,7 +20,7 @@ Ghi chú thô: output lab thật, lỗi đã gặp, chỗ hiểu sai, câu hỏi
 Refused tới chính máy mình mà mất hơn 2 giây: Windows thử lại vài lần trước khi kết luận bị từ chối.
 Đã dùng `-4` và gõ thẳng `127.0.0.1`, nên không phải chuyện `localhost` thử `::1` trước.
 
-### Lab 2 — `--max-time 15` (chạy lại ngày 03/10/2026 khi tách bài)
+### Lab 2: `--max-time 15` (chạy lại ngày 03/10/2026 khi tách bài)
 
 ```
 $ time curl -4 -o /dev/null --max-time 15 http://10.255.255.1:9999
@@ -35,7 +35,7 @@ real    0m2.082s
 Timeout khớp `--max-time` tới từng mili-giây; refused vẫn khoảng 2 giây. Kết luận: phân biệt hai triệu
 chứng bằng **ai quyết định lúc dừng**, không bằng tốc độ.
 
-### Lab 3 — listen address (output của người viết, 03/10/2026)
+### Lab 3: listen address (output của người viết, 03/10/2026)
 
 Lab này thêm vào khi tách bài, chưa chạy trong buổi học. Địa chỉ WiFi thật đã được thay bằng
 `192.168.10.38`.

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bài 01 — IP, port, listen, firewall: vì sao gọi không tới</title>
+<title>Bài 01: IP, port, listen, firewall và vì sao gọi không tới</title>
 <meta name="description" content="Vì sao app gọi được bằng localhost mà người khác gọi vào thì không: địa chỉ IP, port, listen address, firewall, và cách đọc refused với timeout.">
-<link rel="stylesheet" href="../../assets/style.css?v=227913a6">
+<link rel="stylesheet" href="../../assets/style.css?v=31a8c472">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01">
@@ -27,7 +27,7 @@
   cùng hai triệu chứng chỉ ra điều kiện nào đang thiếu.</p>
   <div class="meta">
     <span class="chip lime"><i class="stt stt-done" aria-hidden="true"></i>Đã xong</span>
-    <span class="chip">3–5 giờ học</span>
+    <span class="chip">3-5 giờ học</span>
     <span class="chip">Lab: Git Bash + Node</span>
     <a class="chip" href="mang-va-thiet-bi.html"><i class="ic ic-r" aria-hidden="true"></i> Phụ lục: mạng và thiết bị mạng</a>
     <a class="chip" href="ipv4-vs-ipv6.html"><i class="ic ic-r" aria-hidden="true"></i> Phụ lục: lịch sử địa chỉ IP</a>
@@ -37,7 +37,7 @@
 <main class="tabs" data-tabs="Các phần của Bài 01">
 
 <!-- =====================================================================
-     TAB 1 — VẤN ĐỀ
+     TAB 1: VẤN ĐỀ
      ===================================================================== -->
 <section class="tab" id="van-de" data-tab="Vấn đề" data-note="localhost được, người khác không">
 
@@ -60,7 +60,7 @@ phóng to dòng ấy ra.</p>
                         ├─ gọi đúng địa chỉ                    (địa chỉ IP)
                         ├─ firewall cho qua                    (firewall)
                         └─ có chương trình listen đúng địa chỉ (port, listen)</code></pre>
-<figcaption><b>Hình 1</b> Bước mở kết nối trên bản đồ Bài 00, nhìn gần hơn. Muốn kết nối được thì đủ cả ba điều kiện; trong ngoặc là khái niệm mà mỗi điều kiện dựa vào, xếp theo thứ tự gói tin gặp chúng.</figcaption>
+<figcaption><b>Hình 1</b> Bước mở kết nối trên bản đồ Bài 00, nhìn gần hơn. Muốn kết nối được thì phải đủ cả ba điều kiện; trong ngoặc là khái niệm mà mỗi điều kiện dựa vào, xếp theo thứ tự gói tin gặp chúng.</figcaption>
 </figure>
 
 <div class="callout story">
@@ -113,7 +113,7 @@ mình chả biết đó là một thứ hay nhiều thứ. Từ chỗ rối đó
 </section>
 
 <!-- =====================================================================
-     TAB 2 — ĐỊA CHỈ IP
+     TAB 2: ĐỊA CHỈ IP
      ===================================================================== -->
 <section class="tab" id="dia-chi-ip" data-tab="Địa chỉ IP" data-note="một máy, nhiều địa chỉ">
 
@@ -162,17 +162,17 @@ loopback, nên cộng thêm loopback thì máy có ba địa chỉ. Hình 2 vẽ
 <figure class="fig">
 <pre class="diagram"><code>             một cái laptop
     ┌────────────────────────────────────┐
-    │  lo — giao diện loopback           │
+    │  lo: giao diện loopback            │
     │  127.0.0.1       chỉ trong máy     │  ← không dây, không sóng,
     │                                    │    gói tin không ra ngoài
-    │  wlan0 — card WiFi                 │
+    │  wlan0: card WiFi                  │
     │  192.168.10.38   trong mạng WiFi   │  ← router cấp, có thể đổi
     │                                    │
     │  card ảo của VPN                   │
     │  10.8.0.2        trong mạng VPN    │
     └────────────────────────────────────┘</code></pre>
 <figcaption><b>Hình 2</b> Ba giao diện mạng, ba địa chỉ, cùng trên một laptop. Mỗi địa chỉ chỉ gọi tới
-được từ phạm vi ghi bên cạnh nó.</figcaption>
+được từ chỗ ghi bên cạnh nó.</figcaption>
 </figure>
 
 <p>Ba địa chỉ cùng dẫn vào một máy, vậy dùng cái nào cũng được chứ? Không, vì mỗi địa chỉ chỉ có nghĩa với một nhóm
@@ -208,7 +208,7 @@ chỗ chúng có nghĩa trong vùng rộng tới đâu, như Hình 3 xếp ra.</
   192.168.…    →  chỉ trong mạng nội bộ          (mạng riêng)
   10.…
   172.16.… tới 172.31.…</code></pre>
-<figcaption><b>Hình 3</b> Ba loại địa chỉ đặc biệt, xếp theo phạm vi từ hẹp tới rộng. Không loại nào
+<figcaption><b>Hình 3</b> Ba loại địa chỉ đặc biệt, xếp từ hẹp tới rộng theo chỗ dùng được. Không loại nào
 được chuyển ra Internet.</figcaption>
 </figure>
 
@@ -286,7 +286,7 @@ phải đưa một địa chỉ của máy mình mà họ với tới được, 
 </section>
 
 <!-- =====================================================================
-     TAB 3 — PORT VÀ LISTEN
+     TAB 3: PORT VÀ LISTEN
      ===================================================================== -->
 <section class="tab" id="port-listen" data-tab="Port &amp; listen" data-note="tới đúng chương trình">
 
@@ -306,7 +306,7 @@ con số thứ hai, để hệ điều hành biết giao nó cho ai.</p>
 
 <figure class="fig photo shot">
   <img src="img/rfc9293-tcp-header.webp" width="1148" height="738" loading="lazy" alt="Sơ đồ phần đầu gói tin TCP trong RFC 9293 vẽ bằng ký tự, hàng đầu tiên gồm hai ô Source Port và Destination Port được khoanh đỏ.">
-  <figcaption><b>Ảnh 4</b> Phần đầu của một gói tin TCP, trong văn bản chuẩn RFC 9293. Mỗi hàng rộng 32 bit; <span class="kw"><i class="key k-red" aria-hidden="true"></i>hàng</span> đầu tiên được chia đôi cho hai con số 16 bit: <em>Source Port</em> (port của bên gửi) và <em>Destination Port</em> (port của bên nhận). Port không phải một thứ có sẵn trong máy; nó chỉ là con số nằm ở đây, trong từng gói tin.</figcaption>
+  <figcaption><b>Ảnh 4</b> Phần đầu của một gói tin TCP, trong văn bản chuẩn RFC 9293. Mỗi hàng rộng 32 bit; <span class="kw"><i class="key k-red" aria-hidden="true"></i>hàng</span> đầu tiên được chia đôi cho hai con số 16 bit: <em>Source Port</em> (port của bên gửi) và <em>Destination Port</em> (port của bên nhận). Trong máy không có sẵn thứ gì tên là port, vì port chỉ là con số nằm ở đây, trong từng gói tin.</figcaption>
 </figure>
 
 <p>Vì port chỉ là một trường số 16 bit nên nó không bao giờ lớn hơn 65535. Trong khoảng đó, vài con số được quy ước
@@ -390,7 +390,7 @@ chỉ listen <code>127.0.0.1</code> cho an toàn.</p>
 </section>
 
 <!-- =====================================================================
-     TAB 4 — FIREWALL VÀ BA ĐIỀU KIỆN
+     TAB 4: FIREWALL VÀ BA ĐIỀU KIỆN
      ===================================================================== -->
 <section class="tab" id="firewall" data-tab="Firewall" data-note="ba điều kiện">
 
@@ -416,7 +416,7 @@ thì nó là lý do hay gặp nhất làm lần thử thứ hai phải chờ lâ
 
 <figure class="fig photo">
   <img src="img/firewall-hai-phia.webp" width="1000" height="330" loading="lazy" alt="Mặt trước một thiết bị firewall Netgear với đèn báo của hai cổng WAN và bốn cổng LAN.">
-  <figcaption><b>Ảnh 5</b> Một firewall dạng thiết bị riêng, Netgear FVS336G. Mặt trước chia rõ hai phía: hai cổng WAN nối ra Internet, bốn cổng LAN nối vào mạng bên trong. Mọi gói tin đi giữa hai phía đều phải qua bộ luật của nó. Firewall trên laptop làm đúng việc đó. Khác ở chỗ nó là phần mềm, và đứng giữa mạng với các chương trình trong máy.</figcaption>
+  <figcaption><b>Ảnh 5</b> Một firewall dạng thiết bị riêng, Netgear FVS336G. Mặt trước chia rõ hai phía: hai cổng WAN nối ra Internet, bốn cổng LAN nối vào mạng bên trong. Mọi gói tin đi giữa hai phía đều phải qua bộ luật của nó. Firewall trên laptop cũng làm đúng việc đó, chỉ có điều nó là phần mềm và đứng giữa mạng với các chương trình trong máy.</figcaption>
 </figure>
 
 <p>Firewall chặn một gói tin bằng cách nào? Có hai cách, và mỗi cách để lại một triệu chứng khác ở phía người
@@ -486,7 +486,7 @@ chính là bằng chứng rằng điều kiện vừa sửa đã đạt.</p>
 
 <div class="callout warn">
   <span class="label">Một thói quen nên tập ngay từ máy dev</span>
-  <p>Gặp lỗi mạng thì đừng tắt firewall cho nhanh (mình cũng từng nói vậy). Hãy <strong>mở đúng một port, cho
+  <p>Gặp lỗi mạng thì đừng tắt firewall cho nhanh (mình cũng từng nói vậy). Cứ <strong>mở đúng một port, cho
   đúng nguồn cần thiết</strong>. Trên Windows, lệnh dưới chạy trong PowerShell (cửa sổ dòng lệnh của Windows, mở
   bằng quyền quản trị). Nó chỉ cho các máy cùng mạng với máy bạn gọi vào port 8080 (nghĩa của
   <code>LocalSubnet</code>), mọi thứ khác vẫn bị chặn như cũ:</p>
@@ -532,7 +532,7 @@ riêng.</figcaption>
 </section>
 
 <!-- =====================================================================
-     TAB 5 — KẾT NỐI TCP: REFUSED VÀ TIMEOUT
+     TAB 5: KẾT NỐI TCP: REFUSED VÀ TIMEOUT
      ===================================================================== -->
 <section class="tab" id="ket-noi-tcp" data-tab="Kết nối TCP" data-note="refused hay timeout">
 
@@ -770,7 +770,7 @@ bạn ấy thoát phần mềm VPN rồi vẫn gọi <code>10.8.0.2</code>.</p>
 </section>
 
 <!-- =====================================================================
-     TAB 6 — LAB
+     TAB 6: LAB
      ===================================================================== -->
 <section class="tab" id="lab" data-tab="Lab" data-note="đo refused và timeout">
 
@@ -857,10 +857,10 @@ ngoài trình duyệt.</p>
 <p>Trước hết tìm địa chỉ của máy trong mạng WiFi bằng lệnh <code>ipconfig</code> của Windows, ở dòng
 <code>IPv4 Address</code> dưới mục card WiFi. Rồi mở hai cửa sổ Git Bash, đứng ở thư mục của bài.</p>
 
-<pre><code># Cửa sổ 1 — chỉ listen trên loopback
+<pre><code># Cửa sổ 1: chỉ listen trên loopback
 node lab/nghe.js 127.0.0.1
 
-# Cửa sổ 2 — thay 192.168.x.y bằng địa chỉ WiFi của máy bạn
+# Cửa sổ 2: thay 192.168.x.y bằng địa chỉ WiFi của máy bạn
 netstat -ano | grep ":8080 " | grep LISTEN
 curl http://127.0.0.1:8080
 curl http://192.168.x.y:8080</code></pre>
@@ -918,7 +918,7 @@ hai dễ kiếm nhất là điện thoại đã tắt WiFi và dùng mạng di �
 </section>
 
 <!-- =====================================================================
-     TAB 7 — KẾT LẠI
+     TAB 7: KẾT LẠI
      ===================================================================== -->
 <section class="tab" id="ket" data-tab="Kết lại" data-note="tự kiểm tra, câu hỏi tiếp">
 
@@ -992,44 +992,44 @@ Người gọi ở mạng khác thì cần thêm một đường tới được 
 <p>Chỉ gồm văn bản chuẩn gốc và tài liệu chính thức. Dùng để tra cứu, không cần đọc hết.</p>
 
 <ol class="refs">
-  <li>RFC 791 — <em>Internet Protocol</em>. Định nghĩa IPv4 và địa chỉ 32 bit.
+  <li>RFC 791, <em>Internet Protocol</em>. Định nghĩa IPv4 và địa chỉ 32 bit.
   <a href="https://www.rfc-editor.org/rfc/rfc791">rfc-editor.org/rfc/rfc791</a></li>
-  <li>RFC 9293 — <em>Transmission Control Protocol (TCP)</em>. Phần đầu gói TCP, bắt tay ba bước, gói reset.
+  <li>RFC 9293, <em>Transmission Control Protocol (TCP)</em>. Phần đầu gói TCP, bắt tay ba bước, gói reset.
   <a href="https://www.rfc-editor.org/rfc/rfc9293">rfc-editor.org/rfc/rfc9293</a></li>
-  <li>RFC 1122 — <em>Requirements for Internet Hosts</em>. Dải loopback <code>127.0.0.0/8</code>.
+  <li>RFC 1122, <em>Requirements for Internet Hosts</em>. Dải loopback <code>127.0.0.0/8</code>.
   <a href="https://www.rfc-editor.org/rfc/rfc1122">rfc-editor.org/rfc/rfc1122</a></li>
-  <li>RFC 1918 — <em>Address Allocation for Private Internets</em>. Ba dải mạng riêng.
+  <li>RFC 1918, <em>Address Allocation for Private Internets</em>. Ba dải mạng riêng.
   <a href="https://www.rfc-editor.org/rfc/rfc1918">rfc-editor.org/rfc/rfc1918</a></li>
-  <li>RFC 4291 — <em>IP Version 6 Addressing Architecture</em>. <code>::1</code> và <code>fe80::/10</code>.
+  <li>RFC 4291, <em>IP Version 6 Addressing Architecture</em>. <code>::1</code> và <code>fe80::/10</code>.
   <a href="https://www.rfc-editor.org/rfc/rfc4291">rfc-editor.org/rfc/rfc4291</a></li>
-  <li>RFC 6761 — <em>Special-Use Domain Names</em>. Tên <code>localhost</code>.
+  <li>RFC 6761, <em>Special-Use Domain Names</em>. Tên <code>localhost</code>.
   <a href="https://www.rfc-editor.org/rfc/rfc6761">rfc-editor.org/rfc/rfc6761</a></li>
-  <li>RFC 6335 — quản lý số hiệu port, gồm khoảng port tạm 49152–65535.
+  <li>RFC 6335, quản lý số hiệu port, gồm khoảng port tạm 49152-65535.
   <a href="https://www.rfc-editor.org/rfc/rfc6335">rfc-editor.org/rfc/rfc6335</a></li>
-  <li>RFC 2131 — <em>Dynamic Host Configuration Protocol</em>. Router cho thuê địa chỉ.
+  <li>RFC 2131, <em>Dynamic Host Configuration Protocol</em>. Router cho thuê địa chỉ.
   <a href="https://www.rfc-editor.org/rfc/rfc2131">rfc-editor.org/rfc/rfc2131</a></li>
-  <li>RFC 4949 — <em>Internet Security Glossary, Version 2</em> (2007). Định nghĩa VPN.
+  <li>RFC 4949, <em>Internet Security Glossary, Version 2</em> (2007). Định nghĩa VPN.
   <a href="https://www.rfc-editor.org/rfc/rfc4949">rfc-editor.org/rfc/rfc4949</a></li>
-  <li>IANA — sổ đăng ký các dải địa chỉ IPv4 dùng cho mục đích đặc biệt.
+  <li>IANA, sổ đăng ký các dải địa chỉ IPv4 dùng cho mục đích đặc biệt.
   <a href="https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml">iana.org/assignments/iana-ipv4-special-registry</a></li>
-  <li>curl — danh sách mã lỗi của libcurl, gồm <code>CURLE_COULDNT_CONNECT</code> (7) và <code>CURLE_OPERATION_TIMEDOUT</code> (28).
+  <li>curl, danh sách mã lỗi của libcurl, gồm <code>CURLE_COULDNT_CONNECT</code> (7) và <code>CURLE_OPERATION_TIMEDOUT</code> (28).
   <a href="https://curl.se/libcurl/c/libcurl-errors.html">curl.se/libcurl/c/libcurl-errors.html</a></li>
-  <li>Microsoft Learn — lệnh <code>netstat</code>.
+  <li>Microsoft Learn, lệnh <code>netstat</code>.
   <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netstat">learn.microsoft.com/…/netstat</a></li>
-  <li>Microsoft Learn — lệnh PowerShell <code>New-NetFirewallRule</code>, gồm tham số <code>-RemoteAddress</code>.
+  <li>Microsoft Learn, lệnh PowerShell <code>New-NetFirewallRule</code>, gồm tham số <code>-RemoteAddress</code>.
   <a href="https://learn.microsoft.com/en-us/powershell/module/netsecurity/new-netfirewallrule">learn.microsoft.com/…/new-netfirewallrule</a></li>
 </ol>
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
 <p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do mình tự chụp; các khung màu là phần đánh dấu thêm vào. Truyện tranh của xkcd và của turnoff.us dùng theo giấy phép phi thương mại ghi ở từng dòng; đã đổi cỡ và chuyển sang đen trắng.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b><a href="https://xkcd.com/2259/">Networking Problems</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg">Card mạng Intel X540-T2</a> — Dmitry Nosachev, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
-  <li><b>Ảnh 3</b>Sổ đăng ký không gian địa chỉ IPv4 — chụp màn hình <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org</a>, 30/09/2026; đã ẩn các khối 015/8 tới 123/8 và ba cột WHOIS, RDAP, Note.</li>
-  <li><b>Ảnh 4</b>Khuôn phần đầu gói tin TCP, RFC 9293 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc9293.html">rfc-editor.org</a>, 03/10/2026.</li>
-  <li><b>Ảnh 5</b><a href="https://commons.wikimedia.org/wiki/File:Netgear_ProSafe_Dual_WAN_VPN_Gigabit_Firewall_FVS336G_front.jpeg">Firewall Netgear FVS336G, mặt trước</a> — Zuzu, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>.</li>
-  <li><b>Ảnh 6</b>Bắt tay ba bước, RFC 9293, Hình 6 — chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc9293.html">rfc-editor.org</a>, 03/10/2026.</li>
-  <li><b>Ảnh 7</b><a href="https://turnoff.us/geek/tcp-buddies/">TCP Buddies</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 1</b><a href="https://xkcd.com/2259/">Networking Problems</a>, Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg">Card mạng Intel X540-T2</a>, Dmitry Nosachev, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 3</b>Sổ đăng ký không gian địa chỉ IPv4, chụp màn hình <a href="https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml">iana.org</a>, 30/09/2026; đã ẩn các khối 015/8 tới 123/8 và ba cột WHOIS, RDAP, Note.</li>
+  <li><b>Ảnh 4</b>Khuôn phần đầu gói tin TCP, RFC 9293, chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc9293.html">rfc-editor.org</a>, 03/10/2026.</li>
+  <li><b>Ảnh 5</b><a href="https://commons.wikimedia.org/wiki/File:Netgear_ProSafe_Dual_WAN_VPN_Gigabit_Firewall_FVS336G_front.jpeg">Firewall Netgear FVS336G, mặt trước</a>, Zuzu, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>.</li>
+  <li><b>Ảnh 6</b>Bắt tay ba bước, RFC 9293, Hình 6, chụp màn hình <a href="https://www.rfc-editor.org/rfc/rfc9293.html">rfc-editor.org</a>, 03/10/2026.</li>
+  <li><b>Ảnh 7</b><a href="https://turnoff.us/geek/tcp-buddies/">TCP Buddies</a>, Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
 </ol>
 
 </section>
@@ -1048,11 +1048,11 @@ Người gọi ở mạng khác thì cần thêm một đường tới được 
 </nav>
 
 <footer class="page">
-  <p>Bài 01 · Module M0 — Nền tảng tối thiểu · DevOps Self-Learning</p>
+  <p>Bài 01 · Module M0: Nền tảng tối thiểu · DevOps Self-Learning</p>
 </footer>
 
 </div>
 
-<script src="../../assets/app.js?v=227913a6"></script>
+<script src="../../assets/app.js?v=31a8c472"></script>
 </body>
 </html>
