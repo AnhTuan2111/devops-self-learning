@@ -48,20 +48,23 @@
   lỗi, không biết hỏng từ lúc nào.</p>
 </div>
 
-<p>Mở IDE đọc lại code là phản xạ dễ hiểu nhất, vì code là thứ bạn viết, hiểu từng dòng và sửa được ngay. Nhưng
-nếu từ hôm qua tới giờ code không đổi dòng nào mà hôm qua web vẫn chạy, thì lỗi nhiều khả năng không nằm ở
-code. Hệ thống đang chạy tốt chỉ hỏng khi có thứ gì đó thay đổi. Thứ bạn viết không đổi, vậy cái đã đổi ở chỗ
-khác.</p>
+<p>Nhận được tin như thế thì bắt đầu tìm từ đâu? Chỗ dễ nghĩ tới nhất là code. Mở IDE ra đọc lại là phản xạ rất tự
+nhiên, vì code là thứ bạn viết, bạn hiểu từng dòng và sửa được ngay.</p>
 
-<p>Chỗ khác đó tên chung là <strong>hạ tầng</strong> (infrastructure): mọi thứ nằm giữa người dùng và code của
-bạn, gồm đường mạng, các máy chủ, và những chương trình chạy trước hoặc sau ứng dụng. Chưa hình dung được một
-request phải đi qua những gì trước khi tới controller thì gặp sự cố chỉ biết tìm ở chỗ quen. Cái thiếu là một
-tấm bản đồ của đường đi đó, và bài này vẽ nó.</p>
+<p>Có điều, giả sử từ hôm qua tới giờ code không đổi dòng nào, mà hôm qua web vẫn chạy. Một hệ thống đang chạy tốt
+thì chỉ hỏng khi có thứ gì đó thay đổi. Code đã không đổi, vậy thứ đã đổi nằm ở đâu?</p>
 
-<p>Cái "lời yêu cầu" ở trên tên chuẩn là <strong>request</strong>: thông điệp trình duyệt gửi đi để xin một thứ
-gì đó, ví dụ "cho tôi dữ liệu của người dùng số 42". Code xử lý request thì bạn viết hằng ngày; bài này nhìn
-nó từ phía ngược lại, đi theo request từ lúc nó sinh ra trên máy người dùng. Mỗi bước request phải đi qua,
-mình gọi là một <strong>chặng</strong>.</p>
+<p>Nó nằm ở <strong>hạ tầng</strong> (infrastructure). Hạ tầng là tên chung cho mọi thứ đứng giữa người dùng và code
+của bạn: đường mạng, các máy chủ (server), và những chương trình chạy trước hoặc sau ứng dụng.</p>
+
+<p>Muốn tìm lỗi trong hạ tầng thì trước hết phải biết một lượt truy cập đi qua hạ tầng như thế nào. Mỗi lần người
+dùng mở một trang, trình duyệt gửi đi một <strong>request</strong>, là một thông điệp xin một thứ gì đó, ví dụ "cho
+tôi dữ liệu của người dùng số 42". Code xử lý request thì bạn viết hằng ngày rồi. Bài này nhìn từ phía ngược lại: đi
+theo request từ lúc nó sinh ra trên máy người dùng.</p>
+
+<p>Từ máy người dùng, request phải đi qua nhiều bước mới tới được controller của bạn, và mỗi bước như vậy mình gọi
+là một <strong>chặng</strong>. Chưa biết các chặng đó thì lúc có sự cố chỉ còn cách tìm ở chỗ quen, là code. Thứ
+đang thiếu vì thế là một tấm bản đồ của cả đường đi, và bài này vẽ tấm bản đồ đó.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  người dùng gõ                               code bạn viết
@@ -75,10 +78,11 @@ mình gọi là một <strong>chặng</strong>.</p>
 
 <div class="callout" id="chu-devops">
   <span class="label">Chữ DevOps trong tên khoá học</span>
-  <p><strong>DevOps</strong> ghép từ development (phát triển, tức viết phần mềm) và operations (vận hành, tức
-  giữ cho phần mềm chạy). Hai việc đó làm chung được thì phải nhìn được trọn khoảng giữa, tức hiểu cả code lẫn
-  những thứ quanh nó. Định nghĩa đầy đủ, lấy từ chuẩn quốc tế, nằm ở tab <a href="#devops">Phía server</a>,
-  sau khi vẽ xong bản đồ và thấy rõ phần nào không phải code của bạn.</p>
+  <p>Tên khoá học có chữ DevOps, vậy chữ đó dính gì tới tấm bản đồ này? <strong>DevOps</strong> ghép từ development
+  (phát triển: viết phần mềm) và operations (vận hành: giữ cho phần mềm chạy). Muốn làm chung hai việc đó thì phải
+  nhìn được trọn khoảng giữa ở Hình 1, nghĩa là hiểu cả code lẫn những thứ quanh nó.</p>
+  <p>Còn định nghĩa đầy đủ theo chuẩn quốc tế thì mình để ở tab <a href="#devops">Phía server</a>, vì tới lúc ấy
+  bản đồ đã vẽ xong và bạn thấy rõ phần nào không phải code của bạn.</p>
 </div>
 
 <h2 id="cau-hoi-bai">Câu hỏi của bài</h2>
@@ -86,24 +90,25 @@ mình gọi là một <strong>chặng</strong>.</p>
 <p class="lede">Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi
 qua những chặng nào, và chặng nào thật sự là code của bạn?</p>
 
-<p>Chia ra ba câu nhỏ cho dễ trả lời:</p>
+<p>Câu hỏi này lớn, nên bài chia nó thành ba câu nhỏ và trả lời lần lượt:</p>
 
 <ol>
-  <li><strong>Một URL nói gì</strong>, phần nào dành cho hạ tầng, phần nào dành cho code?</li>
-  <li><strong>Request đi qua những chặng nào</strong>, chặng nào chạy trên máy người dùng, chặng nào
-  chạy trên server?</li>
-  <li><strong>Chặng nào là code của bạn</strong>, vì sao điều đó quyết định chỗ đi tìm khi có sự cố, và
-  ai lo phần còn lại?</li>
+  <li><strong>Một URL nói gì?</strong> Phần nào dành cho hạ tầng, phần nào dành cho code?</li>
+  <li><strong>Request đi qua những chặng nào?</strong> Chặng nào chạy trên máy người dùng, chặng nào chạy trên
+  server?</li>
+  <li><strong>Chặng nào là code của bạn?</strong> Điều đó cho biết gì về chỗ cần tìm khi có sự cố, và ai lo phần
+  còn lại?</li>
 </ol>
-
 
 
 <h2 id="can-hoc-truoc">Cần đã học trước</h2>
 
-<p>Đây là bài đầu nên chỉ cần biết viết và chạy một ứng dụng Spring Boot trên máy: viết được một controller có
-<code>@GetMapping</code>, chạy ứng dụng, mở <code>http://localhost:8080</code> trong trình duyệt xem kết quả.
-Mình bắt đầu khoá này với đúng chừng đó: viết Spring Boot hằng ngày, chưa biết gì về những thứ nằm ngoài code.
-Thuật ngữ hạ tầng nào khác được giới thiệu ngay trong bài, đúng chỗ nó xuất hiện lần đầu.</p>
+<p>Bài này cần bạn biết trước những gì? Vì là bài đầu nên chỉ cần một thứ: viết và chạy được một ứng dụng Spring
+Boot trên máy. Nói rõ hơn là viết được một controller có <code>@GetMapping</code>, chạy ứng dụng, rồi mở
+<code>http://localhost:8080</code> trong trình duyệt để xem kết quả.</p>
+
+<p>Mình bắt đầu khoá này cũng với đúng chừng đó: viết Spring Boot hằng ngày mà chưa biết gì về những thứ nằm ngoài
+code. Vì vậy thuật ngữ hạ tầng nào cũng được giải nghĩa ngay ở chỗ nó xuất hiện lần đầu.</p>
 
 </section>
 
@@ -112,12 +117,13 @@ Thuật ngữ hạ tầng nào khác được giới thiệu ngay trong bài, đ
      ===================================================================== -->
 <section class="tab" id="url" data-tab="URL" data-note="phần nào cho hạ tầng, phần nào cho code">
 
-<p>Request nào cũng bắt đầu từ chuỗi người dùng gõ vào thanh địa chỉ, nên bản đồ cũng bắt đầu từ đó.</p>
+<p>Tấm bản đồ nên bắt đầu vẽ từ đâu? Từ chính chuỗi chữ người dùng gõ vào thanh địa chỉ, vì request nào cũng sinh
+ra từ đó.</p>
 
 <h2 id="client-server">Hai đầu của một request: client và server</h2>
 
-<p>Request nào cũng có hai phía. Phía gửi đi là chương trình người dùng đang dùng, phía nhận và trả lời là một
-chương trình chạy trên máy ở xa. Hai vai này có tên chuẩn, từ đây bài dùng đúng hai tên đó.</p>
+<p>Request nào cũng có hai bên. Bên gửi là chương trình người dùng đang dùng, còn bên nhận và trả lời là một chương
+trình chạy trên một máy ở xa. Hai vai này có tên chuẩn, và từ đây bài gọi chúng bằng đúng hai tên đó.</p>
 
 <dl class="terms">
   <dt>Client <small>máy khách</small></dt>
@@ -130,8 +136,9 @@ chương trình chạy trên máy ở xa. Hai vai này có tên chuẩn, từ đ
 
 <h2 id="doc-url">Đọc cho đúng một URL</h2>
 
-<p>URL (<em>Uniform Resource Locator</em>, địa chỉ tài nguyên) nhìn như một khối liền, nhưng client đọc nó thành
-năm phần, và mỗi phần do một bộ phận khác nhau lo. Biết ai lo phần nào thì mới biết một lỗi thuộc về ai.</p>
+<p>Chuỗi người dùng gõ vào có tên là URL (<em>Uniform Resource Locator</em>, địa chỉ tài nguyên). Nhìn thì URL như
+một khối liền, nhưng client đọc nó thành năm phần, và mỗi phần lại do một bộ phận khác nhau lo. Vì sao phải tách kỹ
+như vậy? Vì biết ai lo phần nào thì mới biết một lỗi thuộc về ai.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  https://api.example.com:443/users/42?active=true
@@ -150,7 +157,7 @@ code Spring Boot của bạn thực sự đọc tới.</figcaption>
   <em>tên miền</em> (domain name).</dd>
   <dt>port <small>cổng</small></dt>
   <dd>Một con số chỉ ra chương trình nào trên máy đích sẽ nhận request. Một máy có thể chạy nhiều chương
-  trình cùng nhận request, mỗi chương trình một port riêng. Port học kỹ ở Bài 01.</dd>
+  trình cùng nhận request, mỗi chương trình một port riêng.</dd>
   <dt>path <small>đường dẫn</small></dt>
   <dd>Phần chỉ ra tài nguyên bên trong ứng dụng, như <code>/users/42</code>. Đây là phần
   <code>@GetMapping</code> của bạn khớp vào.</dd>
@@ -168,36 +175,46 @@ code Spring Boot của bạn thực sự đọc tới.</figcaption>
   mục trong trang.</figcaption>
 </figure>
 
-<p>Năm phần đó có ba chỗ đáng dừng lại, và chỗ nào cũng dẫn tới một chặng trên bản đồ ở tab sau.</p>
+<p>Trong năm phần đó có ba chỗ đáng dừng lại, vì chỗ nào cũng dẫn tới một chặng trên bản đồ ở tab sau.</p>
 
 <h3 id="host-la-ten">Host là một cái tên, còn mạng cần một địa chỉ</h3>
 
-<p>Mạng không chuyển dữ liệu tới một cái tên, chỉ chuyển tới một <strong>địa chỉ IP</strong>: con số định
-danh một máy trên mạng. Loại phổ biến nhất viết thành bốn số, ví dụ <code>104.20.23.154</code>, một trong các
-địa chỉ của <code>example.com</code> bạn sẽ thấy ở tab Lab. Nói chính xác hơn thì địa chỉ IP gắn với từng card
-mạng của máy (card WiFi chẳng hạn), không gắn với cả máy; Bài 01 đi sâu chỗ này.</p>
+<p>Người dùng gõ một cái tên như <code>api.example.com</code>, vậy mạng có chuyển dữ liệu tới cái tên đó được
+không? Không. Mạng chỉ chuyển dữ liệu tới một <strong>địa chỉ IP</strong>, là con số định danh một máy trên mạng.
+Loại địa chỉ phổ biến nhất viết thành bốn số, ví dụ <code>104.20.23.154</code>, một trong các địa chỉ của
+<code>example.com</code> mà bạn sẽ thấy ở tab Lab.</p>
 
-<p>Nên giữa lúc người dùng gõ tên và lúc client gửi được dữ liệu đầu tiên luôn có một bước dịch tên thành địa
-chỉ. Bước đó do một hệ thống riêng lo, gọi là <strong>DNS</strong> (<em>Domain Name System</em>, hệ thống tên
-miền): mạng lưới máy chủ trải khắp thế giới, chuyên trả lời câu hỏi "tên này ứng với địa chỉ nào". DNS là một
-chặng có thể hỏng riêng, không liên quan gì tới phần còn lại: tên miền quên gia hạn, hay nhà cung cấp DNS gặp
-sự cố, đều làm web "không vào được" dù server và code vẫn khoẻ.</p>
+<p>Nói cho chính xác thì địa chỉ IP gắn với từng card mạng của máy (card WiFi chẳng hạn) chứ không gắn với cả máy.
+Ở mức bản đồ thì cứ coi mỗi máy có một địa chỉ là đủ.</p>
+
+<p>Người gõ tên mà mạng lại cần số, nên giữa lúc người dùng gõ xong và lúc client gửi được dữ liệu đầu tiên luôn có
+một bước dịch tên thành địa chỉ. Bước dịch đó do một hệ thống riêng lo, gọi là <strong>DNS</strong> (<em>Domain Name
+System</em>, hệ thống tên miền). DNS là một mạng lưới server trải khắp thế giới, chuyên trả lời câu hỏi "tên này ứng
+với địa chỉ nào".</p>
+
+<p>Điều đáng nhớ về DNS là nó có thể hỏng riêng một mình, không dính gì tới phần còn lại. Quên gia hạn tên miền, hay
+nhà cung cấp DNS gặp sự cố, đều làm web "không vào được" dù server và code vẫn khoẻ.</p>
 
 <h3 id="scheme-port">Scheme quyết định port mặc định</h3>
 
-<p>Khi URL không ghi port, client tự điền theo scheme: <code>http://</code> đi với port <code>80</code>,
-<code>https://</code> đi với port <code>443</code>. Quy ước này nằm trong chuẩn HTTP (RFC 9110). Nên vào website
-công cộng bạn không phải gõ port, còn chạy Spring Boot trên máy mình thì phải gõ <code>:8080</code>, vì ứng dụng
-nhận request ở một port không mặc định và trình duyệt không đoán được. Ai đứng ở port 443 trên một server thật,
-và vì sao người dùng không bao giờ phải biết số 8080, tab Phía server trả lời.</p>
+<p>URL ở Hình 2 có ghi port, nhưng phần lớn địa chỉ bạn gõ hằng ngày thì không. Vậy lúc đó client lấy port ở đâu
+ra? Nó tự điền theo scheme: <code>http://</code> đi với port <code>80</code>, còn <code>https://</code> đi với port
+<code>443</code>. Quy ước này nằm trong chuẩn HTTP (RFC 9110).</p>
+
+<p>Nhờ quy ước đó mà vào website công cộng bạn không phải gõ port. Còn khi chạy Spring Boot trên máy mình thì phải
+gõ <code>:8080</code>, vì ứng dụng nhận request ở một port không mặc định và trình duyệt không đoán được.</p>
+
+<p>Thế trên một server thật thì ai đứng ở port 443, và vì sao người dùng không bao giờ phải biết con số 8080? Hai
+câu này để tab Phía server trả lời.</p>
 
 <h3 id="path-cho-code">Path và query là phần hạ tầng không đọc</h3>
 
-<p>Không thành phần hạ tầng nào hiểu <code>/users/42</code> là "người dùng số 42". DNS chỉ cần host, còn phần
-lớn chương trình trung gian chuyển nguyên path vào trong. Chỉ ứng dụng, tức code bạn viết, mới gán ý nghĩa cho
-path và query. Vậy URL chia làm hai: ba phần đầu (scheme, host, port) là việc của hạ tầng, vì chúng quyết định
-request có được mã hoá không, đi tới máy nào và vào chương trình nào trên máy đó; hai phần cuối là việc của
-bạn.</p>
+<p>Còn <code>/users/42</code> thì ai hiểu nó là "người dùng số 42"? Không thành phần hạ tầng nào cả. DNS chỉ cần
+host, còn phần lớn chương trình trung gian thì chuyển nguyên path vào trong. Chỉ ứng dụng, tức code bạn viết, mới
+gán ý nghĩa cho path và query.</p>
+
+<p>Vậy là URL chia làm hai nửa. Ba phần đầu (scheme, host, port) là việc của hạ tầng, vì chúng quyết định request
+có được mã hoá không, đi tới máy nào, và vào chương trình nào trên máy đó. Hai phần cuối mới là việc của bạn.</p>
 
 <div class="callout">
   <span class="label">Nối với thứ bạn đã biết</span>
@@ -214,14 +231,13 @@ bạn.</p>
 <section class="tab" id="ban-do" data-tab="Bản đồ" data-note="chín chặng, hai nửa">
 
 <p>Từ lúc trình duyệt tách xong URL tới lúc controller của bạn chạy, request ghé qua những đâu? Hình 4 trả lời
-ở mức toàn cảnh. Hình này sẽ gặp lại ở gần như mọi bài sau, vì công cụ nào của lộ trình cũng gắn vào một hoặc
-vài chặng trên đó.</p>
+ở mức toàn cảnh. Đó là hình quan trọng nhất của bài, vì mỗi thành phần hạ tầng đều nằm ở một chặng trên đó.</p>
 
 <h2 id="vi-sao-chin-chang">Vì sao trên máy bạn chỉ thấy vài bước, còn trên server thật có chín</h2>
 
-<p>Lúc đang code, mọi thứ nằm trên một máy nên đường đi rất ngắn: trình duyệt gọi thẳng
-<code>localhost:8080</code>, Spring Boot nhận request, đọc database rồi trả lời. Không có tên miền để dịch,
-không ai mã hoá, không ai chặn ở giữa.</p>
+<p>Trước khi xem cả chín chặng, thử nhìn lại đường đi quen thuộc lúc bạn đang code. Khi đó mọi thứ nằm trên một máy
+nên đường đi rất ngắn: trình duyệt gọi thẳng <code>localhost:8080</code>, Spring Boot nhận request, đọc database rồi
+trả lời. Trên đường đó không có tên miền nào để dịch, không ai mã hoá, và cũng không ai chặn ở giữa.</p>
 
 <figure class="fig">
 <pre class="diagram"><code>  trình duyệt ──→ localhost:8080 ──→ Spring Boot ──→ PostgreSQL
@@ -229,17 +245,18 @@ không ai mã hoá, không ai chặn ở giữa.</p>
 <figcaption><b>Hình 3</b> Đường đi của request khi bạn đang code trên máy mình.</figcaption>
 </figure>
 
-<p>Đưa ứng dụng lên server cho người dùng thật vào qua Internet thì khoảng cách xa hơn, và môi trường không
-còn an toàn như máy bạn. Phải thêm bốn thành phần, mỗi cái giải quyết đúng một vấn đề mà máy dev chưa có.</p>
+<p>Vậy khi đưa ứng dụng lên server để người dùng thật vào qua Internet thì có gì khác? Đường đi xa hơn, và môi
+trường không còn an toàn như trên máy bạn nữa. Vì hai chuyện đó mà phải thêm bốn thành phần, mỗi thành phần giải
+quyết đúng một vấn đề mà trên máy bạn chưa gặp (Bảng 1).</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 1</b> Bốn thành phần xuất hiện khi ứng dụng đi từ máy dev lên Internet.</caption>
+  <caption><b>Bảng 1</b> Bốn thành phần xuất hiện khi ứng dụng đi từ máy bạn lên Internet.</caption>
   <thead><tr><th>Thành phần</th><th>Vì sao phải có</th></tr></thead>
   <tbody>
     <tr><td><strong>DNS</strong></td><td>Người dùng chỉ biết cái tên <code>api.example.com</code>, không biết địa chỉ IP của server.</td></tr>
-    <tr><td><strong>TLS</strong></td><td>Dữ liệu đi qua Internet phải được mã hoá, và trình duyệt phải kiểm chứng được máy bên kia đúng là <code>api.example.com</code>.</td></tr>
-    <tr><td><strong>Firewall</strong></td><td>Server giờ phơi ra toàn bộ Internet, nơi các chương trình tự động dò quét liên tục; phải có một lớp chặn những gì không được phép vào.</td></tr>
+    <tr><td><strong>TLS</strong>, lớp mã hoá của <code>https</code></td><td>Dữ liệu đi qua Internet phải được mã hoá, và trình duyệt phải kiểm chứng được máy bên kia đúng là <code>api.example.com</code>.</td></tr>
+    <tr><td><strong>Firewall</strong> (tường lửa)</td><td>Server giờ phơi ra toàn bộ Internet, nơi các chương trình tự động dò quét liên tục; phải có một lớp chặn những gì không được phép vào.</td></tr>
     <tr><td><strong>Nginx</strong></td><td>Phải có một chương trình đứng trước ứng dụng: nhận request ở port 443, gỡ lớp mã hoá, rồi chuyển request vào trong.</td></tr>
   </tbody>
 </table>
@@ -274,39 +291,42 @@ request đi qua. Năm chặng trong khung trên chạy trên máy người dùng
 server. Địa chỉ <code>203.0.113.10</code> thuộc một dải dành riêng cho ví dụ trong tài liệu.</figcaption>
 </figure>
 
-<p>Mỗi chặng có một thành phần lo và một kiểu hỏng riêng, và được học kỹ ở một bài của lộ trình. Bảng 2 tóm
-tắt từng chặng bằng một câu để các tên trong Hình 4 có nghĩa ngay từ giờ; hai tab sau giải thích đủ để hiểu
-bản đồ.</p>
+<p>Hình 4 có tới chín cái tên. Có cần hiểu hết ngay không? Chưa cần. Mỗi chặng có một thành phần lo và một kiểu hỏng
+riêng. Lúc này chỉ cần Bảng 2: nó tóm mỗi chặng bằng một câu để các tên trong Hình 4 có nghĩa ngay từ bây giờ, còn
+hai tab sau giải thích thêm vừa đủ để hiểu bản đồ.</p>
 
 <div class="table-scroll">
 <table>
-  <caption><b>Bảng 2</b> Chín chặng theo thứ tự request đi qua, mỗi chặng một câu, và bài học kỹ chặng đó.</caption>
-  <thead><tr><th>Thành phần</th><th>Chạy ở đâu</th><th>Làm gì</th><th>Học kỹ ở</th></tr></thead>
+  <caption><b>Bảng 2</b> Chín chặng theo thứ tự request đi qua, mỗi chặng một câu.</caption>
+  <thead><tr><th>Thành phần</th><th>Chạy ở đâu</th><th>Làm gì</th></tr></thead>
   <tbody>
-    <tr><td>Trình duyệt</td><td>máy người dùng</td><td>Tách URL thành các phần, điền port mặc định nếu thiếu.</td><td>bài này</td></tr>
-    <tr><td>DNS</td><td>máy người dùng hỏi, máy chủ DNS trả lời</td><td>Dịch tên miền thành địa chỉ IP.</td><td>Bài 20</td></tr>
-    <tr><td>TCP</td><td>máy người dùng và server</td><td>Mở một kết nối tin cậy tới đúng địa chỉ IP và port.</td><td>Bài 01</td></tr>
-    <tr><td>TLS</td><td>máy người dùng và server</td><td>Kiểm tra giấy tờ điện tử chứng minh server đúng là tên miền nó nhận (gọi là chứng chỉ), rồi mã hoá mọi thứ gửi sau đó.</td><td>Bài 20</td></tr>
-    <tr><td>HTTP</td><td>máy người dùng</td><td>Gửi request: phương thức, path, các header.</td><td>Bài 02</td></tr>
-    <tr><td>Firewall</td><td>server</td><td>Cho phép hoặc chặn dữ liệu đi vào theo luật.</td><td>Bài 01, Bài 17</td></tr>
-    <tr><td>Nginx</td><td>server</td><td>Nhận request thay ứng dụng, gỡ mã hoá, chuyển vào trong.</td><td>Bài 19</td></tr>
-    <tr><td>Spring Boot</td><td>server</td><td>Chạy code của bạn.</td><td>Bài 03, Bài 08</td></tr>
-    <tr><td>PostgreSQL</td><td>server</td><td>Lưu và trả dữ liệu cho ứng dụng.</td><td>Bài 11</td></tr>
+    <tr><td>Trình duyệt</td><td>máy người dùng</td><td>Tách URL thành các phần, điền port mặc định nếu thiếu.</td></tr>
+    <tr><td>DNS</td><td>máy người dùng hỏi, server DNS trả lời</td><td>Dịch tên miền thành địa chỉ IP.</td></tr>
+    <tr><td>TCP</td><td>máy người dùng và server</td><td>Mở một kết nối tin cậy tới đúng địa chỉ IP và port.</td></tr>
+    <tr><td>TLS</td><td>máy người dùng và server</td><td>Kiểm tra giấy tờ điện tử chứng minh server đúng là tên miền nó nhận (gọi là chứng chỉ), rồi mã hoá mọi thứ gửi sau đó.</td></tr>
+    <tr><td>HTTP</td><td>máy người dùng</td><td>Gửi request: phương thức, path, các header.</td></tr>
+    <tr><td>Firewall</td><td>server</td><td>Cho phép hoặc chặn dữ liệu đi vào theo luật.</td></tr>
+    <tr><td>Nginx</td><td>server</td><td>Nhận request thay ứng dụng, gỡ mã hoá, chuyển vào trong.</td></tr>
+    <tr><td>Spring Boot</td><td>server</td><td>Chạy code của bạn.</td></tr>
+    <tr><td>PostgreSQL</td><td>server</td><td>Lưu và trả dữ liệu cho ứng dụng.</td></tr>
   </tbody>
 </table>
 </div>
 
 <h2 id="thu-tu">Vì sao thứ tự là TCP, rồi TLS, rồi HTTP</h2>
 
-<p>Mở kết nối TCP, bắt tay TLS, gửi request HTTP đi theo một thứ tự cố định, vì bước sau chạy bên trên bước
-trước và cần bước trước xong. TCP phải mở xong trước, vì TLS là cuộc trao đổi diễn ra bên trong kết nối đó.
-TLS bật mã hoá xong thì trình duyệt mới gửi dòng <code>GET /users/42</code>. Nên path và các header của
-request, kể cả cookie đăng nhập, đi qua Internet ở dạng đã mã hoá.</p>
+<p>Trong Hình 4, ba việc mở kết nối TCP, bắt tay TLS và gửi request HTTP đứng liền nhau, và lúc nào cũng theo đúng
+thứ tự đó. Vì sao không đảo được? Vì bước sau chạy ở bên trong bước trước.</p>
 
-<p>Cách tổ chức này tên là <strong>phân tầng</strong> (layering): mỗi tầng chỉ dựa vào dịch vụ của tầng ngay
-bên dưới, nên sửa hay thay một tầng mà không phải viết lại các tầng khác. Vì vậy TCP, TLS và HTTP có ba văn bản
-chuẩn riêng, viết độc lập với nhau; số hiệu từng văn bản, cùng văn bản chuẩn của DNS, nằm ở mục Nguồn đọc thêm
-cuối bài.</p>
+<p>TCP phải mở xong trước, vì TLS là một cuộc trao đổi diễn ra bên trong chính kết nối đó. Rồi TLS phải bật mã hoá
+xong thì trình duyệt mới gửi dòng <code>GET /users/42</code>. Nhờ thứ tự này mà path và các header của request, kể
+cả cookie đăng nhập, đều đi qua Internet ở dạng đã mã hoá.</p>
+
+<p>Cách tổ chức như vậy có tên là <strong>phân tầng</strong> (layering): mỗi tầng chỉ dựa vào tầng ngay bên dưới
+nó. Phân tầng thì được lợi ở chỗ sửa hay thay một tầng không phải viết lại các tầng khác.</p>
+
+<p>Đó cũng là lý do TCP, TLS và HTTP có ba văn bản chuẩn riêng, viết độc lập với nhau. Số hiệu từng văn bản nằm ở
+mục Nguồn đọc thêm cuối bài, cùng với văn bản chuẩn của DNS.</p>
 
 </section>
 
@@ -315,27 +335,30 @@ cuối bài.</p>
      ===================================================================== -->
 <section class="tab" id="may-nguoi-dung" data-tab="Máy người dùng" data-note="từ URL tới request HTTP">
 
-<p>Năm chặng trong khung trên của Hình 4 chạy ngay trên máy người dùng, trước khi một byte nào của request
-tới được server. Phần này đi chậm qua từng chặng để nhận ra chặng nào hỏng khi gặp nó; học kỹ thì để các bài
-sau.</p>
+<p>Năm chặng trong khung trên của Hình 4 chạy ngay trên máy người dùng, lúc chưa có byte nào của request tới được
+server. Phần dưới đây đi chậm qua từng chặng đó. Đi kỹ tới đâu? Vừa đủ để gặp chặng nào hỏng thì bạn nhận ra.</p>
 
 <h2 id="chang-1">Trình duyệt tách URL</h2>
 
-<p>Việc đầu tiên trình duyệt làm là tách URL thành năm phần như ở tab URL, rồi điền port mặc định nếu URL
-không ghi. Từ <code>https://api.example.com/users/42</code>, nó biết sẽ dùng HTTPS, cần tìm địa chỉ của
-<code>api.example.com</code>, kết nối tới port 443 và xin path <code>/users/42</code>. Bước này hiếm khi
-hỏng, trừ khi chính URL gõ sai.</p>
+<p>Người dùng gõ xong địa chỉ và bấm Enter thì trình duyệt làm gì trước tiên? Nó tách URL thành năm phần như ở tab
+URL, rồi điền port mặc định nếu URL không ghi. Lấy <code>https://api.example.com/users/42</code> làm ví dụ. Tách xong
+URL này thì trình duyệt biết bốn điều: phải dùng HTTPS, phải tìm địa chỉ của <code>api.example.com</code>, kết nối
+tới port 443, và xin path <code>/users/42</code>.</p>
+
+<p>Bước tách này hiếm khi hỏng, trừ khi chính URL bị gõ sai.</p>
 
 <h2 id="chang-2">DNS dịch tên thành địa chỉ</h2>
 
-<p>Muốn biết gửi dữ liệu tới đâu thì máy người dùng phải hỏi DNS. Nó không tự biết câu trả lời: hệ điều
-hành gửi câu hỏi tới một <strong>máy chủ DNS</strong> mà nó được cấu hình để dùng, thường là router trong
-nhà hoặc máy chủ của nhà mạng, rồi máy chủ đó trả lời (hoặc đi hỏi tiếp giúp). Chủ tên miền khai báo câu trả
-lời gốc dưới dạng các <strong>bản ghi DNS</strong>: mỗi bản ghi là một dòng ghi rằng tên này ứng với địa chỉ
-này.</p>
+<p>Trình duyệt đã biết phải tìm địa chỉ của <code>api.example.com</code>, nhưng tìm ở đâu? Máy người dùng không tự
+biết câu trả lời, nên nó phải hỏi DNS. Hệ điều hành gửi câu hỏi tới một <strong>server DNS</strong> đã được cài sẵn
+cho nó, thường là cục phát WiFi trong nhà hoặc một server của nhà mạng. Server DNS đó hoặc trả lời luôn, hoặc đi
+hỏi tiếp giúp rồi mới trả lời.</p>
 
-<p>Bạn tự hỏi DNS được bằng lệnh <code>nslookup</code>, có sẵn trên cả Windows lẫn Linux. Đây là output thật
-khi mình chạy Lab 1 trên máy mình ngày 24/09/2026, trong Git Bash trên Windows (tên router nhà mình đã được
+<p>Câu trả lời mà server DNS đưa ra thì rốt cuộc đến từ chủ tên miền. Họ khai sẵn các <strong>bản ghi DNS</strong>,
+mỗi bản ghi là một dòng nói rằng tên này ứng với địa chỉ này, và câu trả lời gốc nằm ở những dòng đó.</p>
+
+<p>Bạn cũng tự hỏi DNS được, bằng lệnh <code>nslookup</code> có sẵn trên cả Windows lẫn Linux. Dưới đây là output
+thật khi mình chạy Lab 1 trên máy mình ngày 24/09/2026, trong Git Bash trên Windows (tên router nhà mình đã được
 ẩn):</p>
 
 <figure class="fig">
@@ -347,12 +370,12 @@ Non-authoritative answer:
 Name:    github.com
 Address: 20.205.243.166</code></pre>
 <figcaption><b>Hình 5</b> Hỏi DNS địa chỉ của <code>github.com</code>. Khối trên cho biết <em>ai</em>
-đã trả lời (router trong nhà, liên lạc qua một địa chỉ <code>fe80::…</code> chỉ dùng được trong mạng
-nội bộ, học ở Bài 01), khối dưới cho biết câu trả lời là gì.</figcaption>
+đã trả lời: router trong nhà. Địa chỉ <code>fe80::…</code> của nó là loại chỉ dùng được trong mạng nội bộ. Khối
+dưới cho biết câu trả lời là gì.</figcaption>
 </figure>
 
-<p>Nếu tên miền không tồn tại thì máy chủ DNS nói đúng như vậy, và hành trình của request dừng ngay ở bước
-hỏi DNS:</p>
+<p>Còn nếu hỏi một tên miền không tồn tại thì sao? Server DNS nói đúng như vậy, và hành trình của request dừng ngay
+ở bước hỏi DNS:</p>
 
 <figure class="fig">
 <pre><code>$ nslookup khong-ton-tai-dau-nhe-12345.com
@@ -361,61 +384,70 @@ hỏi DNS:</p>
 <code>NXDOMAIN</code>: tên miền không tồn tại.</figcaption>
 </figure>
 
-<p>Chỗ đáng để ý ở Hình 6 là những thứ <em>chưa</em> xảy ra. DNS đã trả lời "không có tên này" thì client
-chưa có địa chỉ nào để kết nối, nên chưa có mở kết nối, chưa bắt tay TLS, chưa gửi request. Server, Nginx
-hay code của bạn không biết có người vừa thử vào. Trang
-<a href="phan-tich-output.html#t-dns">Đọc output thật</a> giải thích từng dòng của hai output này kỹ
-hơn.</p>
+<p>Chỗ đáng để ý ở Hình 6 là những thứ <em>chưa</em> xảy ra. Khi DNS trả lời "không có tên này" thì client chưa có
+địa chỉ nào để kết nối, nên nó chưa mở kết nối, chưa bắt tay TLS, và chưa gửi request. Vì vậy server, Nginx và code
+của bạn đều không hề biết có người vừa thử vào.</p>
+
+<p>Trang <a href="phan-tich-output.html#t-dns">Đọc output thật</a> giải thích kỹ từng dòng của hai output này.</p>
 
 <h2 id="chang-3">TCP mở kết nối</h2>
 
-<p>Có địa chỉ rồi, client bắt đầu gửi dữ liệu. Trên mạng, dữ liệu không đi thành một khối mà bị cắt thành
-những mẩu nhỏ gọi là <strong>gói tin</strong> (packet). Mỗi gói tin có phần đầu ghi địa chỉ nơi gửi và nơi
-nhận, giống cách mỗi request HTTP mang các header.</p>
+<p>Có địa chỉ rồi thì client bắt đầu gửi dữ liệu. Nhưng dữ liệu đi trên mạng dưới dạng gì? Nó không đi thành một
+khối, mà bị cắt thành những mẩu nhỏ gọi là <strong>gói tin</strong> (packet). Mỗi gói tin có phần đầu ghi địa chỉ
+nơi gửi và nơi nhận, giống cách mỗi request HTTP mang các header.</p>
 
-<p>Gói tin không bay thẳng tới server mà đi qua nhiều <strong>router</strong>: thiết bị nối các mạng với
-nhau, nhận gói tin từ mạng này rồi chuyển sang mạng gần đích hơn. Router đầu tiên là chiếc router trong nhà
-người dùng, sau đó là router của nhà mạng, rồi của các mạng trung gian, cho tới mạng nơi server đặt.</p>
+<p>Gói tin cũng không bay thẳng một mạch tới server. Trên đường đi nó ghé qua nhiều <strong>router</strong>, là
+thiết bị nối các mạng với nhau: nhận gói tin từ mạng này rồi chuyển sang mạng gần đích hơn. Router đầu tiên chính
+là cục phát WiFi trong nhà người dùng, sau đó tới router của nhà mạng, rồi router của các mạng trung gian, cho tới
+mạng nơi đặt server.</p>
 
 <figure class="fig photo side">
   <img src="img/router-gia-dinh.webp" width="800" height="600" loading="lazy" alt="Một router không dây gia đình màu đen có hai ăng-ten dựng đứng.">
   <figcaption><b>Ảnh 2</b> Một router gia đình. Mọi gói tin rời máy người dùng để ra Internet đều đi qua
-  thiết bị này đầu tiên; ở nhiều mạng gia đình nó cũng chính là máy chủ DNS đã trả lời ở Hình 5.</figcaption>
+  thiết bị này đầu tiên. Ở nhiều mạng gia đình, nó cũng chính là server DNS đã trả lời ở Hình 5.</figcaption>
 </figure>
 
-<p>Gói tin rời rạc như vậy có thể mất, tới sai thứ tự, hoặc tới hai lần. <strong>TCP</strong>
-(<em>Transmission Control Protocol</em>) sinh ra để giải quyết đúng chuyện đó: trước khi gửi dữ liệu, hai máy
-trao đổi vài gói tin để thoả thuận mở một <em>kết nối</em>, rồi đánh số mọi gói gửi sau, gửi lại gói bị mất
-và xếp lại đúng thứ tự. Kết nối mở tới một địa chỉ IP và một port cụ thể, ở đây là
-<code>203.0.113.10</code> và port 443.</p>
+<p>Đi rời rạc qua nhiều router như vậy thì gói tin có thể mất, tới sai thứ tự, hoặc tới hai lần, và
+<strong>TCP</strong> (<em>Transmission Control Protocol</em>) sinh ra để lo đúng chuyện đó.</p>
 
-<p>Mở kết nối thường là chỗ hỏng đầu tiên khi đưa ứng dụng cho người khác dùng, và nó hỏng theo hai kiểu rất
-khác nhau: bị từ chối ngay, hoặc chờ mãi không ai trả lời. Bài 01 dành trọn cho bước này.</p>
+<p>Cách TCP lo là thế này. Trước khi gửi dữ liệu, hai máy trao đổi vài gói tin để thoả thuận mở một <em>kết
+nối</em>. Kể từ lúc có kết nối, TCP đánh số mọi gói gửi đi, gửi lại gói nào bị mất, và xếp các gói lại cho đúng thứ
+tự. Một kết nối luôn mở tới một địa chỉ IP và một port cụ thể, ở đây là <code>203.0.113.10</code> và port 443.</p>
+
+<p>Khi bạn đưa ứng dụng cho người khác dùng thì mở kết nối thường là chỗ hỏng đầu tiên, và nó hỏng theo hai kiểu
+rất khác nhau: bị từ chối ngay, hoặc chờ mãi không ai trả lời.</p>
 
 <h2 id="chang-4">TLS mã hoá và chứng minh danh tính</h2>
 
-<p>Chữ <code>s</code> trong <code>https</code> nghĩa là dữ liệu đi qua một lớp bảo mật tên là
-<strong>TLS</strong> (<em>Transport Layer Security</em>). TLS làm hai việc. Việc thứ nhất là
-<em>chứng minh danh tính</em>: bảo đảm máy đang trả lời đúng là <code>api.example.com</code>, không phải một
-máy mạo danh. Việc thứ hai là <em>mã hoá</em>: biến mọi dữ liệu gửi sau đó thành dạng người đứng giữa không
-đọc được. Thứ tự này có lý do: nếu máy ở đầu kia là máy mạo danh thì mã hoá kỹ tới đâu, dữ liệu vẫn tới đúng
-tay máy mạo danh ấy.</p>
+<p>Kết nối đã mở, nhưng dữ liệu chạy trong nó vẫn đi qua router của nhiều mạng khác. Làm sao để không ai đứng giữa
+đọc được? Đó là việc của chữ <code>s</code> trong <code>https</code>: nó cho biết dữ liệu đi qua một lớp bảo mật tên
+là <strong>TLS</strong> (<em>Transport Layer Security</em>). TLS làm hai việc.</p>
+
+<p>Việc thứ nhất là <em>chứng minh danh tính</em>: bảo đảm máy đang trả lời đúng là <code>api.example.com</code>
+chứ không phải một máy mạo danh. Việc thứ hai là <em>mã hoá</em>: biến mọi dữ liệu gửi sau đó thành dạng mà người
+đứng giữa không đọc được.</p>
+
+<p>Vì sao chứng minh danh tính lại phải đi trước? Vì nếu máy ở đầu kia là máy mạo danh thì mã hoá kỹ tới đâu, dữ
+liệu vẫn tới đúng tay máy mạo danh đó.</p>
 
 <p>Truyện ở Ảnh 3 nói về việc thứ hai, mã hoá, bằng một tình huống ngoài đời.</p>
 
 <figure class="fig photo small">
   <img src="img/truyen-ssl.webp" width="850" height="825" loading="lazy" alt="Truyện tranh một khung. Một người đứng trước quầy nói: Chào buổi sáng, tôi muốn xem các đơn hàng mới nhất của cửa hàng. Người bán đáp: Anh điên à, đó là thông tin mật. Người kia nói: Xin lỗi, vì trang web của anh không dùng SSL nên tôi tưởng anh không quan tâm tới bí mật.">
-  <figcaption><b>Ảnh 3</b> Truyện <em>We need to talk about SSL</em> của Daniel Stori, turnoff.us, năm 2017. Một người lạ hỏi xem đơn hàng của cửa hàng; chủ cửa hàng bảo đó là thông tin mật; người kia đáp rằng trang web của cửa hàng không dùng SSL nên anh tưởng cửa hàng không quan tâm tới bí mật. SSL là giao thức đời trước của TLS, và nhiều người vẫn gọi TLS bằng tên ấy. Truyện đúng ở chỗ: không có lớp mã hoá thì mọi máy đứng giữa đường đi đều đọc được dữ liệu.</figcaption>
+  <figcaption><b>Ảnh 3</b> Truyện <em>We need to talk about SSL</em> của Daniel Stori, turnoff.us, năm 2017. Một người lạ hỏi xem đơn hàng của cửa hàng, và chủ cửa hàng bảo đó là thông tin mật. Người kia đáp rằng trang web của cửa hàng không dùng SSL, nên cứ tưởng cửa hàng không quan tâm tới bí mật. SSL là giao thức đời trước của TLS, và nhiều người vẫn gọi TLS bằng tên ấy. Truyện đúng ở chỗ: không có lớp mã hoá thì mọi máy đứng giữa đường đi đều đọc được dữ liệu.</figcaption>
 </figure>
 
-<p>Để chứng minh danh tính, server trình ra một <strong>chứng chỉ</strong> (certificate): một tài liệu điện
-tử ghi nó thuộc về tên miền nào và còn hiệu lực tới khi nào. Lúc học tới đây mình hỏi ngay: chứng chỉ có
-phải là chỗ cấp phép đăng ký tên miền với địa chỉ IP không? Không phải. Gắn tên với địa chỉ là việc của DNS
-ở trên. Chứng chỉ chỉ chứng minh máy đang trả lời có quyền dùng cái tên đó, và nó không chứa địa chỉ IP.</p>
+<p>Giờ quay lại việc thứ nhất. Để chứng minh danh tính, server trình ra một <strong>chứng chỉ</strong>
+(certificate), là một tài liệu điện tử ghi nó thuộc về tên miền nào và còn hiệu lực tới khi nào.</p>
 
-<p>Ai cũng tự viết ra được một tài liệu như thế, nên chứng chỉ chỉ đáng tin khi được ký bởi một <strong>CA</strong>
-(<em>Certificate Authority</em>, tổ chức cấp chứng chỉ): tổ chức mà trình duyệt và hệ điều hành đã tin sẵn
-từ lúc được cài. Trình duyệt kiểm tra chữ ký của CA, tên miền và hạn dùng, rồi mới đi tiếp.</p>
+<p>Lúc học tới đây mình hỏi ngay: chứng chỉ có phải là chỗ cấp phép đăng ký tên miền với địa chỉ IP không? Không
+phải. Gắn tên với địa chỉ là việc của DNS ở trên. Chứng chỉ chỉ chứng minh máy đang trả lời có quyền dùng cái tên
+đó, và trong nó không có địa chỉ IP nào.</p>
+
+<p>Nhưng một tài liệu như thế thì ai cũng tự viết ra được, vậy sao trình duyệt lại tin? Vì chứng chỉ chỉ được tin
+khi có một <strong>CA</strong> (<em>Certificate Authority</em>, tổ chức cấp chứng chỉ) ký vào, mà CA là những tổ
+chức trình duyệt và hệ điều hành đã tin sẵn từ lúc được cài. Trình duyệt kiểm tra chữ ký của CA, tên miền và hạn
+dùng, rồi mới đi tiếp.</p>
 
 <p>Lab 3 đọc chứng chỉ thật của <code>example.com</code> bằng lệnh <code>openssl</code>. Đây là kết quả khi
 mình chạy nó ngày 24/09/2026:</p>
@@ -429,21 +461,22 @@ notAfter=Oct 27 22:17:21 2026 GMT</code></pre>
 cấp cho ai (<code>subject</code>), ai ký (<code>issuer</code>), hiệu lực từ ngày nào tới ngày nào.</figcaption>
 </figure>
 
-<p>Hai dòng cuối cho thấy chứng chỉ này chỉ có hiệu lực 90 ngày, từ 29/07 tới 27/10. Chứng chỉ có hạn dùng
-nên một website có thể hỏng ở bước bắt tay TLS đúng ngày chứng chỉ hết hạn, dù không ai đụng vào gì. Vì sao
-cấp ngắn hạn như vậy, và gia hạn tự động ra sao, là nội dung của Bài 20.</p>
+<p>Hai dòng cuối cho thấy chứng chỉ này chỉ có hiệu lực 90 ngày, từ 29/07 tới 27/10. Chứng chỉ đã có hạn dùng thì
+một website có thể hỏng ở bước bắt tay TLS đúng vào ngày chứng chỉ hết hạn, dù không ai đụng vào gì.</p>
 
-<p>Có lần mình đoán một website hết chứng chỉ đúng thứ Hai là vì ai đó đăng ký nó vào một hôm nào trong quá
-khứ rồi tình cờ trùng. Không tình cờ: hạn là ngày cấp cộng 90 ngày, nên chứng chỉ hết vào một ngày biết trước
-được, và nếu tới ngày đó chưa ai gia hạn thì web hỏng.</p>
+
+<p>Có lần mình đoán thế này: một website hết chứng chỉ đúng thứ Hai là do ai đó đăng ký nó vào một hôm nào trong quá
+khứ, rồi tình cờ trùng. Không tình cờ đâu. Hạn là ngày cấp cộng 90 ngày, nên chứng chỉ hết vào một ngày biết trước
+được. Tới ngày đó mà chưa ai gia hạn thì web hỏng.</p>
 
 <h2 id="chang-5">Gửi request HTTP</h2>
 
-<p>Chỉ khi DNS đã trả lời, kết nối TCP đã mở và TLS đã bật mã hoá thì trình duyệt mới gửi request.
-<strong>HTTP</strong> (<em>Hypertext Transfer Protocol</em>) là quy ước về cách viết request và response.
-Một request HTTP là một đoạn chữ có cấu trúc: dòng đầu gồm phương thức (<code>GET</code>,
-<code>POST</code>…), path và phiên bản giao thức; tiếp theo là các <strong>header</strong>, mỗi dòng một
-cặp tên và giá trị. Đây là request thật mà <code>curl</code> gửi đi ở Lab 2:</p>
+<p>Tới đây DNS đã trả lời, kết nối TCP đã mở, TLS đã bật mã hoá, và lúc này trình duyệt mới gửi request.</p>
+
+<p>Request đó được viết theo <strong>HTTP</strong> (<em>Hypertext Transfer Protocol</em>), là quy ước về cách viết
+request và response. Theo quy ước này, một request là một đoạn chữ có cấu trúc: dòng đầu gồm phương thức
+(<code>GET</code>, <code>POST</code>…), path và phiên bản giao thức, sau đó là các <strong>header</strong>, mỗi
+dòng một cặp tên và giá trị. Đây là request thật mà <code>curl</code> gửi đi ở Lab 2:</p>
 
 <figure class="fig">
 <pre><code>&gt; GET / HTTP/1.1
@@ -454,9 +487,9 @@ cặp tên và giá trị. Đây là request thật mà <code>curl</code> gửi 
 <code>curl -v</code> đánh dấu dữ liệu gửi đi.</figcaption>
 </figure>
 
-<p>Dòng <code>Host: example.com</code> đưa tên miền vào bên trong request. Lý do cần nó: một server có thể
-phục vụ nhiều website cùng lúc trên cùng một địa chỉ IP, và header <code>Host</code> cho server biết request
-này dành cho website nào. Ở tab sau bạn sẽ thấy Nginx dùng đúng dòng này.</p>
+<p>Trong Hình 8 có dòng <code>Host: example.com</code>. Kết nối đã mở tới đúng máy rồi, sao request còn phải ghi
+lại tên miền? Vì một server có thể phục vụ nhiều website cùng lúc trên cùng một địa chỉ IP, nên nó cần header
+<code>Host</code> để biết request này dành cho website nào. Ở tab sau bạn sẽ thấy Nginx dùng đúng dòng này.</p>
 
 </section>
 
@@ -465,42 +498,50 @@ này dành cho website nào. Ở tab sau bạn sẽ thấy Nginx dùng đúng d�
      ===================================================================== -->
 <section class="tab" id="phia-server" data-tab="Phía server" data-note="từ firewall tới database, và code của bạn">
 
-<p>Request đã rời máy người dùng, giờ đi qua Internet, firewall, Nginx, ứng dụng và database.</p>
+<p>Request đã rời máy người dùng. Từ đây nó còn phải qua những đâu mới chạm được code của bạn? Lần lượt là
+Internet, firewall, Nginx, rồi mới tới ứng dụng và database.</p>
 
 <h2 id="internet">Internet: phần bạn không kiểm soát</h2>
 
 <p>Dòng <code>~~~ Internet ~~~</code> trong Hình 4 là chuỗi router và đường truyền nằm giữa mạng của người
-dùng và mạng của server. Bạn không sở hữu, cũng không cấu hình được gì ở đó. Bạn chỉ quyết định được hai
-đầu: request gửi đi đúng cách, và server ở đầu kia sẵn sàng nhận.</p>
+dùng và mạng của server. Ở đoạn này bạn gần như không làm được gì, vì bạn không sở hữu mà cũng không cấu hình được
+thứ nào ở đó. Thứ bạn quyết định được chỉ là hai đầu: request gửi đi đúng cách, và server ở đầu kia sẵn sàng
+nhận.</p>
 
 <figure class="fig photo">
   <img src="img/cap-quang-bien.webp" width="1200" height="803" loading="lazy" alt="Bốn mẫu cáp quang biển cắt ngang đặt cạnh nhau, có nhãn chú thích từng lớp: lõi sợi quang, dây đồng cấp điện, lớp giáp thép.">
   <figcaption><b>Ảnh 4</b> Phần Internet giữa các châu lục có hình hài vật lý thật: phần lớn lưu lượng đi
-  qua cáp quang biển. Đây là mẫu cắt ngang bốn loại vỏ cáp: sợi quang nằm ở lõi, bọc bởi dây đồng cấp điện
-  cho các bộ khuếch đại dọc tuyến, rồi tới các lớp giáp thép dày dần cho những đoạn gần bờ, nơi cáp dễ bị
-  neo tàu kéo đứt.</figcaption>
+  qua cáp quang biển. Đây là mẫu cắt ngang bốn loại vỏ cáp. Sợi quang nằm ở lõi, bọc quanh nó là dây đồng cấp điện
+  cho các bộ khuếch đại dọc tuyến, còn ngoài cùng là các lớp giáp thép. Giáp dày dần ở những đoạn gần bờ, vì ở đó
+  cáp dễ bị neo tàu kéo đứt.</figcaption>
 </figure>
 
 <h2 id="chang-6">Firewall cho qua hoặc chặn</h2>
 
-<p>Gói tin đầu tiên tới server gặp ngay <strong>firewall</strong> (tường lửa): một bộ lọc chạy trên server
-hoặc trước server, xem từng gói tin đi vào rồi quyết định cho qua hay chặn, theo các luật như "chỉ cho phép
-kết nối tới port 443". Firewall đứng trước mọi chương trình trên server, nên gói tin bị nó chặn thì không
-chương trình nào thấy. Lý do phải có nó đã nêu ở Bảng 1: server phơi ra Internet, nơi luôn có chương trình tự
-động dò xem port nào đang mở. Bài 01 sẽ cho thấy một gói tin bị firewall chặn để lại triệu chứng gì ở phía
-client.</p>
+<p>Qua hết Internet, gói tin đầu tiên tới server thì gặp ai trước? Nó gặp <strong>firewall</strong> (tường lửa),
+một bộ lọc chạy trên server hoặc ngay trước server. Firewall xem từng gói tin đi vào rồi quyết định cho qua hay
+chặn, theo các luật kiểu "chỉ cho phép kết nối tới port 443".</p>
+
+<p>Vì firewall đứng trước mọi chương trình trên server, gói tin nào đã bị nó chặn thì không chương trình nào thấy
+được. Còn lý do phải có firewall thì Bảng 1 đã nêu: server phơi ra Internet, mà ở đó luôn có chương trình tự động dò
+xem port nào đang mở.</p>
+
 
 <h2 id="chang-7">Nginx nhận request thay ứng dụng</h2>
 
-<p>Ở port 443 trên server, chương trình nhận kết nối là một <strong>reverse proxy</strong>, chưa phải ứng
-dụng của bạn. Reverse proxy đứng trước ứng dụng, nhận request từ bên ngoài thay cho ứng dụng, rồi tự mở một
-request khác vào ứng dụng ở bên trong và chuyển câu trả lời ngược ra. Người dùng chỉ nói chuyện với reverse
-proxy, không bao giờ kết nối thẳng tới ứng dụng.</p>
+<p>Gói tin được firewall cho qua thì tới port 443. Chương trình đang nhận kết nối ở port đó có phải ứng dụng của
+bạn không? Chưa phải. Nó là một <strong>reverse proxy</strong>, tức chương trình đứng trước ứng dụng và nhận request
+từ bên ngoài thay cho ứng dụng.</p>
 
-<p>Trong lộ trình này reverse proxy là <strong>Nginx</strong>, một chương trình mã nguồn mở phổ biến cho
-đúng vai trò đó. Nginx làm ba việc: gỡ lớp mã hoá TLS, đọc header <code>Host</code> để biết request dành cho
-website nào, rồi chuyển request vào ứng dụng đang chạy ở port 8080. Nhờ Nginx đứng ở port 443 mà người dùng
-không phải biết số 8080 tồn tại.</p>
+<p>Nhận request xong, reverse proxy tự mở một request khác vào ứng dụng ở bên trong, rồi chuyển câu trả lời ngược
+ra. Vì vậy người dùng chỉ nói chuyện với reverse proxy, không bao giờ kết nối thẳng tới ứng dụng.</p>
+
+<p>Trong lộ trình này reverse proxy là <strong>Nginx</strong>, một chương trình mã nguồn mở rất phổ biến cho đúng
+việc đó. Với mỗi request, Nginx làm ba việc: gỡ lớp mã hoá TLS, đọc header <code>Host</code> để biết request dành
+cho website nào, rồi chuyển request vào ứng dụng đang chạy ở port 8080.</p>
+
+<p>Tới đây thì trả lời được câu hỏi để lại ở tab URL: Nginx là bên đứng ở port 443, nên người dùng không cần biết
+có con số 8080.</p>
 
 <figure class="fig photo shot">
   <img src="img/nginx-welcome.webp" width="1280" height="600" loading="lazy" alt="Trang trắng với tiêu đề lớn Welcome to nginx! và vài dòng hướng dẫn, kết thúc bằng Thank you for using nginx.">
@@ -509,28 +550,34 @@ không phải biết số 8080 tồn tại.</p>
   dụng nào. Nên Nginx tự trả lời được một số request mà không cần tới ứng dụng.</figcaption>
 </figure>
 
-<p>Vì sao gần như hệ thống thật nào cũng đặt một reverse proxy trước ứng dụng, dù Spring Boot tự nhận
-request được, là câu hỏi của Bài 19. Ở bài này chỉ cần nhớ vị trí của nó trên bản đồ: ngay trước code của
-bạn.</p>
+<p>Spring Boot tự nhận request được, vậy đặt thêm một reverse proxy phía trước để làm gì? Ở mức bản đồ thì có ba lý
+do, và cả ba đều đã xuất hiện trong bài. Nó lo phần mã hoá thay cho ứng dụng. Nó đọc header <code>Host</code> nên
+nhiều website dùng chung được một địa chỉ IP. Và nó là thứ duy nhất nhận kết nối từ Internet, nên ứng dụng được giấu
+ở phía sau.</p>
 
 <h2 id="chang-8-9">Ứng dụng của bạn và database</h2>
 
-<p>Sau Nginx là ứng dụng Spring Boot. Bên trong nó có một web server nhúng (mặc định là Tomcat) nhận request
-ở port 8080, tìm controller có path khớp, rồi chạy code của bạn. Trên server thật, ứng dụng thường được cấu
-hình chỉ nhận kết nối từ chính máy đó, nên chỉ Nginx gọi vào được; không ai từ Internet chạm thẳng tới port
-8080. Bài 01 giải thích cấu hình đó nằm ở đâu.</p>
+<p>Sau Nginx mới tới ứng dụng Spring Boot. Request vào ứng dụng qua một web server nhúng nằm ngay bên trong nó,
+mặc định là Tomcat. Tomcat nhận request ở port 8080, tìm controller có path khớp, rồi chạy code của bạn.</p>
 
-<p>Cuối đường đi là <strong>database</strong>, ở đây là PostgreSQL nhận kết nối ở port 5432. Code của bạn mở
-kết nối tới nó để đọc và ghi dữ liệu, rồi dùng kết quả để viết response. Database cũng chỉ nhận kết nối từ ứng
-dụng, không bao giờ từ Internet. Response đi ngược lại đúng con đường cũ: từ Spring Boot ra Nginx, qua
+<p>Trên server thật, ứng dụng thường được cấu hình để chỉ nhận kết nối từ chính máy đó. Nhờ vậy chỉ Nginx gọi vào
+được, còn từ Internet thì không ai chạm thẳng tới port 8080.</p>
+
+<p>Cuối đường đi là <strong>database</strong>, ở đây là PostgreSQL, nhận kết nối ở port 5432. Code của bạn mở kết
+nối tới nó để đọc và ghi dữ liệu, rồi dùng kết quả để viết response. Database cũng không nhận kết nối nào từ
+Internet, nó chỉ nhận từ ứng dụng.</p>
+
+<p>Có response rồi thì nó đi ngược lại đúng con đường cũ để về tới người dùng: từ Spring Boot ra Nginx, qua
 Internet, về trình duyệt.</p>
 
 <h2 id="chang-cua-ban">Chặng nào là code của bạn</h2>
 
-<p>Trong cả đường đi, chỉ ứng dụng là code bạn viết. Tám chặng còn lại là hạ tầng: chương trình của người
-khác, cấu hình của người vận hành, hoặc mạng của các nhà cung cấp. Chặng nào cũng hỏng được mà code bạn không
-đổi một dòng. Nên nhận tin "web không vào được" mà code không đổi từ hôm qua thì nghi tám chặng hạ tầng
-trước, rồi mới tới phần code quen tay nhất.</p>
+<p>Đi hết chín chặng rồi, giờ quay lại câu hỏi của bài: chặng nào là code của bạn? Trong cả đường đi, chỉ ứng dụng
+là code bạn viết. Tám chặng còn lại là hạ tầng: chương trình của người khác, cấu hình của người vận hành, hoặc mạng
+của các nhà cung cấp. Chặng nào trong số đó cũng có thể hỏng trong khi code của bạn không đổi một dòng.</p>
+
+<p>Vì thế khi nhận tin "web không vào được" mà code không đổi từ hôm qua thì hãy nghi tám chặng hạ tầng trước, còn
+phần code quen tay thì xem sau.</p>
 
 <p>Truyện ở Ảnh 6 vẽ cùng ý đó: phần của bạn nằm trên rất nhiều phần của người khác.</p>
 
@@ -541,11 +588,14 @@ trước, rồi mới tới phần code quen tay nhất.</p>
 
 <h2 id="devops">DevOps: ai lo cho tám chặng còn lại</h2>
 
-<p>Nếu tám chặng kia không phải code của bạn thì ai lo chúng? Một thời gian dài, câu trả lời là một đội khác.
-Đội phát triển (<em>development</em>, gọi tắt là dev) viết ứng dụng; đội vận hành (<em>operations</em>, gọi tắt
-là ops) giữ server, mạng, firewall, Nginx và database. Dev viết xong thì bàn giao, ops nhận về rồi đưa lên
-server. Cách chia này lộ điểm yếu đúng lúc có sự cố: dev chỉ thấy code mình nên kết luận "lỗi ở server", ops
-thấy server vẫn chạy nên kết luận "lỗi ở code", và không ai nhìn được cả chín chặng cùng lúc.</p>
+<p>Tám chặng kia không phải code của bạn, vậy ai lo chúng? Một thời gian dài, câu trả lời là một đội khác.</p>
+
+<p>Đội phát triển (<em>development</em>, gọi tắt là dev) viết ứng dụng, còn đội vận hành (<em>operations</em>, gọi
+tắt là ops) giữ server, mạng, firewall, Nginx và database. Dev viết xong thì bàn giao, ops nhận về rồi đưa lên
+server.</p>
+
+<p>Chia việc như vậy thì yếu ở đâu? Ở đúng lúc có sự cố. Dev chỉ thấy code của mình nên kết luận "lỗi ở server",
+ops thấy server vẫn chạy nên kết luận "lỗi ở code", và không ai nhìn được cả chín chặng cùng lúc.</p>
 
 <div class="callout define">
   <span class="label">Định nghĩa trong chuẩn</span>
@@ -559,37 +609,46 @@ thấy server vẫn chạy nên kết luận "lỗi ở code", và không ai nh�
   continuous improvements in all aspects of the life cycle."</em></p>
 </div>
 
-<p>Cái tên có trước chuẩn hơn mười năm. Nó lan ra từ hội nghị devopsdays đầu tiên, tổ chức ở Ghent, Bỉ, năm
-2009, tên ghép từ hai chữ development và operations. Vì sao hai đội từng tách ra, vì sao cách làm đó hết dùng
-được, và ngày nay người ta đo DevOps bằng gì, mình kể trong phụ lục
-<a href="lich-su-devops.html">Lịch sử DevOps</a>.</p>
+<p>Cái tên DevOps thì có trước chuẩn hơn mười năm: nó lan ra từ hội nghị devopsdays đầu tiên, tổ chức ở Ghent, Bỉ,
+năm 2009. Còn vì sao hai đội từng tách ra, vì sao cách làm đó hết dùng được, và ngày nay người ta đo DevOps bằng gì
+thì mình kể trong phụ lục <a href="lich-su-devops.html">Lịch sử DevOps</a>.</p>
 
-<p>Đọc định nghĩa lên bản đồ: <em>các bên liên quan</em> (stakeholders, những người có phần trong việc phần
-mềm được làm ra và chạy ra sao) trước hết là người viết ứng dụng và người giữ cho phần còn lại của đường đi
-chạy được: server, firewall, Nginx, database. Hằng ngày, sự cộng tác của họ hay hiện ra thành ba việc. Người
-viết ứng dụng hiểu và cùng chịu trách nhiệm cho hạ tầng mà ứng dụng chạy trên đó. Những bước lặp lại giữa code
-và server được tự động hoá. Hệ thống được đo đạc để biết nó đang tốt lên hay xấu đi, làm căn cứ cho việc cải
-tiến liên tục mà định nghĩa nhắc tới. Ba việc này là diễn giải của bài, không trích từ chuẩn.</p>
 
-<p>Mục 5.2 của chuẩn liệt kê các nguyên tắc của DevOps, và một nguyên tắc gắn thẳng với bài này: <em>tư duy
-hệ thống</em> (systems thinking, mục 5.2.4). Theo chuẩn, nguyên tắc này chống lối làm việc thiển cận là dùng
-những chuyên gia (như người lo mạng, người quản trị database, người quản trị hệ thống) hiếm khi trao đổi
-với đội phát triển hoặc đội vận hành và không hiểu hệ thống như một tổng thể. Chuẩn viết rằng trong DevOps,
-nhìn bao quát khuyến khích người làm kỹ thuật hiểu trọn hệ thống từ đầu tới cuối. Với một request, "từ đầu
-tới cuối" là chín chặng của Hình 4, và tấm bản đồ trong bài này là bước đầu của việc hiểu trọn đó.</p>
+<p>Định nghĩa trong chuẩn khá trừu tượng, vậy đặt lên tấm bản đồ thì nó nói gì? <em>Các bên liên quan</em>
+(stakeholders) là những người có phần trong việc phần mềm được làm ra và chạy ra sao. Trên bản đồ, trước hết đó là
+hai nhóm: người viết ứng dụng, và người giữ cho phần còn lại của đường đi chạy được (server, firewall, Nginx,
+database).</p>
 
-<p>Với bạn, phần còn lại của lộ trình là lần lượt học cách cùng chịu trách nhiệm cho tám chặng kia: đóng gói
-ứng dụng để nó chạy giống nhau trên mọi máy; tự đưa nó lên một server thật, đặt Nginx, tên miền và HTTPS phía
-trước; tự động hoá chính những bước vừa làm tay; rồi giữ nó chạy ổn định trên nhiều máy, có số liệu và cảnh
-báo. Bài nào cũng bắt đầu từ tấm bản đồ này, vì muốn chịu trách nhiệm cho một chặng thì trước hết phải biết
-nó nằm ở đâu và hỏng ra sao.</p>
+<p>Còn "giao tiếp và cộng tác tốt hơn" thì hằng ngày trông ra sao? Thường nó hiện ra thành ba việc:</p>
+
+<ul>
+  <li>Người viết ứng dụng hiểu hạ tầng mà ứng dụng chạy trên đó, và cùng chịu trách nhiệm cho nó.</li>
+  <li>Những bước lặp đi lặp lại giữa code và server được tự động hoá.</li>
+  <li>Hệ thống được đo đạc để biết nó đang tốt lên hay xấu đi. Số đo đó là căn cứ cho việc cải tiến liên tục mà định
+  nghĩa nhắc tới.</li>
+</ul>
+
+<p>Ba việc này là cách bài này diễn giải, không trích từ chuẩn.</p>
+
+<p>Chuẩn không dừng ở định nghĩa. Mục 5.2 của nó liệt kê các nguyên tắc của DevOps, và có một nguyên tắc gắn thẳng
+với bài này: <em>tư duy hệ thống</em> (systems thinking, mục 5.2.4).</p>
+
+<p>Theo chuẩn, tư duy hệ thống chống lại một lối làm việc thiển cận: dùng những chuyên gia (người lo mạng, người
+quản trị database, người quản trị hệ thống) hiếm khi trao đổi với đội phát triển hoặc đội vận hành, và không hiểu
+hệ thống như một tổng thể. Ngược lại, chuẩn viết rằng trong DevOps, cách nhìn bao quát khuyến khích người làm kỹ
+thuật hiểu trọn hệ thống từ đầu tới cuối.</p>
+
+<p>Với một request thì "từ đầu tới cuối" chính là chín chặng của Hình 4, nên tấm bản đồ trong bài này là bước đầu
+của việc hiểu trọn đó.</p>
+
+<p>Vì sao bước đầu lại là một tấm bản đồ? Vì muốn chịu trách nhiệm cho một chặng thì trước hết phải biết nó nằm ở
+đâu và hỏng ra sao.</p>
 
 <div class="callout ok">
   <span class="label">Chốt</span>
-  <p>Trong chín chặng chỉ ứng dụng là code bạn viết; tám chặng còn lại là hạ tầng, và là chỗ cần nghi trước
-  khi code không đổi mà web vẫn hỏng. DevOps, theo chuẩn IEEE 2675-2021, là các nguyên tắc và cách làm để
-  người viết phần mềm và người giữ nó chạy cộng tác suốt vòng đời, bắt đầu từ việc cùng hiểu trọn đường đi
-  này.</p>
+  <p>Trong chín chặng, chỉ ứng dụng là code bạn viết. Code không đổi mà web vẫn hỏng thì nghi tám chặng hạ tầng
+  trước. DevOps, theo chuẩn IEEE 2675-2021, là các nguyên tắc và cách làm để người viết phần mềm và người giữ nó chạy
+  cộng tác suốt vòng đời, bắt đầu từ việc cùng hiểu trọn đường đi này.</p>
 </div>
 
 </section>
@@ -599,9 +658,10 @@ nó nằm ở đâu và hỏng ra sao.</p>
      ===================================================================== -->
 <section class="tab" id="lab" data-tab="Lab" data-note="nhìn tận mắt từng chặng">
 
-<p>Ba lab dưới đây dùng output thật để bạn thấy ngay trên máy mình bước hỏi DNS, mở kết nối TCP, bắt tay
-TLS, gửi request HTTP, và dấu vết của một reverse proxy phía server. Bước tự gây lỗi nằm ở Lab 1. Chạy hết
-trong <strong>Git Bash</strong> trên Windows.</p>
+<p>Tấm bản đồ vẽ trên giấy thì dễ gật đầu, nhưng làm sao biết các chặng đó có thật? Ba lab dưới đây cho bạn thấy
+chúng ngay trên máy mình, bằng output thật: hỏi DNS, mở kết nối TCP, bắt tay TLS, gửi request HTTP, và dấu vết của một
+reverse proxy ở phía server. Bước tự gây lỗi nằm ở Lab 1, và tất cả chạy trong <strong>Git Bash</strong> trên
+Windows.</p>
 
 <pre><code># Lab 1 — DNS
 nslookup github.com
@@ -614,20 +674,32 @@ curl -v https://example.com
 echo | openssl s_client -connect example.com:443 -servername example.com 2&gt;/dev/null \
   | openssl x509 -noout -subject -issuer -dates</code></pre>
 
-<h2 id="lab-1">Lab 1 — DNS, và một tên miền không tồn tại</h2>
+<h2 id="lab-1">Lab 1: DNS, và một tên miền không tồn tại</h2>
 
-<p>Lệnh đầu hỏi địa chỉ của <code>github.com</code>; output ở Hình 5. Lệnh thứ hai là bước
-<strong>tự gây lỗi</strong>: hỏi một tên miền chắc chắn chưa ai đăng ký. Kết quả <code>Non-existent
-domain</code> ở Hình 6 là bước hỏi DNS hỏng ở dạng đơn giản nhất. Trước khi đọc tiếp, thử tự trả lời: lúc
-nhận câu trả lời đó, request đã đi tới đâu trên bản đồ? Đáp án: chưa qua khỏi bước hỏi DNS. Chưa có kết nối
-nào được mở, nên mọi suy đoán kiểu "server chết" hay "firewall chặn" loại được ngay.</p>
+<p>Lệnh đầu hỏi địa chỉ của <code>github.com</code>, và output của nó là Hình 5.</p>
 
-<h2 id="lab-2">Lab 2 — một request trọn vẹn</h2>
+<p>Lệnh thứ hai là bước <strong>tự gây lỗi</strong>: cố tình hỏi một tên miền chắc chắn chưa ai đăng ký. Kết quả
+<code>Non-existent domain</code> ở Hình 6 là kiểu hỏng đơn giản nhất của bước hỏi DNS.</p>
 
-<p>Cờ <code>-v</code> (verbose) bảo <code>curl</code> kể lại từng bước nó làm. Ký tự đầu mỗi dòng cho biết
-dòng đó thuộc loại nào: <code>*</code> là lời <code>curl</code> tự kể (đang hỏi DNS, đang kết nối, đang bắt
-tay TLS), <code>&gt;</code> là dữ liệu gửi đi, <code>&lt;</code> là dữ liệu nhận về. Đây là những dòng chính
-trong output thật trên máy mình ngày 24/09/2026, xếp theo thứ tự các chặng trên bản đồ:</p>
+<p>Trước khi đọc tiếp, thử tự trả lời: lúc nhận câu trả lời đó thì request đã đi tới đâu trên bản đồ?</p>
+
+<p>Nó chưa qua khỏi bước hỏi DNS. Chưa có kết nối nào được mở, nên những suy đoán kiểu "server chết" hay "firewall
+chặn" loại được ngay.</p>
+
+<h2 id="lab-2">Lab 2: một request trọn vẹn</h2>
+
+<p>Lab 1 mới soi một chặng. Muốn thấy cả chuỗi chặng nối nhau thì dùng <code>curl</code> với cờ <code>-v</code>
+(verbose), là cờ bảo nó kể lại từng bước nó làm. Output sẽ khá dài, vậy đọc thế nào cho khỏi rối? Nhìn ký tự đầu
+mỗi dòng, vì ký tự đó cho biết dòng thuộc loại nào:</p>
+
+<ul>
+  <li><code>*</code> là lời <code>curl</code> tự kể: đang hỏi DNS, đang kết nối, đang bắt tay TLS.</li>
+  <li><code>&gt;</code> là dữ liệu gửi đi.</li>
+  <li><code>&lt;</code> là dữ liệu nhận về.</li>
+</ul>
+
+<p>Dưới đây là những dòng chính trong output thật trên máy mình ngày 24/09/2026, xếp theo thứ tự các chặng trên bản
+đồ:</p>
 
 <figure class="fig">
 <pre class="diagram"><code>* IPv4: 104.20.23.154, 172.66.147.243      ← DNS đã trả lời
@@ -644,26 +716,30 @@ chặng. Dòng đầu liệt kê các địa chỉ <code>IPv4</code>, tức lo�
 <a href="phan-tich-output.html#t-curl-ket-noi">Đọc output thật</a>.</figcaption>
 </figure>
 
-<p>Dòng cuối, <code>Server: cloudflare</code>, cho biết ai đã trả lời request. Request tới
-<code>example.com</code> được trả lời bởi một reverse proxy của công ty Cloudflare, đặt giữa người dùng và
-máy của chủ website. Trên bản đồ nó đứng đúng chỗ của Nginx, chỉ khác là do một nhà cung cấp lớn vận
-hành.</p>
+<p>Dòng cuối, <code>Server: cloudflare</code>, cho biết ai đã trả lời request. Sao lại là Cloudflare mà không phải
+máy của chủ website? Vì đứng giữa người dùng và máy đó có một reverse proxy của công ty Cloudflare, và chính nó đã
+trả lời request tới <code>example.com</code>. Trên bản đồ, reverse proxy này đứng đúng chỗ của Nginx, chỉ khác là
+do một nhà cung cấp lớn vận hành.</p>
 
-<h2 id="lab-3">Lab 3 — đọc chứng chỉ</h2>
+<h2 id="lab-3">Lab 3: đọc chứng chỉ</h2>
 
-<p>Bản <code>curl</code> đi kèm Git for Windows không in thông tin chứng chỉ (lý do ở trang Đọc output
-thật), nên lab này dùng <code>openssl</code>, bộ công cụ mật mã có sẵn trong Git Bash. Output ở Hình 7. Câu
-lệnh dài vì nó nối hai lệnh <code>openssl</code> với nhau; dấu <code>|</code> (đưa output của lệnh trước làm
-input của lệnh sau) và phần <code>2&gt;/dev/null</code> (giấu các dòng chẩn đoán) được giải nghĩa ở Bài 04,
-khi bạn học shell. Câu hỏi của lab: chứng chỉ do ai ký, và còn bao nhiêu ngày thì hết hạn? Với output ở Hình
-7, chạy ngày 24/09/2026, câu trả lời là 33 ngày. Chạy hôm nay bạn sẽ thấy một chứng chỉ khác, vì chứng chỉ
-được thay định kỳ trước khi hết hạn; cách đọc thì giữ nguyên.</p>
+<p>Bản <code>curl</code> đi kèm Git for Windows không in thông tin chứng chỉ (lý do ở trang Đọc output thật). Vậy
+muốn xem chứng chỉ thì dùng gì? Dùng <code>openssl</code>, bộ công cụ mật mã có sẵn trong Git Bash. Output của nó
+là Hình 7.</p>
+
+<p>Câu lệnh trông dài vì nó nối hai lệnh <code>openssl</code> với nhau, và trong đó có hai ký hiệu lạ. Dấu
+<code>|</code> đưa output của lệnh trước làm input của lệnh sau, còn phần <code>2&gt;/dev/null</code> giấu các dòng
+chẩn đoán. Biết chừng đó là đủ để chạy lab này.</p>
+
+<p>Câu hỏi của lab là: chứng chỉ do ai ký, và còn bao nhiêu ngày thì hết hạn? Với output ở Hình 7, chạy ngày
+24/09/2026, thì còn 33 ngày. Chạy hôm nay bạn sẽ thấy một chứng chỉ khác, vì chứng chỉ được thay định kỳ trước khi
+hết hạn, nhưng cách đọc thì vẫn vậy.</p>
 
 <h2 id="lab-ve-lai">Tự vẽ lại bản đồ</h2>
 
-<p>Bước cuối không cần lệnh nào: đóng tài liệu lại, lấy giấy vẽ chín chặng theo thứ tự, ghi cạnh mỗi chặng
-nó chạy ở đâu và output nào trong ba lab vừa rồi đã cho bạn thấy nó. Chặng nào bạn không gắn được với dòng
-output nào thì các bài sau sẽ cho bạn thấy.</p>
+<p>Bước cuối không cần lệnh nào. Bạn đóng tài liệu lại, lấy giấy vẽ chín chặng theo thứ tự, rồi cạnh mỗi chặng ghi
+nó chạy ở đâu và output nào trong ba lab vừa rồi đã cho bạn thấy nó. Sẽ có chặng không gắn được với dòng output nào,
+vì ba lab này không chạm tới firewall, ứng dụng và database.</p>
 
 </section>
 
@@ -696,7 +772,7 @@ một người chưa học bài này, bằng lời của bạn, kèm một ví d
   <tbody>
     <tr><td>Web không vào được thì mở code ra xem trước.</td><td>Code không đổi thì lỗi thường nằm ở tám chặng hạ tầng.</td><td><a href="#chang-cua-ban">Phía server</a></td></tr>
     <tr><td>Chứng chỉ là thứ gắn tên miền với địa chỉ IP.</td><td>Gắn tên với địa chỉ là việc của DNS. Chứng chỉ, được kiểm tra lúc bắt tay TLS, chứng minh rằng máy đang trả lời có quyền dùng tên miền đó.</td><td><a href="#chang-4">TLS</a></td></tr>
-    <tr><td><code>nslookup</code> tự biết địa chỉ của mọi tên miền.</td><td>Nó chỉ hỏi một máy chủ DNS rồi in lại câu trả lời; dòng <code>Server:</code> cho biết ai đã trả lời.</td><td><a href="#chang-2">DNS</a></td></tr>
+    <tr><td><code>nslookup</code> tự biết địa chỉ của mọi tên miền.</td><td>Nó chỉ hỏi một server DNS rồi in lại câu trả lời, còn dòng <code>Server:</code> cho biết ai đã trả lời.</td><td><a href="#chang-2">DNS</a></td></tr>
     <tr><td>DevOps là một công cụ, hoặc tên một chức danh.</td><td>Chuẩn IEEE 2675-2021 định nghĩa DevOps là một tập hợp nguyên tắc và cách làm giúp các bên liên quan cộng tác tốt hơn suốt vòng đời phần mềm. Công cụ chỉ giúp áp dụng các nguyên tắc ấy.</td><td><a href="#devops">DevOps</a></td></tr>
   </tbody>
 </table>
@@ -704,30 +780,33 @@ một người chưa học bài này, bằng lời của bạn, kèm một ví d
 
 <h2 id="ket-lai">Kết lại</h2>
 
-<p>Câu hỏi của bài là: từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy,
-request đi qua những chặng nào, và chặng nào thật sự là code của bạn? Câu trả lời là chín chặng: trình
-duyệt, DNS, mở kết nối, mã hoá, gửi request, firewall, reverse proxy, ứng dụng, database. Năm chặng đầu chạy
-trên máy người dùng, bốn chặng sau trên server, ở giữa là Internet. Trong cả đường đi, chỉ ứng dụng là code
-bạn viết; tám chặng còn lại là hạ tầng, và khi code không đổi mà web hỏng thì đó là chỗ cần nghi trước.</p>
+<p>Câu hỏi của bài là: từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi qua
+những chặng nào, và chặng nào thật sự là code của bạn?</p>
 
-<p>Chuẩn IEEE 2675-2021 định nghĩa DevOps là tập hợp các nguyên tắc và cách làm giúp các bên liên quan cộng
-tác tốt hơn để đặc tả, phát triển và vận hành phần mềm, đồng thời cải tiến liên tục suốt vòng đời của nó. Một
-trong các nguyên tắc ấy, tư duy hệ thống, khuyến khích hiểu trọn hệ thống từ đầu tới cuối; tấm bản đồ chín
-chặng là bước đầu của việc đó, và lộ trình này đi qua từng chặng một.</p>
+<p>Nó đi qua chín chặng: trình duyệt, DNS, mở kết nối, mã hoá, gửi request, firewall, reverse proxy, ứng dụng,
+database. Năm chặng đầu chạy trên máy người dùng, bốn chặng sau chạy trên server, còn ở giữa là Internet.</p>
+
+<p>Còn chặng nào là code của bạn? Trong cả đường đi, chỉ ứng dụng là code bạn viết. Tám chặng còn lại là hạ tầng,
+nên khi code không đổi mà web hỏng thì đó là chỗ cần nghi trước.</p>
+
+<p>Tám chặng ấy cũng là chỗ chữ DevOps có nghĩa. Chuẩn IEEE 2675-2021 định nghĩa DevOps là tập hợp các nguyên tắc
+và cách làm giúp các bên liên quan cộng tác tốt hơn để đặc tả, phát triển và vận hành phần mềm, đồng thời cải tiến
+liên tục suốt vòng đời của nó. Một trong các nguyên tắc ấy là tư duy hệ thống, khuyến khích người làm kỹ thuật hiểu
+trọn hệ thống từ đầu tới cuối. Tấm bản đồ chín chặng là bước đầu của việc đó.</p>
+
 
 <div class="callout" id="cau-hoi-tiep">
-  <span class="label">Câu hỏi cho bài sau</span>
-  <p>Trong chín chặng, bước mở kết nối tới đúng máy và đúng chương trình là chỗ dễ vấp đầu tiên, và nó hỏng
-  được ngay trên máy dev, chưa cần tới server. Từ đó ra câu hỏi của bài tiếp theo:</p>
+  <span class="label">Câu hỏi còn mở</span>
+  <p>Trong chín chặng, chặng nào dễ vấp trước nhất? Bước mở kết nối tới đúng máy và đúng chương trình, vì nó hỏng
+  được ngay trên máy bạn, chưa cần tới server. Từ đó còn lại một câu hỏi:</p>
   <p><strong>App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì
   không được. Chặng mở kết nối hỏng ở đâu?</strong></p>
-  <p><a href="../01-ip-port-listen-firewall/"><i class="ic ic-r" aria-hidden="true"></i> Bài 01 · IP, port, listen, firewall</a></p>
 </div>
 
 <h2 id="nguon">Nguồn đọc thêm</h2>
 
 <p>Danh sách chỉ gồm nguồn chính thức: văn bản chuẩn gốc và tài liệu của chính dự án. Không cần đọc hết
-ngay, cứ để đó tra khi bài sau đi sâu vào chặng tương ứng.</p>
+ngay, cứ để đó tra khi cần.</p>
 
 <ol class="refs">
   <li>RFC 3986 — <em>Uniform Resource Identifier (URI): Generic Syntax</em>. Cấu trúc của URL.
