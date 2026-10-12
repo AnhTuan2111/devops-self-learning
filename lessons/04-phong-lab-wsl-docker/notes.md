@@ -31,11 +31,9 @@ Cột `VERSION` của Ubuntu là: ___
 ```
 $ uname -r
 
-$ ps -p 1 -o pid,comm
-
 ```
 
-Dòng đầu tiên của `sudo dmesg | less`:
+Năm dòng cuối của `sudo dmesg | tail -5`:
 
 ```
 
@@ -46,11 +44,7 @@ Dòng đầu tiên của `sudo dmesg | less`:
 ```
 $ pwd
 
-$ echo $PATH
-
-$ which ls
-
-$ type cd
+$ cat ghi-chu.txt
 
 ```
 
@@ -65,85 +59,46 @@ $ sudo ls /root
 
 ```
 
-### Lab 3: stdout và stderr
+### Lab 3: Chạy app mẫu
 
-```
-$ ls /etc/hostname /khong-co
-
-$ ls /etc/hostname /khong-co > ketqua.txt
-
-$ cat ketqua.txt
-
-$ ls /etc/hostname /khong-co 2> /dev/null
-
-$ ls -l /proc/$$/fd
-
-```
-
-Lệnh `openssl` của Bài 00, **không** có `2>/dev/null`, những dòng nào chen vào?
+Hai dòng cuối khi app khởi động xong:
 
 ```
 
 ```
 
-Cùng lệnh, **có** `2>/dev/null`:
+```
+$ curl http://localhost:8080/
+
+$ curl -i http://localhost:8080/ghi-chu
+
+```
+
+Dòng có chữ `refused` trong log của app, chép nguyên văn:
 
 ```
 
 ```
 
-Những dòng biến mất (tức `s_client` ghi ra số 2):
+Dòng đó nói app đã gọi tới đâu, và vì sao bị từ chối?
 
-### Lab 4: Signal thật
+### Lab 4: Giết app bằng hai cách
 
-| Gửi | Cửa sổ 1 in gì | `echo $?` | 128 + số signal |
+| Cách dừng | Dòng cuối app in ra | `echo $?` | 128 + số signal |
 |---|---|---|---|
-| `kill <PID>` tới `sleep 1000` | | | 128 + 15 = 143 |
-| `kill -9 <PID>` tới `sleep 1000` | | | 128 + 9 = 137 |
-| `kill <PID>` tới `nghe-signal.sh` | | | (handler tự chọn) |
-| `kill -9 <PID>` tới `nghe-signal.sh` | | | |
+| `kill <PID>` | | | 128 + 15 = 143 |
+| `kill -9 <PID>` | | | 128 + 9 = 137 |
+| Ctrl+C (đoán trước rồi mới bấm) | | | 128 + 2 = ? |
 
-Handler có kịp in dòng `[SIGTERM] duoc bao truoc…` với `kill -9` không?  ☐ Có  ☐ Không
+### Lab 5: Chạy hai bản cùng lúc
 
-### Lab 5: Docker Desktop và hello-world
-
-```
-$ docker version
+Thông báo của bản thứ hai, và exit status của nó:
 
 ```
 
 ```
-$ docker run hello-world
 
-```
-
-Lần chạy thứ hai, dòng nào không còn?
-
-```
-PS> wsl -l -v
-
-```
-
-### Lab 6: Tắt daemon
-
-Trong Git Bash:
-
-```
-$ docker version
-
-```
-
-Trong Ubuntu:
-
-```
-$ docker version
-
-```
-
-- Ai viết ra thông báo?
-- Client có đang chạy không? Bằng chứng nằm ở dòng nào?
-- Đầu bên kia thiếu gì?
-- Sau khi mở lại Docker Desktop, phần `Server` có quay về không?
+Process đang giữ port 8080 tìm được bằng lệnh nào, PID bao nhiêu?
 
 ---
 
