@@ -4,7 +4,7 @@
 **Hình thức:** đối thoại thầy–trò + lab trên Git Bash, Windows 11
 
 Ghi chú thô: output lab thật, lỗi đã gặp, chỗ hiểu sai, câu hỏi còn treo. Bài giảng đầy đủ ở
-[`index.html`](index.html), vở bài tập ở [`README.md`](README.md).
+[`index.html`](index.html).
 
 ---
 
@@ -93,6 +93,11 @@ Trích nguyên văn từ buổi học, để dùng làm chất liệu khi viết
 - Câu trả lời đầu tiên cho câu hỏi của bài (21/09/2026): "chắc là đổi localhost thành địa chỉ mình tự custom à ? mở địa chỉ đó và cổng trên máy mình và để đồng nghiệp vào ?", kèm "tôi chỉ hiểu cơ bản thế thôi, hơi mơ màng"
 - Hỏi lại sau khi được sửa (22/09/2026): "chỗ 2 tôi mặc dù hiểu đôi chút nhưng chưa thực sự hiểu bạn đang nói về việc gì, lấy ví dụ về câu hỏi gốc của bạn ấy để tôi hiểu"; "chỗ 3 bản chất của host là gì nhỉ? lúc thì bắt đầu bằng 127 hoặc là 192, rồi lại ở máy mình hoặc card wifi nữa"
 - Trả lời câu "đồng nghiệp gặp timeout thì nghi ở đâu" (22/09/2026): "do firewall, tôi đi tắt firewall trên máy tôi hoặc là cho phép máy khác gửi gói tin tới máy tôi là bên bình vào được". Chẩn đoán đúng; chỗ sai là "tắt firewall" và tin là mở xong thì vào được.
+- Chuyện sinh ra mục VPN (kể lại ngày 12/10/2026): "lúc đó tôi đangg giải thích về localhost, tại sao máy tôi gọi localhost:8080 được mà máy bạn tôi lại không được, xong tôi chỉ cách để 2 người ngồi cùng 1 mạng có thể gọi được 8080 ở máy bên kia, xong bạn tôi mới hỏi khác mạng thì sao, tôi không biết nên tra mạng thì thấy người ta bảo là dùng vpn server".
+- Lần đầu được hỏi "app listen `127.0.0.1:8080`, bạn ấy gọi đúng địa chỉ VPN thì refused hay timeout" (12/10/2026): "tôi không trả lời được do chưa hiểu rõ hết cơ chế vpn".
+- Sau khi nghe giảng lại, vẫn nghĩ (12/10/2026): "theo như tôi biết nếu bật vpn thì khi app listen thì nó sẽ listen trên ip của vpn chứ k phải 192.68.10.38". Với câu "app listen ở địa chỉ WiFi, bạn ấy gọi địa chỉ VPN thì sao" thì lưỡng lự: "có khả năng gọi được (do đang bật vpn) và có khả năng k gọi được (do app đang listen ở ip của wifi cấp cho)". Khả năng thứ hai mới đúng.
+- Thắc mắc ngoài kịch bản (12/10/2026): "tại sao bạn lại lấy ví dụ về app listen ở 0.0.0.0".
+- Lẫn lại refused với timeout (12/10/2026), khi app chỉ listen ở địa chỉ VPN mà điện thoại gọi địa chỉ WiFi: "khi điện thoại gọi 192 thì timeout do không có ai đang listen". Đúng ra là refused: máy còn sống, gói tin tới nơi, không ai listen thì hệ điều hành từ chối ngay.
 - Khi gặp con số 2 giây của refused trên Windows, ghi lại: "Refused tới chính máy mình mà mất hơn 2 giây"
 
 ---
@@ -106,6 +111,8 @@ Trích nguyên văn từ buổi học, để dùng làm chất liệu khi viết
 | Dải `127.0.0.0/8` có `127⁴` địa chỉ | `/8` đếm bit: dải có `2²⁴`, khoảng 16,7 triệu địa chỉ, dù máy thường chỉ dùng `127.0.0.1`. |
 | Máy chủ còn sống thì không thể `refused` | Ngược lại: `refused` **chỉ** xảy ra khi máy còn sống, vì phải có hệ điều hành đang chạy mới gửi được `RST`. |
 | Mở firewall xong là đồng nghiệp vào được | Chưa chắc. Nếu app chỉ listen `127.0.0.1`, triệu chứng đổi từ `timeout` sang `refused`; triệu chứng đổi chứng tỏ firewall đã sửa đúng. |
+| Bật VPN thì app tự listen ở địa chỉ của VPN (12/10/2026) | App chọn địa chỉ listen một lần lúc khởi động; VPN chỉ thêm cho máy một địa chỉ. Listen `0.0.0.0` thì nhận luôn ở địa chỉ VPN. |
+| Không ai listen thì người gọi thấy `timeout` (12/10/2026) | Gói tin tới được máy mà không ai listen thì là `refused`. Trả lời lại đúng cả ba tình huống: app tắt là refused, firewall chặn là timeout, máy tắt là timeout. |
 | Refused nhanh, timeout chậm | Trên Windows refused cũng mất 2 giây. Phân biệt bằng ai quyết định lúc dừng. |
 
 ---
