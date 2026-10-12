@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bài 03 — Máy tính, hệ điều hành, process</title>
+<title>Bài 03: Máy tính, hệ điều hành, process</title>
 <meta name="description" content="502 nghĩa là phía sau Nginx không còn ai trả lời. Bài này cho thấy app là một process do kernel quản lý, vì sao nó bị giết khi hết RAM, vì sao nó chết thì website sập, và vì sao phải biến nó thành service.">
-<link rel="stylesheet" href="../../assets/style.css?v=227913a6">
+<link rel="stylesheet" href="../../assets/style.css?v=31a8c472">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="03">
@@ -27,7 +27,7 @@
   hành, gọi là kernel; rồi từ đó thấy vì sao nó có thể bị giết, và vì sao nó chết thì cả website sập theo.</p>
   <div class="meta">
     <span class="chip lime"><i class="stt stt-done" aria-hidden="true"></i>Đã xong</span>
-    <span class="chip">5–8 giờ học</span>
+    <span class="chip">5-8 giờ học</span>
     <span class="chip">Lab: Node + Git Bash</span>
     <a class="chip" href="lich-su-he-dieu-hanh.html"><i class="ic ic-r" aria-hidden="true"></i> Phụ lục: lịch sử hệ điều hành</a>
   </div>
@@ -213,7 +213,7 @@ phần lõi của hệ điều hành và là thứ duy nhất nắm quyền trê
   mỗi giây) và giới hạn bởi bộ đệm của card mạng lẫn của kernel.</dd>
 </dl>
 
-<p>Với câu hỏi của bài, thứ quan trọng là <em>quan hệ</em> giữa bốn tài nguyên. CPU chỉ xử lý dữ liệu đang nằm trong
+<p>Với câu hỏi của bài, thứ cần để ý là <em>quan hệ</em> giữa bốn tài nguyên. CPU chỉ xử lý dữ liệu đang nằm trong
 RAM, chứ không làm việc trực tiếp với ổ đĩa, nên muốn dùng một file thì chương trình phải đọc nó từ đĩa vào RAM
 trước. Khoảng 30 giây Spring Boot khởi động chính là để làm việc đó: JVM đọc hàng nghìn file class vào RAM, khởi tạo
 các bean, mở sẵn connection tới database. Vì vậy khi RAM đã được cấp hết thì chương trình không còn chỗ đặt dữ liệu
@@ -222,7 +222,7 @@ nó cần, và công việc không chạy tiếp bình thường được.</p>
 
 <h3 id="an-du">Ẩn dụ hỗ trợ ghi nhớ: người, mặt bàn, cái tủ</h3>
 
-<p>Quan hệ vừa nêu dễ nhớ hơn qua một phép so sánh. Đây là ẩn dụ chứ không phải định nghĩa. Hãy hình dung một văn
+<p>Quan hệ vừa nêu dễ nhớ hơn qua một phép so sánh. Đây là ẩn dụ chứ không phải định nghĩa. Thử hình dung một văn
 phòng.</p>
 
 <ul>
@@ -242,7 +242,7 @@ phòng.</p>
   <tbody>
     <tr><td><strong>Disk</strong></td><td>cái tủ hồ sơ trong kho</td><td>To, rẻ, <strong>chậm</strong></td><td><i class="ic ic-yes" role="img" aria-label="có"></i> còn nguyên</td></tr>
     <tr><td><strong>RAM</strong></td><td>mặt bàn làm việc</td><td>Nhỏ, đắt, <strong>nhanh</strong></td><td><i class="ic ic-no" role="img" aria-label="không"></i> <strong>sạch trơn</strong></td></tr>
-    <tr><td><strong>CPU</strong></td><td>chính người làm việc</td><td>Chỉ làm được với thứ <strong>đang trên bàn</strong></td><td>—</td></tr>
+    <tr><td><strong>CPU</strong></td><td>chính người làm việc</td><td>Chỉ làm được với thứ <strong>đang trên bàn</strong></td><td>không giữ gì</td></tr>
   </tbody>
 </table>
 </div>
@@ -376,7 +376,7 @@ JVM vào và cho nó chạy. Thực thể đang sống đó mới là thứ list
    một file, nằm im                     PID 4123
    không chiếm gì                       chiếm 800 MB RAM
    không ai gọi được                    đang listen port 8080
-   copy được, xóa được                  kill được — và chết là hết</code></pre>
+   copy được, xóa được                  kill được, và chết là hết</code></pre>
   <figcaption><b>Hình 4</b> Chương trình và process. Bên trái là một file trên ổ đĩa; bên phải là
   chính file đó khi đang chạy: chiếm RAM, giữ port, có PID.</figcaption>
 </figure>
@@ -813,7 +813,7 @@ niệm đã gặp, ở bài này hoặc ở các bài trước.</p>
         ↓
   2 Kernel chấm điểm, chọn JVM (ăn RAM nhiều nhất)
         ↓
-  3 SIGKILL — process 4123 biến mất tức thì, không kịp log
+  3 SIGKILL: process 4123 biến mất tức thì, không kịp log
         ↓
   4 Kernel xóa dòng "8080 → PID 4123" khỏi bảng port
         ↓
@@ -823,8 +823,8 @@ niệm đã gặp, ở bài này hoặc ở các bài trước.</p>
         ↓
   7 Nginx dịch sang ngôn ngữ HTTP cho người dùng:
                                               502 Bad Gateway</code></pre>
-  <figcaption><b>Hình 12</b> Bảy bước từ RAM hết tới 502. Bước 1 thuộc tab Bốn tài nguyên, bước 2–3
-  thuộc tab này, bước 4–6 thuộc tab Kernel (bước 6 chính là refused ở Bài 01), bước 7 thuộc Bài 02.</figcaption>
+  <figcaption><b>Hình 12</b> Bảy bước từ RAM hết tới 502. Bước 1 thuộc tab Bốn tài nguyên, bước 2-3
+  thuộc tab này, bước 4-6 thuộc tab Kernel (bước 6 chính là refused ở Bài 01), bước 7 thuộc Bài 02.</figcaption>
 </figure>
 
 <div class="callout">
@@ -897,7 +897,7 @@ viết một file cấu hình cho người trông coi.</p>
   Docker      trông coi ứng dụng đóng gói trên một máy
   Kubernetes  trông coi ứng dụng trên cả một cụm máy</code></pre>
     <figcaption><b>Hình 13</b> Ba công cụ trông coi hay gặp. Ngoài systemd còn có Docker (công cụ đóng gói và
-    chạy app) và Kubernetes (chạy app trên nhiều máy). Phạm vi khác nhau, nhưng việc trông coi là một: thấy
+    chạy app) và Kubernetes (chạy app trên nhiều máy). Ba công cụ trông coi ở ba cỡ khác nhau, nhưng việc trông coi là một: thấy
     process chết thì dựng nó dậy.</figcaption>
   </figure>
 </div>
@@ -955,7 +955,7 @@ server.listen(8080, () => {
   console.log('PID = ' + process.pid + '  |  dang listen port 8080');
 });
 
-// Đăng ký hàm xử lý SIGINT — chỉ chạy khi được báo trước (Ctrl+C)
+// Đăng ký hàm xử lý SIGINT, chỉ chạy khi được báo trước (Ctrl+C)
 process.on('SIGINT', () => {
   console.log('\n[SIGINT] duoc bao truoc, dang don dep...');
   setTimeout(() => {
@@ -1111,7 +1111,7 @@ Windows khi bị từ chối kết nối.</p>
 <p>Đây là bước cố tình gây lỗi của bài. Chạy lại <code>node lab/server.js</code> và ghi PID mới, để ý nó đã khác PID
 ở Lab 1 vì PID không cố định. Lần này, ở cửa sổ khác, <strong>giết ép</strong> nó:</p>
 
-<pre><code># PowerShell hoặc Git Bash — /F nghĩa là ép buộc
+<pre><code># PowerShell hoặc Git Bash, /F nghĩa là ép buộc
 taskkill //F //PID &lt;PID&gt;</code></pre>
 
 <div class="callout warn">
@@ -1195,7 +1195,7 @@ này. Cách nghĩ nào cũng nghe hợp lý, nhưng sai ở một chỗ cụ th�
     <tr><td>Server mất điện thì người dùng thấy refused, hoặc 502</td><td>Thấy <strong>timeout</strong>: không còn kernel nào để từ chối, Nginx cũng đã chết, nên không ai viết ra lỗi cả</td><td><a href="../01-ip-port-listen-firewall/#ket-noi-tcp">xem lại</a></td></tr>
     <tr><td>Bị <code>kill -9</code> thì các object trong RAM không được dọn</td><td>RAM được kernel thu hồi hết. Thứ bị bỏ dở là những thứ <strong>ngoài process</strong>: connection treo ở database, transaction dở, log còn trong bộ đệm</td><td><a href="#term-vs-kill">xem lại</a></td></tr>
     <tr><td>OOM killer giết process chiếm quá nửa RAM, và chắc chắn giết nó</td><td>Chấm điểm <strong>chủ yếu theo RAM</strong> và <strong>so với các process khác</strong>: lớn nhất thì nhiều khả năng bị chọn nhất</td><td><a href="#oom">xem lại</a></td></tr>
-    <tr><td>Có người trông coi dựng dậy ngay, nên 502 chỉ thoáng qua</td><td>Process mới đã chạy nhưng Spring Boot còn cần 15–60 giây mới listen 8080: <strong>đang chạy chưa phải sẵn sàng</strong>. Nếu lý do còn đó thì app bị giết rồi dựng lại liên tục</td><td><a href="#process-vs-service">xem lại</a></td></tr>
+    <tr><td>Có người trông coi dựng dậy ngay, nên 502 chỉ thoáng qua</td><td>Process mới đã chạy nhưng Spring Boot còn cần 15-60 giây mới listen 8080: <strong>đang chạy chưa phải sẵn sàng</strong>. Nếu lý do còn đó thì app bị giết rồi dựng lại liên tục</td><td><a href="#process-vs-service">xem lại</a></td></tr>
   </tbody>
 </table>
 </div>
@@ -1234,8 +1234,8 @@ nhất thường là chính app. Process chết thì kernel xoá dòng của por
 RAM và CPU, được kernel cấp PID và port, và chết theo những cách giờ bạn gọi được tên.</p>
 
 <figure class="fig">
-<pre class="diagram"><code>  Bài 00–02  Bản đồ và triệu chứng — request đi qua đâu, hỏng ở chặng nào
-  Bài 03     Bên dưới mỗi chặng    — chặng phía server là gì
+<pre class="diagram"><code>  Bài 00-02  Bản đồ và triệu chứng:  request đi qua đâu, hỏng ở chặng nào
+  Bài 03     Bên dưới mỗi chặng:     chặng phía server là gì
 
      Nginx        →  một process, listen port 443
      Spring Boot  →  một process, listen port 8080
@@ -1266,38 +1266,38 @@ RAM và CPU, được kernel cấp PID và port, và chết theo những cách g
 <code>signal(7)</code> trước, vì nó là trang gần với nội dung bài này nhất.</p>
 
 <ol class="refs">
-  <li><a href="https://man7.org/linux/man-pages/man7/signal.7.html">signal(7)</a> — danh sách signal,
+  <li><a href="https://man7.org/linux/man-pages/man7/signal.7.html">signal(7)</a>, danh sách signal,
   hành vi mặc định, và vì sao SIGKILL không thể bị bắt.</li>
   <li><a href="https://man7.org/linux/man-pages/man2/fork.2.html">fork(2)</a> và
-  <a href="https://man7.org/linux/man-pages/man2/execve.2.html">execve(2)</a> — hai bước sinh ra một process mới.</li>
-  <li><a href="https://man7.org/linux/man-pages/man2/syscalls.2.html">syscalls(2)</a> — danh sách
+  <a href="https://man7.org/linux/man-pages/man2/execve.2.html">execve(2)</a>, hai bước sinh ra một process mới.</li>
+  <li><a href="https://man7.org/linux/man-pages/man2/syscalls.2.html">syscalls(2)</a>, danh sách
   system call của Linux.</li>
-  <li><a href="https://man7.org/linux/man-pages/man5/proc.5.html">proc(5)</a> — thư mục
+  <li><a href="https://man7.org/linux/man-pages/man5/proc.5.html">proc(5)</a>, thư mục
   <code>/proc/&lt;PID&gt;/</code>: <code>environ</code>, <code>cwd</code>,
   <code>oom_score</code>.</li>
-  <li><a href="https://docs.kernel.org/admin-guide/sysctl/vm.html">Linux kernel docs — /proc/sys/vm</a>
-  — tài liệu chính thức về overcommit và OOM.</li>
-  <li><a href="https://nodejs.org/api/process.html#signal-events">Node.js — Signal events</a> — cách
+  <li><a href="https://docs.kernel.org/admin-guide/sysctl/vm.html">Linux kernel docs, /proc/sys/vm</a>,
+  tài liệu chính thức về overcommit và OOM.</li>
+  <li><a href="https://nodejs.org/api/process.html#signal-events">Node.js, Signal events</a>, cách
   Node xử lý SIGINT, SIGTERM, SIGKILL, kể cả trên Windows.</li>
-  <li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html">systemd.service</a>
-  — tuỳ chọn <code>Restart=</code>, chính sách dựng process dậy của systemd trong Ảnh 7.</li>
+  <li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html">systemd.service</a>,
+  tuỳ chọn <code>Restart=</code>, chính sách dựng process dậy của systemd trong Ảnh 7.</li>
 </ol>
 
 
 <h2 id="nguon-anh">Nguồn ảnh</h2>
 <p class="photo-credits-note">Ảnh chụp lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng; ảnh đã được chuyển sang đen trắng và cắt khung cho hợp bố cục trang; ảnh chụp đồ vật còn được tách khỏi nền cũ để đặt thẳng lên nền trang. Ảnh chụp màn hình do mình tự chụp; các khung màu là phần đánh dấu thêm vào. Truyện tranh của xkcd và của turnoff.us dùng theo giấy phép phi thương mại ghi ở từng dòng; đã đổi cỡ và chuyển sang đen trắng.</p>
 <ol class="photo-credits">
-  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg">Tủ server ở trung tâm dữ liệu NERSC</a> — Derrick Coetzee, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
-  <li><b>Ảnh 2</b><a href="https://xkcd.com/908/">The Cloud</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
-  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:AMD_Ryzen_9_9950X.jpg">CPU AMD Ryzen 9 9950X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
-  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png">Thanh RAM DDR4</a> — PantheraLeo1359531, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
-  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Western_Digital_SN850X_NVME_solid_state_drive_8TB_front_side.jpg">Ổ SSD NVMe WD SN850X</a> — 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
-  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg">Card mạng Ethernet PCI</a> — afrank99, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
-  <li><b>Ảnh 4</b><a href="https://turnoff.us/geek/pid1/">PID 1</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
-  <li><b>Ảnh 5</b>Bảng tín hiệu chuẩn, signal(7) — chụp màn hình <a href="https://man7.org/linux/man-pages/man7/signal.7.html">man7.org</a>, 30/09/2026.</li>
-  <li><b>Ảnh 6</b><a href="https://turnoff.us/geek/the-real-reason-not-to-use-sigkill/">The real reason not to use SIGKILL</a> — Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
-  <li><b>Ảnh 7</b>Bảng 1, systemd.service(5) — chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a>, 30/09/2026; đã ẩn ba cột on-abnormal, on-abort, on-watchdog.</li>
-  <li><b>Ảnh 8</b><a href="https://xkcd.com/1495/">Hard Reboot</a> — Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg">Tủ server ở trung tâm dữ liệu NERSC</a>, Derrick Coetzee, Wikimedia Commons, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://xkcd.com/908/">The Cloud</a>, Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:AMD_Ryzen_9_9950X.jpg">CPU AMD Ryzen 9 9950X</a>, 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png">Thanh RAM DDR4</a>, PantheraLeo1359531, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Western_Digital_SN850X_NVME_solid_state_drive_8TB_front_side.jpg">Ổ SSD NVMe WD SN850X</a>, 4300streetcar, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</li>
+  <li><b>Ảnh 3</b><a href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg">Card mạng Ethernet PCI</a>, afrank99, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>.</li>
+  <li><b>Ảnh 4</b><a href="https://turnoff.us/geek/pid1/">PID 1</a>, Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 5</b>Bảng tín hiệu chuẩn, signal(7), chụp màn hình <a href="https://man7.org/linux/man-pages/man7/signal.7.html">man7.org</a>, 30/09/2026.</li>
+  <li><b>Ảnh 6</b><a href="https://turnoff.us/geek/the-real-reason-not-to-use-sigkill/">The real reason not to use SIGKILL</a>, Daniel Stori, turnoff.us, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</li>
+  <li><b>Ảnh 7</b>Bảng 1, systemd.service(5), chụp màn hình <a href="https://man7.org/linux/man-pages/man5/systemd.service.5.html">man7.org</a>, 30/09/2026; đã ẩn ba cột on-abnormal, on-abort, on-watchdog.</li>
+  <li><b>Ảnh 8</b><a href="https://xkcd.com/1495/">Hard Reboot</a>, Randall Munroe, xkcd.com, <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a>.</li>
 </ol>
 </section>
 
@@ -1315,11 +1315,11 @@ RAM và CPU, được kernel cấp PID và port, và chết theo những cách g
 </nav>
 
 <footer class="page">
-  <p>Bài 03 · Module M0 — Nền tảng tối thiểu · DevOps Self-Learning</p>
+  <p>Bài 03 · Module M0: Nền tảng tối thiểu · DevOps Self-Learning</p>
 </footer>
 
 </div>
 
-<script src="../../assets/app.js?v=227913a6"></script>
+<script src="../../assets/app.js?v=31a8c472"></script>
 </body>
 </html>

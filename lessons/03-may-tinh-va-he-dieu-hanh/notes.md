@@ -1,24 +1,24 @@
-# Ghi chú — Bài 03
+# Ghi chú Bài 03
 
 > Chỗ ghi thô. Viết xấu cũng được. Sau này đọc lại phần này hữu ích hơn lý thuyết nhiều,
 > vì nó là thứ *chính mình* đã vấp.
 
-**Ngày học:** 25/09 – 03/10/2026
+**Ngày học:** 25/09 tới 03/10/2026
 
 ---
 
 ## Kết quả lab thật
 
-### Lab 1 — sinh ra process
+### Lab 1: sinh ra process
 
 ```
 PID = 3464  |  dang giu phong 8080
 Ctrl+C de tat tu te  ·  taskkill //F //PID 3464 de giet ep
 ```
 
-PID tôi nhận được: 3464, rồi 27348, rồi 29140 — mỗi lần chạy lại là một PID mới.
+PID tôi nhận được: 3464, rồi 27348, rồi 29140, mỗi lần chạy lại là một PID mới.
 
-### Lab 2 — đi ngược PORT → PID → tên chương trình
+### Lab 2: đi ngược PORT → PID → tên chương trình
 
 ```
 $ curl http://localhost:8080
@@ -40,7 +40,7 @@ PID trong `netstat` **có khớp** với PID mà Node tự in ra không?  ☑ C�
 Dòng `TIME_WAIT` với PID `0` là dấu vết kết nối của chính `curl` vừa đóng (đi qua `::1`), không phải
 người ngồi trong phòng.
 
-### Lab 3 — file trên đĩa vs process trong RAM
+### Lab 3: file trên đĩa vs process trong RAM
 
 | | Kích thước |
 |---|---|
@@ -50,7 +50,7 @@ người ngồi trong phòng.
 Chênh nhau bao nhiêu lần? Khoảng **47.000 lần**. Để so: một process `java.exe` tự bật để thử chiếm
 732.832 KB, gấp hơn 13 lần process Node.
 
-### Lab 4 — giết tử tế (Ctrl+C)
+### Lab 4: giết tử tế (Ctrl+C)
 
 Có thấy dòng `[SIGINT] duoc bao truoc, dang don dep...` không?  ☑ Có  ☐ Không (PID 3464, rồi PID 29140)
 
@@ -68,7 +68,7 @@ $ netstat -ano | grep 8080
 
 2,087 giây, gần với 2,155 giây ở Bài 01: cùng một hành vi thử lại của Windows khi bị từ chối kết nối.
 
-### Lab 5 — giết ép (`taskkill //F`)
+### Lab 5: giết ép (`taskkill //F`)
 
 Có thấy dòng `[SIGINT]` không?  ☐ Có  ☑ Không (PID 27348)
 
@@ -83,7 +83,7 @@ $ netstat -ano | grep 8080
 (không in gì: kernel đã xoá tên khỏi sổ phòng)
 ```
 
-### Lab 6 — biến môi trường
+### Lab 6: biến môi trường
 
 Cửa sổ 1: `echo $BI_MAT` → `xin chao`
 Cửa sổ 2: `echo $BI_MAT` → (dòng trống)
@@ -141,9 +141,9 @@ Trích nguyên văn từ buổi học, để dùng làm chất liệu khi viết
 | Server mất điện thì người dùng gặp "lỗi TCP" | Gặp **timeout**: không còn kernel nào để gửi lời từ chối, nên không ai viết ra lỗi cả |
 | Bị `kill -9` thì các object trong RAM không được dọn | RAM được kernel thu hồi hết. Thứ bị bỏ dở là những thứ nằm ngoài process: connection treo ở phía database, transaction dở, log còn trong bộ đệm |
 | OOM killer giết process chiếm quá nửa RAM, và chắc chắn giết nó | Chấm điểm **chủ yếu theo RAM** và **so với các process khác**: lớn nhất thì nhiều khả năng bị chọn nhất |
-| Chạy `node` là chạy một process khác, nên nó không đọc được biến đặt bằng `export` | Process **con** sinh ra sau `export` nhận bản sao. Khác process không quan trọng; quan trọng là **cha của nó là ai** — Node chạy ở cửa sổ 1 in `xin chao`, ở cửa sổ 2 in `undefined` |
+| Chạy `node` là chạy một process khác, nên nó không đọc được biến đặt bằng `export` | Process **con** sinh ra sau `export` nhận bản sao. Khác process không quan trọng; quan trọng là **cha của nó là ai**, Node chạy ở cửa sổ 1 in `xin chao`, ở cửa sổ 2 in `undefined` |
 | Chạy lại `node server.js` có thể tự tắt bản đang chạy | Bản mới gặp `EADDRINUSE` và chết; bản cũ vẫn giữ phòng |
-| systemd dựng app dậy ngay, nên người dùng chỉ thấy 502 trong chốc lát | Process mới đã chạy nhưng Spring Boot còn cần 15–60 giây mới listen 8080 — **process đang chạy chưa phải app sẵn sàng**. Nếu script vẫn ngốn RAM thì app bị giết, dựng dậy, rồi lại bị giết |
+| systemd dựng app dậy ngay, nên người dùng chỉ thấy 502 trong chốc lát | Process mới đã chạy nhưng Spring Boot còn cần 15-60 giây mới listen 8080, **process đang chạy chưa phải app sẵn sàng**. Nếu script vẫn ngốn RAM thì app bị giết, dựng dậy, rồi lại bị giết |
 
 ---
 
@@ -168,14 +168,14 @@ netstat -ano | grep 8080
 tasklist //FI "PID eq <PID>"
 
 # Giết process
-taskkill //PID <PID>        # tử tế  — app ĐƯỢC BÁO TRƯỚC
-taskkill //F //PID <PID>    # ép     — app KHÔNG kịp nói gì
+taskkill //PID <PID>        # tử tế:   app ĐƯỢC BÁO TRƯỚC
+taskkill //F //PID <PID>    # ép:      app KHÔNG kịp nói gì
 
 # Trên Linux (Bài 04 trở đi)
 ss -tlnp | grep 8080        # ai giữ port
 ps aux | grep java          # process nào đang chạy
-kill <PID>                  # SIGTERM — được báo trước
-kill -9 <PID>               # SIGKILL — chết ngay
+kill <PID>                  # SIGTERM, được báo trước
+kill -9 <PID>               # SIGKILL, chết ngay
 dmesg | grep -i "killed process"    # kernel đã giết ai vì OOM
 ```
 

@@ -1,4 +1,4 @@
-// Bài 03 — Lab: một process nhỏ nhất có thể, để quan sát nó sống và chết.
+// Bài 03, Lab: một process nhỏ nhất có thể, để quan sát nó sống và chết.
 //
 //   node lab/server.js
 //
@@ -14,7 +14,7 @@ server.listen(8080, () => {
   console.log('Ctrl+C de tat tu te  ·  taskkill //F //PID ' + process.pid + ' de giet ep');
 });
 
-// Hàm xử lý SIGINT — chỉ chạy khi process ĐƯỢC BÁO TRƯỚC.
+// Hàm xử lý SIGINT, chỉ chạy khi process ĐƯỢC BÁO TRƯỚC.
 // Ctrl+C gửi SIGINT → dòng này in ra.
 // taskkill /F (tương đương SIGKILL) → KHÔNG in gì cả, đó là điểm của bài lab.
 process.on('SIGINT', () => {
