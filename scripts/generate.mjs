@@ -257,14 +257,13 @@ ${modulesHtml}
       giải thích vì sao nó xảy ra, sau cùng mới tới <strong>công cụ</strong>.</p>
     </div>
 
-    <h2 id="bon-tep">Mỗi bài gồm bốn phần</h2>
+    <h2 id="bon-tep">Mỗi bài gồm ba phần</h2>
     <div class="table-scroll">
     <table>
       <caption><b>Bảng 1</b> Các tệp trong một thư mục bài học.</caption>
       <thead><tr><th>Tệp</th><th>Dùng để</th></tr></thead>
       <tbody>
-        <tr><td><code>index.html</code></td><td>Bài giảng đầy đủ: giải thích, sơ đồ, bảng tra.</td></tr>
-        <tr><td><code>README.md</code></td><td>Vở bài tập: các bước lab và danh sách tự kiểm tra.</td></tr>
+        <tr><td><code>index.html</code></td><td>Bài giảng đầy đủ: giải thích, sơ đồ, bảng tra, lab và danh sách tự kiểm tra.</td></tr>
         <tr><td><code>notes.md</code></td><td>Ghi chép: lỗi đã gặp, output thật.</td></tr>
         <tr><td><code>lab/</code></td><td>Các tệp đã viết trong bài: Dockerfile, cấu hình…</td></tr>
       </tbody>
@@ -375,7 +374,7 @@ const readmeModules = curriculum.modules
         const st = statusOf(l.id);
         const d = dateOf(l.id);
         const state = st === 'done' ? `xong ${viDate(d)}` : st === 'doing' ? 'đang học' : '—';
-        const name = hasPage(l) ? `[${l.title}](${dirOf(l)}/)` : l.title;
+        const name = hasPage(l) ? `[${l.title}](${SITE}${dirOf(l)}/)` : l.title;
         return `| \`${l.id}\` | ${name} | ${l.question} | ${hrs(l)} | ${state} |`;
       })
       .join('\n');
@@ -421,8 +420,7 @@ ${readmeModules}
 
 | Tệp | Dùng để |
 |---|---|
-| \`index.html\` | Bài giảng đầy đủ: giải thích, sơ đồ, bảng tra |
-| \`README.md\` | Vở bài tập: các bước lab, danh sách tự kiểm tra |
+| \`index.html\` | Bài giảng đầy đủ: giải thích, sơ đồ, bảng tra, lab, danh sách tự kiểm tra |
 | \`notes.md\` | Ghi chép: lỗi đã gặp, output thật |
 | \`lab/\` | Các tệp đã viết trong bài |
 

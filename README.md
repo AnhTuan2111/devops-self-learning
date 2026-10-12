@@ -28,11 +28,11 @@ một lab chạy thật, với một bước cố tình gây lỗi rồi tự s�
 
 | # | Bài | Câu hỏi của bài | Ước lượng | Trạng thái |
 |---|---|---|---|---|
-| `00` | [Bản đồ toàn cảnh: một request đi qua chín chặng](lessons/00-ban-do-toan-canh/) | Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi qua những chặng nào, và chặng nào thật sự là code của bạn? | 3–5 giờ | xong 24/09/2026 |
-| `01` | [IP, port, listen, firewall: vì sao gọi không tới](lessons/01-ip-port-listen-firewall/) | App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu? | 3–5 giờ | xong 24/09/2026 |
-| `02` | [Chẩn đoán theo chặng: nhìn lỗi biết chỗ hỏng](lessons/02-chan-doan-theo-chang/) | Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết chặng nào đang hỏng? | 3–5 giờ | xong 24/09/2026 |
-| `03` | [Máy tính, Hệ điều hành, Process: 'server' thật ra là cái gì](lessons/03-may-tinh-va-he-dieu-hanh/) | 502 nghĩa là phía sau Nginx không còn ai trả lời. Nhưng "app" thật ra là gì trên một máy chủ, vì sao nó có thể chết, và vì sao nó chết thì website sập? | 5–8 giờ | xong 03/10/2026 |
-| `04` | [Phòng lab: WSL2, Docker Desktop và shell tối thiểu](lessons/04-phong-lab-wsl-docker/) | Server thật chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình, để thấy process, signal và lỗi đúng như trên server? | 3–5 giờ | đang học |
+| `00` | [Bản đồ toàn cảnh: một request đi qua chín chặng](https://anhtuan2111.github.io/devops-self-learning/lessons/00-ban-do-toan-canh/) | Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi qua những chặng nào, và chặng nào thật sự là code của bạn? | 3–5 giờ | xong 24/09/2026 |
+| `01` | [IP, port, listen, firewall: vì sao gọi không tới](https://anhtuan2111.github.io/devops-self-learning/lessons/01-ip-port-listen-firewall/) | App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu? | 3–5 giờ | xong 24/09/2026 |
+| `02` | [Chẩn đoán theo chặng: nhìn lỗi biết chỗ hỏng](https://anhtuan2111.github.io/devops-self-learning/lessons/02-chan-doan-theo-chang/) | Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết chặng nào đang hỏng? | 3–5 giờ | xong 24/09/2026 |
+| `03` | [Máy tính, Hệ điều hành, Process: 'server' là cái gì](https://anhtuan2111.github.io/devops-self-learning/lessons/03-may-tinh-va-he-dieu-hanh/) | 502 nghĩa là phía sau Nginx không còn ai trả lời. Nhưng "app" là gì trên một máy chủ, vì sao nó có thể chết, và vì sao nó chết thì website sập? | 5–8 giờ | xong 03/10/2026 |
+| `04` | [Phòng lab: WSL2, Docker Desktop và shell tối thiểu](https://anhtuan2111.github.io/devops-self-learning/lessons/04-phong-lab-wsl-docker/) | Server thật chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình, để thấy process, signal và lỗi đúng như trên server? | 3–5 giờ | đang học |
 
 ### M1 · Docker — Đóng gói và chạy ứng dụng
 
@@ -111,8 +111,7 @@ một lab chạy thật, với một bước cố tình gây lỗi rồi tự s�
 
 | Tệp | Dùng để |
 |---|---|
-| `index.html` | Bài giảng đầy đủ: giải thích, sơ đồ, bảng tra |
-| `README.md` | Vở bài tập: các bước lab, danh sách tự kiểm tra |
+| `index.html` | Bài giảng đầy đủ: giải thích, sơ đồ, bảng tra, lab, danh sách tự kiểm tra |
 | `notes.md` | Ghi chép: lỗi đã gặp, output thật |
 | `lab/` | Các tệp đã viết trong bài |
 
