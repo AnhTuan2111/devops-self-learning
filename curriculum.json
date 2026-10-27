@@ -1016,6 +1016,7 @@
           "concepts": [
             "Ingress và Ingress controller",
             "Luật theo host và path",
+            "Service dừng ở tầng 4, Ingress đọc tới tầng 7 (gọi lại phụ lục Mô hình OSI và TCP/IP của Bài 01)",
             "Thời gian chờ và kích thước body: 504 và 413 gặp lại",
             "Tự cấp và tự gia hạn chứng chỉ trong cụm",
             "Gateway API, hướng thay thế Ingress, vừa đủ để nhận ra khi gặp"

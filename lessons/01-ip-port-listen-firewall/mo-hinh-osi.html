@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phụ lục: Mô hình OSI và TCP/IP</title>
+<meta name="description" content="Tầng là gì, bảy tầng của OSI và bốn tầng của TCP/IP gồm những gì, vì sao có hai cách đếm, và tầng 4, tầng 7 nằm ở đâu trên bản đồ chín chặng. Phụ lục của Bài 01.">
+<link rel="stylesheet" href="../../assets/style.css?v=31a8c472">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="01-osi">
+
+<nav class="topbar"><div class="topbar-inner">
+  <a class="home" href="../../">devops-self-learning</a><span class="crumb">/ bai-01 / mo-hinh-osi</span>
+  <span class="spacer"></span>
+</div></nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Bài 01 · Phụ lục · đọc thêm, không bắt buộc</p>
+  <h1>Mô hình OSI và TCP/IP: <span class="hl">tầng 4, tầng 7 là gì</span></h1>
+  <p class="lede">Hai bài đầu đã nhắc tới chữ "tầng" mấy lần mà chưa lần nào nói nó là gì. Phụ lục này nói rõ chữ
+  đó, kể vì sao có hai bảng tầng là OSI và TCP/IP, rồi đặt cả hai lên bản đồ chín chặng.</p>
+  <div class="meta">
+    <span class="chip violet">Phụ lục · Mô hình OSI và TCP/IP</span>
+    <a class="chip" href="index.html"><i class="ic ic-l" aria-hidden="true"></i> Bài giảng 01</a>
+  </div>
+</header>
+
+<main class="tabs" data-tabs="Các phần của phụ lục Mô hình OSI và TCP/IP">
+
+<!-- ================================================================== -->
+<section class="tab" id="t-tang" data-tab="Tầng là gì" data-note="gói tin nhiều lớp">
+
+<p class="panel-intro">Chữ "tầng" đã xuất hiện ba lần trong hai bài đầu, mà chưa lần nào được giải thích. Tab này
+nói tầng là gì, bắt đầu từ một request đi ra khỏi laptop.</p>
+
+<h2 id="cau-hoi">Câu hỏi của phụ lục</h2>
+
+<p>Hồi đi học mình có học bảy tầng OSI, và nhớ mang máng là sau đó nó "giảm thành 3 tầng gì ấy". Nghĩ lại thì hình
+như cái mình nhớ là mô hình bốn tầng, mô hình mang tên TCP với IP. Còn hai cách đếm đó khớp vào đâu trong những gì
+đang học thì mình chưa nối được.</p>
+
+<p>Trong khoá học thì chữ tầng đã hiện ra ba lần. Bài 00 nói TCP, TLS và HTTP
+<a href="../00-ban-do-toan-canh/#thu-tu">xếp thành tầng</a>, tầng sau chạy bên trong tầng trước. Truyện
+<a href="index.html#bat-tay">TCP Buddies</a> ở Bài 01 có câu "my layer 1". Còn tên đầy đủ của TLS là Transport Layer
+Security, tức có chữ layer ngay trong tên. Ba chỗ đó dẫn tới ba câu hỏi, và phụ lục đi qua chúng theo thứ tự sau:</p>
+
+<ul>
+  <li>Một tầng là gì, và gói tin trông thế nào khi đi qua các tầng?</li>
+  <li>Bảy tầng của OSI và bốn tầng của TCP/IP gồm những tầng nào, và vì sao lại có tới hai cách đếm?</li>
+  <li>Khi người ta nói "tầng 4", "tầng 7" thì họ đang chỉ chỗ nào trên bản đồ chín chặng?</li>
+</ul>
+
+<p>Để trả lời, phụ lục dùng lại <a href="../00-ban-do-toan-canh/#chang-3">gói tin và router</a> của Bài 00,
+<a href="index.html#port">port</a> của Bài 01, và lớp vỏ ghi địa chỉ MAC ở phụ lục
+<a href="mang-va-thiet-bi.html#switch">Mạng và thiết bị mạng</a>.</p>
+
+<h2 id="dong-goi">Mỗi tầng bọc thêm một lớp</h2>
+
+<p>Bài 00 nói thứ tự TCP, rồi TLS, rồi HTTP không đảo được, vì bước sau chạy bên trong bước trước. Vậy "bên trong"
+nghĩa là gì? Nghĩa là mỗi bước nhận phần việc của bước trước, gói nó lại và gắn thêm một phần đầu của riêng mình. Cứ
+theo một request HTTPS đi ra khỏi laptop là thấy từng lớp được gắn vào.</p>
+
+<ol>
+  <li>Trình duyệt viết request HTTP, giống đoạn <code>GET / HTTP/1.1</code> ở
+  <a href="../00-ban-do-toan-canh/#chang-5">Hình 8 của Bài 00</a>.</li>
+  <li>TLS mã hoá cả đoạn request đó thành một khối byte mà người đứng giữa không đọc được, rồi gắn thêm vài byte đầu
+  của TLS.</li>
+  <li>TCP cắt dữ liệu thành từng mẩu và gắn vào mỗi mẩu một phần đầu ghi port nơi gửi và port nơi nhận, đúng cái phần
+  đầu mà <a href="index.html#port">Ảnh 4 của Bài 01</a> chụp từ RFC 9293.</li>
+  <li>IP gắn thêm một phần đầu ghi địa chỉ IP nơi gửi và nơi nhận. Tới bước này mới có thứ mà Bài 00 gọi là gói
+  tin.</li>
+  <li>Card mạng bọc gói tin trong lớp vỏ ghi địa chỉ MAC, rồi đẩy nó lên dây hoặc lên sóng thành tín hiệu.</li>
+</ol>
+
+<figure class="fig">
+<pre class="diagram"><code> ┌───────────┬───────────┬───────────┬─────────┬─────────────────────┐
+ │  vỏ MAC   │  đầu IP   │  đầu TCP  │ đầu TLS │  request HTTP       │
+ │ MAC gửi   │ IP gửi    │ port gửi  │         │  GET / HTTP/1.1     │
+ │ MAC nhận  │ IP nhận   │ port nhận │         │  Host: example.com  │
+ └───────────┴───────────┴───────────┴─────────┴─────────────────────┘
+   gắn sau cùng                                  viết đầu tiên
+   bóc đầu tiên                                  đọc sau cùng
+                                     └──── TLS đã mã hoá phần này ────┘</code></pre>
+<figcaption><b>Hình 1</b> Một gói tin chở request HTTPS lúc rời card mạng. Phần bên phải được viết trước, mỗi bước
+sau gắn thêm một phần đầu ở bên trái. Bên nhận bóc theo chiều ngược lại, từ trái sang phải.</figcaption>
+</figure>
+
+<p>Cách xếp lớp này có tên là encapsulation (đóng gói). Trong encapsulation, mỗi bước coi thứ bước trước
+đưa cho nó là một khối byte. Nó không đọc bên trong khối đó, mà chỉ gắn phần đầu của mình vào rồi giao xuống cho bước
+kế tiếp. TCP không cần biết mình đang chở request HTTP hay chở gì khác, và IP cũng không cần biết port là gì.</p>
+
+<p>Còn bên nhận thì làm ngược lại. Card mạng của server bóc lớp vỏ MAC. IP đọc phần đầu của nó, thấy địa chỉ nhận
+đúng là máy mình thì bóc phần đầu đó đi. TCP đọc port để biết giao phần còn lại cho chương trình nào. TLS giải mã, và
+cuối cùng chương trình nhận kết nối có lại đúng đoạn request mà trình duyệt đã viết.</p>
+
+<p>Tới đây thì nói được tầng là gì. Một tầng (layer) là một phần việc có phần đầu riêng trong gói tin. Nó chỉ dùng
+dịch vụ của tầng ngay bên dưới và chỉ phục vụ tầng ngay bên trên. Vì mỗi tầng chỉ đọc phần đầu của chính nó, Bài 00
+mới nói được rằng sửa hay thay một tầng thì không phải viết lại các tầng khác.</p>
+
+<h2 id="goi-tin-that">Nhìn một gói tin thật</h2>
+
+<p>Mấy lớp ở Hình 1 có nhìn tận mắt được không? Nhìn được, bằng Wireshark, một chương trình bắt lại mọi gói tin đi
+qua card mạng rồi bóc từng lớp ra cho người đọc. Ảnh 1 là một gói tin thật mà Wireshark bắt được trên máy của một
+người khác, và gói này chở một câu hỏi DNS.</p>
+
+<figure class="fig photo shot wide">
+  <img src="img/wireshark-dns.webp" width="1149" height="200" loading="lazy" alt="Cửa sổ Wireshark, hàng trên là một gói DNS hỏi www.google.com. Bên dưới là các dòng Frame, Ethernet II, Internet Protocol Version 4, User Datagram Protocol và Domain Name System; ba dòng Ethernet II, Internet Protocol và User Datagram Protocol được khoanh đỏ, vàng, lam.">
+  <figcaption><b>Ảnh 1</b> Một gói tin hỏi DNS tên <code>www.google.com</code>, mở bằng Wireshark. Các dòng xếp từ lớp ngoài vào lớp trong: <span class="kw"><i class="key k-red" aria-hidden="true"></i>vỏ Ethernet</span> ghi hai địa chỉ MAC, <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>phần đầu IPv4</span> ghi hai địa chỉ IP, <span class="kw"><i class="key k-blue" aria-hidden="true"></i>phần đầu UDP</span> ghi hai port, và dòng cuối là chính câu hỏi DNS. Dòng Frame trên cùng không phải một lớp trong gói, mà là ghi chú của Wireshark về độ dài gói và card mạng đã bắt nó.</figcaption>
+</figure>
+
+<p>Ảnh 1 có một chữ chưa gặp là UDP (User Datagram Protocol). UDP đứng cùng chỗ với TCP, cũng ghi port nơi gửi và
+port nơi nhận, nhưng nó không bắt tay ba bước và cũng không gửi lại gói bị mất. DNS hay chạy trên UDP vì một câu hỏi
+DNS thường vừa trong một gói tin, có mất thì hỏi lại là xong. Port 53 ở dòng UDP là port quy ước của DNS, giống 443
+là port quy ước của HTTPS.</p>
+
+<p>Thứ tự trong Ảnh 1 khớp với Hình 1, chỉ có UDP đứng vào chỗ của TCP và không có lớp TLS. Còn vỏ Ethernet thì chính
+là lớp vỏ MAC, vì Ethernet là chuẩn nối mạng bằng cáp đã gặp ở phụ lục Mạng và thiết bị mạng.</p>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-osi" data-tab="OSI bảy tầng" data-note="bảng chia việc của ISO">
+
+<p class="panel-intro">Hình 1 có năm lớp, nhưng bảng tầng được dạy nhiều nhất thì có bảy. Đó là mô hình OSI, cái
+bảng hồi đi học mình được học.</p>
+
+<h2 id="bay-tang">Bảy tầng theo văn bản chuẩn</h2>
+
+<p>OSI là viết tắt của Open Systems Interconnection, nghĩa là kết nối các hệ thống mở. Hệ thống mở ở đây là những
+máy theo chuẩn chung, nên máy của hãng này nói chuyện được với máy của hãng khác. Mô hình OSI do ISO, tổ chức tiêu
+chuẩn quốc tế, công bố lần đầu năm 1984 với số hiệu ISO 7498.</p>
+
+<p>Bản đang hiệu lực là ISO/IEC 7498-1:1994. Cùng văn bản đó cũng được ITU-T, bộ phận làm chuẩn viễn thông của Liên
+minh Viễn thông Quốc tế, phát hành dưới số hiệu X.200, và bản X.200 tải được miễn phí. Mục 6.1.2 của X.200 kể tên bảy
+tầng như sau.</p>
+
+<figure class="fig">
+<blockquote class="src" lang="en">
+<p>The Reference Model contains seven layers:</p>
+<p>a) the Application Layer (layer 7);<br>
+b) the Presentation Layer (layer 6);<br>
+c) the Session Layer (layer 5);<br>
+d) the Transport Layer (layer 4);<br>
+e) the Network Layer (layer 3);<br>
+f) the Data Link Layer (layer 2); and<br>
+g) the Physical Layer (layer 1).</p>
+</blockquote>
+<figcaption><b>Hình 2</b> Bảy tầng của OSI, mục 6.1.2 trong
+<a href="https://www.itu.int/rec/T-REC-X.200-199407-I/en">ITU-T X.200</a>, bản tháng 7 năm 1994, đọc ngày
+27/10/2026. Tầng 7 ở trên cùng, gần chương trình nhất. Tầng 1 ở dưới cùng, gần sợi dây nhất.</figcaption>
+</figure>
+
+<p>Chữ "Reference Model" trong câu đầu, mô hình tham chiếu, nói lên OSI là loại văn bản gì. Mục 1.4 của X.200 ghi rõ
+mô hình này không nhằm "to serve as an implementation specification", tức nó không phải bản đặc tả để viết phần mềm
+theo. Nó chỉ chia việc truyền dữ liệu giữa hai máy thành bảy phần, để mỗi nhóm chuyên gia viết chuẩn cho một phần mà
+không giẫm chân nhau. Giao thức chạy thật cho từng tầng thì được viết sau, trong những văn bản khác.</p>
+
+<p>Bảng 1 nói mỗi tầng lo việc gì, theo phần mục đích của từng tầng trong X.200, và chỉ ra thứ đã gặp trong khoá học
+nằm ở tầng nào.</p>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 1</b> Bảy tầng của OSI, từ trên xuống, kèm thứ đã gặp ở Bài 00, Bài 01 và hai phụ lục của
+  Bài 01.</caption>
+  <thead><tr><th>Tầng</th><th>Tên</th><th>Lo việc gì</th><th>Đã gặp</th></tr></thead>
+  <tbody>
+    <tr><td>7</td><td>Application, ứng dụng</td><td>Giao thức của chính chương trình: request viết ra sao, câu hỏi DNS viết ra sao</td><td>HTTP, DNS</td></tr>
+    <tr><td>6</td><td>Presentation, trình diễn</td><td>Thống nhất cách biểu diễn dữ liệu để hai bên hiểu như nhau, ví dụ cách nén</td><td>Chưa gặp giao thức nào chỉ làm việc này</td></tr>
+    <tr><td>5</td><td>Session, phiên</td><td>Mở, giữ trật tự và đóng một phiên trao đổi giữa hai chương trình</td><td>Chưa gặp giao thức nào chỉ làm việc này</td></tr>
+    <tr><td>4</td><td>Transport, giao vận</td><td>Chuyển dữ liệu giữa hai chương trình ở hai đầu, đủ và đúng thứ tự</td><td>TCP, UDP, port</td></tr>
+    <tr><td>3</td><td>Network, mạng</td><td>Đưa gói tin đi qua nhiều mạng để tới đúng máy</td><td>IP, router</td></tr>
+    <tr><td>2</td><td>Data Link, liên kết dữ liệu</td><td>Đưa gói tin tới máy kế bên trong cùng một mạng</td><td>Địa chỉ MAC, switch, access point</td></tr>
+    <tr><td>1</td><td>Physical, vật lý</td><td>Đổi bit thành tín hiệu trên cáp đồng, sóng hay cáp quang</td><td>Cáp mạng, sóng WiFi, modem</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="ba-tang-duoi">Router chỉ cần ba tầng dưới</h2>
+
+<p>Hai máy ở hai đầu cần đủ bảy tầng, vì một máy viết request còn máy kia đọc nó. Vậy router đứng giữa đường cần mấy
+tầng? X.200 trả lời câu đó ở mục 6.1.6. Khi đường truyền không nối thẳng hai máy với nhau thì có những hệ thống chỉ
+làm việc chuyển tiếp, và theo văn bản này thì việc chuyển tiếp đó "provided in the lower layers", tức nằm ở các tầng
+dưới. Hình 12 của X.200 vẽ đúng cảnh ấy, và Hình 3 dưới đây vẽ lại theo nó, có thêm tên thiết bị.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>      laptop                 router                 server
+ ┌────────────────┐                            ┌────────────────┐
+ │ 7 Application  │ ◄── HTTP, hai đầu đọc ───► │ 7 Application  │
+ │ 6 Presentation │                            │ 6 Presentation │
+ │ 5 Session      │                            │ 5 Session      │
+ │ 4 Transport    │ ◄── TCP, hai đầu đọc ────► │ 4 Transport    │
+ ├────────────────┤    ┌──────────────┐        ├────────────────┤
+ │ 3 Network      │ ◄► │ 3 Network    │ ◄────► │ 3 Network      │
+ │ 2 Data Link    │ ◄► │ 2 Data Link  │ ◄────► │ 2 Data Link    │
+ │ 1 Physical     │ ◄► │ 1 Physical   │ ◄────► │ 1 Physical     │
+ └────────────────┘    └──────────────┘        └────────────────┘
+          └─ mạng nhà bạn ─┘       └──── mạng khác ────┘</code></pre>
+<figcaption><b>Hình 3</b> Router chỉ có ba tầng dưới. Vẽ lại theo Figure 12 của ITU-T X.200, thêm tên thiết bị.
+Bốn tầng trên chỉ có ở hai máy hai đầu, nên phần đầu TCP và request HTTP đi qua router mà router không đọc
+tới.</figcaption>
+</figure>
+
+<p>Hình 3 khớp với phụ lục Mạng và thiết bị mạng. Ở đó switch chỉ đọc lớp vỏ MAC, tức dừng ở tầng 2, còn router mở
+lớp vỏ ra và đọc địa chỉ IP bên trong, tức đi lên tới tầng 3. Đọc xong địa chỉ thì router bọc gói tin trong một lớp
+vỏ MAC mới hợp với mạng phía bên kia rồi đẩy đi, nên lớp vỏ MAC chỉ sống được từ máy này tới máy kế bên. Câu RFC 1983
+nói router chọn đường bằng "network layer information" giờ cũng rõ nghĩa, vì network layer chính là tầng 3.</p>
+
+<h2 id="tang-5-6">Tầng 5 và tầng 6 nằm ở đâu</h2>
+
+<p>Bảng 1 có hai dòng mà cột cuối không có gì, vì trên Internet không có giao thức phổ biến nào chỉ làm đúng việc
+của tầng Session hay tầng Presentation. Chỗ này cũng làm TLS khó xếp. Tên của nó có chữ Transport Layer, nhưng nó
+chạy bên trong kết nối TCP và bọc request HTTP bên trong, nên tài liệu mỗi nơi xếp TLS một kiểu, nơi thì tầng 5, nơi
+thì tầng 6. Theo mình thì cứ nói TLS nằm giữa tầng 4 và tầng 7 là dễ dùng nhất, vì câu đó nói đúng điều Hình 1 đã
+cho thấy.</p>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-tcpip" data-tab="TCP/IP bốn tầng" data-note="bảng của Internet">
+
+<p class="panel-intro">OSI là bảng chia việc viết trên giấy. Internet đang chạy thì theo một bảng khác, ít tầng hơn,
+và đó chính là mô hình bốn tầng mà mình nhớ ra.</p>
+
+<h2 id="bon-tang">Bốn tầng trong RFC 1122</h2>
+
+<p>Mô hình bốn tầng ấy được ghi ở đâu? Nó được ghi trong RFC 1122, văn bản năm 1989 quy định một máy nối Internet phải
+làm được những gì. Mục 1.1.3 của RFC này nói một máy muốn nói chuyện qua Internet thì phải cài một bộ giao thức xếp
+thành tầng, mỗi tầng ít nhất một giao thức, rồi kể tên bốn tầng đó.</p>
+
+<figure class="fig">
+<blockquote class="src" lang="en">
+<p>The protocol layers used in the Internet architecture are as follows: […] Application Layer […] Transport Layer
+[…] Internet Layer […] Link Layer</p>
+<p>The application layer of the Internet suite essentially combines the functions of the top two layers --
+Presentation and Application -- of the OSI reference model.</p>
+</blockquote>
+<figcaption><b>Hình 4</b> Tạm dịch: các tầng giao thức dùng trong kiến trúc Internet gồm Application, Transport,
+Internet và Link. Tầng Application của Internet về cơ bản gộp việc của hai tầng trên cùng trong mô hình OSI là
+Presentation và Application. Trích mục 1.1.3 của <a href="https://www.rfc-editor.org/rfc/rfc1122">RFC 1122</a>,
+tháng 10 năm 1989, đọc ngày 27/10/2026; dấu […] là chỗ lược phần giải thích của từng tầng.</figcaption>
+</figure>
+
+<p>Bộ giao thức này mang tên TCP/IP, lấy theo hai giao thức chính của nó, TCP ở tầng Transport và IP ở tầng
+Internet. Hai tầng giữa khớp gần như một một với OSI, nên tầng Transport vẫn là tầng 4 và tầng Internet là tầng 3.
+Hai đầu thì khác. Ở dưới, tầng Link gộp tầng 1 và tầng 2 của OSI, vì RFC 1122 chỉ đòi máy nói được với mạng nó nối
+thẳng vào, còn nói bằng cáp hay bằng sóng thì để chuẩn của từng loại mạng lo. Ở trên, tầng Application gộp các tầng
+trên của OSI, và phần lớn tài liệu vẽ nó trùm cả ba tầng 5, 6, 7 như Hình 5.</p>
+
+<figure class="fig">
+<pre class="diagram"><code>     OSI, 7 tầng               TCP/IP, 4 tầng      đã gặp trong khoá
+ ┌───────────────────┐      ┌────────────────┐
+ │ 7 Application     │      │                │   HTTP, DNS
+ │ 6 Presentation    │      │  Application   │
+ │ 5 Session         │      │                │
+ ├───────────────────┤      ├────────────────┤
+ │ 4 Transport       │      │  Transport     │   TCP, UDP, port
+ ├───────────────────┤      ├────────────────┤
+ │ 3 Network         │      │  Internet      │   IP, router
+ ├───────────────────┤      ├────────────────┤
+ │ 2 Data Link       │      │  Link          │   MAC, switch
+ │ 1 Physical        │      │                │   cáp, sóng, modem
+ └───────────────────┘      └────────────────┘</code></pre>
+<figcaption><b>Hình 5</b> Hai bảng tầng đặt cạnh nhau. Tầng 4 và tầng 3 khớp nhau, còn tầng Application và tầng Link
+của TCP/IP mỗi tầng gộp vài tầng của OSI.</figcaption>
+</figure>
+
+<p>Vậy sách này bảy tầng, sách kia bốn tầng thì sách nào sai? Không sách nào sai cả. Có giáo trình còn dùng năm
+tầng, tức tách tầng Link ra làm hai như OSI. Mọi cách đếm cùng tả một chồng việc, từ tín hiệu trên dây lên tới giao
+thức của ứng dụng, và chỉ khác nhau ở chỗ gộp hay tách. Cái cần nhớ là thứ tự của chồng việc đó.</p>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>Internet chạy các giao thức của TCP/IP, chia bốn tầng. Còn khi người ta gọi số tầng, như "tầng 4", "tầng 7",
+  thì con số đó là số của OSI.</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-lich-su" data-tab="Hai mô hình" data-note="vì sao có hai bảng">
+
+<p class="panel-intro">Giao thức thì theo TCP/IP, mà số tầng lại gọi theo OSI. Hai thứ lệch nhau như vậy vì hai bảng ra
+đời ở hai nơi, cùng một khoảng thời gian, và từng cạnh tranh nhau để thành chuẩn chung.</p>
+
+<h2 id="hai-noi">Hai bảng, hai nơi làm ra</h2>
+
+<p>TCP/IP ra đời trước, từ một dự án nghiên cứu. Tháng 5 năm 1974, Vint Cerf và Bob Kahn công bố bài <em>A Protocol
+for Packet Network Intercommunication</em> trên tạp chí <em>IEEE Transactions on Communications</em>. Bài đó mô tả
+cách cho nhiều mạng gói tin khác nhau nói chuyện được với nhau, và giao thức trong bài về sau được tách làm hai, TCP
+và IP. Ngày 1/1/1983, mạng nghiên cứu ARPANET chuyển hẳn sang TCP/IP, như phụ lục
+<a href="ipv4-vs-ipv6.html#1981">Lịch sử địa chỉ IP</a> đã kể.</p>
+
+<figure class="fig photo small">
+  <img src="img/cerf-kahn-2005.webp" width="1030" height="656" loading="lazy" alt="Ba người đàn ông mặc vest đứng cạnh nhau trong một phòng có rèm và lá cờ Mỹ phía sau: Vint Cerf bên trái, Bob Kahn ở giữa, Tổng thống George W. Bush bên phải.">
+  <figcaption><b>Ảnh 2</b> Vint Cerf (trái) và Bob Kahn (giữa) nhận Huân chương Tự do của Tổng thống Mỹ ngày 9/11/2005, vì công sức góp phần tạo ra Internet. Người bên phải là Tổng thống George W. Bush. Ba mươi mốt năm trước buổi lễ này, hai người cùng viết bài báo đặt nền cho TCP/IP.</figcaption>
+</figure>
+
+<p>OSI thì đi đường khác. Theo bài <em>OSI: The Internet That Wasn't</em> của nhà sử học Andrew L. Russell đăng trên
+IEEE Spectrum năm 2013, ISO lập một uỷ ban về OSI năm 1977 do Charles Bachman làm chủ tịch, họp toàn thể lần đầu đầu
+năm 1978, và ra mô hình bảy tầng năm 1984. Đây là một chuẩn do uỷ ban của nhiều nước, nhiều hãng cùng soạn. Mục tiêu
+của nó là máy của mọi hãng nối được với nhau, chứ không phải nối mạng của riêng một dự án.</p>
+
+<figure class="fig">
+<pre class="diagram"><code> 1974   Cerf và Kahn công bố giao thức nối nhiều mạng        TCP/IP
+ 1977   ISO lập uỷ ban OSI                                   OSI
+ 1983   ARPANET chuyển hẳn sang TCP/IP, ngày 1/1             TCP/IP
+ 1984   ISO công bố ISO 7498, mô hình bảy tầng               OSI
+ 1988   Bộ Thương mại Mỹ yêu cầu cơ quan chính phủ mua
+        sản phẩm theo OSI, áp dụng sau tháng 8/1990          OSI
+ 1989   RFC 1122 ghi bốn tầng của Internet                   TCP/IP
+ 1992   kỹ sư Internet bác đề xuất lấy giao thức của ISO
+        thay cho IPv4                                        TCP/IP
+ 1994   bản sửa ISO/IEC 7498-1, cùng văn bản ITU-T X.200     OSI</code></pre>
+<figcaption><b>Hình 6</b> Hai mô hình, mười năm chạy song song. Các mốc của OSI và mốc năm 1988, 1992 lấy theo bài của
+Andrew L. Russell; mốc năm 1974 và 1989 lấy theo chính bài báo và RFC 1122; mốc năm 1983 như phụ lục Lịch sử địa
+chỉ IP đã kể.</figcaption>
+</figure>
+
+<h2 id="vi-sao-thang">TCP/IP thắng vì nó chạy trước</h2>
+
+<p>Năm 1988 chính phủ Mỹ còn chọn OSI, vậy sao về sau Internet lại chạy TCP/IP? Bài của Russell đưa ra hai lý do
+chính. Uỷ ban OSI mở cửa cho mọi bên cùng bàn, nên chuẩn ra rất chậm và chứa nhiều phương án để chiều tất cả. Văn bản
+chuẩn OSI thì phải mua bản giấy từ ISO, trong khi ai cũng tự cài được TCP/IP mà không mất tiền. Trong lúc OSI còn đang
+soạn thì TCP/IP đã chạy, và tới giữa thập niên 1990 Internet đã thành chuẩn thực tế cho mạng toàn cầu. Đây là cách kể
+của một nhà sử học, mình chưa đọc tài liệu gốc của uỷ ban OSI để tự kiểm.</p>
+
+<h2 id="dau-vet">Dấu vết còn lại: cách đánh số</h2>
+
+<p>Giao thức của OSI gần như không còn thấy trên Internet, nhưng cách đánh số tầng của nó thì ở lại. Vì sao người ta
+vẫn gọi "tầng 2", "tầng 7" theo OSI mà không gọi theo TCP/IP? Theo mình là vì bảy tầng chia nhỏ hơn bốn tầng. TCP/IP
+gộp sợi dây và địa chỉ MAC vào chung tầng Link, nên muốn nói riêng về sợi dây thì phải mượn số của OSI. Chữ
+"my layer 1" trong truyện TCP Buddies chính là số của OSI, vì TCP/IP không có tầng 1 nào riêng.</p>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-tang-4-7" data-tab="Tầng 4, tầng 7" data-note="đặt lên bản đồ">
+
+<p class="panel-intro">Có đủ hai bảng rồi thì quay về câu hỏi cuối: người ta nói "tầng 4", "tầng 7" là đang chỉ chỗ
+nào trên bản đồ chín chặng?</p>
+
+<h2 id="tren-ban-do">Mỗi chặng đọc tới tầng nào</h2>
+
+<p>Một chặng nằm ở tầng nào thì nhìn vào thứ nó đọc là biết. Chặng nào chỉ đọc địa chỉ IP thì dừng ở tầng 3, chặng
+nào đọc port thì lên tới tầng 4, còn chặng nào đọc được path hay header của request thì đã lên tới tầng 7. Bảng 2 xếp
+chín chặng của <a href="../00-ban-do-toan-canh/#hinh-ban-do">Bài 00</a> theo cách đó, và thêm một dòng cho các router
+trên Internet nằm giữa hai đầu.</p>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 2</b> Chín chặng và các router ở giữa, mỗi chặng đọc tới tầng nào. Số tầng theo OSI.</caption>
+  <thead><tr><th>Chặng</th><th>Đọc tới tầng</th><th>Đọc gì</th></tr></thead>
+  <tbody>
+    <tr><td>Trình duyệt</td><td>7</td><td>URL, rồi viết ra request HTTP</td></tr>
+    <tr><td>DNS</td><td>7</td><td>Câu hỏi và câu trả lời DNS, thường chạy trên UDP port 53</td></tr>
+    <tr><td>Mở kết nối TCP</td><td>4</td><td>Port, ba gói của bắt tay ba bước</td></tr>
+    <tr><td>Bắt tay TLS</td><td>giữa 4 và 7</td><td>Chứng chỉ, rồi mã hoá mọi thứ ở bên trên</td></tr>
+    <tr><td>Gửi request HTTP</td><td>7</td><td>Phương thức, path, các header</td></tr>
+    <tr><td>Các router trên Internet</td><td>3</td><td>Địa chỉ IP nơi nhận</td></tr>
+    <tr><td>Firewall</td><td>3 và 4</td><td>Địa chỉ nguồn và đích, port, giao thức</td></tr>
+    <tr><td>Nginx</td><td>7</td><td>Header <code>Host</code>, path</td></tr>
+    <tr><td>Ứng dụng Spring Boot</td><td>7</td><td>Cả request; phía trên tầng 7 là code bạn viết</td></tr>
+    <tr><td>PostgreSQL</td><td>7</td><td>Giao thức riêng của PostgreSQL, chạy trên TCP port 5432</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Dòng firewall đáng nhìn kỹ hơn. Theo định nghĩa ở <a href="index.html#firewall-la-gi">Bài 01</a>, mỗi luật của
+firewall xét nguồn, đích, port và giao thức, tức dừng ở tầng 3 và tầng 4. Vì vậy firewall chặn được "mọi kết nối vào
+port 8080", nhưng không chặn được riêng request tới <code>/admin</code>, vì path nằm ở tầng 7 mà firewall không đọc
+tới. Nginx thì khác, nó đọc tới tầng 7, nên mới chọn được website theo header <code>Host</code> như Bài 00 đã kể.</p>
+
+<h2 id="loi-tang">Lỗi tầng 4 và lỗi tầng 7</h2>
+
+<p>Số tầng còn giúp chia lỗi làm hai nhóm. Nếu bắt tay ba bước không xong, người gọi thấy <code>refused</code> hay
+<code>timeout</code>, thì lỗi nằm ở tầng 4 trở xuống, đúng phạm vi ba điều kiện của Bài 01. Nếu bắt tay xong rồi mà
+trang trả về vẫn sai hay báo lỗi thì tầng 4 đã thông, và lỗi nằm ở tầng 7 hoặc nằm trong code. Vì thế khi ai đó nói
+"tầng 4 thông rồi" thì ý họ là kết nối TCP đã mở được, việc còn lại là xem request và câu trả lời.</p>
+
+<h2 id="goi-theo-tang">Thiết bị gọi tên theo tầng</h2>
+
+<p>Người ta cũng hay gọi một thiết bị hay một chương trình theo tầng cao nhất mà nó đọc. Switch đọc tới lớp vỏ MAC
+nên được gọi là thiết bị tầng 2, còn router là thiết bị tầng 3. Cách gọi này gặp nhiều nhất với load balancer (bộ cân
+bằng tải). Khi một server không chịu nổi số người dùng, người ta chạy cùng một app trên nhiều server rồi đặt phía
+trước chúng một load balancer, là chương trình chia các kết nối đi vào cho những server đó.</p>
+
+<p>AWS, dịch vụ cho thuê server của Amazon, có hai loại load balancer, và tài liệu chính thức gọi tên chúng đúng theo
+số tầng của OSI.</p>
+
+<figure class="fig">
+<blockquote class="src" lang="en">
+<p>A Network Load Balancer functions at the fourth layer of the Open Systems Interconnection (OSI) model.</p>
+<p>An Application Load Balancer functions at the application layer, the seventh layer of the Open Systems
+Interconnection (OSI) model. […] You can configure listener rules to route requests to different target groups based
+on the content of the application traffic.</p>
+</blockquote>
+<figcaption><b>Hình 7</b> Tạm dịch: Network Load Balancer làm việc ở tầng thứ tư của mô hình OSI. Application Load
+Balancer làm việc ở tầng Application, tầng thứ bảy của mô hình OSI, và có thể đặt luật để chuyển request tới các nhóm
+server khác nhau dựa trên nội dung của request. Trích hai trang giới thiệu
+<a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html">Network Load Balancer</a>
+và <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html">Application Load
+Balancer</a> trong tài liệu AWS, đọc ngày 27/10/2026.</figcaption>
+</figure>
+
+<p>Hai loại đó khác nhau ở đúng chỗ Bảng 2 đã chỉ ra. Loại tầng 4 chỉ thấy địa chỉ và port, nên nó chỉ chia được theo
+từng kết nối: kết nối này sang server A, kết nối kia sang server B. Loại tầng 7 đọc được header <code>Host</code> và
+path, nên nó chia được theo nội dung, ví dụ request tới <code>/api</code> sang một nhóm server còn request tới
+<code>/</code> sang nhóm khác. Đổi lại, loại tầng 7 phải gỡ được mã hoá TLS thì mới đọc được request, còn loại tầng 4
+thì không cần.</p>
+
+<div class="callout ok">
+  <span class="label">Chốt</span>
+  <p>Tầng 4 là chỗ của TCP và port, tầng 7 là chỗ của HTTP. Thứ gì chỉ đọc tới tầng 4 thì biết kết nối đi đâu, nhưng
+  không biết request bên trong muốn gì.</p>
+</div>
+
+</section>
+
+<!-- ================================================================== -->
+<section class="tab" id="t-ket" data-tab="Kết" data-note="nối về Bài 01">
+
+<p class="panel-intro">Trước khi quay về Bài 01, có năm chỗ dễ nghĩ sai về tầng nên gom lại một lần.</p>
+
+<h2 id="de-nghi-sai">Những chỗ dễ nghĩ sai</h2>
+
+<div class="table-scroll">
+<table>
+  <caption><b>Bảng 3</b> Năm cách nghĩ nghe hợp lý về tầng, và chỗ chúng lệch.</caption>
+  <thead><tr><th>Dễ nghĩ là</th><th>Đúng là</th><th>Xem lại</th></tr></thead>
+  <tbody>
+    <tr><td>Internet chạy theo mô hình OSI</td><td>Internet chạy các giao thức của TCP/IP. Từ OSI, thứ còn dùng hằng ngày là cách đánh số tầng</td><td><a href="#dau-vet">Dấu vết còn lại</a></td></tr>
+    <tr><td>Giao thức nào cũng nằm gọn trong đúng một tầng</td><td>TLS không khớp ô nào của OSI. Mô hình dùng để gọi tên và chia việc, không phải luật mọi giao thức phải theo</td><td><a href="#tang-5-6">Tầng 5 và tầng 6</a></td></tr>
+    <tr><td>Router đọc cả request HTTP đi qua nó</td><td>Router chỉ bóc tới tầng 3, đọc địa chỉ IP rồi chuyển đi. Với HTTPS thì phần HTTP đã mã hoá, router có muốn cũng không đọc được</td><td><a href="#ba-tang-duoi">Router chỉ cần ba tầng dưới</a></td></tr>
+    <tr><td>Sách bảy tầng và sách bốn tầng thì một sách sai</td><td>Cả hai tả cùng một chồng việc, chỉ khác chỗ gộp hay tách</td><td><a href="#bon-tang">Bốn tầng trong RFC 1122</a></td></tr>
+    <tr><td>Firewall trên laptop chặn được request theo path</td><td>Firewall xét địa chỉ, port và giao thức, tức tầng 3 và tầng 4. Phân biệt theo path là việc của thứ đọc tới tầng 7</td><td><a href="#tren-ban-do">Mỗi chặng đọc tới tầng nào</a></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="noi-ve-bai-01">Nối về Bài 01</h2>
+
+<p>Vậy Bài 01 nằm ở tầng nào? Nằm trọn ở tầng 3 và tầng 4. Gọi đúng địa chỉ là chuyện của tầng 3, listen một port là
+chuyện của tầng 4, còn firewall xét cả hai. Hai triệu chứng <code>refused</code> và <code>timeout</code> là hai kiểu
+bắt tay ba bước không xong, tức hai kiểu hỏng ở tầng 4.</p>
+
+<p>Còn câu hỏi ở cuối Bài 01 thì đã sang tầng 7. Ở đó kết nối đã mở, tức tầng 4 đã thông, mà trang vẫn báo lỗi mang
+một con số. Theo cách chia ở tab trước thì lỗi ấy nằm ở tầng 7 hoặc trong code, tức ở những chặng đọc được
+request.</p>
+
+<h2 id="nguon">Nguồn đọc thêm</h2>
+
+<p>Gồm văn bản chuẩn gốc, tài liệu chính thức và một bài lịch sử. Dùng để tra cứu, không cần đọc hết.</p>
+
+<ol class="refs">
+  <li>ITU-T X.200 (07/1994), <em>Open Systems Interconnection: Basic Reference Model</em>, cùng văn bản với
+  ISO/IEC 7498-1:1994. Bảy tầng ở mục 6, mục đích từng tầng ở mục 7. Tải miễn phí.
+  <a href="https://www.itu.int/rec/T-REC-X.200-199407-I/en">itu.int/rec/T-REC-X.200-199407-I</a></li>
+  <li>RFC 1122, <em>Requirements for Internet Hosts: Communication Layers</em> (1989). Bốn tầng ở mục 1.1.3.
+  <a href="https://www.rfc-editor.org/rfc/rfc1122">rfc-editor.org/rfc/rfc1122</a></li>
+  <li>V. Cerf, R. Kahn, <em>A Protocol for Packet Network Intercommunication</em>, IEEE Transactions on
+  Communications, tháng 5 năm 1974.
+  <a href="https://ieeexplore.ieee.org/document/1092259">ieeexplore.ieee.org/document/1092259</a></li>
+  <li>Andrew L. Russell, <em>OSI: The Internet That Wasn't</em>, IEEE Spectrum, 2013.
+  <a href="https://spectrum.ieee.org/osi-the-internet-that-wasnt">spectrum.ieee.org/osi-the-internet-that-wasnt</a></li>
+  <li>AWS, trang giới thiệu Network Load Balancer và Application Load Balancer.
+  <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html">docs.aws.amazon.com/…/network/introduction</a> ·
+  <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html">…/application/introduction</a></li>
+  <li>Wireshark User's Guide, tài liệu chính thức của Wireshark.
+  <a href="https://www.wireshark.org/docs/wsug_html_chunked/">wireshark.org/docs/wsug_html_chunked</a></li>
+</ol>
+
+<h2 id="nguon-anh">Nguồn ảnh</h2>
+<p class="photo-credits-note">Ảnh lấy từ Wikimedia Commons, dùng theo giấy phép ghi ở từng dòng. Ảnh 1 đã được cắt lấy phần trên và vẽ thêm ba khung màu, bản đã chỉnh được chia sẻ lại theo đúng giấy phép của ảnh gốc. Ảnh 2 đã được chuyển sang đen trắng.</p>
+<ol class="photo-credits">
+  <li><b>Ảnh 1</b><a href="https://commons.wikimedia.org/wiki/File:Wireshark_Network_Analyzer_Screen.png">Wireshark Network Analyzer Screen</a>, Laurachappell, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</li>
+  <li><b>Ảnh 2</b><a href="https://commons.wikimedia.org/wiki/File:CerfKahnMedalOfFreedom.jpg">Cerf và Kahn nhận Huân chương Tự do, 2005</a>, Paul Morse, Nhà Trắng, Wikimedia Commons, phạm vi công cộng.</li>
+</ol>
+
+</section>
+
+</main>
+
+<nav class="prevnext">
+  <a href="index.html">
+    <span class="dir">Quay lại</span>
+    <span class="t">Bài giảng 01</span>
+  </a>
+  <a class="next" href="../02-chan-doan-theo-chang/">
+    <span class="dir">Bài tiếp</span>
+    <span class="t">02 · Chẩn đoán theo chặng</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 01 · Phụ lục · Mô hình OSI và TCP/IP · DevOps Self-Learning</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=31a8c472"></script>
+</body>
+</html>

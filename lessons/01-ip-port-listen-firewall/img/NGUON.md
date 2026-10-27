@@ -36,6 +36,16 @@ sinh từ ảnh CC BY-SA được chia sẻ lại theo cùng giấy phép đó.
 
 Cả ba ảnh của phụ lục này được người tải lên ghi là "Own work" trên trang tệp của Commons (kiểm ngày 12/10/2026).
 
+## Phụ lục `mo-hinh-osi.html`
+
+| Ảnh | Tệp | Nguồn | Tác giả | Giấy phép | Đã chỉnh |
+|---|---|---|---|---|---|
+| Ảnh 1 | `wireshark-dns.webp` | [File:Wireshark Network Analyzer Screen.png](https://commons.wikimedia.org/wiki/File:Wireshark_Network_Analyzer_Screen.png) | Laurachappell | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | ảnh chụp màn hình ngày 18/01/2021, trang tệp ghi "Own work" (kiểm ngày 27/10/2026); cắt còn hàng gói tin và năm dòng đầu của khung chi tiết (1149×200); vẽ khung đỏ quanh dòng Ethernet II, vàng quanh dòng IPv4, lam quanh dòng UDP, không vẽ chữ; `hau-ky.py --giu-mau` |
+| Ảnh 2 | `cerf-kahn-2005.webp` | [File:CerfKahnMedalOfFreedom.jpg](https://commons.wikimedia.org/wiki/File:CerfKahnMedalOfFreedom.jpg) | Paul Morse, Nhà Trắng | Public domain | ảnh chụp cảnh nên không tách nền; phóng 2 lần (ảnh gốc rộng 515px), chuyển hai tông, `hau-ky.py --phong-to 2` |
+
+Hình 3 của phụ lục này là sơ đồ ASCII vẽ lại theo Figure 12 của ITU-T X.200, không dùng ảnh chụp hình đó, vì văn
+bản X.200 ghi "All rights reserved" và cấm sao chép khi chưa có văn bản cho phép của ITU.
+
 Truyện tranh của xkcd (CC BY-NC 2.5) và turnoff.us (CC BY-NC-SA 4.0) chỉ được dùng phi thương mại; trang này
 không thu tiền nên dùng được, và phải giữ tên tác giả cùng link về trang gốc. Bản đã chuyển hai tông của truyện
 turnoff.us là ảnh phái sinh, chia sẻ lại theo đúng giấy phép CC BY-NC-SA 4.0.
