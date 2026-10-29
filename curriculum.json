@@ -1,1378 +1,879 @@
 {
-  "meta": {
-    "title": "DevOps Self-Learning",
-    "subtitle": "Học DevOps từ số 0 tới thực chiến doanh nghiệp",
-    "what": "DevOps là cách làm để chính người viết code đưa được nó lên server, giữ nó chạy ổn, và tìm ra lỗi khi nó hỏng.",
-    "goal": "Có đủ hành trang để làm DevOps thực chiến ở doanh nghiệp: tự đóng gói, deploy, vận hành và xử lý sự cố một hệ thống chạy trên Kubernetes.",
-    "owner": "AnhTuan2111",
-    "started": "2026-09-21",
-    "stack": "Spring Boot + PostgreSQL + Docker + GitLab CI + Kubernetes + Rancher + Argo CD",
-    "env": "Windows 11 + WSL2 Ubuntu + Docker Desktop",
-    "principle": "Problem, rồi Concept, rồi Tool. Không học lệnh, học hệ thống.",
-    "time": {
-      "unit": "Giờ học thật cho trọn một bài, không phải thời gian giảng",
-      "parts": [
-        [
-          "Đọc trước trang bài",
-          "1-2 giờ"
-        ],
-        [
-          "Học đối thoại: trả lời câu hỏi, sửa chỗ hiểu sai",
-          "1,5-3 giờ"
-        ],
-        [
-          "Lab, kể cả bước tự gây lỗi rồi tự sửa",
-          "1-3 giờ"
-        ],
-        [
-          "Ghi notes.md và bồi tài liệu lượt hai",
-          "0,5-1 giờ"
-        ]
-      ]
+ "meta": {
+  "title": "DevOps lang băm",
+  "subtitle": "Khoá tự học DevOps và SRE",
+  "goal": "Tự học, không bằng cấp, không chứng chỉ, nhưng học tới bản chất để làm được việc của một junior DevOps hay SRE.",
+  "owner": "AnhTuan2111",
+  "started": "2026-10-29",
+  "env": "Windows 11 + WSL2 Ubuntu; server và cụm Kubernetes tự kiếm theo hướng dẫn trong bài",
+  "lab": {
+   "local": "máy bạn",
+   "server": "server",
+   "cloud": "cloud",
+   "gitlab": "GitLab",
+   "cluster": "cụm Kubernetes",
+   "reading": "chỉ đọc"
+  }
+ },
+ "modules": [
+  {
+   "id": "M0",
+   "title": "Phía sau một cú bấm",
+   "intro": "Một cú bấm trên trình duyệt đi qua những tầng nào trước khi tới server.",
+   "lessons": [
+    {
+     "id": "00",
+     "slug": "osi-layers",
+     "title": "Bấm like trên facebook.com: bảy tầng OSI",
+     "desc": "Từ lúc bấm like tới lúc số like tăng, dữ liệu đi qua những bước nào. Mô hình OSI chia việc đó thành bảy tầng; đi qua từng tầng bằng chính cú like, xem mỗi tầng làm gì và bọc thêm gì vào dữ liệu.",
+     "lab": "local",
+     "needs": []
+    },
+    {
+     "id": "01",
+     "slug": "tcp-ip",
+     "title": "TCP/IP: Internet chạy thế nào",
+     "desc": "OSI là bảng chia việc, còn Internet chạy theo bộ giao thức TCP/IP. Dữ liệu bị cắt thành gói tin, router chuyển gói qua nhiều mạng, các nhà mạng báo cho nhau đường đi bằng BGP, DNS là một hệ thống tên chia theo cấp. Bắt gói tin của một request bằng Wireshark để xem từng lớp.",
+     "lab": "local",
+     "needs": [
+      "bảy tầng OSI"
+     ]
+    },
+    {
+     "id": "02",
+     "slug": "where-devops-fits",
+     "title": "Người làm DevOps nắm chỗ nào trong các tầng",
+     "desc": "Tầng nào cũng có người lo, nhưng người làm DevOps chỉ cần nắm sâu một số chỗ. Đường đi của một request trên server (DNS, TLS, firewall, reverse proxy, app, database), chặng nào là code của developer, chặng nào là việc của DevOps và SRE, và DevOps, SRE, platform engineering là gì.",
+     "lab": "reading",
+     "needs": [
+      "TCP/IP",
+      "DNS",
+      "HTTP"
+     ]
     }
+   ]
   },
-  "modules": [
+  {
+   "id": "M1",
+   "title": "Một cái máy Linux",
+   "intro": "Server gần như luôn là một máy Linux, nên học một máy trước rồi mới tới nhiều máy.",
+   "lessons": [
     {
-      "id": "M0",
-      "title": "Nền tảng tối thiểu: Request, process và phòng lab",
-      "why": "Vừa đủ nền để Docker có nghĩa: một request đi qua những đâu, process là gì, và một máy Linux để thực hành.",
-      "lessons": [
-        {
-          "id": "00",
-          "slug": "ban-do-toan-canh",
-          "title": "Bản đồ toàn cảnh: một request đi qua chín chặng",
-          "question": "Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi qua những chặng nào, và chặng nào thật sự là code của bạn?",
-          "answer": "Chín chặng: trình duyệt, DNS, mở kết nối, mã hoá, gửi request, firewall, reverse proxy, ứng dụng, database. Trong cả đường đi, chỉ ứng dụng là code bạn viết; tám chặng còn lại là hạ tầng, và phần lớn sự cố nằm ở đó.",
-          "goal": "Kể lại được, không nhìn tài liệu, chín chặng một request đi qua từ trình duyệt tới code của bạn, và chặng nào do ai phụ trách.",
-          "concepts": [
-            "URL và các phần của nó: scheme, host, port, path, query",
-            "Client và server",
-            "DNS: đổi tên miền thành địa chỉ IP",
-            "Gói tin và đường đi của nó ra Internet",
-            "HTTPS ở mức khái niệm: mã hoá và chứng chỉ",
-            "Ba chặng trên server: reverse proxy, ứng dụng, database",
-            "Trong cả đường đi, chỉ ứng dụng là code bạn viết",
-            "DevOps: một nhóm chịu trách nhiệm cho cả chín chặng thay vì hai đội phát triển và vận hành (phụ lục Lịch sử DevOps)"
-          ],
-          "lab": "Dùng nslookup và curl -v quan sát một request thật đi ra Internet, chỉ ra từng dòng output thuộc chặng nào, và đọc chứng chỉ của một website thật. Cố tình tra một tên miền không tồn tại để thấy bước hỏi DNS hỏng. Tự vẽ lại bản đồ.",
-          "checklist": [
-            "Giải thích được từng phần của https://example.com:443/users/42?x=1",
-            "Kể được chín chặng theo đúng thứ tự, và chặng nào chạy ở đâu",
-            "Chỉ ra được một dòng output của curl -v thuộc chặng nào",
-            "Nói được vì sao trong cả đường đi chỉ ứng dụng là code của bạn"
-          ],
-          "hours": [
-            3,
-            5
-          ],
-          "needs": []
-        },
-        {
-          "id": "01",
-          "slug": "ip-port-listen-firewall",
-          "title": "IP, port, listen, firewall: vì sao gọi không tới",
-          "question": "App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu?",
-          "answer": "Muốn gọi tới được cần đủ ba điều kiện, theo thứ tự gói tin gặp chúng: đúng địa chỉ IP, firewall cho đi qua, và có chương trình listen ở port đó trên đúng địa chỉ. Refused hay timeout cho biết điều kiện nào đang thiếu.",
-          "goal": "Biết chính xác vì sao một app gọi được bằng localhost mà người khác không gọi được, và đọc refused hay timeout để biết hỏng ở đâu.",
-          "concepts": [
-            "Địa chỉ IP và network interface: một máy có nhiều địa chỉ",
-            "Port: con số chọn đúng chương trình trong máy",
-            "Listen và listen address: 127.0.0.1, IP mạng LAN, 0.0.0.0",
-            "Ba dải địa chỉ đặc biệt: loopback, mạng riêng, link-local",
-            "Firewall: lớp chặn trước khi gói tin tới chương trình",
-            "Ba điều kiện để gọi tới được một app",
-            "TCP: bắt tay ba bước, và bộ bốn IP:port của một kết nối",
-            "Refused và timeout: ai trả lời, và vì sao một cái tức thì còn một cái phải chờ"
-          ],
-          "lab": "Gọi một app bằng localhost, bằng IP mạng LAN và từ máy khác; đổi listen address giữa 127.0.0.1 và 0.0.0.0. Cố tình gọi vào một port không ai listen và vào một địa chỉ không ai trả lời, rồi đo thời gian refused và timeout bằng time curl.",
-          "checklist": [
-            "Giải thích được vì sao localhost là một từ tương đối",
-            "Kể được ba điều kiện để gọi tới được một app",
-            "Phân biệt được refused và timeout, và điều kiện nào thiếu sinh ra cái nào",
-            "Nói được vì sao một server không đặt trên laptop ở nhà"
-          ],
-          "hours": [
-            3,
-            5
-          ],
-          "needs": [
-            "00"
-          ]
-        },
-        {
-          "id": "02",
-          "slug": "chan-doan-theo-chang",
-          "title": "Chẩn đoán theo chặng: nhìn lỗi biết chỗ hỏng",
-          "question": "Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết chặng nào đang hỏng?",
-          "answer": "Mỗi mã lỗi là câu trả lời của một thành phần cụ thể: 502 và 504 do Nginx viết khi phía sau không trả lời hoặc trả lời quá chậm, 500 do chính app viết. Biết ai viết ra là khoanh được chặng hỏng, vì triệu chứng luôn chứng minh các chặng phía trước đã chạy tốt.",
-          "goal": "Nhìn một trang lỗi hay một dòng lỗi là khoanh được chặng hỏng và biết ai đã viết ra lỗi đó.",
-          "concepts": [
-            "Mã trạng thái HTTP theo nhóm: 2xx, 3xx, 4xx, 5xx",
-            "Ai viết ra lỗi: trình duyệt, curl, Nginx hay app",
-            "502 và 500: hai mã hay bị nhầm",
-            "504: phía sau trả lời quá chậm",
-            "Ba nguyên tắc chẩn đoán",
-            "Đã chạy chưa phải đã sẵn sàng: cửa sổ 502 lúc app khởi động",
-            "Hệ thống hỏng mà không ai đụng vào: thời gian tự nó là nguyên nhân"
-          ],
-          "lab": "Đọc lại output các lab trước theo câu hỏi \"ai viết ra dòng này\": NXDOMAIN, refused, timeout. Dùng curl -i xem mã trạng thái và header Server của một trang có thật và một trang không tồn tại để biết ai đã trả lời.",
-          "checklist": [
-            "Nhìn một mã lỗi nói được ai viết ra nó",
-            "Phân biệt 502 với 500, và nói được mỗi cái hỏng ở đâu",
-            "Áp được ba nguyên tắc chẩn đoán vào một sự cố",
-            "Kể được ba thứ sẽ tự hỏng nếu không ai động vào trong sáu tháng"
-          ],
-          "hours": [
-            3,
-            5
-          ],
-          "needs": [
-            "01"
-          ]
-        },
-        {
-          "id": "03",
-          "slug": "may-tinh-va-he-dieu-hanh",
-          "title": "Máy tính, Hệ điều hành, Process: 'server' là cái gì",
-          "question": "502 nghĩa là phía sau Nginx không còn ai trả lời. Nhưng \"app\" là gì trên một máy chủ, vì sao nó có thể chết, và vì sao nó chết thì website sập?",
-          "answer": "App là một process do kernel quản lý. Hết RAM thì kernel giết process lớn nhất, process chết thì port của nó trống và Nginx viết 502. Muốn app tự sống lại thì phải giao nó cho một process khác trông coi, tức biến nó thành service.",
-          "goal": "Hiểu server chỉ là một máy tính chạy 24/7, và mọi thứ bạn deploy cuối cùng đều là một process đang chạy.",
-          "concepts": [
-            "CPU, RAM, ổ đĩa, mạng: hết cái nào thì hỏng kiểu nào",
-            "Kernel, user space và syscall",
-            "Process, PID, thread",
-            "Process sở hữu gì: vùng nhớ, user, thư mục làm việc, biến môi trường",
-            "Process chết: SIGTERM, SIGKILL, OOM killer",
-            "Service: process có người trông coi",
-            "Vì sao app chết thì website sập"
-          ],
-          "lab": "Quan sát process của chính Spring Boot / Node trên máy mình. Tìm PID, xem RAM, kill nó, xem điều gì xảy ra. Tìm xem process nào đang giữ port 8080.",
-          "checklist": [
-            "Chỉ ra được process nào đang giữ một port",
-            "Giải thích được OOM (hết RAM) sẽ làm gì với app",
-            "Phân biệt process và service"
-          ],
-          "hours": [
-            5,
-            8
-          ],
-          "needs": [
-            "02"
-          ]
-        },
-        {
-          "id": "04",
-          "slug": "phong-lab-wsl-docker",
-          "title": "Phòng lab Linux: thấy tận mắt những gì Bài 03 mới kể",
-          "question": "Server thật chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình, để thấy process, signal và lỗi đúng như trên server?",
-          "answer": "WSL2 chạy một kernel Linux thật trong một máy ảo nhẹ, và vài lệnh shell là đủ để điều khiển nó. Trên đó app mẫu chạy được, bị kill thì để lại 143, bị kill -9 thì để lại 137. Nhưng app chưa làm được việc của nó, vì nó cần PostgreSQL mà máy chưa có, và cài tay thì lâu, mỗi máy mỗi khác.",
-          "goal": "Có một máy Linux thật ngay trong Windows, chạy được app mẫu trên đó, và tự tay thấy SIGTERM khác SIGKILL ở đâu.",
-          "concepts": [
-            "WSL2: một kernel Linux thật chạy trong một máy ảo nhẹ",
-            "Máy ảo và hypervisor",
-            "Shell vừa đủ: cd, ls, cat, nano, sudo, apt, ps, kill, mỗi lệnh giải nghĩa ngay chỗ gõ",
-            "Exit status, và hai con số 143, 137",
-            "App mẫu của cả khoá: một API Spring Boot lưu dữ liệu vào PostgreSQL"
-          ],
-          "lab": "Cài Ubuntu trên WSL2, cài Java, chạy app mẫu. Gửi kill rồi kill -9 và đọc exit status của từng lần. Tự gây lỗi: chạy app lần thứ hai khi lần đầu còn sống để gặp lỗi tranh port, tìm process đang giữ port bằng ps rồi kill nó. Làm phép đo đối chứng của Bài 01: thời gian một kết nối bị từ chối trên Linux so với 2,155 giây đo trên Windows.",
-          "checklist": [
-            "Giải thích được WSL2 là một máy ảo có kernel Linux riêng",
-            "Tới một thư mục, xem và sửa một tệp bằng nano mà không cần chuột",
-            "Chạy được app mẫu trên Linux và tìm được PID của nó",
-            "Đọc được 143 và 137 nói app chết vì signal nào",
-            "Nói được app mẫu đang thiếu gì và vì sao cài tay thứ đó là một chỗ kẹt"
-          ],
-          "hours": [
-            3,
-            5
-          ],
-          "needs": [
-            "03"
-          ]
-        }
-      ]
+     "id": "03",
+     "slug": "what-is-a-server",
+     "title": "Server là cái gì: phần cứng, hệ điều hành, process",
+     "desc": "Server là một máy tính có CPU, RAM, ổ đĩa, card mạng, chạy một hệ điều hành. App của bạn là một process do kernel quản lý, có vùng nhớ, user và biến môi trường riêng. Mỗi tài nguyên hết theo một kiểu riêng, và hết RAM thì kernel giết process.",
+     "lab": "local",
+     "needs": []
     },
     {
-      "id": "M1",
-      "title": "Docker: Đóng gói và chạy ứng dụng",
-      "why": "Đóng gói và chạy ứng dụng bằng Docker. Phần Linux và mạng cần tới được dạy ngay trong bài cần nó.",
-      "lessons": [
-        {
-          "id": "05",
-          "slug": "container-dau-tien",
-          "title": "Container đầu tiên: có PostgreSQL mà không phải cài",
-          "question": "App mẫu cần PostgreSQL, mà cài tay thì lâu và mỗi máy mỗi khác. Có cách nào chạy PostgreSQL mà không phải cài nó không?",
-          "answer": "Có: docker run postgres, một lệnh là có database. Image mang sẵn mọi file PostgreSQL cần, còn container là một process Linux bình thường chạy từ image đó, bị kernel giới hạn tầm nhìn và tài nguyên. Nhưng từ máy mình gọi vào localhost:5432 thì vẫn bị từ chối.",
-          "goal": "Chạy, xem, vào trong và xoá container thành thạo, và chứng minh được container chỉ là một process Linux bị giới hạn tầm nhìn.",
-          "concepts": [
-            "Docker Desktop, Docker client và Docker daemon: lệnh docker chỉ gửi yêu cầu",
-            "Image và container",
-            "Container là một process: nhìn từ ngoài bằng docker top, nhìn từ trong thấy nó là PID 1",
-            "Namespace: container có cây process, hệ thống file và mạng riêng",
-            "Cgroup: kernel giới hạn RAM và CPU cho một process",
-            "Container khác máy ảo ở chỗ không có kernel riêng (nối WSL2 ở Bài 04)"
-          ],
-          "lab": "Bật Docker Desktop, chạy PostgreSQL bằng docker run, rồi dùng docker ps, logs, exec, top, stop, rm. Tự gây lỗi: chạy thiếu biến mật khẩu để container thoát ngay rồi đọc docker logs tìm lý do; tắt Docker Desktop rồi gõ lệnh để gặp lỗi không gọi được daemon.",
-          "checklist": [
-            "Giải thích bằng lời thường vì sao container không phải máy ảo",
-            "Nói được image khác container ở điểm nào",
-            "Vào được bên trong một container đang chạy và thoát ra",
-            "Chỉ ra được cùng một process có PID khác nhau khi nhìn từ trong và từ ngoài container",
-            "Đọc được lỗi không gọi được Docker daemon nói lên điều gì, và sửa được"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "03",
-            "04"
-          ]
-        },
-        {
-          "id": "06",
-          "slug": "publish-port",
-          "title": "Gọi được vào container: publish port",
-          "question": "PostgreSQL đang chạy trong container, có process đang listen 5432, mà từ máy mình gọi localhost:5432 vẫn bị từ chối. Vì sao?",
-          "answer": "Vì nó listen trong mạng riêng của container, còn localhost là của máy mình: đang thiếu điều kiện gọi đúng địa chỉ. Publish port mở một port trên máy và nối nó vào port trong container. Làm xong thì app mẫu lần đầu ghi được dữ liệu. Database đã gọn, nhưng app thì vẫn phải cài Java và chạy tay trên từng máy.",
-          "goal": "Đưa được một port của container ra máy, và đọc được lỗi gọi không tới bằng ba điều kiện của Bài 01.",
-          "concepts": [
-            "Container có địa chỉ IP riêng trong mạng riêng của nó",
-            "-p cổng_máy:cổng_container, và -p 127.0.0.1:… để chỉ máy mình gọi được",
-            "Chương trình trong container phải listen 0.0.0.0",
-            "Lỗi port is already allocated và cách tìm ai đang giữ port"
-          ],
-          "lab": "Chạy lại PostgreSQL có publish port, cho app mẫu trong WSL nối vào và ghi dữ liệu. Tự gây lỗi: publish trùng một port đang có người dùng; chạy một server nhỏ chỉ listen 127.0.0.1 bên trong container rồi gọi từ ngoài.",
-          "checklist": [
-            "Giải thích được vì sao gọi localhost:5432 bị từ chối dù container đang chạy",
-            "Publish được một port và chỉ ra nó nối cổng nào với cổng nào",
-            "Nói được vì sao app trong container phải listen 0.0.0.0",
-            "Tìm được process đang giữ một port"
-          ],
-          "hours": [
-            3,
-            5
-          ],
-          "needs": [
-            "01",
-            "05"
-          ]
-        },
-        {
-          "id": "07",
-          "slug": "dockerfile",
-          "title": "Dockerfile: đóng app của mình thành image",
-          "question": "Database đã chạy bằng một lệnh, còn app thì vẫn phải cài Java và chạy tay trên từng máy. Làm sao app của mình cũng chạy được bằng một lệnh như PostgreSQL?",
-          "answer": "Tự làm image cho nó bằng Dockerfile. Mỗi dòng sinh ra một layer, layer không đổi thì được dùng lại, nên thứ tự các dòng quyết định build lại nhanh hay chậm. Nhưng app chạy trong container thì lại báo bị từ chối ở localhost:5432, dù PostgreSQL vẫn chạy và port vẫn đang publish.",
-          "goal": "Viết được Dockerfile cho một file jar, và giải thích được vì sao lần build sau nhanh hay chậm.",
-          "concepts": [
-            "Bốn lệnh đủ cho một file jar: FROM, WORKDIR, COPY, CMD",
-            "Layer và cache",
-            "Build context và .dockerignore",
-            "Đặt tên và tag cho image"
-          ],
-          "lab": "Build image cho app mẫu, sửa một dòng code rồi build lại và đo thời gian, đảo thứ tự COPY để thấy mất cache. Tự gây lỗi: bỏ .dockerignore để build context phình to.",
-          "checklist": [
-            "Viết được Dockerfile chạy một file jar",
-            "Giải thích được layer là gì và khi nào cache bị bỏ",
-            "Nói được build context gồm những gì",
-            "Đặt được tên và tag cho image"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "05",
-            "06"
-          ]
-        },
-        {
-          "id": "08",
-          "slug": "network-va-ten",
-          "title": "Hai container gọi nhau: network và tên",
-          "question": "Chạy ngoài container thì app gọi localhost:5432 được, vào container thì bị từ chối. Vì sao cùng một địa chỉ mà lúc được lúc không?",
-          "answer": "Vì mỗi container có localhost của riêng nó, và trong container app không ai listen 5432. Hai container vào chung một network tự tạo thì gọi nhau bằng tên, nhờ DNS nội bộ của Docker, và database không cần publish port ra máy nữa. Nhưng lúc tạo lại container database để đổi network, dữ liệu đã ghi mất sạch.",
-          "goal": "Cho hai container gọi nhau bằng tên, và chỉ publish những port thật sự cần lộ ra ngoài.",
-          "concepts": [
-            "localhost bên trong container là chính container đó",
-            "Network tự tạo và DNS theo tên container",
-            "Mạng bridge của Docker là một switch ảo, có dải địa chỉ riêng",
-            "Chỉ publish những port cần lộ"
-          ],
-          "lab": "Tạo network, cho app và database vào chung, đổi địa chỉ database trong app thành tên container. Bỏ publish port 5432. Tự gây lỗi: tách hai container ra hai network để thấy tên không còn phân giải được.",
-          "checklist": [
-            "Giải thích được localhost trong container trỏ vào đâu",
-            "Cho hai container gọi nhau bằng tên",
-            "Nói được vì sao database không cần publish port",
-            "Đọc được lỗi không phân giải được tên và biết nhìn ở đâu"
-          ],
-          "hours": [
-            3,
-            5
-          ],
-          "needs": [
-            "06",
-            "07"
-          ]
-        },
-        {
-          "id": "09",
-          "slug": "volume-va-backup",
-          "title": "Dữ liệu sống lâu hơn container: volume và backup",
-          "question": "Tạo lại container database là dữ liệu mất sạch. Vì sao xoá container lại mất dữ liệu, và để nó ở đâu thì không mất?",
-          "answer": "Mọi thứ container ghi ra nằm ở một lớp tạm đặt trên các layer của image, và lớp đó bị xoá cùng container. Dữ liệu cần sống lâu thì để trong volume, ở ngoài container, và một bản backup chỉ có giá trị khi đã khôi phục thử. Giữ được dữ liệu rồi thì lộ ra chỗ khác: mật khẩu database nằm ngay trong lệnh docker run, còn địa chỉ database thì ghi cứng trong app.",
-          "goal": "Giữ được dữ liệu qua những lần tạo lại container, và có một bản backup đã khôi phục thử.",
-          "concepts": [
-            "Lớp ghi tạm của container",
-            "Named volume và bind mount",
-            "Quyền file và chủ sở hữu, học lúc gặp Permission denied",
-            "pg_dump, khôi phục, và diễn tập khôi phục"
-          ],
-          "lab": "Chạy database không volume rồi xoá container để thấy mất dữ liệu, làm lại với named volume. Backup bằng pg_dump rồi khôi phục vào một container mới. Tự gây lỗi: bind mount một thư mục sai quyền.",
-          "checklist": [
-            "Giải thích được vì sao xoá container là mất dữ liệu",
-            "Phân biệt được named volume và bind mount",
-            "Đọc được lỗi Permission denied khi mount và sửa được",
-            "Backup và khôi phục thử được một database"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "07",
-            "08"
-          ]
-        },
-        {
-          "id": "10",
-          "slug": "cau-hinh-va-secret",
-          "title": "Một image, nhiều môi trường: cấu hình và secret",
-          "question": "Mật khẩu database nằm trong lệnh docker run, địa chỉ database ghi cứng trong app, mà máy dev và server sẽ cần giá trị khác nhau. Cùng một image thì đưa giá trị vào bằng đường nào?",
-          "answer": "Bằng biến môi trường lúc chạy: biến môi trường là của process, mà container là một process. Mật khẩu không được nằm trong image, vì layer giữ lại mọi thứ từng được ghi vào. Cấu hình gọn rồi, nhưng muốn dựng lại hệ thống thì phải gõ đúng thứ tự bốn lệnh dài, mỗi lệnh năm sáu tham số.",
-          "goal": "Chạy cùng một image với hai bộ cấu hình, và không để secret nằm trong image hay trong Git.",
-          "concepts": [
-            "-e và --env-file",
-            "Spring Boot đọc cấu hình từ biến môi trường",
-            "Secret không nằm trong image, không nằm trong Git",
-            "Lỡ commit secret thì phải đổi secret"
-          ],
-          "lab": "Chạy app mẫu với hai file env khác nhau. Tự gây lỗi: nhúng mật khẩu vào Dockerfile rồi dùng docker history lôi nó ra.",
-          "checklist": [
-            "Đưa được cấu hình vào container bằng biến môi trường",
-            "Giải thích được vì sao xoá mật khẩu ở dòng sau của Dockerfile không làm nó biến mất",
-            "Nói được phải làm gì khi lỡ commit một secret"
-          ],
-          "hours": [
-            3,
-            5
-          ],
-          "needs": [
-            "03",
-            "09"
-          ]
-        },
-        {
-          "id": "11",
-          "slug": "compose",
-          "title": "Compose: cả hệ thống trong một file",
-          "question": "Muốn dựng lại hệ thống phải gõ đúng thứ tự bốn lệnh dài. Làm sao dựng lại tất cả bằng một lệnh?",
-          "answer": "Viết mọi thứ đã gõ tay vào một file compose.yaml. App lên trước database thì hỏng, và depends_on chỉ đợi container đã chạy chứ chưa đợi đã sẵn sàng, nên phải có healthcheck. Dựng được bằng một lệnh rồi thì hỏi tiếp: dừng mất mười giây thì request đang xử lý ra sao, nửa đêm app chết thì ai dựng, và log của nó nằm ở đâu?",
-          "goal": "Dựng và dỡ cả hệ thống bằng một lệnh, và bắt được chỗ app lên trước database.",
-          "concepts": [
-            "services, networks, volumes, env_file: gom lại những gì đã gõ tay",
-            "Healthcheck và điều kiện đợi tới khi khoẻ",
-            "docker compose up -d, down, logs -f, ps"
-          ],
-          "lab": "Viết compose.yaml cho app mẫu và PostgreSQL, dựng lên từ thư mục trống. Tự gây lỗi: bỏ healthcheck để app lên trước database.",
-          "checklist": [
-            "Viết được compose.yaml cho app và database",
-            "Giải thích được depends_on đợi cái gì và không đợi cái gì",
-            "Viết được một healthcheck và đọc được trạng thái của nó"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "02",
-            "08",
-            "09",
-            "10"
-          ]
-        },
-        {
-          "id": "12",
-          "slug": "signal-restart-log",
-          "title": "Container sống, chết và để lại gì: signal, restart, log",
-          "question": "docker compose down mất mười giây mới xong, vậy request đang xử lý thì sao? Nửa đêm app chết thì ai dựng? Log của nó nằm ở đâu?",
-          "answer": "Dừng container là gửi SIGTERM, chờ, rồi mới SIGKILL, đúng hai con số 143 và 137 của Bài 04. App phải là PID 1 thì mới nhận được SIGTERM mà tắt êm. Restart policy dựng nó dậy, còn log là hai đường ra của process mà Docker hứng lại. Hiểu rồi thì thấy ba chỗ chưa ổn: image nặng hơn nửa GB, process bên trong chạy bằng root, và đặt giới hạn RAM như một server nhỏ thì app bị giết với con số 137.",
-          "goal": "Cho app tắt êm, tự dựng dậy khi chết, và tìm lại được log của nó.",
-          "concepts": [
-            "docker stop, thời gian chờ, và tắt êm của Spring Boot",
-            "CMD dạng exec để app là PID 1 và nhận được signal",
-            "Restart policy: Docker làm người trông coi",
-            "stdout và stderr là hai đường ra của một process, và log của container chính là hai đường đó",
-            "Xoay vòng log"
-          ],
-          "lab": "Chạy app với hai dạng CMD, dừng cả hai rồi so thời gian và exit status. Tự gây lỗi: cho app crash liên tục để xem restart policy làm gì.",
-          "checklist": [
-            "Giải thích được docker stop gửi gì và chờ bao lâu",
-            "Viết được CMD để app nhận được SIGTERM",
-            "Chọn được restart policy cho một service",
-            "Nói được docker logs lấy chữ từ đâu"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "03",
-            "04",
-            "11"
-          ]
-        },
-        {
-          "id": "13",
-          "slug": "image-len-server",
-          "title": "Image đủ tốt để lên server: nhỏ, không root, vừa bộ nhớ",
-          "question": "Image nặng hơn nửa GB, process bên trong chạy bằng root, và đặt giới hạn RAM thì app bị giết với con số 137. Sửa ba chỗ đó bằng gì?",
-          "answer": "Bằng ba thứ. Build hai giai đoạn để image chỉ còn phần cần chạy. Thêm một dòng USER để process không chạy bằng root. Cấu hình JVM để nó ở dưới giới hạn mà cgroup áp. Chín bài là chín mảnh, và còn một câu chưa trả lời được: nếu có một thứ hỏng mà không ai nói thứ nào, bạn có tìm ra không?",
-          "goal": "Có một image nhỏ, chạy bằng user thường, và không bị giết vì vượt giới hạn bộ nhớ.",
-          "concepts": [
-            "Multi-stage build: build bằng JDK, chạy bằng JRE",
-            "Chạy bằng user thường, và vì sao root trong container vẫn là root dưới mắt kernel",
-            "Giới hạn bộ nhớ của container và JVM",
-            "OOMKilled trong docker inspect"
-          ],
-          "lab": "So dung lượng image trước và sau khi tách hai giai đoạn. Tự gây lỗi: đặt giới hạn bộ nhớ quá thấp để app bị giết rồi chỉnh cho vừa.",
-          "checklist": [
-            "Viết được Dockerfile hai giai đoạn",
-            "Giải thích được vì sao không chạy bằng root",
-            "Đọc được OOMKilled và 137 nói điều gì",
-            "Đặt được giới hạn bộ nhớ mà app vẫn sống"
-          ],
-          "hours": [
-            5,
-            7
-          ],
-          "needs": [
-            "05",
-            "07",
-            "12"
-          ]
-        },
-        {
-          "id": "14",
-          "slug": "tram-kiem-tra-docker",
-          "title": "Trạm kiểm tra Docker: dựng lại từ thư mục trống, rồi tìm năm chỗ hỏng",
-          "question": "Chín bài, chín mảnh. Nếu xoá hết, dựng lại, rồi có một thứ hỏng mà không ai nói thứ nào, bạn có tìm ra không?",
-          "answer": "Tìm được, nếu đi theo một thứ tự cố định: xem container nào đã chết, đọc log, xem cấu hình, rồi mới vào bên trong. Hệ thống giờ chạy tốt, nhưng chỉ trên laptop: tắt máy là tắt web, và laptop nằm sau router ở nhà nên ngoài Internet không ai gọi tới được.",
-          "goal": "Tự dựng lại cả hệ thống, và chẩn đoán được năm kiểu container hỏng mà không cần ai gợi ý.",
-          "concepts": [
-            "Thứ tự kiểm tra cố định: docker ps -a, logs, inspect, rồi mới exec",
-            "Bảng triệu chứng cho container, nối bảng ai viết ra lỗi của Bài 02"
-          ],
-          "lab": "Dựng lại cả hệ thống từ một thư mục trống. Rồi tự gây năm kiểu hỏng (sai lệnh khởi động, thiếu biến môi trường, hết bộ nhớ, sai port, sai tên database), trộn thứ tự rồi chẩn đoán từng cái.",
-          "checklist": [
-            "Dựng lại được hệ thống mà không nhìn bài cũ",
-            "Với mỗi kiểu hỏng, nói được triệu chứng và lệnh đầu tiên cần gõ",
-            "Tự viết được bảng triệu chứng của riêng mình"
-          ],
-          "hours": [
-            4,
-            7
-          ],
-          "needs": [
-            "02",
-            "06",
-            "08",
-            "10",
-            "12",
-            "13"
-          ]
-        }
-      ]
+     "id": "04",
+     "slug": "linux-lab",
+     "title": "Phòng lab: Linux trên máy Windows",
+     "desc": "Dựng một máy Linux bằng WSL2 để thực hành, biết terminal và shell là gì, gõ những lệnh đầu tiên, chạy thử một app Spring Boot trên Linux.",
+     "lab": "local",
+     "needs": [
+      "process",
+      "kernel"
+     ]
     },
     {
-      "id": "M2",
-      "title": "Server thật: Deploy lên một máy Linux thật",
-      "why": "Tự tay đưa ứng dụng lên một server thật một lần, để biết các module sau đang tự động hoá những gì.",
-      "lessons": [
-        {
-          "id": "15",
-          "slug": "server-va-ssh",
-          "title": "Một máy bật suốt: server và SSH",
-          "question": "Hệ thống chỉ sống trên laptop, tắt máy là tắt web, và ngoài Internet không ai gọi tới được. Cần gì để người khác vào được?",
-          "answer": "Một máy Linux bật suốt và có địa chỉ gọi tới được, là server. Điều khiển nó bằng SSH, đăng nhập bằng một cặp khoá: khoá bí mật ở lại máy mình, khoá công khai đặt lên server. Trên server Docker daemon chạy như một service do systemd trông coi. Server có Docker rồi nhưng chưa có image của app, vì image chỉ nằm trên laptop.",
-          "goal": "Vào được một server Linux bằng khoá SSH, và cài được Docker trên đó.",
-          "concepts": [
-            "Cặp khoá SSH, ssh-keygen, authorized_keys",
-            "known_hosts: server cũng phải chứng minh nó đúng là nó",
-            "~/.ssh/config và scp",
-            "Cài Docker Engine, systemctl status docker",
-            "Server nằm trong mạng riêng thì vào qua VPN (nối Bài 01)"
-          ],
-          "lab": "Tạo cặp khoá, đăng nhập server bằng khoá, tắt đăng nhập bằng mật khẩu, cài Docker. Tự gây lỗi: để quyền của file khoá quá rộng cho SSH từ chối dùng nó.",
-          "checklist": [
-            "Giải thích được khoá nào nằm ở đâu và vì sao",
-            "Đăng nhập được server không cần mật khẩu",
-            "Đọc được cảnh báo đổi khoá của server và biết khi nào nó đáng lo",
-            "Xem được Docker daemon trên server đang chạy hay không"
-          ],
-          "hours": [
-            3,
-            5
-          ],
-          "needs": [
-            "00",
-            "01",
-            "03",
-            "05"
-          ]
-        },
-        {
-          "id": "16",
-          "slug": "deploy-tay",
-          "title": "Deploy tay lần đầu: image tới server bằng đường nào",
-          "question": "Server mới tinh, có Docker nhưng không có image của app, vì image chỉ nằm trên laptop. Image tới server bằng đường nào?",
-          "answer": "Xuất ra file rồi đẩy qua SSH thì chạy được, nhưng sửa một dòng là chở lại cả trăm MB. Registry giải chuyện đó: đẩy lên một lần, máy nào cũng kéo về, và chỉ layer mới phải đi. Chạy Compose trên server, mở firewall đúng một port, ghi mọi lệnh thành runbook. Nó chạy rồi, nhưng để yên ba tháng thì cái gì hỏng trước?",
-          "goal": "Đưa được app lên server bằng tay, và có một runbook ghi lại từng bước.",
-          "concepts": [
-            "docker save và docker load",
-            "Registry, repository, tag, digest; vì sao không tin tag latest",
-            "Thư mục deploy trên server và file .env với quyền chặt",
-            "Firewall trên server",
-            "Runbook"
-          ],
-          "lab": "Deploy app mẫu lên server theo hai đường, save rồi load, sau đó qua registry. Tự gây lỗi: quên mở firewall rồi đọc triệu chứng timeout bằng Bài 01; deploy thiếu file .env; kéo một tag không tồn tại.",
-          "checklist": [
-            "So được hai đường đưa image tới server",
-            "Giải thích được tag khác digest ở đâu",
-            "Mở firewall đúng một port và kiểm được từ laptop",
-            "Có một runbook mà người khác làm theo được"
-          ],
-          "hours": [
-            5,
-            8
-          ],
-          "needs": [
-            "01",
-            "07",
-            "10",
-            "11",
-            "15"
-          ]
-        },
-        {
-          "id": "17",
-          "slug": "server-de-yen-ba-thang",
-          "title": "Server để yên ba tháng: khởi động lại, đầy đĩa, hết RAM",
-          "question": "Hệ thống đã chạy trên server. Bài 02 nói hệ thống có thể hỏng mà không ai đụng vào. Để yên ba tháng thì cái gì hỏng trước?",
-          "answer": "Ba chuyện chắc chắn xảy ra: server khởi động lại, đĩa đầy vì log và image cũ, và hết RAM khiến kernel giết process lớn nhất. Mỗi chuyện có lệnh để thấy trước và cách phòng. Server ổn rồi, nhưng người dùng vẫn phải gõ địa chỉ IP kèm :8080, app nhận thẳng kết nối từ Internet không mã hoá, và app thứ hai sẽ tranh port.",
-          "goal": "Biết ba thứ làm server hỏng theo thời gian, tự gây ra từng thứ một lần, và biết lệnh nào cho thấy nó.",
-          "concepts": [
-            "Khởi động lại server: restart policy và service bật cùng máy",
-            "df, du, docker system df, dọn image cũ",
-            "free, log của kernel, docker stats",
-            "ss để xem ai giữ port nào",
-            "Bảng triệu chứng cho server"
-          ],
-          "lab": "Khởi động lại server rồi xem container có tự lên không. Tự gây lỗi: làm đầy đĩa bằng log rồi dọn; ép hết RAM để kernel giết một process rồi tìm xem nó vừa giết ai.",
-          "checklist": [
-            "Kiểm được hệ thống tự lên sau khi server khởi động lại",
-            "Tìm được thứ đang chiếm đĩa",
-            "Tìm được dấu vết kernel vừa giết process nào",
-            "Nói được vì sao phải xoay vòng log"
-          ],
-          "hours": [
-            4,
-            7
-          ],
-          "needs": [
-            "02",
-            "03",
-            "12",
-            "13",
-            "16"
-          ]
-        },
-        {
-          "id": "18",
-          "slug": "nginx-dung-truoc-app",
-          "title": "Nginx đứng trước app",
-          "question": "Người dùng đang phải gõ địa chỉ IP kèm :8080, app nhận thẳng kết nối từ Internet, và app thứ hai trên server này sẽ tranh port. Sửa bằng gì?",
-          "answer": "Đặt Nginx đứng trước: một cửa chung ở port 80 và 443 cho mọi app, app và database được giấu phía sau, và có chỗ để gắn HTTPS. 502, 504, 413 giờ là lỗi tự tay làm ra được, mỗi lỗi sửa bằng một dòng cấu hình. Nhưng địa chỉ vẫn là http:// kèm IP: trình duyệt ghi Không an toàn, và ai đứng giữa đường cũng đọc được dữ liệu.",
-          "goal": "Cấu hình được Nginx làm reverse proxy cho app, và tự làm ra rồi tự sửa 502, 504, 413.",
-          "concepts": [
-            "server, location, proxy_pass",
-            "Header X-Forwarded-For và X-Forwarded-Proto",
-            "Thời gian chờ và kích thước body",
-            "Kiểm cấu hình và nạp lại mà không rớt kết nối"
-          ],
-          "lab": "Thêm Nginx vào Compose, cho nó chuyển request vào app theo tên, bỏ publish port của app. Tự gây lỗi: tắt app để gặp 502, làm một API chạy chậm để gặp 504, gửi một file lớn để gặp 413.",
-          "checklist": [
-            "Viết được một khối server chuyển request vào app",
-            "Tự làm ra 502, 504, 413 và nói được ai viết ra từng lỗi",
-            "Giải thích được vì sao app cần header chuyển tiếp",
-            "Nạp lại cấu hình Nginx mà không rớt kết nối"
-          ],
-          "hours": [
-            5,
-            8
-          ],
-          "needs": [
-            "00",
-            "02",
-            "08",
-            "11",
-            "17"
-          ]
-        },
-        {
-          "id": "19",
-          "slug": "ten-mien-va-https",
-          "title": "Tên miền và HTTPS tự gia hạn",
-          "question": "Địa chỉ vẫn là http:// kèm IP, trình duyệt ghi Không an toàn, và ai đứng giữa đường cũng đọc được dữ liệu. Còn thiếu gì?",
-          "answer": "Một cái tên và một chứng chỉ. Tên thì trỏ bản ghi DNS về địa chỉ server. Chứng chỉ thì CA chỉ ký khi mình chứng minh được đang giữ tên miền đó, và nó chỉ sống 90 ngày nên việc gia hạn phải tự chạy. Hệ thống đã ra dáng thật, nhưng sửa một dòng code là tám bước tay, quên một bước là sập, và chỉ một người biết làm.",
-          "goal": "Gắn được tên miền và HTTPS cho hệ thống, và kiểm được việc gia hạn chứng chỉ tự chạy.",
-          "concepts": [
-            "Bản ghi A, CNAME, TXT, và TTL",
-            "Chuỗi tin cậy của chứng chỉ (nối Lab 3 của Bài 00)",
-            "ACME: CA kiểm quyền giữ tên miền ra sao",
-            "Gắn chứng chỉ vào Nginx, chuyển 80 sang 443, tự gia hạn và cách kiểm"
-          ],
-          "lab": "Trỏ tên miền về server, xin chứng chỉ, gắn vào Nginx, chuyển hướng 80 sang 443, chạy thử lệnh gia hạn. Tự gây lỗi: trỏ sai bản ghi DNS rồi đọc triệu chứng.",
-          "checklist": [
-            "Giải thích được CA dựa vào đâu để cấp chứng chỉ",
-            "Đọc được chuỗi chứng chỉ của website mình",
-            "Chứng minh được việc gia hạn sẽ tự chạy",
-            "Nói được vì sao chứng chỉ chỉ sống 90 ngày"
-          ],
-          "hours": [
-            5,
-            7
-          ],
-          "needs": [
-            "00",
-            "02",
-            "15",
-            "18"
-          ]
-        }
-      ]
+     "id": "05",
+     "slug": "files-users-permissions",
+     "title": "File, user, quyền",
+     "desc": "Linux coi gần như mọi thứ là file, file nào cũng có chủ và quyền đọc, ghi, chạy. Permission denied là kernel từ chối vì user đang chạy không có quyền. Thêm root và sudo.",
+     "lab": "local",
+     "needs": [
+      "process",
+      "shell"
+     ]
     },
     {
-      "id": "M3",
-      "title": "CI/CD với GitLab: Từ git push tới server",
-      "why": "Tự động hoá bằng GitLab CI đúng những bước vừa làm tay ở module trước.",
-      "lessons": [
-        {
-          "id": "20",
-          "slug": "pipeline-dau-tien",
-          "title": "Từ runbook tới pipeline đầu tiên",
-          "question": "Sửa một dòng code là build, test, đóng image, đẩy lên, SSH vào, kéo về, chạy lại, kiểm tra. Tám bước tay, quên một bước là sập. Bước nào giao cho máy được?",
-          "answer": "Bước nào lặp lại và kiểm tra được thì giao được, và dễ nhất là chạy test mỗi lần đẩy code. GitLab đọc .gitlab-ci.yml rồi giao việc cho runner, mỗi việc chạy trong một container. Pipeline xanh rồi, nhưng mất tám phút vì lần nào cũng tải lại cả kho thư viện, và test nào chạm database thì hỏng vì trong job không có PostgreSQL.",
-          "goal": "Có một pipeline chạy test mỗi lần đẩy code, và đọc được log của một pipeline đỏ.",
-          "concepts": [
-            "CI/CD là quy trình: runbook thành các bước máy chạy",
-            "Stage, job, script; runner là ai và job chạy trong image nào",
-            "Khi nào một job chạy",
-            "Biến CI, loại được bảo vệ và được che trong log"
-          ],
-          "lab": "Viết .gitlab-ci.yml chạy test cho app mẫu. Tự gây lỗi: viết sai thụt dòng YAML; đẩy code không biên dịch được, rồi đọc log tìm lý do.",
-          "checklist": [
-            "Giải thích được runner là gì và job chạy ở đâu",
-            "Viết được một pipeline hai stage",
-            "Đọc được log của pipeline đỏ và chỉ ra dòng gây lỗi",
-            "Nói được biến CI nào phải che và vì sao"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "05",
-            "10",
-            "16",
-            "19"
-          ]
-        },
-        {
-          "id": "21",
-          "slug": "pipeline-nhanh-va-dang-tin",
-          "title": "Pipeline nhanh và đáng tin: cache, database cho test, chặn merge",
-          "question": "Pipeline xanh nhưng mất tám phút vì lần nào cũng tải lại cả kho thư viện, và test nào chạm database thì hỏng vì trong job không có PostgreSQL. Sửa hai chỗ đó thế nào?",
-          "answer": "Cả hai đã có lời giải ở Module 1. Cache của CI cùng một ý với cache layer: thứ gì không đổi thì giữ lại. Database cho test là một container đứng cạnh job, và job gọi nó bằng tên. Pipeline đã nhanh và đủ tin thì dùng làm cổng: đỏ thì không được merge. Code được kiểm tự động rồi, còn image thì vẫn build và đẩy bằng tay từ laptop.",
-          "goal": "Rút ngắn pipeline bằng cache, chạy được test cần database, và chặn merge khi pipeline đỏ.",
-          "concepts": [
-            "Cache giữa các lần chạy",
-            "services trong job: container đứng cạnh job",
-            "Pipeline cho merge request",
-            "Báo cáo test"
-          ],
-          "lab": "Thêm cache và service PostgreSQL vào pipeline, đo thời gian trước và sau. Tự gây lỗi: đẩy một test gãy để thấy merge request bị chặn.",
-          "checklist": [
-            "Giải thích được cache của CI giữ cái gì",
-            "Cho test trong job gọi được PostgreSQL",
-            "Cấu hình được chặn merge khi pipeline đỏ"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "07",
-            "08",
-            "20"
-          ]
-        },
-        {
-          "id": "22",
-          "slug": "pipeline-dong-image",
-          "title": "Pipeline tự đóng image",
-          "question": "Code được kiểm tự động rồi, nhưng image vẫn build và đẩy bằng tay từ laptop. Job là một container, trong đó không có Docker daemon, vậy build image bằng gì?",
-          "answer": "Có hai lối: cho job mượn một daemon, hoặc dùng công cụ build không cần daemon, mỗi lối một đánh đổi. Image gắn tag theo mã commit chứ không dùng latest, để lúc nào cũng biết bản nào đang chạy. Sau mỗi commit đã có image mới trên registry, còn server thì vẫn chạy bản tuần trước.",
-          "goal": "Pipeline tự build và đẩy image sau mỗi commit, với tag truy ngược được về commit.",
-          "concepts": [
-            "Build image trong CI theo hai lối và đánh đổi của mỗi lối",
-            "Tag theo mã commit",
-            "Đăng nhập registry bằng token của job"
-          ],
-          "lab": "Thêm job build và đẩy image vào pipeline. Tự gây lỗi: dùng sai thông tin đăng nhập để gặp lỗi unauthorized.",
-          "checklist": [
-            "Giải thích được vì sao job không tự build được như trên laptop",
-            "So được hai lối build image trong CI",
-            "Từ một image đang chạy, tìm ngược được commit sinh ra nó"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "05",
-            "16",
-            "21"
-          ]
-        },
-        {
-          "id": "23",
-          "slug": "pipeline-deploy-va-rollback",
-          "title": "Pipeline tự deploy, và quay lại bản cũ",
-          "question": "Sau mỗi commit đã có image mới trên registry, còn server thì vẫn chạy bản tuần trước. Bước cuối của runbook giao cho pipeline thế nào?",
-          "answer": "Pipeline SSH vào server bằng một khoá riêng cất trong biến CI, rồi kéo image mới và chạy lại. Bản mới hỏng thì deploy lại tag cũ, với điều kiện thay đổi trong database không làm bản cũ hết chạy được. Nhưng một server có ba chỗ đau không tự hết: mỗi lần deploy người dùng gặp vài giây 502, server chết là mọi thứ chết, và RAM của một máy thì có hạn.",
-          "goal": "Mỗi commit lên nhánh chính tự tới server, và quay lại được bản cũ trong vài phút.",
-          "concepts": [
-            "Script deploy chạy lại nhiều lần vẫn an toàn",
-            "Môi trường và nút duyệt tay trước production",
-            "Rollback bằng tag cũ",
-            "Thay đổi database tương thích ngược"
-          ],
-          "lab": "Thêm job deploy vào pipeline. Tự gây lỗi: deploy một bản không khởi động được, rollback, và bấm giờ từ lúc phát hiện tới lúc hệ thống lành.",
-          "checklist": [
-            "Giải thích được pipeline vào server bằng gì và khoá đó nằm ở đâu",
-            "Rollback được về một bản cũ",
-            "Nói được thay đổi database nào làm rollback hỏng",
-            "Chỉ ra được vài giây 502 lúc deploy đến từ đâu"
-          ],
-          "hours": [
-            5,
-            8
-          ],
-          "needs": [
-            "02",
-            "15",
-            "16",
-            "22"
-          ]
-        }
-      ]
+     "id": "06",
+     "slug": "processes-services-logs",
+     "title": "Process, signal, service, log",
+     "desc": "App chạy từ terminal thì chết theo terminal. systemd giữ app thành service: bật khi máy khởi động, chạy lại khi chết, gom log vào journal. Signal là cách hệ điều hành bảo process dừng.",
+     "lab": "local",
+     "needs": [
+      "process",
+      "user và quyền"
+     ]
     },
     {
-      "id": "M4",
-      "title": "Kubernetes: Chạy container trên cả một cụm máy",
-      "why": "Chạy container trên nhiều máy cùng lúc. Mỗi khái niệm ở đây nối về một bài Docker đã học.",
-      "lessons": [
-        {
-          "id": "24",
-          "slug": "cum-dau-tien",
-          "title": "Khi một server không đủ: cụm đầu tiên",
-          "question": "Mỗi lần deploy người dùng gặp vài giây 502, server chết là mọi thứ chết, và RAM của một máy thì có hạn. Ba chỗ đau đó giải bằng gì?",
-          "answer": "Bằng nhiều máy, và một chương trình chia việc cho các máy đó: Kubernetes. Mình khai muốn có ba bản app đang chạy, nó liên tục so thực tế với mong muốn rồi sửa cho khớp. Cái giá là nhiều khái niệm hơn và vận hành nặng hơn Compose rất nhiều. Cụm đã dựng xong, và nó còn trống.",
-          "goal": "Dựng được một cụm Kubernetes học trên máy, và giải thích được trạng thái mong muốn là gì.",
-          "concepts": [
-            "Cụm, node, control plane",
-            "Trạng thái mong muốn và vòng điều chỉnh",
-            "kubectl và kubeconfig",
-            "Một cụm học chạy ngay trên máy",
-            "Cái giá của Kubernetes so với Compose"
-          ],
-          "lab": "Dựng một cụm nhiều node trên máy, xem node bằng kubectl. Tự gây lỗi: tắt một node để thấy nó chuyển sang NotReady.",
-          "checklist": [
-            "Kể được cụm gồm những phần nào",
-            "Giải thích được vòng điều chỉnh bằng một ví dụ",
-            "Nói được trong kubeconfig có gì",
-            "Nêu được hai lý do không nên dùng Kubernetes cho một app nhỏ"
-          ],
-          "hours": [
-            4,
-            7
-          ],
-          "needs": [
-            "04",
-            "05",
-            "12",
-            "15",
-            "23"
-          ]
-        },
-        {
-          "id": "25",
-          "slug": "pod-va-deployment",
-          "title": "Pod và Deployment: ba bản app, chết thì tự sinh lại",
-          "question": "Cụm đã có nhưng còn trống. Đưa app lên cụm bằng gì?",
-          "answer": "Bằng một Deployment: nó giữ đủ số bản sao, bản nào chết thì thay, có bản mới thì thay dần từng bản. Mỗi bản sao là một pod, tức container được bọc thêm một lớp, và node kéo image từ registry. Giờ có ba pod, mỗi pod một địa chỉ IP, và địa chỉ đổi mỗi lần pod bị thay. App gọi database ở đâu, người ngoài gọi app ở đâu?",
-          "goal": "Chạy được ba bản app trên cụm, và cập nhật hay quay lại một bản mà không gõ lệnh trên từng node.",
-          "concepts": [
-            "Pod, và manifest bốn phần",
-            "Deployment, cập nhật dần, rollout status, rollout undo",
-            "Node kéo image thế nào, và khai thông tin đăng nhập registry cho cụm",
-            "kubectl apply, get, describe, logs"
-          ],
-          "lab": "Viết Deployment cho app mẫu, đổi image để xem cập nhật dần. Tự gây lỗi: xoá một pod để thấy nó được sinh lại; đặt sai tag image để gặp ImagePullBackOff.",
-          "checklist": [
-            "Nói được pod khác container ở đâu",
-            "Viết được một manifest Deployment",
-            "Đọc được ImagePullBackOff và biết hai lý do hay gặp",
-            "Quay lại được bản trước bằng rollout undo"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "05",
-            "12",
-            "16",
-            "22",
-            "24"
-          ]
-        },
-        {
-          "id": "26",
-          "slug": "service",
-          "title": "Service: một cái tên đứng trước các pod",
-          "question": "Có ba pod, mỗi pod một địa chỉ IP, và địa chỉ đổi mỗi lần pod bị thay. App gọi database ở đâu, người ngoài gọi app ở đâu?",
-          "answer": "Địa chỉ đổi liên tục thì gọi bằng tên. Service là một cái tên ổn định, chọn pod theo nhãn, và DNS của cụm phân giải tên đó, giống hai container gọi nhau bằng tên ở Bài 08. Gọi được nhau rồi thì lộ ra chỗ khác: địa chỉ và mật khẩu database đang viết thẳng trong manifest, mà manifest nằm trong Git.",
-          "goal": "Cho các pod gọi nhau bằng tên, và chẩn đoán được một Service không có pod nào phía sau.",
-          "concepts": [
-            "Service, nhãn và bộ chọn",
-            "DNS trong cụm",
-            "Namespace của Kubernetes, khác namespace của kernel ở Bài 05 dù trùng tên",
-            "port-forward để gọi thử từ máy mình"
-          ],
-          "lab": "Tạo Service cho app và database, gọi thử bằng port-forward. Tự gây lỗi: cho bộ chọn lệch nhãn để Service không có pod nào phía sau, rồi đọc triệu chứng bằng ba điều kiện của Bài 01.",
-          "checklist": [
-            "Giải thích được Service tìm pod bằng gì",
-            "Gọi được một Service bằng tên từ pod khác",
-            "Phân biệt được hai nghĩa của chữ namespace",
-            "Tìm được lý do một Service không trả lời"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "01",
-            "08",
-            "25"
-          ]
-        },
-        {
-          "id": "27",
-          "slug": "configmap-va-secret",
-          "title": "ConfigMap và Secret",
-          "question": "Địa chỉ và mật khẩu database đang viết thẳng trong manifest, mà manifest nằm trong Git. Để chúng ở đâu?",
-          "answer": "Cấu hình vào ConfigMap, thứ nhạy cảm vào Secret, và cả hai tới app qua biến môi trường như cũ. Secret chỉ được mã hoá kiểu base64, ai đọc được là giải ra được, nên nó vẫn phải ở ngoài Git. Đổi cấu hình xong phải thay pod, và trong lúc pod mới lên có vài request lỗi: pod báo Running, nhưng Spring Boot bên trong còn đang khởi động.",
-          "goal": "Tách cấu hình và secret khỏi manifest, và biết Secret của Kubernetes che được gì, không che được gì.",
-          "concepts": [
-            "Nạp cấu hình bằng biến môi trường hoặc file",
-            "base64 không phải mã hoá",
-            "Đổi cấu hình thì pod có tự nhận không",
-            "Giữ Secret ngoài Git"
-          ],
-          "lab": "Chuyển cấu hình của app mẫu sang ConfigMap và Secret. Tự gây lỗi: tham chiếu một khoá không tồn tại để pod kẹt ở CreateContainerConfigError.",
-          "checklist": [
-            "Chuyển được một biến môi trường sang ConfigMap",
-            "Giải mã được một Secret và nói được điều đó có nghĩa gì",
-            "Đọc được CreateContainerConfigError"
-          ],
-          "hours": [
-            3,
-            5
-          ],
-          "needs": [
-            "10",
-            "26"
-          ]
-        },
-        {
-          "id": "28",
-          "slug": "probe",
-          "title": "Probe: Running chưa phải sẵn sàng",
-          "question": "Trong lúc pod mới lên có vài request lỗi. Pod báo Running, nhưng Spring Boot bên trong còn đang khởi động. Cụm biết pod đã sẵn sàng bằng cách nào?",
-          "answer": "Bằng readiness probe: nó cho Service biết pod nào đã nhận được request, nên lúc thay pod không còn request nào rơi vào pod chưa sẵn sàng. Còn hai probe nữa, một cho app khởi động chậm, một cho app bị treo, và probe thứ hai mà đặt sai thì cụm tự tay giết một app đang khoẻ. Vẫn còn một chỗ hở: một pod rò bộ nhớ ăn hết RAM của node và kéo pod khác chết theo, còn cụm thì chưa có căn cứ gì để xếp pod vào node nào.",
-          "goal": "Thay pod mà không rớt request nào, và không để liveness probe giết nhầm app.",
-          "concepts": [
-            "Readiness, startup và liveness probe, việc của từng loại",
-            "Actuator làm đích cho probe"
-          ],
-          "lab": "Thêm ba probe cho app mẫu. Tự gây lỗi: bỏ readiness rồi đếm số request lỗi khi thay pod, trước và sau; đặt liveness quá gắt để pod bị khởi động lại mãi.",
-          "checklist": [
-            "Nói được mỗi probe trả lời câu hỏi nào",
-            "Chứng minh bằng số đo rằng readiness làm hết request lỗi lúc thay pod",
-            "Giải thích được vì sao liveness đặt sai lại nguy hiểm"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "02",
-            "11",
-            "25",
-            "27"
-          ]
-        },
-        {
-          "id": "29",
-          "slug": "requests-va-limits",
-          "title": "Requests và limits: chia tài nguyên của node",
-          "question": "Một pod rò bộ nhớ ăn hết RAM của node và kéo pod khác chết theo, và cụm chưa có căn cứ gì để xếp pod vào node nào. Chia tài nguyên của node thế nào?",
-          "answer": "Bằng hai con số cho mỗi pod. Con số xin là căn cứ để cụm xếp chỗ, xin quá thì pod kẹt ở Pending. Con số trần do cgroup áp: vượt trần RAM thì bị giết với 137, vượt trần CPU thì không bị giết mà bị bóp cho chạy chậm, và Spring Boot khởi động chậm có thể bị liveness giết oan. Chia xong tài nguyên thì gặp chuyện khác: node đang chứa pod PostgreSQL bị tắt, pod được dựng lại ở node khác, và database trống trơn.",
-          "goal": "Đặt được requests và limits cho app, và nhận ra CPU bị bóp khi gặp nó.",
-          "concepts": [
-            "Requests và limits",
-            "Pending vì thiếu tài nguyên",
-            "OOMKilled trên cụm",
-            "CPU bị bóp, cách gỡ, và đánh đổi của từng cách"
-          ],
-          "lab": "Đặt requests và limits cho app mẫu. Tự gây lỗi: đặt trần CPU thấp để app khởi động chậm rồi bị giết; đặt trần RAM thấp để gặp OOMKilled; xin quá nhiều để pod kẹt ở Pending.",
-          "checklist": [
-            "Giải thích được requests và limits khác nhau ở đâu",
-            "Đọc được vì sao một pod kẹt ở Pending",
-            "Nói được vượt trần RAM và vượt trần CPU khác nhau thế nào",
-            "Gỡ được một pod bị giết vì khởi động chậm"
-          ],
-          "hours": [
-            5,
-            7
-          ],
-          "needs": [
-            "03",
-            "05",
-            "13",
-            "28"
-          ]
-        },
-        {
-          "id": "30",
-          "slug": "du-lieu-trong-cum",
-          "title": "Dữ liệu trong cụm: PVC, StatefulSet, backup theo lịch",
-          "question": "Node đang chứa pod PostgreSQL bị tắt, pod được dựng lại ở node khác, và database trống trơn. Giữ dữ liệu trong cụm thế nào?",
-          "answer": "Ổ đĩa giờ là thứ phải xin như xin RAM, và database cần một kiểu chạy riêng để mỗi bản luôn nhận lại đúng ổ của nó. Bản backup thành một việc chạy theo lịch. Nhiều khi database nên nằm ngoài cụm, và bài này nói thẳng đánh đổi đó. App giờ chạy đủ và giữ được dữ liệu, nhưng mới gọi được từ trong cụm.",
-          "goal": "Chạy được một database giữ được dữ liệu trên cụm, có backup theo lịch đã khôi phục thử.",
-          "concepts": [
-            "PersistentVolume, PersistentVolumeClaim, StorageClass",
-            "StatefulSet",
-            "CronJob chạy backup, và diễn tập khôi phục",
-            "Đánh đổi giữa database trong cụm và ngoài cụm"
-          ],
-          "lab": "Chạy PostgreSQL bằng StatefulSet có ổ bền, đặt CronJob backup rồi khôi phục thử. Tự gây lỗi: chạy database không có ổ bền rồi xoá pod.",
-          "checklist": [
-            "Giải thích được PVC là gì bằng cách so với xin RAM",
-            "Nói được vì sao database không chạy bằng Deployment",
-            "Khôi phục thử được từ một bản backup",
-            "Nêu được khi nào nên để database ngoài cụm"
-          ],
-          "hours": [
-            5,
-            8
-          ],
-          "needs": [
-            "09",
-            "25",
-            "29"
-          ]
-        },
-        {
-          "id": "31",
-          "slug": "ingress-va-https",
-          "title": "Ingress và HTTPS trong cụm",
-          "question": "App chạy đủ và giữ được dữ liệu, nhưng mới gọi được từ trong cụm. Người dùng ngoài Internet vào bằng đường nào?",
-          "answer": "Bằng Ingress: một bản khai luật theo tên miền và đường dẫn, do một reverse proxy chạy ngay trong cụm thực thi, còn chứng chỉ thì có một thành phần tự xin và tự gia hạn. Bản đồ chín chặng vẽ lại được cho cụm: DNS, Ingress, Service, pod, app, database. Hệ thống giờ có tám loại đối tượng, vậy người dùng báo lỗi thì nhìn ở đâu trước?",
-          "goal": "Đưa được app trên cụm ra Internet bằng tên miền và HTTPS, và vẽ lại được bản đồ request cho cụm.",
-          "concepts": [
-            "Ingress và Ingress controller",
-            "Luật theo host và path",
-            "Service dừng ở tầng 4, Ingress đọc tới tầng 7 (gọi lại phụ lục Mô hình OSI và TCP/IP của Bài 01)",
-            "Thời gian chờ và kích thước body: 504 và 413 gặp lại",
-            "Tự cấp và tự gia hạn chứng chỉ trong cụm",
-            "Gateway API, hướng thay thế Ingress, vừa đủ để nhận ra khi gặp"
-          ],
-          "lab": "Cài Ingress controller, viết Ingress cho app mẫu, gắn chứng chỉ. Tự gây lỗi: cho Ingress trỏ vào một tên Service sai để gặp 503.",
-          "checklist": [
-            "Giải thích được Ingress khác Ingress controller ở đâu",
-            "Viết được luật theo host và path",
-            "Vẽ lại được bản đồ request cho cụm",
-            "Tìm được lý do một Ingress trả 503"
-          ],
-          "hours": [
-            5,
-            7
-          ],
-          "needs": [
-            "00",
-            "18",
-            "19",
-            "26",
-            "30"
-          ]
-        },
-        {
-          "id": "32",
-          "slug": "tram-kiem-tra-kubernetes",
-          "title": "Trạm kiểm tra Kubernetes: sáu kiểu pod hỏng",
-          "question": "Hệ thống giờ có tám loại đối tượng. Người dùng báo lỗi thì nhìn ở đâu trước?",
-          "answer": "Đi theo bản đồ từ ngoài vào, và ở mỗi đối tượng đọc theo một thứ tự cố định: get, describe, rồi logs. Sáu trạng thái hỏng hay gặp, mỗi trạng thái chỉ về đúng một chỗ. Tìm được lỗi rồi thì thấy một chỗ nặng nề khác: bộ manifest đã lên cả chục file, và môi trường thử với production là hai bản chép gần giống nhau, sửa một chỗ phải nhớ sửa cả hai.",
-          "goal": "Chẩn đoán được sáu kiểu pod hỏng mà không cần ai gợi ý.",
-          "concepts": [
-            "Thứ tự đọc: kubectl get, describe, logs --previous",
-            "Bảng triệu chứng cho cụm, nối bảng container ở Bài 14"
-          ],
-          "lab": "Tự gây sáu kiểu hỏng (Pending, CrashLoopBackOff, ImagePullBackOff, CreateContainerConfigError, OOMKilled, Service không có pod phía sau), trộn thứ tự rồi chẩn đoán từng cái.",
-          "checklist": [
-            "Với mỗi trạng thái, nói được nó chỉ về chỗ nào",
-            "Đọc được log của lần chạy trước khi pod bị khởi động lại",
-            "Tự viết được bảng triệu chứng cho cụm"
-          ],
-          "hours": [
-            4,
-            7
-          ],
-          "needs": [
-            "14",
-            "25",
-            "26",
-            "27",
-            "29",
-            "31"
-          ]
-        },
-        {
-          "id": "33",
-          "slug": "helm",
-          "title": "Helm: một bộ manifest, nhiều môi trường",
-          "question": "Bộ manifest đã lên cả chục file, và môi trường thử với production là hai bản chép gần giống nhau, sửa một chỗ phải nhớ sửa cả hai. Gọn lại bằng gì?",
-          "answer": "Hai bản chép gần giống nhau thì nên là một khuôn và hai bộ giá trị. Helm làm đúng việc đó, và nó nhớ từng lần cài nên quay lại được. Một người với kubectl và Helm thì ổn, nhưng có thêm người thứ hai, thêm cụm thứ hai, thì ai được làm gì và nhìn ở đâu?",
-          "goal": "Đóng bộ manifest của app thành một chart dùng được cho hai môi trường.",
-          "concepts": [
-            "Chart, template, values",
-            "Cài, nâng cấp, quay lại",
-            "Cài phần mềm có sẵn bằng chart"
-          ],
-          "lab": "Viết chart cho app mẫu, cài cho hai môi trường bằng hai file values. Tự gây lỗi: đặt sai một giá trị cho lần nâng cấp hỏng rồi quay lại.",
-          "checklist": [
-            "Giải thích được chart, template và values",
-            "Cài được cùng một chart cho hai môi trường",
-            "Quay lại được bản cài trước"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "23",
-            "25",
-            "27",
-            "32"
-          ]
-        }
-      ]
+     "id": "07",
+     "slug": "shell-scripting",
+     "title": "Shell script",
+     "desc": "Gom các lệnh hay gõ vào một file bash có biến, điều kiện, vòng lặp và mã thoát, để chạy lại nhiều lần mà không gõ sai.",
+     "lab": "local",
+     "needs": [
+      "shell",
+      "lệnh Linux cơ bản"
+     ]
     },
     {
-      "id": "M5",
-      "title": "Rancher và vận hành: Quản lý cụm, GitOps, theo dõi, xử lý sự cố",
-      "why": "Quản lý cụm bằng Rancher, deploy bằng GitOps với Argo CD, theo dõi, cảnh báo, xử lý sự cố, rồi tự dựng lại toàn bộ.",
-      "lessons": [
-        {
-          "id": "34",
-          "slug": "rancher-va-openshift",
-          "title": "Rancher và OpenShift: nhiều người, nhiều cụm",
-          "question": "Một người với kubectl thì ổn. Có thêm người thứ hai, thêm cụm thứ hai, thì ai được làm gì và nhìn ở đâu?",
-          "answer": "Cần một lớp quản lý đặt lên trên các cụm, và phân quyền theo vai trò. Rancher là lớp đó: mỗi nút bấm là một lời gọi mà kubectl cũng gọi được. OpenShift của Red Hat đi lối khác, là cả một bản Kubernetes đóng sẵn kèm giao diện và luật chặt hơn. Phân quyền xong thì thấy deploy lên cụm vẫn là gõ lệnh từ laptop, còn pipeline ở Module 3 chỉ biết SSH vào một server.",
-          "goal": "Quản lý được cụm và phân quyền qua Rancher, và nhận ra OpenShift khi gặp nó.",
-          "concepts": [
-            "Rancher: lớp quản lý đặt trên các cụm, và các bản Kubernetes của nó (RKE2, K3s)",
-            "Project và namespace",
-            "Phân quyền theo vai trò",
-            "Lấy kubeconfig từ Rancher",
-            "OpenShift: một bản Kubernetes của Red Hat, cùng tầng với RKE2 cộng Rancher",
-            "Nhận ra OpenShift: lệnh oc, Project, Route thay cho Ingress, và mặc định không cho container chạy bằng root (nối Bài 13)",
-            "Chọn bên nào: giấy phép, mức đóng gói sẵn, và đội đang quen gì"
-          ],
-          "lab": "Cài Rancher bằng chart, đưa cụm học vào, đối chiếu từng màn hình với lệnh kubectl đã học, tạo một tài khoản chỉ có quyền xem. Đọc một manifest viết cho OpenShift và chỉ ra chỗ nó khác manifest của mình. Tự gây lỗi: dùng tài khoản chỉ xem để bị chặn khi sửa.",
-          "checklist": [
-            "Giải thích được Rancher không phải một loại Kubernetes khác",
-            "Tạo được tài khoản chỉ có quyền xem trong một project",
-            "Nói được OpenShift đứng ở đâu so với Kubernetes, RKE2 và Rancher",
-            "Kể được ba chỗ một manifest phải sửa khi mang sang OpenShift"
-          ],
-          "hours": [
-            4,
-            7
-          ],
-          "needs": [
-            "13",
-            "24",
-            "26",
-            "33"
-          ]
-        },
-        {
-          "id": "35",
-          "slug": "pipeline-deploy-len-cum",
-          "title": "Pipeline deploy lên cụm",
-          "question": "Deploy lên cụm vẫn là gõ lệnh từ laptop, còn pipeline chỉ biết SSH vào một server. Pipeline deploy lên cụm thế nào, và cho nó quyền gì?",
-          "answer": "Cho pipeline một tài khoản riêng với quyền vừa đủ đổi đúng Deployment của nó, cất thông tin đăng nhập cụm trong biến CI, rồi chờ cụm thay pod xong mới báo xanh, nên bản hỏng thì pipeline đỏ. Deploy đã tự chạy, nhưng lối này để lại ba chỗ hở: file trong Git và cụm lệch nhau mà không ai báo, bản đang chạy không ghi ở đâu trong Git, và chìa khoá vào cụm nằm ở ngoài cụm.",
-          "goal": "Deploy lên cụm bằng pipeline với quyền tối thiểu, và chỉ ra được ba chỗ hở của lối này.",
-          "concepts": [
-            "Tài khoản riêng cho CI với quyền tối thiểu",
-            "Thông tin đăng nhập cụm cất trong biến CI",
-            "Deploy rồi chờ kết quả: pipeline chỉ xanh khi pod mới đã sẵn sàng",
-            "Quay lại bản cũ",
-            "Ba chỗ hở của lối pipeline đẩy"
-          ],
-          "lab": "Tạo một tài khoản chỉ được đổi Deployment của app mẫu, cho pipeline dùng nó để deploy chart lên cụm và chờ rollout xong. Tự gây lỗi: deploy một image hỏng để pipeline đỏ rồi quay lại bản cũ; sửa tay giới hạn RAM trên cụm rồi push một commit khác, để thấy file trong Git và cụm lệch nhau mà không ai báo.",
-          "checklist": [
-            "Giải thích được pipeline cần quyền gì và vì sao không hơn",
-            "Cho pipeline chờ được kết quả deploy",
-            "Quay lại được bản cũ trên cụm",
-            "Kể được ba chỗ hở của lối pipeline đẩy, mỗi chỗ kèm một ví dụ"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "20",
-            "23",
-            "25",
-            "28",
-            "33",
-            "34"
-          ]
-        },
-        {
-          "id": "36",
-          "slug": "gitops-argo-cd",
-          "title": "GitOps với Argo CD: cụm tự kéo từ Git",
-          "question": "File trong Git và cụm lệch nhau mà không ai báo, bản đang chạy không ghi ở đâu trong Git, và chìa khoá vào cụm nằm ở ngoài cụm. Có lối deploy nào bịt được cả ba chỗ hở đó không?",
-          "answer": "Có: đảo chiều. Git là chỗ duy nhất ghi trạng thái muốn có, còn Argo CD chạy trong cụm, tự kéo Git về, so liên tục các file YAML với các đối tượng trên cụm và sửa cụm cho khớp. CI chỉ còn build image rồi sửa tag trong Git, không cần chìa khoá vào cụm nữa. Mọi thứ tự chạy rồi, nhưng nó đang khoẻ hay yếu dần thì chưa ai biết, và người đầu tiên biết web chậm là người dùng.",
-          "goal": "Deploy app mẫu bằng Argo CD, đọc được trạng thái sync, và nói được đánh đổi giữa pipeline đẩy và cụm kéo.",
-          "concepts": [
-            "GitOps: Git là chỗ duy nhất ghi trạng thái muốn có, và chỉ có một chiều từ Git sang cụm",
-            "Argo CD chạy trong cụm: Application, sync, trạng thái Synced và OutOfSync",
-            "Self-heal: ai sửa tay trên cụm thì bị ghi đè",
-            "Argo CD so file YAML trong Git với đối tượng trên cụm; biến code thành image vẫn là việc của CI",
-            "Có Argo CD thì CI làm gì để bản mới lên: sửa tag image trong Git",
-            "Rollback là hoàn tác một commit",
-            "Argo là một họ dự án (Argo CD, Rollouts, Workflows); bài này chỉ dùng Argo CD",
-            "Fleet của Rancher và OpenShift GitOps (Argo CD do Red Hat đóng gói) làm cùng việc đó",
-            "Đánh đổi giữa pipeline đẩy và cụm kéo, và Argo CD cần những gì để tự host"
-          ],
-          "lab": "Cài Argo CD vào cụm, tạo một Application trỏ vào repo chứa chart của app mẫu, rồi đổi pipeline để nó chỉ còn sửa tag image trong Git. Tự gây lỗi: sửa tay một thứ trên cụm để thấy OutOfSync rồi bị ghi đè; sửa file mà quên push để thấy cụm không đổi; đẩy một tag image không tồn tại rồi quay lại bằng cách hoàn tác commit.",
-          "checklist": [
-            "Nói được Argo CD so cái gì với cái gì, và nó không làm việc gì",
-            "Tạo được một Application và đọc được trạng thái sync của nó",
-            "Giải thích được vì sao CI không còn cần chìa khoá vào cụm",
-            "Quay lại được bản cũ bằng Git",
-            "Nêu được một lý do chọn pipeline đẩy và một lý do chọn cụm kéo"
-          ],
-          "hours": [
-            5,
-            8
-          ],
-          "needs": [
-            "24",
-            "25",
-            "33",
-            "34",
-            "35"
-          ]
-        },
-        {
-          "id": "37",
-          "slug": "metric",
-          "title": "Metric: biết hệ thống yếu đi trước người dùng",
-          "question": "Mọi thứ tự chạy, nhưng nó đang khoẻ hay yếu dần? Lúc này người đầu tiên biết web chậm là người dùng. Làm sao biết trước họ?",
-          "answer": "Phải đo liên tục. App phơi con số qua Actuator, một chương trình đi hỏi định kỳ rồi lưu lại, một chương trình khác vẽ thành biểu đồ. Đo bốn thứ trước: độ trễ, lưu lượng, tỉ lệ lỗi, và mức đầy của tài nguyên. Biểu đồ cho thấy lỗi vọt lên lúc hai giờ sáng hôm kia, nhưng không nói vì sao: pod lúc đó đã bị thay, và log của nó mất theo.",
-          "goal": "Có biểu đồ cho bốn tín hiệu của app, và đọc được một sự cố trên đó.",
-          "concepts": [
-            "Metric khác log ở đâu",
-            "Thu metric và vẽ biểu đồ",
-            "Bốn tín hiệu: độ trễ, lưu lượng, tỉ lệ lỗi, mức đầy",
-            "Cài bộ giám sát bằng chart, khai thành một Application của Argo CD"
-          ],
-          "lab": "Cài bộ giám sát qua Argo CD, bật đường phơi metric của app mẫu, dựng biểu đồ cho bốn tín hiệu. Tự gây lỗi: tắt đường phơi metric để thấy đích báo mất; tạo tải để thấy CPU bị bóp hiện trên biểu đồ.",
-          "checklist": [
-            "Nói được metric và log trả lời hai loại câu hỏi nào",
-            "Dựng được biểu đồ cho bốn tín hiệu",
-            "Chỉ ra được CPU bị bóp trên biểu đồ"
-          ],
-          "hours": [
-            5,
-            8
-          ],
-          "needs": [
-            "02",
-            "03",
-            "28",
-            "29",
-            "33",
-            "36"
-          ]
-        },
-        {
-          "id": "38",
-          "slug": "log-tap-trung",
-          "title": "Log tập trung: tìm lại chuyện của ba ngày trước",
-          "question": "Biểu đồ cho thấy lỗi vọt lên lúc hai giờ sáng hôm kia. Vì sao? Pod lúc đó đã bị thay, log của nó mất theo. Giữ log thế nào để tìm lại được?",
-          "answer": "Log của pod nằm trên node và mất khi pod bị dọn, nên phải gom về một chỗ. Gom rồi thì log phải có cấu trúc để lọc được, và mỗi request mang một mã riêng đi suốt từ Ingress vào app. Tìm lại được chuyện cũ rồi, nhưng muốn biết đang có chuyện thì vẫn phải có người mở biểu đồ ra xem, mà không ai ngồi trước server.",
-          "goal": "Tìm lại được log của một request lỗi từ ba ngày trước, qua nhiều pod.",
-          "concepts": [
-            "Gom log trong cụm",
-            "Log dạng JSON",
-            "Mã theo dõi một request",
-            "Không ghi mật khẩu, token, dữ liệu cá nhân vào log"
-          ],
-          "lab": "Cài bộ gom log, chuyển log của app mẫu sang JSON, thêm mã theo dõi. Lần theo một request lỗi qua nhiều pod bằng mã của nó. Tự gây lỗi: xoá pod rồi tìm lại log của nó.",
-          "checklist": [
-            "Giải thích được vì sao log của pod mất",
-            "Lọc được log theo một trường",
-            "Lần được một request qua nhiều pod"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "10",
-            "12",
-            "18",
-            "37"
-          ]
-        },
-        {
-          "id": "39",
-          "slug": "canh-bao",
-          "title": "Cảnh báo: máy gọi người",
-          "question": "Muốn biết đang có chuyện thì vẫn phải có người mở biểu đồ ra xem, mà không ai ngồi trước server. Làm sao để máy tự gọi người?",
-          "answer": "Đặt luật trên các con số đã đo. Đặt ngưỡng theo thứ người dùng thấy trước, là tỉ lệ lỗi và độ trễ, rồi mới tới tài nguyên, vì cảnh báo nhiều quá thì không ai đọc. Hai thứ hỏng theo thời gian cũng có cảnh báo: chứng chỉ sắp hết hạn và đĩa sắp đầy. Máy đã biết gọi, nhưng cảnh báo kêu lúc nửa đêm thì làm gì trước, theo thứ tự nào?",
-          "goal": "Có cảnh báo tới được người khi app hỏng, và đã kiểm là nó tới thật.",
-          "concepts": [
-            "Luật cảnh báo",
-            "Nơi nhận cảnh báo",
-            "Chọn ngưỡng theo thứ người dùng thấy trước",
-            "Luật cảnh báo nằm trong Git và lên cụm qua Argo CD"
-          ],
-          "lab": "Viết luật cho tỉ lệ lỗi, độ trễ, chứng chỉ sắp hết hạn và đĩa sắp đầy, đưa lên cụm qua Git. Tự gây lỗi: làm sập service để kiểm xem cảnh báo có tới thật không và sau bao lâu.",
-          "checklist": [
-            "Viết được một luật cảnh báo",
-            "Giải thích được vì sao đặt ngưỡng theo người dùng trước",
-            "Chứng minh được cảnh báo tới nơi nhận"
-          ],
-          "hours": [
-            4,
-            6
-          ],
-          "needs": [
-            "02",
-            "17",
-            "19",
-            "36",
-            "37",
-            "38"
-          ]
-        },
-        {
-          "id": "40",
-          "slug": "xu-ly-su-co",
-          "title": "Khi mọi thứ đang cháy: xử lý sự cố theo bản đồ",
-          "question": "Cảnh báo kêu lúc nửa đêm. Làm gì trước, theo thứ tự nào?",
-          "answer": "Đi theo bản đồ request của cụm, mỗi chặng hỏi một câu có hay không. Khôi phục trước, tìm lý do sau: bản mới gây lỗi thì quay lại bằng cách hoàn tác commit trong Git để Argo CD kéo về. Xong thì viết lại chuyện đã xảy ra mà không đổ lỗi cho ai. Từng mảnh đã học và đã hỏng thử, chỉ còn một câu: từ một repo trống, bạn có tự dựng lại được tất cả không?",
-          "goal": "Xử lý được một sự cố theo thứ tự, có bấm giờ, và viết được bản ghi sự cố.",
-          "concepts": [
-            "Thứ tự xử lý theo bản đồ",
-            "Khôi phục trước, tìm lý do sau",
-            "Rollback trong GitOps: hoàn tác commit",
-            "Bản ghi sự cố không đổ lỗi",
-            "Runbook cho từng loại sự cố"
-          ],
-          "lab": "Tự gây ba sự cố trên cụm học (database chết, pod hết bộ nhớ, Ingress cấu hình sai), trộn lẫn, xử lý có bấm giờ, và viết runbook cho từng loại.",
-          "checklist": [
-            "Nói được việc đầu tiên phải làm khi cảnh báo kêu",
-            "Xử lý được ba sự cố mà không nhìn tài liệu",
-            "Viết được một bản ghi sự cố"
-          ],
-          "hours": [
-            4,
-            7
-          ],
-          "needs": [
-            "02",
-            "16",
-            "31",
-            "32",
-            "36",
-            "39"
-          ]
-        },
-        {
-          "id": "41",
-          "slug": "tong-ket",
-          "title": "Tổng kết: dựng lại tất cả từ một repo trống",
-          "question": "Từng mảnh đã học và đã hỏng thử. Từ một repo trống, bạn có tự dựng lại được tất cả không?",
-          "answer": "Dựng lại được: Dockerfile, pipeline, chart, Application của Argo CD, Ingress có HTTPS, biểu đồ và cảnh báo, tất cả nằm trong Git. Và trình bày được kiến trúc đó trong 15 phút, không nhìn tài liệu.",
-          "goal": "Tự dựng lại cả hệ thống từ một repo trống, và trình bày được nó.",
-          "concepts": [
-            "Không có khái niệm mới: ghép mọi mảnh đã học",
-            "Mọi thứ nằm trong Git, cụm tự kéo về"
-          ],
-          "lab": "Từ một repo trống, viết Dockerfile, pipeline, chart, Application của Argo CD, Ingress có HTTPS, biểu đồ, cảnh báo, và đưa lên một cụm mới. Rồi tự trình bày kiến trúc trong 15 phút.",
-          "checklist": [
-            "Dựng lại được hệ thống trên một cụm mới",
-            "Vẽ được bản đồ request và chỉ ra mỗi công cụ nằm ở chặng nào",
-            "Trình bày được trong 15 phút, không nhìn tài liệu"
-          ],
-          "hours": [
-            5,
-            8
-          ],
-          "needs": [
-            "13",
-            "23",
-            "31",
-            "33",
-            "35",
-            "36",
-            "37",
-            "39",
-            "40"
-          ]
-        }
-      ]
+     "id": "08",
+     "slug": "networking-on-one-host",
+     "title": "Mạng trên một máy: listen, port, firewall",
+     "desc": "Nhìn mạng từ bên trong một máy Linux: app listen ở port nào, trên địa chỉ nào (127.0.0.1 hay 0.0.0.0), firewall của máy chặn gì. Gọi tới được thì cần đủ ba thứ, lỗi refused và timeout cho biết thiếu thứ nào. Đọc bằng ss, ip, curl.",
+     "lab": "local",
+     "needs": [
+      "IP",
+      "TCP",
+      "process"
+     ]
+    },
+    {
+     "id": "09",
+     "slug": "slow-server",
+     "title": "Server chậm: CPU, RAM, đĩa, mạng",
+     "desc": "Web chậm mà app không báo lỗi thì khoanh vùng theo bốn tài nguyên: CPU bận, hết RAM phải dùng swap, đĩa đầy hoặc đọc ghi chậm, mạng nghẽn. Đọc top, free, df, iostat, ss để biết tài nguyên nào đang hết.",
+     "lab": "local",
+     "needs": [
+      "process",
+      "kernel",
+      "CPU",
+      "RAM"
+     ]
+    },
+    {
+     "id": "10",
+     "slug": "layered-troubleshooting",
+     "title": "Chẩn đoán theo tầng",
+     "desc": "Mỗi lỗi là câu trả lời của một thành phần: refused do kernel, 502 và 504 do reverse proxy, 500 do app. Đọc lỗi thì biết hỏng ở tầng nào và bắt đầu tìm từ đâu.",
+     "lab": "local",
+     "needs": [
+      "đường đi của request trên server",
+      "listen và port",
+      "HTTP"
+     ]
     }
-  ]
+   ]
+  },
+  {
+   "id": "M2",
+   "title": "Server thật, làm bằng tay",
+   "intro": "Đưa app lên một server bằng tay, từng bước một.",
+   "lessons": [
+    {
+     "id": "11",
+     "slug": "getting-a-server",
+     "title": "Kiếm một server để thực hành",
+     "desc": "Có ba đường: thuê VPS theo tháng, dùng gói miễn phí của các nhà cung cấp cloud, hoặc dựng máy ảo ngay trên máy mình. Mỗi đường tốn gì, giới hạn gì, và những việc phải làm ngay khi nhận máy: cập nhật, tạo user riêng, không dùng root hằng ngày.",
+     "lab": "server",
+     "needs": [
+      "Linux",
+      "user và quyền"
+     ]
+    },
+    {
+     "id": "12",
+     "slug": "ssh",
+     "title": "SSH: điều khiển một máy ở xa",
+     "desc": "SSH cho bạn gõ lệnh trên một máy ở xa qua kết nối mã hoá. Đăng nhập bằng cặp khoá thay mật khẩu, tắt đăng nhập root, copy file lên server.",
+     "lab": "server",
+     "needs": [
+      "IP",
+      "port",
+      "user",
+      "shell"
+     ]
+    },
+    {
+     "id": "13",
+     "slug": "manual-deploy",
+     "title": "Deploy tay",
+     "desc": "Đưa file jar lên server, cài Java, đặt cấu hình bằng biến môi trường, chạy thành service. Làm tay hết thì thấy bước nào dễ quên, bước nào dễ lệch giữa hai máy.",
+     "lab": "server",
+     "needs": [
+      "SSH",
+      "service",
+      "biến môi trường"
+     ]
+    },
+    {
+     "id": "14",
+     "slug": "nginx",
+     "title": "Nginx",
+     "desc": "App mở thẳng port ra Internet thì phải tự lo mã hoá và tự chịu mọi request lạ. Nginx là reverse proxy đứng trước app: nhận request rồi chuyển vào app, cho nhiều website dùng chung một máy.",
+     "lab": "server",
+     "needs": [
+      "listen và port",
+      "HTTP"
+     ]
+    },
+    {
+     "id": "15",
+     "slug": "domains-and-https",
+     "title": "Tên miền và HTTPS",
+     "desc": "Kiếm một tên miền để thực hành, rồi tạo bản ghi DNS trỏ nó về IP của server. Chứng chỉ do CA ký chứng minh server có quyền dùng tên đó; Let's Encrypt cấp miễn phí và tự gia hạn được.",
+     "lab": "server",
+     "needs": [
+      "DNS",
+      "TLS",
+      "reverse proxy"
+     ]
+    },
+    {
+     "id": "16",
+     "slug": "load-balancer",
+     "title": "Hai server sau một load balancer",
+     "desc": "Một server chết là web chết. Đặt hai bản app sau một load balancer thì request chia cho cả hai, một bản chết thì dồn sang bản còn lại nhờ health check. Muốn vậy app không được giữ trạng thái trong RAM: phiên đăng nhập, file tải lên phải nằm ở chỗ dùng chung.",
+     "lab": "server",
+     "needs": [
+      "Nginx",
+      "deploy tay"
+     ]
+    },
+    {
+     "id": "17",
+     "slug": "server-maintenance",
+     "title": "Server để yên ba tháng",
+     "desc": "Không ai đụng vào thì server vẫn hỏng: log làm đầy đĩa, chứng chỉ hết hạn, bản vá bảo mật chưa cài, database không có backup. Những việc phải làm định kỳ và cách tự động hoá chúng.",
+     "lab": "server",
+     "needs": [
+      "service",
+      "log",
+      "chứng chỉ",
+      "shell script"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "M3",
+   "title": "Container",
+   "intro": "Đóng app cùng mọi thứ nó cần thành một khối, chạy ở máy nào cũng giống nhau.",
+   "lessons": [
+    {
+     "id": "18",
+     "slug": "what-is-a-container",
+     "title": "Container là gì",
+     "desc": "Cài app lên máy bằng tay thì mỗi máy lệch một chút: phiên bản Java, thư viện, cấu hình. Container đóng app cùng mọi thứ nó cần, chạy như một process bị kernel nhốt lại bằng namespace và cgroup. Nó khác máy ảo ở chỗ dùng chung kernel với máy thật.",
+     "lab": "local",
+     "needs": [
+      "process",
+      "kernel",
+      "cài một app lên server"
+     ]
+    },
+    {
+     "id": "19",
+     "slug": "images-and-containers",
+     "title": "Image và container",
+     "desc": "Image là bộ file và cấu hình đóng sẵn, chỉ đọc. Container là một lần chạy image đó. Chạy PostgreSQL bằng Docker mà không cài gì lên máy.",
+     "lab": "local",
+     "needs": [
+      "container"
+     ]
+    },
+    {
+     "id": "20",
+     "slug": "dockerfile",
+     "title": "Dockerfile",
+     "desc": "Viết Dockerfile để đóng app Spring Boot thành image: chọn image nền, copy file, build nhiều giai đoạn, và vì sao thứ tự các dòng ảnh hưởng tới tốc độ build.",
+     "lab": "local",
+     "needs": [
+      "image",
+      "container"
+     ]
+    },
+    {
+     "id": "21",
+     "slug": "networks-and-volumes",
+     "title": "Network và volume",
+     "desc": "Container nào cũng có mạng riêng; cùng một network thì container gọi nhau bằng tên. Dữ liệu trong container mất khi xoá container, volume giữ nó lại.",
+     "lab": "local",
+     "needs": [
+      "image",
+      "container",
+      "IP và port",
+      "DNS"
+     ]
+    },
+    {
+     "id": "22",
+     "slug": "config-secrets-compose",
+     "title": "Cấu hình, secret và Compose",
+     "desc": "Một image chạy ở nhiều môi trường thì cấu hình phải đưa vào từ ngoài bằng biến môi trường, mật khẩu không nằm trong image. Compose mô tả cả hệ thống nhiều container trong một file.",
+     "lab": "local",
+     "needs": [
+      "Dockerfile",
+      "network",
+      "volume"
+     ]
+    },
+    {
+     "id": "23",
+     "slug": "cache-and-message-queues",
+     "title": "Cache và message queue",
+     "desc": "Database chậm vì bị hỏi đi hỏi lại cùng một thứ thì đặt cache (Redis) phía trước. Việc lâu như gửi mail, xử lý file thì đẩy vào hàng đợi (RabbitMQ, Kafka) cho một process khác làm dần. Chạy cả hai bằng Compose, và những chỗ phải trông: bộ nhớ của Redis, hàng đợi bị dồn.",
+     "lab": "local",
+     "needs": [
+      "Compose",
+      "database"
+     ]
+    },
+    {
+     "id": "24",
+     "slug": "registry-and-production-images",
+     "title": "Registry và image để chạy production",
+     "desc": "Registry là kho chứa image để server kéo về. Image chạy production thì nên nhỏ, không chạy bằng root, giới hạn bộ nhớ hợp với JVM, và có tag rõ ràng.",
+     "lab": "server",
+     "needs": [
+      "Dockerfile",
+      "Compose"
+     ]
+    },
+    {
+     "id": "25",
+     "slug": "rebuild-with-containers",
+     "title": "Dựng lại cả hệ thống bằng container",
+     "desc": "Từ một thư mục trống, dựng lại app, database, cache, Nginx bằng Dockerfile và Compose trên server. Xong thì điểm lại những chỗ hay hỏng: port trùng, sai tên host database, xoá container mất dữ liệu, image chạy bằng root, hết bộ nhớ.",
+     "lab": "server",
+     "needs": [
+      "Dockerfile",
+      "Compose",
+      "registry",
+      "Nginx"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "M4",
+   "title": "Git và CI/CD với GitLab",
+   "intro": "Các bước build, đẩy image, deploy giao cho pipeline làm.",
+   "lessons": [
+    {
+     "id": "26",
+     "slug": "git-for-ops",
+     "title": "Git cho người vận hành",
+     "desc": "Developer dùng Git để lưu code, người vận hành dựa vào nó để biết bản nào đang chạy và quay về bản cũ. Nhánh, tag, merge request, revert, và cách đặt nhánh theo môi trường.",
+     "lab": "local",
+     "needs": []
+    },
+    {
+     "id": "27",
+     "slug": "first-pipeline",
+     "title": "Pipeline đầu tiên",
+     "desc": "Build, đẩy image, SSH vào server, kéo về, chạy lại: làm tay mỗi lần sửa code thì chậm và dễ sai. CI/CD để máy chạy các bước đó mỗi lần có commit. GitLab đọc file .gitlab-ci.yml rồi giao job cho runner chạy.",
+     "lab": "gitlab",
+     "needs": [
+      "Git",
+      "image",
+      "registry"
+     ]
+    },
+    {
+     "id": "28",
+     "slug": "build-test-image",
+     "title": "Build, test, đóng image trong pipeline",
+     "desc": "Chia pipeline thành các stage, job hỏng thì dừng. Đóng image và gắn tag theo mã commit để biết image nào ứng với code nào.",
+     "lab": "gitlab",
+     "needs": [
+      "pipeline",
+      "Dockerfile"
+     ]
+    },
+    {
+     "id": "29",
+     "slug": "deploy-environments-rollback",
+     "title": "Deploy tự động, môi trường, rollback",
+     "desc": "Đưa cùng một image qua dev, staging, production, mỗi nơi chỉ khác cấu hình. Bản mới lỗi thì quay về tag cũ.",
+     "lab": "server",
+     "needs": [
+      "pipeline",
+      "registry",
+      "deploy tay"
+     ]
+    },
+    {
+     "id": "30",
+     "slug": "database-migrations",
+     "title": "Migration database trong pipeline",
+     "desc": "Bản mới thường kéo theo đổi bảng. Flyway hay Liquibase ghi mỗi lần đổi thành một file có thứ tự, pipeline chạy chúng trước khi app mới lên. Đổi sao cho bản cũ vẫn chạy được trong lúc chuyển, và làm gì khi migration lỗi giữa chừng.",
+     "lab": "server",
+     "needs": [
+      "pipeline",
+      "deploy tự động",
+      "database"
+     ]
+    },
+    {
+     "id": "31",
+     "slug": "pipeline-secrets",
+     "title": "Secret và an toàn của pipeline",
+     "desc": "Pipeline giữ mật khẩu registry, khoá SSH, token. Cất chúng ở đâu, che khỏi log thế nào, và quét image tìm lỗ hổng đã biết trước khi đẩy lên.",
+     "lab": "gitlab",
+     "needs": [
+      "pipeline",
+      "image"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "M5",
+   "title": "Hạ tầng bằng code và cloud",
+   "intro": "Server, mạng, bản ghi DNS cũng viết thành code để dựng lại được.",
+   "lessons": [
+    {
+     "id": "32",
+     "slug": "infrastructure-as-code",
+     "title": "Hạ tầng là code",
+     "desc": "Server cấu hình bằng tay thì không ai nhớ đã gõ gì, chết là không dựng lại giống được. Viết hạ tầng thành code thì lưu trong git, review được, chạy lại được.",
+     "lab": "reading",
+     "needs": [
+      "deploy tay",
+      "Git"
+     ]
+    },
+    {
+     "id": "33",
+     "slug": "ansible",
+     "title": "Ansible",
+     "desc": "Ansible SSH vào nhiều máy và đưa chúng về trạng thái mô tả trong playbook. Chạy lại bao nhiêu lần cũng ra cùng kết quả, khác với shell script chạy lại có thể làm hỏng. Thực hành trên vài máy ảo hoặc container giả làm máy.",
+     "lab": "local",
+     "needs": [
+      "SSH",
+      "Linux",
+      "shell script"
+     ]
+    },
+    {
+     "id": "34",
+     "slug": "cloud-basics-iam",
+     "title": "Cloud tối thiểu và IAM",
+     "desc": "Cloud cho thuê máy ảo, ổ đĩa, load balancer, kho lưu file theo giờ. Ai và máy nào được làm gì trên tài khoản cloud thì IAM quyết. Tiền tính theo cái gì, và đặt cảnh báo chi tiêu để không bị trừ tiền vì quên tắt máy.",
+     "lab": "cloud",
+     "needs": [
+      "server",
+      "IP",
+      "load balancer"
+     ]
+    },
+    {
+     "id": "35",
+     "slug": "cloud-networking",
+     "title": "Mạng trên cloud: VPC, subnet, NAT, VPN",
+     "desc": "Máy trên cloud nằm trong một mạng riêng (VPC) chia thành các subnet. Máy ở subnet kín ra Internet qua NAT, còn mạng cloud nối về mạng công ty qua VPN.",
+     "lab": "cloud",
+     "needs": [
+      "IP",
+      "mạng riêng",
+      "router",
+      "firewall"
+     ]
+    },
+    {
+     "id": "36",
+     "slug": "terraform",
+     "title": "Terraform",
+     "desc": "Ansible cài phần mềm lên máy có sẵn, còn Terraform tạo chính cái máy, cái mạng, bản ghi DNS từ file mô tả. Nó ghi những gì đã tạo vào file state, sửa file thì nó tính ra phải tạo, sửa, xoá những gì.",
+     "lab": "cloud",
+     "needs": [
+      "cloud",
+      "VPC"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "M6",
+   "title": "Kubernetes",
+   "intro": "Quản container trên nhiều máy.",
+   "lessons": [
+    {
+     "id": "37",
+     "slug": "why-kubernetes",
+     "title": "Vì sao cần Kubernetes",
+     "desc": "Hai server sau load balancer đã chạy được, nhưng vẫn phải tự đặt container lên từng máy, tự bật lại khi chết, tự thêm máy khi đông người. Kubernetes nhận việc đó: bạn nói muốn chạy gì, nó tự đặt lên máy và tự giữ cho đúng như vậy.",
+     "lab": "reading",
+     "needs": [
+      "container",
+      "Compose",
+      "load balancer"
+     ]
+    },
+    {
+     "id": "38",
+     "slug": "first-cluster-pods",
+     "title": "Cụm đầu tiên và Pod",
+     "desc": "Kiếm một cụm để thực hành: chạy cụm nhỏ ngay trên máy (kind, k3s) hoặc dùng cụm miễn phí trên mạng. Cụm gồm máy control plane và các máy worker; bạn viết trạng thái mong muốn bằng YAML, Kubernetes làm cho cụm khớp với nó. Pod là một hoặc vài container chạy chung mạng và ổ đĩa.",
+     "lab": "cluster",
+     "needs": [
+      "container",
+      "YAML"
+     ]
+    },
+    {
+     "id": "39",
+     "slug": "deployments",
+     "title": "Deployment",
+     "desc": "Deployment giữ đủ số pod, pod chết thì tạo lại. Đổi image thì nó thay pod dần dần để web không tắt, lỗi thì quay về bản trước.",
+     "lab": "cluster",
+     "needs": [
+      "Pod"
+     ]
+    },
+    {
+     "id": "40",
+     "slug": "services-and-dns",
+     "title": "Service và DNS trong cụm",
+     "desc": "Pod có IP đổi liên tục. Service cho một nhóm pod một tên và một địa chỉ cố định, DNS trong cụm phân giải tên đó.",
+     "lab": "cluster",
+     "needs": [
+      "Pod",
+      "DNS",
+      "IP và port"
+     ]
+    },
+    {
+     "id": "41",
+     "slug": "ingress",
+     "title": "Ingress",
+     "desc": "Service chỉ gọi được từ trong cụm. Ingress nhận request từ ngoài theo tên miền và path rồi chuyển vào Service, làm việc của reverse proxy bên trong cụm.",
+     "lab": "cluster",
+     "needs": [
+      "Service",
+      "reverse proxy",
+      "HTTPS"
+     ]
+    },
+    {
+     "id": "42",
+     "slug": "configmaps-and-secrets",
+     "title": "ConfigMap và Secret",
+     "desc": "Pod chạy trên máy nào cũng được nên cấu hình không thể nằm trong file của một máy. ConfigMap và Secret giữ cấu hình trong cụm và đưa vào pod bằng biến môi trường hoặc file.",
+     "lab": "cluster",
+     "needs": [
+      "Pod",
+      "Deployment",
+      "biến môi trường"
+     ]
+    },
+    {
+     "id": "43",
+     "slug": "storage",
+     "title": "Lưu trữ: PersistentVolume và StatefulSet",
+     "desc": "Pod chết là ổ đĩa của nó mất theo. PersistentVolume giữ dữ liệu sống lâu hơn pod; StatefulSet cho mỗi pod database một tên cố định và một ổ đĩa riêng.",
+     "lab": "cluster",
+     "needs": [
+      "Pod",
+      "Deployment",
+      "volume"
+     ]
+    },
+    {
+     "id": "44",
+     "slug": "resources-and-probes",
+     "title": "Tài nguyên và probe",
+     "desc": "requests và limits nói pod cần và được dùng bao nhiêu CPU, RAM; vượt RAM thì bị OOMKilled. Probe cho Kubernetes biết pod còn sống không và đã nhận request được chưa. Đọc các trạng thái CrashLoopBackOff, Pending, không Ready.",
+     "lab": "cluster",
+     "needs": [
+      "Pod",
+      "Deployment",
+      "OOM killer"
+     ]
+    },
+    {
+     "id": "45",
+     "slug": "helm",
+     "title": "Helm",
+     "desc": "Một app là nhiều file YAML lặp lại giữa các môi trường. Helm gom chúng thành chart có template và file giá trị, cài, nâng cấp, quay lại bằng một lệnh.",
+     "lab": "cluster",
+     "needs": [
+      "Deployment",
+      "Service",
+      "Ingress",
+      "ConfigMap"
+     ]
+    },
+    {
+     "id": "46",
+     "slug": "namespaces-rbac-networkpolicy",
+     "title": "Namespace, RBAC, NetworkPolicy",
+     "desc": "Nhiều team dùng chung cụm thì phải chia: namespace tách tài nguyên, RBAC quy định ai được làm gì, NetworkPolicy quy định pod nào được gọi pod nào.",
+     "lab": "cluster",
+     "needs": [
+      "Pod",
+      "Service"
+     ]
+    },
+    {
+     "id": "47",
+     "slug": "controllers-crds-operators",
+     "title": "Controller, CRD và operator",
+     "desc": "Deployment tạo lại pod chết là nhờ một controller chạy vòng lặp so trạng thái mong muốn với trạng thái hiện tại. CRD thêm loại tài nguyên mới, operator là controller cho loại đó, ví dụ một operator tự lo PostgreSQL có bản sao và backup.",
+     "lab": "cluster",
+     "needs": [
+      "Deployment",
+      "StatefulSet"
+     ]
+    },
+    {
+     "id": "48",
+     "slug": "rebuild-on-kubernetes",
+     "title": "Dựng lại cả hệ thống trên cụm",
+     "desc": "Đưa app, database, cache lên cụm bằng Helm, có Ingress và HTTPS. Xong thì điểm lại những chỗ hay hỏng: selector không khớp nhãn, image không kéo được, probe gọi sai đường dẫn, thiếu requests, Secret sai tên.",
+     "lab": "cluster",
+     "needs": [
+      "Helm",
+      "Ingress",
+      "StatefulSet",
+      "probe"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "M7",
+   "title": "Quan sát hệ thống",
+   "intro": "Biết hệ thống đang chạy ra sao mà không phải đợi người dùng báo.",
+   "lessons": [
+    {
+     "id": "49",
+     "slug": "metrics",
+     "title": "Metric: Prometheus và Grafana",
+     "desc": "Metric là con số đo theo thời gian: CPU, RAM, số request, độ trễ. Prometheus đi lấy metric từ app và máy, Grafana vẽ thành biểu đồ.",
+     "lab": "cluster",
+     "needs": [
+      "process",
+      "HTTP",
+      "Kubernetes"
+     ]
+    },
+    {
+     "id": "50",
+     "slug": "centralized-logging",
+     "title": "Log tập trung",
+     "desc": "Log nằm rải ở từng pod và mất khi pod chết. Gom log về một chỗ (Loki), ghi log có cấu trúc và có mã request để lọc ra log của một request.",
+     "lab": "cluster",
+     "needs": [
+      "log",
+      "Pod"
+     ]
+    },
+    {
+     "id": "51",
+     "slug": "tracing",
+     "title": "Trace",
+     "desc": "Request đi qua nhiều service thì log và metric ở từng nơi không cho biết chậm ở đâu. Trace ghi từng đoạn request đi qua; OpenTelemetry là chuẩn để gắn trace vào app.",
+     "lab": "cluster",
+     "needs": [
+      "metric",
+      "log",
+      "HTTP"
+     ]
+    },
+    {
+     "id": "52",
+     "slug": "ebpf",
+     "title": "eBPF",
+     "desc": "Trace phải sửa app để gắn vào. eBPF chạy chương trình nhỏ bên trong kernel một cách an toàn, nên thấy được kết nối mạng và lời gọi hệ thống của app mà không sửa app. Nhiều công cụ giám sát và mạng của Kubernetes dựa vào nó.",
+     "lab": "reading",
+     "needs": [
+      "kernel",
+      "syscall",
+      "trace"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "M8",
+   "title": "Nền tảng",
+   "intro": "Nhiều cụm, nhiều team dùng chung.",
+   "lessons": [
+    {
+     "id": "53",
+     "slug": "gitops-argocd",
+     "title": "GitOps với Argo CD",
+     "desc": "Ai cũng apply vào cụm được thì không ai biết cụm đang chạy gì. GitOps để git giữ trạng thái mong muốn của cụm, Argo CD so cụm với git rồi kéo cụm về giống git.",
+     "lab": "cluster",
+     "needs": [
+      "Kubernetes",
+      "Helm",
+      "Git"
+     ]
+    },
+    {
+     "id": "54",
+     "slug": "rancher",
+     "title": "Rancher: quản nhiều cụm",
+     "desc": "Công ty có nhiều cụm cho nhiều môi trường và khách hàng. Rancher gom chúng về một giao diện: tạo cụm, phân quyền theo project, nâng cấp, xem tài nguyên.",
+     "lab": "cluster",
+     "needs": [
+      "Kubernetes",
+      "RBAC",
+      "namespace"
+     ]
+    },
+    {
+     "id": "55",
+     "slug": "openshift",
+     "title": "OpenShift",
+     "desc": "OpenShift là bản Kubernetes của Red Hat. Nó có thêm Route thay cho Ingress, build image ngay trong cụm, và mặc định khoá chặt hơn, ví dụ không cho container chạy bằng root. Đưa một app đang chạy trên Kubernetes sang OpenShift thì vướng ở đâu.",
+     "lab": "cluster",
+     "needs": [
+      "Kubernetes",
+      "Ingress",
+      "RBAC"
+     ]
+    },
+    {
+     "id": "56",
+     "slug": "secret-management",
+     "title": "Secret tập trung",
+     "desc": "Secret của Kubernetes chỉ là base64 và rải ở từng cụm. Vault hay kho secret của cloud giữ mật khẩu ở một chỗ, External Secrets đưa chúng vào cụm, git không chứa mật khẩu nào.",
+     "lab": "cluster",
+     "needs": [
+      "Secret",
+      "GitOps"
+     ]
+    },
+    {
+     "id": "57",
+     "slug": "cluster-security",
+     "title": "Bảo mật cụm: policy và audit",
+     "desc": "RBAC không chặn được container chạy bằng root hay image lạ. Policy (Pod Security, Kyverno) chặn từ lúc tạo, audit log ghi ai đã làm gì trên cụm.",
+     "lab": "cluster",
+     "needs": [
+      "RBAC",
+      "Pod",
+      "image"
+     ]
+    },
+    {
+     "id": "58",
+     "slug": "service-mesh",
+     "title": "Service mesh",
+     "desc": "Mã hoá giữa các service, thử lại khi lỗi, chia lưu lượng sang bản mới, nhìn được ai gọi ai: viết vào từng app thì app nào cũng phải viết. Service mesh đặt một proxy cạnh mỗi pod để hạ tầng lo các việc đó, đổi lại thêm độ trễ và thêm thứ phải vận hành.",
+     "lab": "cluster",
+     "needs": [
+      "Service",
+      "Ingress",
+      "TLS",
+      "trace"
+     ]
+    },
+    {
+     "id": "59",
+     "slug": "developer-platform",
+     "title": "Nền tảng tự phục vụ",
+     "desc": "Mỗi team tự viết Dockerfile, pipeline, Helm chart thì mỗi nơi một kiểu. Nền tảng tự phục vụ là bộ mẫu dựng sẵn (template, pipeline chung, chart chung) để developer tự tạo service theo chuẩn của công ty.",
+     "lab": "cluster",
+     "needs": [
+      "Dockerfile",
+      "pipeline",
+      "Helm",
+      "GitOps"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "M9",
+   "title": "SRE: giữ hệ thống chạy",
+   "intro": "Đặt mức chạy tốt, báo khi lệch, xử lý khi hỏng, và chuẩn bị cho lúc mất hết.",
+   "lessons": [
+    {
+     "id": "60",
+     "slug": "sli-slo-error-budget",
+     "title": "SLI, SLO, error budget",
+     "desc": "Hệ thống nào cũng có lúc hỏng. SLI là con số đo trải nghiệm người dùng, SLO là mức đặt ra cho con số đó, error budget là phần được phép hỏng. Hết budget thì lo ổn định trước, tính năng mới để sau.",
+     "lab": "cluster",
+     "needs": [
+      "metric"
+     ]
+    },
+    {
+     "id": "61",
+     "slug": "alerting-on-call",
+     "title": "Cảnh báo và trực sự cố",
+     "desc": "Cảnh báo theo triệu chứng người dùng thấy và theo SLO, không theo từng con số CPU. Ai trực, báo qua đâu, lúc nào gọi thêm người.",
+     "lab": "cluster",
+     "needs": [
+      "metric",
+      "SLO"
+     ]
+    },
+    {
+     "id": "62",
+     "slug": "incident-postmortem",
+     "title": "Xử lý sự cố và postmortem",
+     "desc": "Khi có sự cố thì khoanh vùng, khôi phục trước, tìm lý do sau. Postmortem ghi lại diễn biến và lý do để sửa hệ thống, không để đổ lỗi cho người.",
+     "lab": "cluster",
+     "needs": [
+      "chẩn đoán theo tầng",
+      "metric",
+      "log",
+      "cảnh báo"
+     ]
+    },
+    {
+     "id": "63",
+     "slug": "databases-in-production",
+     "title": "Database khi chạy production",
+     "desc": "Một máy database chết thì app chết theo. Bản sao (replication), chuyển sang máy dự phòng (failover), connection pool, và tìm truy vấn chậm.",
+     "lab": "server",
+     "needs": [
+      "database",
+      "volume"
+     ]
+    },
+    {
+     "id": "64",
+     "slug": "backup-and-restore",
+     "title": "Backup và khôi phục",
+     "desc": "Backup chỉ có giá trị khi khôi phục được. Backup database và cụm (Velero), thử khôi phục định kỳ, và hai con số RPO, RTO: mất bao nhiêu dữ liệu, dựng lại hết bao lâu.",
+     "lab": "cluster",
+     "needs": [
+      "database",
+      "PersistentVolume",
+      "Kubernetes"
+     ]
+    },
+    {
+     "id": "65",
+     "slug": "multi-region",
+     "title": "Chạy ở nhiều vùng",
+     "desc": "Khôi phục từ backup mất hàng giờ. Chạy ở hai vùng thì một vùng sập vẫn còn vùng kia, đổi lại dữ liệu phải đồng bộ giữa hai nơi và chi phí tăng lên.",
+     "lab": "reading",
+     "needs": [
+      "DNS",
+      "load balancer",
+      "replication",
+      "backup"
+     ]
+    },
+    {
+     "id": "66",
+     "slug": "cost",
+     "title": "Chi phí",
+     "desc": "Mỗi môi trường, mỗi team tốn bao nhiêu tiền cloud, và cắt ở đâu: máy thừa tài nguyên, môi trường dev chạy cả đêm, ổ đĩa không ai dùng.",
+     "lab": "reading",
+     "needs": [
+      "cloud",
+      "requests và limits"
+     ]
+    },
+    {
+     "id": "67",
+     "slug": "capstone",
+     "title": "Tổng kết: dựng lại từ repo trống",
+     "desc": "Dựng lại một hệ thống từ đầu: hạ tầng bằng Terraform, cụm, pipeline, GitOps, giám sát, cảnh báo. Xong thì điểm lại những chỗ hay hỏng ở từng phần.",
+     "lab": "cluster",
+     "needs": [
+      "container",
+      "Kubernetes",
+      "pipeline",
+      "GitOps",
+      "metric",
+      "Terraform"
+     ]
+    }
+   ]
+  }
+ ]
 }

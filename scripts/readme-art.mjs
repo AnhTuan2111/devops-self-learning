@@ -50,31 +50,31 @@ ${body}
   // ---------- Thẻ đầu README: một tấm thẻ dẫn sang bản web ----------
   // Cố ý KHÁC trang chủ của bản web (trang chủ đã có tiêu đề lớn, ba hình số liệu và bức tranh lộ
   // trình): thẻ này chỉ nói ba điều, đang học bài nào, đi được bao xa, và bấm vào đâu để đọc tiếp.
-  function card({ done, total, modules, hoursRange, current, strip }) {
+  function card({ done, total, modules, current, strip }) {
     const W = 1000, H = 300, BAND = 236, X = 240;
     let b = `<rect width="${W}" height="${H}" fill="${C.paper}"/>`;
     // Ấn ký của bài đang học: cùng hình với đầu trang bài đó trên bản web
     if (current) b += `<g transform="translate(28 28) scale(0.48)">${inner(Bauhaus.glyph(current.id))}</g>`;
     b += `<rect x="${X}" y="34" width="12" height="12" fill="${C.red}"/>`;
-    b += `<text class="t" x="${X + 20}" y="45" font-size="17" font-weight="600" fill="${C.ink2}">lộ trình tự học · mở cho mọi người</text>`;
-    b += `<text class="t" x="${X - 4}" y="106" font-size="60" font-weight="800" fill="${C.ink}" letter-spacing="-0.8">devops từ số 0</text>`;
+    b += `<text class="t" x="${X + 20}" y="45" font-size="17" font-weight="600" fill="${C.ink2}">khoá tự học devops và sre</text>`;
+    b += `<text class="t" x="${X - 4}" y="106" font-size="60" font-weight="800" fill="${C.ink}" letter-spacing="-0.8">devops lang băm</text>`;
     const now = current
       ? (current.status === 'doing' ? 'đang học' : 'bài tiếp theo') + ` · bài ${current.id} · ${current.title}`
       : `đã học xong cả ${total} bài`;
     b += `<text class="t" x="${X}" y="142" font-size="19" font-weight="600" fill="${C.ink}">${esc(now)}</text>`;
     // Một dải ô vuông: mỗi bài một ô, cách thêm một khoảng giữa hai module
-    const SQ = 12, GAP = 3, MGAP = 8;
+    const SQ = 8, GAP = 2, MGAP = 7;
     let x = X;
     strip.forEach((mod, mi) => {
       if (mi > 0) x += MGAP;
       mod.forEach((st) => {
         if (st === 'done') b += `<rect x="${x}" y="160" width="${SQ}" height="${SQ}" fill="${C.red}"/>`;
-        else if (st === 'doing') b += `<rect x="${x + 1.5}" y="161.5" width="${SQ - 3}" height="${SQ - 3}" fill="${C.yellow}" stroke="${C.ink}" stroke-width="3"/>`;
+        else if (st === 'doing') b += `<rect x="${x + 1}" y="161" width="${SQ - 2}" height="${SQ - 2}" fill="${C.yellow}" stroke="${C.ink}" stroke-width="2"/>`;
         else b += `<rect x="${x + 0.75}" y="160.75" width="${SQ - 1.5}" height="${SQ - 1.5}" fill="${C.surface}" stroke="${C.ghost}" stroke-width="1.5"/>`;
         x += SQ + GAP;
       });
     });
-    b += `<text class="t" x="${X}" y="204" font-size="16" font-weight="500" fill="${C.ink3}">${done}/${total} bài đã xong · ${modules} module · khoảng ${hoursRange} giờ học</text>`;
+    b += `<text class="t" x="${X}" y="204" font-size="16" font-weight="500" fill="${C.ink3}">${done}/${total} bài đã xong · ${modules} module</text>`;
     // Dải đen: lời mời bấm vào, kèm mũi tên vẽ bằng nét (không dùng ký tự)
     b += `<rect x="0" y="${BAND}" width="${W}" height="${H - BAND}" fill="${C.ink}"/>`;
     b += `<text class="t" x="32" y="${BAND + 41}" font-size="26" font-weight="800" fill="#fff">mở bản web đầy đủ</text>`;
@@ -82,8 +82,8 @@ ${body}
     b += `<path d="M${ax} ${ay}H${ax + 40}M${ax + 28} ${ay - 11}L${ax + 41} ${ay}L${ax + 28} ${ay + 11}" fill="none" stroke="${C.yellow}" stroke-width="5" stroke-linecap="square"/>`;
     b += `<text class="t" x="${W - 32}" y="${BAND + 39}" font-size="18" font-weight="600" fill="${C.yellow}" text-anchor="end">anhtuan2111.github.io/devops-self-learning</text>`;
     const title = current
-      ? `DevOps từ số 0: ${current.status === 'doing' ? 'đang học' : 'bài tiếp theo là'} Bài ${current.id}, đã xong ${done}/${total} bài. Bấm để mở bản web.`
-      : `DevOps từ số 0: đã xong cả ${total} bài. Bấm để mở bản web.`;
+      ? `DevOps lang băm: ${current.status === 'doing' ? 'đang học' : 'bài tiếp theo là'} Bài ${current.id}, đã xong ${done}/${total} bài. Bấm để mở bản web.`
+      : `DevOps lang băm: đã xong cả ${total} bài. Bấm để mở bản web.`;
     return doc({ w: W, h: H, title, fontCss: FULL_FONT, css: `.gn{font-family:'LS','Futura','Arial Black',sans-serif;font-weight:900;font-size:124px;fill:#fff;letter-spacing:-2px}`, body: b });
   }
 

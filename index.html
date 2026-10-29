@@ -2,590 +2,578 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DevOps Self-Learning</title>
-<meta name="description" content="Học DevOps từ số 0 tới thực chiến doanh nghiệp">
-<link rel="stylesheet" href="assets/style.css?v=31a8c472">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3eee4">
+<title>DevOps lang băm: lộ trình</title>
+<meta name="description" content="Khoá tự học DevOps và SRE, 68 bài, 10 module, từ bảy tầng OSI tới Kubernetes, GitOps và vận hành.">
+<link rel="stylesheet" href="assets/home.css?v=cd3da345">
 <link rel="icon" href="assets/favicon.svg">
 </head>
-<body data-lesson="home">
+<body>
+<div class="progress-bar" aria-hidden="true"></div>
 
-<nav class="topbar">
-  <div class="topbar-inner">
-    <a class="home" href="./">devops-self-learning</a>
-    <span class="spacer"></span>
-    <a class="nav" href="#lo-trinh">Lộ trình</a>
-    <a class="nav" href="lessons/04-phong-lab-wsl-docker/">Đang học · 04</a>
+<header class="hero">
+  <div class="hero-text">
+    <h1>devops <span class="hl">lang băm</span></h1>
   </div>
+  <nav class="hero-shapes" aria-label="Mười module">
+    <div class="shape-scroll"><a class="shape-tile" href="#m0" aria-label="M0 Phía sau một cú bấm"><span class="shp s0"></span><b>M0</b></a><a class="shape-tile" href="#m1" aria-label="M1 Một cái máy Linux"><span class="shp s1"></span><b>M1</b></a><a class="shape-tile" href="#m2" aria-label="M2 Server thật, làm bằng tay"><span class="shp s2"></span><b>M2</b></a><a class="shape-tile" href="#m3" aria-label="M3 Container"><span class="shp s3"></span><b>M3</b></a><a class="shape-tile" href="#m4" aria-label="M4 Git và CI/CD với GitLab"><span class="shp s4"></span><b>M4</b></a><a class="shape-tile" href="#m5" aria-label="M5 Hạ tầng bằng code và cloud"><span class="shp s5"></span><b>M5</b></a><a class="shape-tile" href="#m6" aria-label="M6 Kubernetes"><span class="shp s6"></span><b>M6</b></a><a class="shape-tile" href="#m7" aria-label="M7 Quan sát hệ thống"><span class="shp s7"></span><b>M7</b></a><a class="shape-tile" href="#m8" aria-label="M8 Nền tảng"><span class="shp s8"></span><b>M8</b></a><a class="shape-tile" href="#m9" aria-label="M9 SRE: giữ hệ thống chạy"><span class="shp s9"></span><b>M9</b></a></div>
+    <button class="search-btn" type="button" aria-expanded="false" aria-controls="search-drop"><span class="ic-search" aria-hidden="true"></span>tìm</button>
+    <div class="search-drop" id="search-drop" role="search">
+      <input id="search-input" type="search" placeholder="Ví dụ: Pod, DNS, Terraform" aria-label="Tìm bài" autocomplete="off">
+      <output for="search-input" aria-live="polite"></output>
+    </div>
+  </nav>
+</header>
+
+<nav class="strip" aria-label="Cả khoá, mỗi ô một bài">
+  <a class="tile c-blue" href="#lesson-00" data-title="00 · Bấm like trên facebook.com: bảy tầng OSI"><span>00</span></a><a class="tile c-blue" href="#lesson-01" data-title="01 · TCP/IP: Internet chạy thế nào"><span>01</span></a><a class="tile c-blue" href="#lesson-02" data-title="02 · Người làm DevOps nắm chỗ nào trong các tầng"><span>02</span></a><a class="tile c-red" href="#lesson-03" data-title="03 · Server là cái gì: phần cứng, hệ điều hành, process"><span>03</span></a><a class="tile c-red" href="#lesson-04" data-title="04 · Phòng lab: Linux trên máy Windows"><span>04</span></a><a class="tile c-red" href="#lesson-05" data-title="05 · File, user, quyền"><span>05</span></a><a class="tile c-red" href="#lesson-06" data-title="06 · Process, signal, service, log"><span>06</span></a><a class="tile c-red" href="#lesson-07" data-title="07 · Shell script"><span>07</span></a><a class="tile c-red" href="#lesson-08" data-title="08 · Mạng trên một máy: listen, port, firewall"><span>08</span></a><a class="tile c-red" href="#lesson-09" data-title="09 · Server chậm: CPU, RAM, đĩa, mạng"><span>09</span></a><a class="tile c-red" href="#lesson-10" data-title="10 · Chẩn đoán theo tầng"><span>10</span></a><a class="tile c-yellow" href="#lesson-11" data-title="11 · Kiếm một server để thực hành"><span>11</span></a><a class="tile c-yellow" href="#lesson-12" data-title="12 · SSH: điều khiển một máy ở xa"><span>12</span></a><a class="tile c-yellow" href="#lesson-13" data-title="13 · Deploy tay"><span>13</span></a><a class="tile c-yellow" href="#lesson-14" data-title="14 · Nginx"><span>14</span></a><a class="tile c-yellow" href="#lesson-15" data-title="15 · Tên miền và HTTPS"><span>15</span></a><a class="tile c-yellow" href="#lesson-16" data-title="16 · Hai server sau một load balancer"><span>16</span></a><a class="tile c-yellow" href="#lesson-17" data-title="17 · Server để yên ba tháng"><span>17</span></a><a class="tile c-ink" href="#lesson-18" data-title="18 · Container là gì"><span>18</span></a><a class="tile c-ink" href="#lesson-19" data-title="19 · Image và container"><span>19</span></a><a class="tile c-ink" href="#lesson-20" data-title="20 · Dockerfile"><span>20</span></a><a class="tile c-ink" href="#lesson-21" data-title="21 · Network và volume"><span>21</span></a><a class="tile c-ink" href="#lesson-22" data-title="22 · Cấu hình, secret và Compose"><span>22</span></a><a class="tile c-ink" href="#lesson-23" data-title="23 · Cache và message queue"><span>23</span></a><a class="tile c-ink" href="#lesson-24" data-title="24 · Registry và image để chạy production"><span>24</span></a><a class="tile c-ink" href="#lesson-25" data-title="25 · Dựng lại cả hệ thống bằng container"><span>25</span></a><a class="tile c-blue" href="#lesson-26" data-title="26 · Git cho người vận hành"><span>26</span></a><a class="tile c-blue" href="#lesson-27" data-title="27 · Pipeline đầu tiên"><span>27</span></a><a class="tile c-blue" href="#lesson-28" data-title="28 · Build, test, đóng image trong pipeline"><span>28</span></a><a class="tile c-blue" href="#lesson-29" data-title="29 · Deploy tự động, môi trường, rollback"><span>29</span></a><a class="tile c-blue" href="#lesson-30" data-title="30 · Migration database trong pipeline"><span>30</span></a><a class="tile c-blue" href="#lesson-31" data-title="31 · Secret và an toàn của pipeline"><span>31</span></a><a class="tile c-red" href="#lesson-32" data-title="32 · Hạ tầng là code"><span>32</span></a><a class="tile c-red" href="#lesson-33" data-title="33 · Ansible"><span>33</span></a><a class="tile c-red" href="#lesson-34" data-title="34 · Cloud tối thiểu và IAM"><span>34</span></a><a class="tile c-red" href="#lesson-35" data-title="35 · Mạng trên cloud: VPC, subnet, NAT, VPN"><span>35</span></a><a class="tile c-red" href="#lesson-36" data-title="36 · Terraform"><span>36</span></a><a class="tile c-yellow" href="#lesson-37" data-title="37 · Vì sao cần Kubernetes"><span>37</span></a><a class="tile c-yellow" href="#lesson-38" data-title="38 · Cụm đầu tiên và Pod"><span>38</span></a><a class="tile c-yellow" href="#lesson-39" data-title="39 · Deployment"><span>39</span></a><a class="tile c-yellow" href="#lesson-40" data-title="40 · Service và DNS trong cụm"><span>40</span></a><a class="tile c-yellow" href="#lesson-41" data-title="41 · Ingress"><span>41</span></a><a class="tile c-yellow" href="#lesson-42" data-title="42 · ConfigMap và Secret"><span>42</span></a><a class="tile c-yellow" href="#lesson-43" data-title="43 · Lưu trữ: PersistentVolume và StatefulSet"><span>43</span></a><a class="tile c-yellow" href="#lesson-44" data-title="44 · Tài nguyên và probe"><span>44</span></a><a class="tile c-yellow" href="#lesson-45" data-title="45 · Helm"><span>45</span></a><a class="tile c-yellow" href="#lesson-46" data-title="46 · Namespace, RBAC, NetworkPolicy"><span>46</span></a><a class="tile c-yellow" href="#lesson-47" data-title="47 · Controller, CRD và operator"><span>47</span></a><a class="tile c-yellow" href="#lesson-48" data-title="48 · Dựng lại cả hệ thống trên cụm"><span>48</span></a><a class="tile c-ink" href="#lesson-49" data-title="49 · Metric: Prometheus và Grafana"><span>49</span></a><a class="tile c-ink" href="#lesson-50" data-title="50 · Log tập trung"><span>50</span></a><a class="tile c-ink" href="#lesson-51" data-title="51 · Trace"><span>51</span></a><a class="tile c-ink" href="#lesson-52" data-title="52 · eBPF"><span>52</span></a><a class="tile c-blue" href="#lesson-53" data-title="53 · GitOps với Argo CD"><span>53</span></a><a class="tile c-blue" href="#lesson-54" data-title="54 · Rancher: quản nhiều cụm"><span>54</span></a><a class="tile c-blue" href="#lesson-55" data-title="55 · OpenShift"><span>55</span></a><a class="tile c-blue" href="#lesson-56" data-title="56 · Secret tập trung"><span>56</span></a><a class="tile c-blue" href="#lesson-57" data-title="57 · Bảo mật cụm: policy và audit"><span>57</span></a><a class="tile c-blue" href="#lesson-58" data-title="58 · Service mesh"><span>58</span></a><a class="tile c-blue" href="#lesson-59" data-title="59 · Nền tảng tự phục vụ"><span>59</span></a><a class="tile c-red" href="#lesson-60" data-title="60 · SLI, SLO, error budget"><span>60</span></a><a class="tile c-red" href="#lesson-61" data-title="61 · Cảnh báo và trực sự cố"><span>61</span></a><a class="tile c-red" href="#lesson-62" data-title="62 · Xử lý sự cố và postmortem"><span>62</span></a><a class="tile c-red" href="#lesson-63" data-title="63 · Database khi chạy production"><span>63</span></a><a class="tile c-red" href="#lesson-64" data-title="64 · Backup và khôi phục"><span>64</span></a><a class="tile c-red" href="#lesson-65" data-title="65 · Chạy ở nhiều vùng"><span>65</span></a><a class="tile c-red" href="#lesson-66" data-title="66 · Chi phí"><span>66</span></a><a class="tile c-red" href="#lesson-67" data-title="67 · Tổng kết: dựng lại từ repo trống"><span>67</span></a>
 </nav>
 
-<div class="wrap-wide">
-
-  <header class="home-hero">
-    <div>
-      <p class="eyebrow">Lộ trình tự học · mở cho mọi người</p>
-      <h1>DevOps<br><span class="hl">từ số 0</span></h1>
-      <p class="route"><span>chưa biết gì về hạ tầng</span><i class="ic ic-r arrow" aria-hidden="true"></i><span>tự deploy lên Kubernetes</span></p>
-      <p class="lede">DevOps là cách làm để chính người viết code đưa được nó lên server, giữ nó chạy ổn, và tìm ra lỗi khi nó hỏng. Học theo thứ tự; bài nào cũng có lý thuyết, một bài lab chạy
-      thật và những lỗi hay gặp.</p>
-      <div class="meta">
-        <span class="chip ink">Spring Boot + PostgreSQL + Docker + GitLab CI + Kubernetes + Rancher + Argo CD</span>
-      </div>
+<div class="main-grid">
+  <aside class="toc">
+    <p class="toc-title">module</p>
+    <ol><li><a class="c-blue" href="#m0"><span class="shp s0"></span><span class="toc-name">Phía sau một cú bấm</span><span class="toc-range">00-02</span></a></li><li><a class="c-red" href="#m1"><span class="shp s1"></span><span class="toc-name">Một cái máy Linux</span><span class="toc-range">03-10</span></a></li><li><a class="c-yellow" href="#m2"><span class="shp s2"></span><span class="toc-name">Server thật, làm bằng tay</span><span class="toc-range">11-17</span></a></li><li><a class="c-ink" href="#m3"><span class="shp s3"></span><span class="toc-name">Container</span><span class="toc-range">18-25</span></a></li><li><a class="c-blue" href="#m4"><span class="shp s4"></span><span class="toc-name">Git và CI/CD với GitLab</span><span class="toc-range">26-31</span></a></li><li><a class="c-red" href="#m5"><span class="shp s5"></span><span class="toc-name">Hạ tầng bằng code và cloud</span><span class="toc-range">32-36</span></a></li><li><a class="c-yellow" href="#m6"><span class="shp s6"></span><span class="toc-name">Kubernetes</span><span class="toc-range">37-48</span></a></li><li><a class="c-ink" href="#m7"><span class="shp s7"></span><span class="toc-name">Quan sát hệ thống</span><span class="toc-range">49-52</span></a></li><li><a class="c-blue" href="#m8"><span class="shp s8"></span><span class="toc-name">Nền tảng</span><span class="toc-range">53-59</span></a></li><li><a class="c-red" href="#m9"><span class="shp s9"></span><span class="toc-name">SRE: giữ hệ thống chạy</span><span class="toc-range">60-67</span></a></li></ol>
+  </aside>
+  <main>
+    <div class="filter" role="search">
+      <label for="filter-input">tìm bài</label>
+      <input id="filter-input" type="search" placeholder="Ví dụ: Pod, DNS, Terraform" autocomplete="off">
+      <output for="filter-input" aria-live="polite"></output>
     </div>
-    <div class="hh-stats" role="img" aria-label="Đã xong 4 trên 42 bài; khoảng 171 tới 269 giờ học; 6 module">
-      <div class="st st-c"><b>04<small>/42</small></b><small>bài đã xong</small></div>
-      <div class="st st-s"><b>~220</b><small>giờ học</small></div>
-      <div class="st st-t"><b>6</b><small>module</small></div>
-    </div>
-  </header>
-
-  <p class="toolstrip"><span class="lbl">công cụ sẽ gặp</span><span class="t">Linux</span><span class="t">Bash</span><span class="t">Docker</span><span class="t">Docker Compose</span><span class="t">PostgreSQL</span><span class="t">Spring Boot</span><span class="t">SSH</span><span class="t">Nginx</span><span class="t">Let's Encrypt</span><span class="t">GitLab CI</span><span class="t">Kubernetes</span><span class="t">Helm</span><span class="t">cert-manager</span><span class="t">Rancher</span><span class="t">Prometheus</span><span class="t">Grafana</span></p>
-
-  <section class="roadmap" aria-labelledby="roadmap-title">
-    <div class="roadmap-head">
-      <h2 id="roadmap-title">Lộ trình sáu module</h2>
-      <span class="chip">lý thuyết · lab · lỗi thật</span>
-      <span class="chip ink since">từ 21/09/2026</span>
-    </div>
-    <div class="roadmap-body">
-      <div class="roadmap-count">
-        <div class="n">04<small>/42</small></div>
-        <div class="lbl">bài đã xong</div>
-        <a class="chip yellow" href="lessons/04-phong-lab-wsl-docker/"><i class="stt stt-doing" aria-hidden="true"></i>Đang học: Bài 04 <i class="ic ic-r" aria-hidden="true"></i></a>
-      </div>
-      <div>
-        <p class="poster-legend"><span><i class="lg-todo"></i>chưa học: chỉ còn nét</span><span><i class="lg-done"></i>học xong: ô được tô màu</span><span><i class="lg-doing"></i>đang học: khung đen</span></p>
-        <ol class="poster">
-        <li class="prow">
-          <a class="phead" href="#M0"><span class="shp s-0">0</span><span class="nm">Nền tảng tối thiểu</span><span class="ct">4/5</span></a>
-          <span class="ptiles"><a class="ptile done" href="lessons/00-ban-do-toan-canh/" title="Bài 00 · Bản đồ toàn cảnh: một request đi qua chín chặng, đã xong" aria-label="Bài 00 · Bản đồ toàn cảnh: một request đi qua chín chặng, đã xong"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-yellow"/><rect x="0" y="12" width="100" height="16" class="f f-ink"/><rect x="0" y="42" width="100" height="16" class="f f-ink"/><rect x="0" y="72" width="100" height="16" class="f f-ink"/></svg></a><a class="ptile done" href="lessons/01-ip-port-listen-firewall/" title="Bài 01 · IP, port, listen, firewall: vì sao gọi không tới, đã xong" aria-label="Bài 01 · IP, port, listen, firewall: vì sao gọi không tới, đã xong"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(270 50 50)"><path d="M0 100V0A100 100 0 0 1 100 100Z" class="f f-red"/></g></svg></a><a class="ptile done" href="lessons/02-chan-doan-theo-chang/" title="Bài 02 · Chẩn đoán theo chặng: nhìn lỗi biết chỗ hỏng, đã xong" aria-label="Bài 02 · Chẩn đoán theo chặng: nhìn lỗi biết chỗ hỏng, đã xong"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(270 50 50)"><rect x="22" y="22" width="56" height="56" class="f f-red"/></g></svg></a><a class="ptile done" href="lessons/03-may-tinh-va-he-dieu-hanh/" title="Bài 03 · Máy tính, Hệ điều hành, Process: 'server' là cái gì, đã xong" aria-label="Bài 03 · Máy tính, Hệ điều hành, Process: 'server' là cái gì, đã xong"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><g transform="rotate(90 50 50)"><path d="M0 0L100 100H0Z" class="f f-paper"/></g></svg></a><a class="ptile doing" href="lessons/04-phong-lab-wsl-docker/" title="Bài 04 · Phòng lab Linux: thấy tận mắt những gì Bài 03 mới kể, đang học" aria-label="Bài 04 · Phòng lab Linux: thấy tận mắt những gì Bài 03 mới kể, đang học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-yellow"/><path d="M50 0L100 50L50 100L0 50Z" class="f f-red"/></svg></a></span>
-        </li>
-        <li class="prow">
-          <a class="phead" href="#M1"><span class="shp s-1">1</span><span class="nm">Docker</span><span class="ct">0/10</span></a>
-          <span class="ptiles"><span class="ptile todo" title="Bài 05 · Container đầu tiên: có PostgreSQL mà không phải cài, chưa học" aria-label="Bài 05 · Container đầu tiên: có PostgreSQL mà không phải cài, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-blue"/><g transform="rotate(270 50 50)"><path d="M50 0L100 50L50 100L0 50Z" class="f f-yellow"/></g></svg></span><span class="ptile todo" title="Bài 06 · Gọi được vào container: publish port, chưa học" aria-label="Bài 06 · Gọi được vào container: publish port, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-blue"/><g transform="rotate(270 50 50)"><rect x="0" y="12" width="100" height="16" class="f f-red"/><rect x="0" y="42" width="100" height="16" class="f f-red"/><rect x="0" y="72" width="100" height="16" class="f f-red"/></g></svg></span><span class="ptile todo" title="Bài 07 · Dockerfile: đóng app của mình thành image, chưa học" aria-label="Bài 07 · Dockerfile: đóng app của mình thành image, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-red"/><rect x="22" y="22" width="56" height="56" class="f f-yellow"/></svg></span><span class="ptile todo" title="Bài 08 · Hai container gọi nhau: network và tên, chưa học" aria-label="Bài 08 · Hai container gọi nhau: network và tên, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><g transform="rotate(180 50 50)"><rect x="0" y="12" width="100" height="16" class="f f-yellow"/><rect x="0" y="42" width="100" height="16" class="f f-yellow"/><rect x="0" y="72" width="100" height="16" class="f f-yellow"/></g></svg></span><span class="ptile todo" title="Bài 09 · Dữ liệu sống lâu hơn container: volume và backup, chưa học" aria-label="Bài 09 · Dữ liệu sống lâu hơn container: volume và backup, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(180 50 50)"><circle cx="50" cy="50" r="50" class="f f-red"/></g></svg></span><span class="ptile todo" title="Bài 10 · Một image, nhiều môi trường: cấu hình và secret, chưa học" aria-label="Bài 10 · Một image, nhiều môi trường: cấu hình và secret, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><rect x="0" y="12" width="100" height="16" class="f f-paper"/><rect x="0" y="42" width="100" height="16" class="f f-paper"/><rect x="0" y="72" width="100" height="16" class="f f-paper"/></svg></span><span class="ptile todo" title="Bài 11 · Compose: cả hệ thống trong một file, chưa học" aria-label="Bài 11 · Compose: cả hệ thống trong một file, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><circle cx="50" cy="50" r="33" stroke-width="16" class="r r-ink"/></svg></span><span class="ptile todo" title="Bài 12 · Container sống, chết và để lại gì: signal, restart, log, chưa học" aria-label="Bài 12 · Container sống, chết và để lại gì: signal, restart, log, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(180 50 50)"><rect x="0" y="12" width="100" height="16" class="f f-red"/><rect x="0" y="42" width="100" height="16" class="f f-red"/><rect x="0" y="72" width="100" height="16" class="f f-red"/></g></svg></span><span class="ptile todo" title="Bài 13 · Image đủ tốt để lên server: nhỏ, không root, vừa bộ nhớ, chưa học" aria-label="Bài 13 · Image đủ tốt để lên server: nhỏ, không root, vừa bộ nhớ, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(270 50 50)"><circle cx="50" cy="50" r="24" class="f f-blue"/></g></svg></span><span class="ptile todo" title="Bài 14 · Trạm kiểm tra Docker: dựng lại từ thư mục trống, rồi tìm năm chỗ hỏng, chưa học" aria-label="Bài 14 · Trạm kiểm tra Docker: dựng lại từ thư mục trống, rồi tìm năm chỗ hỏng, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><g transform="rotate(180 50 50)"><circle cx="50" cy="50" r="50" class="f f-red"/></g></svg></span></span>
-        </li>
-        <li class="prow">
-          <a class="phead" href="#M2"><span class="shp s-2">2</span><span class="nm">Server thật</span><span class="ct">0/5</span></a>
-          <span class="ptiles"><span class="ptile todo" title="Bài 15 · Một máy bật suốt: server và SSH, chưa học" aria-label="Bài 15 · Một máy bật suốt: server và SSH, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-red"/><circle cx="50" cy="50" r="24" class="f f-ink"/></svg></span><span class="ptile todo" title="Bài 16 · Deploy tay lần đầu: image tới server bằng đường nào, chưa học" aria-label="Bài 16 · Deploy tay lần đầu: image tới server bằng đường nào, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><g transform="rotate(90 50 50)"><circle cx="50" cy="50" r="50" class="f f-red"/></g></svg></span><span class="ptile todo" title="Bài 17 · Server để yên ba tháng: khởi động lại, đầy đĩa, hết RAM, chưa học" aria-label="Bài 17 · Server để yên ba tháng: khởi động lại, đầy đĩa, hết RAM, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><g transform="rotate(90 50 50)"><circle cx="50" cy="50" r="24" class="f f-paper"/></g></svg></span><span class="ptile todo" title="Bài 18 · Nginx đứng trước app, chưa học" aria-label="Bài 18 · Nginx đứng trước app, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><circle cx="50" cy="50" r="24" class="f f-yellow"/></svg></span><span class="ptile todo" title="Bài 19 · Tên miền và HTTPS tự gia hạn, chưa học" aria-label="Bài 19 · Tên miền và HTTPS tự gia hạn, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(180 50 50)"><path d="M16 100V50A34 34 0 0 1 84 50V100Z" class="f f-red"/></g></svg></span></span>
-        </li>
-        <li class="prow">
-          <a class="phead" href="#M3"><span class="shp s-3">3</span><span class="nm">CI/CD với GitLab</span><span class="ct">0/4</span></a>
-          <span class="ptiles"><span class="ptile todo" title="Bài 20 · Từ runbook tới pipeline đầu tiên, chưa học" aria-label="Bài 20 · Từ runbook tới pipeline đầu tiên, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-red"/><circle cx="50" cy="50" r="50" class="f f-yellow"/></svg></span><span class="ptile todo" title="Bài 21 · Pipeline nhanh và đáng tin: cache, database cho test, chặn merge, chưa học" aria-label="Bài 21 · Pipeline nhanh và đáng tin: cache, database cho test, chặn merge, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(270 50 50)"><path d="M0 100A50 50 0 0 1 100 100Z" class="f f-blue"/></g></svg></span><span class="ptile todo" title="Bài 22 · Pipeline tự đóng image, chưa học" aria-label="Bài 22 · Pipeline tự đóng image, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-blue"/><g transform="rotate(270 50 50)"><path d="M16 100V50A34 34 0 0 1 84 50V100Z" class="f f-red"/></g></svg></span><span class="ptile todo" title="Bài 23 · Pipeline tự deploy, và quay lại bản cũ, chưa học" aria-label="Bài 23 · Pipeline tự deploy, và quay lại bản cũ, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(180 50 50)"><rect x="0" y="12" width="100" height="16" class="f f-yellow"/><rect x="0" y="42" width="100" height="16" class="f f-yellow"/><rect x="0" y="72" width="100" height="16" class="f f-yellow"/></g></svg></span></span>
-        </li>
-        <li class="prow">
-          <a class="phead" href="#M4"><span class="shp s-4">4</span><span class="nm">Kubernetes</span><span class="ct">0/10</span></a>
-          <span class="ptiles"><span class="ptile todo" title="Bài 24 · Khi một server không đủ: cụm đầu tiên, chưa học" aria-label="Bài 24 · Khi một server không đủ: cụm đầu tiên, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(270 50 50)"><circle cx="50" cy="50" r="50" class="f f-ink"/></g></svg></span><span class="ptile todo" title="Bài 25 · Pod và Deployment: ba bản app, chết thì tự sinh lại, chưa học" aria-label="Bài 25 · Pod và Deployment: ba bản app, chết thì tự sinh lại, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(90 50 50)"><path d="M0 100A50 50 0 0 1 100 100Z" class="f f-ink"/></g></svg></span><span class="ptile todo" title="Bài 26 · Service: một cái tên đứng trước các pod, chưa học" aria-label="Bài 26 · Service: một cái tên đứng trước các pod, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-red"/><g transform="rotate(90 50 50)"><path d="M0 0L100 100H0Z" class="f f-blue"/></g></svg></span><span class="ptile todo" title="Bài 27 · ConfigMap và Secret, chưa học" aria-label="Bài 27 · ConfigMap và Secret, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><circle cx="50" cy="50" r="24" class="f f-blue"/></svg></span><span class="ptile todo" title="Bài 28 · Probe: Running chưa phải sẵn sàng, chưa học" aria-label="Bài 28 · Probe: Running chưa phải sẵn sàng, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-blue"/><g transform="rotate(90 50 50)"><path d="M0 0L100 100H0Z" class="f f-yellow"/></g></svg></span><span class="ptile todo" title="Bài 29 · Requests và limits: chia tài nguyên của node, chưa học" aria-label="Bài 29 · Requests và limits: chia tài nguyên của node, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(180 50 50)"><path d="M0 100V0A100 100 0 0 1 100 100Z" class="f f-ink"/></g></svg></span><span class="ptile todo" title="Bài 30 · Dữ liệu trong cụm: PVC, StatefulSet, backup theo lịch, chưa học" aria-label="Bài 30 · Dữ liệu trong cụm: PVC, StatefulSet, backup theo lịch, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-red"/><g transform="rotate(90 50 50)"><circle cx="50" cy="50" r="50" class="f f-paper"/></g></svg></span><span class="ptile todo" title="Bài 31 · Ingress và HTTPS trong cụm, chưa học" aria-label="Bài 31 · Ingress và HTTPS trong cụm, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-blue"/><g transform="rotate(270 50 50)"><circle cx="50" cy="50" r="33" stroke-width="16" class="r r-red"/></g></svg></span><span class="ptile todo" title="Bài 32 · Trạm kiểm tra Kubernetes: sáu kiểu pod hỏng, chưa học" aria-label="Bài 32 · Trạm kiểm tra Kubernetes: sáu kiểu pod hỏng, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(180 50 50)"><circle cx="50" cy="50" r="24" class="f f-red"/></g></svg></span><span class="ptile todo" title="Bài 33 · Helm: một bộ manifest, nhiều môi trường, chưa học" aria-label="Bài 33 · Helm: một bộ manifest, nhiều môi trường, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(180 50 50)"><circle cx="50" cy="50" r="50" class="f f-yellow"/></g></svg></span></span>
-        </li>
-        <li class="prow">
-          <a class="phead" href="#M5"><span class="shp s-5">5</span><span class="nm">Rancher và vận hành</span><span class="ct">0/8</span></a>
-          <span class="ptiles"><span class="ptile todo" title="Bài 34 · Rancher và OpenShift: nhiều người, nhiều cụm, chưa học" aria-label="Bài 34 · Rancher và OpenShift: nhiều người, nhiều cụm, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><path d="M0 0A100 100 0 0 0 100 100A100 100 0 0 0 0 0Z" class="f f-red"/></svg></span><span class="ptile todo" title="Bài 35 · Pipeline deploy lên cụm, chưa học" aria-label="Bài 35 · Pipeline deploy lên cụm, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><path d="M0 0L100 100H0Z" class="f f-yellow"/></svg></span><span class="ptile todo" title="Bài 36 · GitOps với Argo CD: cụm tự kéo từ Git, chưa học" aria-label="Bài 36 · GitOps với Argo CD: cụm tự kéo từ Git, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(180 50 50)"><path d="M50 0L100 50L50 100L0 50Z" class="f f-red"/></g></svg></span><span class="ptile todo" title="Bài 37 · Metric: biết hệ thống yếu đi trước người dùng, chưa học" aria-label="Bài 37 · Metric: biết hệ thống yếu đi trước người dùng, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><g transform="rotate(90 50 50)"><path d="M0 100A50 50 0 0 1 100 100Z" class="f f-blue"/></g></svg></span><span class="ptile todo" title="Bài 38 · Log tập trung: tìm lại chuyện của ba ngày trước, chưa học" aria-label="Bài 38 · Log tập trung: tìm lại chuyện của ba ngày trước, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(90 50 50)"><circle cx="50" cy="50" r="33" stroke-width="16" class="r r-red"/></g></svg></span><span class="ptile todo" title="Bài 39 · Cảnh báo: máy gọi người, chưa học" aria-label="Bài 39 · Cảnh báo: máy gọi người, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><path d="M0 100A50 50 0 0 1 100 100Z" class="f f-blue"/></svg></span><span class="ptile todo" title="Bài 40 · Khi mọi thứ đang cháy: xử lý sự cố theo bản đồ, chưa học" aria-label="Bài 40 · Khi mọi thứ đang cháy: xử lý sự cố theo bản đồ, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-ink"/><g transform="rotate(270 50 50)"><path d="M16 100V50A34 34 0 0 1 84 50V100Z" class="f f-blue"/></g></svg></span><span class="ptile todo" title="Bài 41 · Tổng kết: dựng lại tất cả từ một repo trống, chưa học" aria-label="Bài 41 · Tổng kết: dựng lại tất cả từ một repo trống, chưa học"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="0" y="0" width="100" height="100" class="b b-paper"/><g transform="rotate(90 50 50)"><path d="M0 100V0A100 100 0 0 1 100 100Z" class="f f-blue"/></g></svg></span></span>
-        </li>
-        </ol>
-      </div>
-    </div>
-    <div class="roadmap-foot">
-      <span>6 module · 42 bài</span>
-      <span>Windows 11 + WSL2 Ubuntu + Docker Desktop</span>
-    </div>
-  </section>
-
-  <main class="tabs" data-tabs="Các phần của trang chủ">
-
-  <section class="tab" id="lo-trinh" data-tab="Lộ trình" data-note="6 module · 42 bài">
-    <div class="callout ok">
-      <span class="label">Đích đến</span>
-      <p>Có đủ hành trang để làm DevOps thực chiến ở doanh nghiệp: tự đóng gói, deploy, vận hành và xử lý sự cố một hệ thống chạy trên Kubernetes.</p>
-    </div>
-    <section class="module" id="M0">
-      <div class="module-head">
-        <span class="module-id shp s-0">M0</span>
-        <h2>Nền tảng tối thiểu: Request, process và phòng lab</h2>
-        <span class="chip">4/5 xong</span>
-      </div>
-      <p class="module-why">Vừa đủ nền để Docker có nghĩa: một request đi qua những đâu, process là gì, và một máy Linux để thực hành.</p>
-      <div class="lesson-list">
-        <a class="lesson done" href="lessons/00-ban-do-toan-canh/">
-          <span class="num">00</span>
-          <span class="txt">
-            <span class="title">Bản đồ toàn cảnh: một request đi qua chín chặng</span>
-            <span class="sub">Từ lúc gõ một địa chỉ vào trình duyệt tới lúc code Spring Boot của bạn chạy, request đi qua những chặng nào, và chặng nào thật sự là code của bạn? · 3-5 giờ · học 24/09/2026</span>
-          </span>
-          <span class="status chip lime"><i class="stt stt-done" aria-hidden="true"></i>Xong</span>
-        </a>
-        <a class="lesson done" href="lessons/01-ip-port-listen-firewall/">
-          <span class="num">01</span>
-          <span class="txt">
-            <span class="title">IP, port, listen, firewall: vì sao gọi không tới</span>
-            <span class="sub">App chạy bình thường khi gọi bằng localhost:8080 trên chính máy mình, nhưng người khác gọi vào thì không được. Chặng mở kết nối hỏng ở đâu? · 3-5 giờ · học 24/09/2026</span>
-          </span>
-          <span class="status chip lime"><i class="stt stt-done" aria-hidden="true"></i>Xong</span>
-        </a>
-        <a class="lesson done" href="lessons/02-chan-doan-theo-chang/">
-          <span class="num">02</span>
-          <span class="txt">
-            <span class="title">Chẩn đoán theo chặng: nhìn lỗi biết chỗ hỏng</span>
-            <span class="sub">Kết nối tới được rồi mà trang vẫn báo 502, 500 hay 504. Lỗi đó do ai viết ra, và nó cho biết chặng nào đang hỏng? · 3-5 giờ · học 24/09/2026</span>
-          </span>
-          <span class="status chip lime"><i class="stt stt-done" aria-hidden="true"></i>Xong</span>
-        </a>
-        <a class="lesson done" href="lessons/03-may-tinh-va-he-dieu-hanh/">
-          <span class="num">03</span>
-          <span class="txt">
-            <span class="title">Máy tính, Hệ điều hành, Process: 'server' là cái gì</span>
-            <span class="sub">502 nghĩa là phía sau Nginx không còn ai trả lời. Nhưng &quot;app&quot; là gì trên một máy chủ, vì sao nó có thể chết, và vì sao nó chết thì website sập? · 5-8 giờ · học 03/10/2026</span>
-          </span>
-          <span class="status chip lime"><i class="stt stt-done" aria-hidden="true"></i>Xong</span>
-        </a>
-        <a class="lesson doing" href="lessons/04-phong-lab-wsl-docker/">
-          <span class="num">04</span>
-          <span class="txt">
-            <span class="title">Phòng lab Linux: thấy tận mắt những gì Bài 03 mới kể</span>
-            <span class="sub">Server thật chạy Linux, còn mọi lab tới giờ chạy trên Windows. Làm sao có một máy Linux thật ngay trên máy mình, để thấy process, signal và lỗi đúng như trên server? · 3-5 giờ · học 03/10/2026</span>
-          </span>
-          <span class="status chip yellow"><i class="stt stt-doing" aria-hidden="true"></i>Đang học</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="module" id="M1">
-      <div class="module-head">
-        <span class="module-id shp s-1">M1</span>
-        <h2>Docker: Đóng gói và chạy ứng dụng</h2>
-        <span class="chip">0/10 xong</span>
-      </div>
-      <p class="module-why">Đóng gói và chạy ứng dụng bằng Docker. Phần Linux và mạng cần tới được dạy ngay trong bài cần nó.</p>
-      <div class="lesson-list">
-        <div class="lesson todo">
-          <span class="num">05</span>
-          <span class="txt">
-            <span class="title">Container đầu tiên: có PostgreSQL mà không phải cài</span>
-            <span class="sub">App mẫu cần PostgreSQL, mà cài tay thì lâu và mỗi máy mỗi khác. Có cách nào chạy PostgreSQL mà không phải cài nó không? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">06</span>
-          <span class="txt">
-            <span class="title">Gọi được vào container: publish port</span>
-            <span class="sub">PostgreSQL đang chạy trong container, có process đang listen 5432, mà từ máy mình gọi localhost:5432 vẫn bị từ chối. Vì sao? · 3-5 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">07</span>
-          <span class="txt">
-            <span class="title">Dockerfile: đóng app của mình thành image</span>
-            <span class="sub">Database đã chạy bằng một lệnh, còn app thì vẫn phải cài Java và chạy tay trên từng máy. Làm sao app của mình cũng chạy được bằng một lệnh như PostgreSQL? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">08</span>
-          <span class="txt">
-            <span class="title">Hai container gọi nhau: network và tên</span>
-            <span class="sub">Chạy ngoài container thì app gọi localhost:5432 được, vào container thì bị từ chối. Vì sao cùng một địa chỉ mà lúc được lúc không? · 3-5 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">09</span>
-          <span class="txt">
-            <span class="title">Dữ liệu sống lâu hơn container: volume và backup</span>
-            <span class="sub">Tạo lại container database là dữ liệu mất sạch. Vì sao xoá container lại mất dữ liệu, và để nó ở đâu thì không mất? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">10</span>
-          <span class="txt">
-            <span class="title">Một image, nhiều môi trường: cấu hình và secret</span>
-            <span class="sub">Mật khẩu database nằm trong lệnh docker run, địa chỉ database ghi cứng trong app, mà máy dev và server sẽ cần giá trị khác nhau. Cùng một image thì đưa giá trị vào bằng đường nào? · 3-5 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">11</span>
-          <span class="txt">
-            <span class="title">Compose: cả hệ thống trong một file</span>
-            <span class="sub">Muốn dựng lại hệ thống phải gõ đúng thứ tự bốn lệnh dài. Làm sao dựng lại tất cả bằng một lệnh? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">12</span>
-          <span class="txt">
-            <span class="title">Container sống, chết và để lại gì: signal, restart, log</span>
-            <span class="sub">docker compose down mất mười giây mới xong, vậy request đang xử lý thì sao? Nửa đêm app chết thì ai dựng? Log của nó nằm ở đâu? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">13</span>
-          <span class="txt">
-            <span class="title">Image đủ tốt để lên server: nhỏ, không root, vừa bộ nhớ</span>
-            <span class="sub">Image nặng hơn nửa GB, process bên trong chạy bằng root, và đặt giới hạn RAM thì app bị giết với con số 137. Sửa ba chỗ đó bằng gì? · 5-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">14</span>
-          <span class="txt">
-            <span class="title">Trạm kiểm tra Docker: dựng lại từ thư mục trống, rồi tìm năm chỗ hỏng</span>
-            <span class="sub">Chín bài, chín mảnh. Nếu xoá hết, dựng lại, rồi có một thứ hỏng mà không ai nói thứ nào, bạn có tìm ra không? · 4-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="module" id="M2">
-      <div class="module-head">
-        <span class="module-id shp s-2">M2</span>
-        <h2>Server thật: Deploy lên một máy Linux thật</h2>
-        <span class="chip">0/5 xong</span>
-      </div>
-      <p class="module-why">Tự tay đưa ứng dụng lên một server thật một lần, để biết các module sau đang tự động hoá những gì.</p>
-      <div class="lesson-list">
-        <div class="lesson todo">
-          <span class="num">15</span>
-          <span class="txt">
-            <span class="title">Một máy bật suốt: server và SSH</span>
-            <span class="sub">Hệ thống chỉ sống trên laptop, tắt máy là tắt web, và ngoài Internet không ai gọi tới được. Cần gì để người khác vào được? · 3-5 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">16</span>
-          <span class="txt">
-            <span class="title">Deploy tay lần đầu: image tới server bằng đường nào</span>
-            <span class="sub">Server mới tinh, có Docker nhưng không có image của app, vì image chỉ nằm trên laptop. Image tới server bằng đường nào? · 5-8 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">17</span>
-          <span class="txt">
-            <span class="title">Server để yên ba tháng: khởi động lại, đầy đĩa, hết RAM</span>
-            <span class="sub">Hệ thống đã chạy trên server. Bài 02 nói hệ thống có thể hỏng mà không ai đụng vào. Để yên ba tháng thì cái gì hỏng trước? · 4-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">18</span>
-          <span class="txt">
-            <span class="title">Nginx đứng trước app</span>
-            <span class="sub">Người dùng đang phải gõ địa chỉ IP kèm :8080, app nhận thẳng kết nối từ Internet, và app thứ hai trên server này sẽ tranh port. Sửa bằng gì? · 5-8 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">19</span>
-          <span class="txt">
-            <span class="title">Tên miền và HTTPS tự gia hạn</span>
-            <span class="sub">Địa chỉ vẫn là http:// kèm IP, trình duyệt ghi Không an toàn, và ai đứng giữa đường cũng đọc được dữ liệu. Còn thiếu gì? · 5-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="module" id="M3">
-      <div class="module-head">
-        <span class="module-id shp s-3">M3</span>
-        <h2>CI/CD với GitLab: Từ git push tới server</h2>
-        <span class="chip">0/4 xong</span>
-      </div>
-      <p class="module-why">Tự động hoá bằng GitLab CI đúng những bước vừa làm tay ở module trước.</p>
-      <div class="lesson-list">
-        <div class="lesson todo">
-          <span class="num">20</span>
-          <span class="txt">
-            <span class="title">Từ runbook tới pipeline đầu tiên</span>
-            <span class="sub">Sửa một dòng code là build, test, đóng image, đẩy lên, SSH vào, kéo về, chạy lại, kiểm tra. Tám bước tay, quên một bước là sập. Bước nào giao cho máy được? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">21</span>
-          <span class="txt">
-            <span class="title">Pipeline nhanh và đáng tin: cache, database cho test, chặn merge</span>
-            <span class="sub">Pipeline xanh nhưng mất tám phút vì lần nào cũng tải lại cả kho thư viện, và test nào chạm database thì hỏng vì trong job không có PostgreSQL. Sửa hai chỗ đó thế nào? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">22</span>
-          <span class="txt">
-            <span class="title">Pipeline tự đóng image</span>
-            <span class="sub">Code được kiểm tự động rồi, nhưng image vẫn build và đẩy bằng tay từ laptop. Job là một container, trong đó không có Docker daemon, vậy build image bằng gì? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">23</span>
-          <span class="txt">
-            <span class="title">Pipeline tự deploy, và quay lại bản cũ</span>
-            <span class="sub">Sau mỗi commit đã có image mới trên registry, còn server thì vẫn chạy bản tuần trước. Bước cuối của runbook giao cho pipeline thế nào? · 5-8 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="module" id="M4">
-      <div class="module-head">
-        <span class="module-id shp s-4">M4</span>
-        <h2>Kubernetes: Chạy container trên cả một cụm máy</h2>
-        <span class="chip">0/10 xong</span>
-      </div>
-      <p class="module-why">Chạy container trên nhiều máy cùng lúc. Mỗi khái niệm ở đây nối về một bài Docker đã học.</p>
-      <div class="lesson-list">
-        <div class="lesson todo">
-          <span class="num">24</span>
-          <span class="txt">
-            <span class="title">Khi một server không đủ: cụm đầu tiên</span>
-            <span class="sub">Mỗi lần deploy người dùng gặp vài giây 502, server chết là mọi thứ chết, và RAM của một máy thì có hạn. Ba chỗ đau đó giải bằng gì? · 4-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">25</span>
-          <span class="txt">
-            <span class="title">Pod và Deployment: ba bản app, chết thì tự sinh lại</span>
-            <span class="sub">Cụm đã có nhưng còn trống. Đưa app lên cụm bằng gì? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">26</span>
-          <span class="txt">
-            <span class="title">Service: một cái tên đứng trước các pod</span>
-            <span class="sub">Có ba pod, mỗi pod một địa chỉ IP, và địa chỉ đổi mỗi lần pod bị thay. App gọi database ở đâu, người ngoài gọi app ở đâu? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">27</span>
-          <span class="txt">
-            <span class="title">ConfigMap và Secret</span>
-            <span class="sub">Địa chỉ và mật khẩu database đang viết thẳng trong manifest, mà manifest nằm trong Git. Để chúng ở đâu? · 3-5 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">28</span>
-          <span class="txt">
-            <span class="title">Probe: Running chưa phải sẵn sàng</span>
-            <span class="sub">Trong lúc pod mới lên có vài request lỗi. Pod báo Running, nhưng Spring Boot bên trong còn đang khởi động. Cụm biết pod đã sẵn sàng bằng cách nào? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">29</span>
-          <span class="txt">
-            <span class="title">Requests và limits: chia tài nguyên của node</span>
-            <span class="sub">Một pod rò bộ nhớ ăn hết RAM của node và kéo pod khác chết theo, và cụm chưa có căn cứ gì để xếp pod vào node nào. Chia tài nguyên của node thế nào? · 5-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">30</span>
-          <span class="txt">
-            <span class="title">Dữ liệu trong cụm: PVC, StatefulSet, backup theo lịch</span>
-            <span class="sub">Node đang chứa pod PostgreSQL bị tắt, pod được dựng lại ở node khác, và database trống trơn. Giữ dữ liệu trong cụm thế nào? · 5-8 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">31</span>
-          <span class="txt">
-            <span class="title">Ingress và HTTPS trong cụm</span>
-            <span class="sub">App chạy đủ và giữ được dữ liệu, nhưng mới gọi được từ trong cụm. Người dùng ngoài Internet vào bằng đường nào? · 5-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">32</span>
-          <span class="txt">
-            <span class="title">Trạm kiểm tra Kubernetes: sáu kiểu pod hỏng</span>
-            <span class="sub">Hệ thống giờ có tám loại đối tượng. Người dùng báo lỗi thì nhìn ở đâu trước? · 4-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">33</span>
-          <span class="txt">
-            <span class="title">Helm: một bộ manifest, nhiều môi trường</span>
-            <span class="sub">Bộ manifest đã lên cả chục file, và môi trường thử với production là hai bản chép gần giống nhau, sửa một chỗ phải nhớ sửa cả hai. Gọn lại bằng gì? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="module" id="M5">
-      <div class="module-head">
-        <span class="module-id shp s-5">M5</span>
-        <h2>Rancher và vận hành: Quản lý cụm, GitOps, theo dõi, xử lý sự cố</h2>
-        <span class="chip">0/8 xong</span>
-      </div>
-      <p class="module-why">Quản lý cụm bằng Rancher, deploy bằng GitOps với Argo CD, theo dõi, cảnh báo, xử lý sự cố, rồi tự dựng lại toàn bộ.</p>
-      <div class="lesson-list">
-        <div class="lesson todo">
-          <span class="num">34</span>
-          <span class="txt">
-            <span class="title">Rancher và OpenShift: nhiều người, nhiều cụm</span>
-            <span class="sub">Một người với kubectl thì ổn. Có thêm người thứ hai, thêm cụm thứ hai, thì ai được làm gì và nhìn ở đâu? · 4-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">35</span>
-          <span class="txt">
-            <span class="title">Pipeline deploy lên cụm</span>
-            <span class="sub">Deploy lên cụm vẫn là gõ lệnh từ laptop, còn pipeline chỉ biết SSH vào một server. Pipeline deploy lên cụm thế nào, và cho nó quyền gì? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">36</span>
-          <span class="txt">
-            <span class="title">GitOps với Argo CD: cụm tự kéo từ Git</span>
-            <span class="sub">File trong Git và cụm lệch nhau mà không ai báo, bản đang chạy không ghi ở đâu trong Git, và chìa khoá vào cụm nằm ở ngoài cụm. Có lối deploy nào bịt được cả ba chỗ hở đó không? · 5-8 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">37</span>
-          <span class="txt">
-            <span class="title">Metric: biết hệ thống yếu đi trước người dùng</span>
-            <span class="sub">Mọi thứ tự chạy, nhưng nó đang khoẻ hay yếu dần? Lúc này người đầu tiên biết web chậm là người dùng. Làm sao biết trước họ? · 5-8 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">38</span>
-          <span class="txt">
-            <span class="title">Log tập trung: tìm lại chuyện của ba ngày trước</span>
-            <span class="sub">Biểu đồ cho thấy lỗi vọt lên lúc hai giờ sáng hôm kia. Vì sao? Pod lúc đó đã bị thay, log của nó mất theo. Giữ log thế nào để tìm lại được? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">39</span>
-          <span class="txt">
-            <span class="title">Cảnh báo: máy gọi người</span>
-            <span class="sub">Muốn biết đang có chuyện thì vẫn phải có người mở biểu đồ ra xem, mà không ai ngồi trước server. Làm sao để máy tự gọi người? · 4-6 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">40</span>
-          <span class="txt">
-            <span class="title">Khi mọi thứ đang cháy: xử lý sự cố theo bản đồ</span>
-            <span class="sub">Cảnh báo kêu lúc nửa đêm. Làm gì trước, theo thứ tự nào? · 4-7 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-        <div class="lesson todo">
-          <span class="num">41</span>
-          <span class="txt">
-            <span class="title">Tổng kết: dựng lại tất cả từ một repo trống</span>
-            <span class="sub">Từng mảnh đã học và đã hỏng thử. Từ một repo trống, bạn có tự dựng lại được tất cả không? · 5-8 giờ</span>
-          </span>
-          <span class="status chip "><i class="stt stt-todo" aria-hidden="true"></i>Chưa học</span>
-        </div>
-      </div>
-    </section>
-
-  </section>
-
-  <section class="tab" id="cach-hoc" data-tab="Cách học" data-note="vấn đề, khái niệm, công cụ">
-    <div class="callout ok">
-      <span class="label">Problem, rồi Concept, rồi Tool. Không học lệnh, học hệ thống.</span>
-      <p>Mỗi bài bắt đầu từ một <strong>vấn đề có thật</strong>, rồi tới <strong>khái niệm</strong>
-      giải thích vì sao nó xảy ra, sau cùng mới tới <strong>công cụ</strong>.</p>
-    </div>
-
-    <h2 id="bon-tep">Mỗi bài gồm ba phần</h2>
-    <div class="table-scroll">
-    <table>
-      <caption><b>Bảng 1</b> Các tệp trong một thư mục bài học.</caption>
-      <thead><tr><th>Tệp</th><th>Dùng để</th></tr></thead>
-      <tbody>
-        <tr><td><code>index.html</code></td><td>Bài giảng đầy đủ: giải thích, sơ đồ, bảng tra, lab và danh sách tự kiểm tra.</td></tr>
-        <tr><td><code>notes.md</code></td><td>Ghi chép: lỗi đã gặp, output thật.</td></tr>
-        <tr><td><code>lab/</code></td><td>Các tệp đã viết trong bài: Dockerfile, cấu hình…</td></tr>
-      </tbody>
-    </table>
-    </div>
-
-    <h2 id="loi-co-chu-dich">Mỗi lab có một bước cố tình gây lỗi</h2>
-    <p>Làm hỏng có chủ đích rồi tự sửa, để lần sau gặp lỗi thật thì đã biết nó là gì.</p>
-  </section>
-
-  <section class="tab" id="tai-nguyen" data-tab="Tài nguyên" data-note="Chỉ nguồn chính thức">
-    <p class="panel-intro">Nguồn chính thức để tra cứu trong lúc học.</p>
-
-    <h2 id="tai-lieu-chinh-thuc">Tài liệu chính thức</h2>
-    <div class="table-scroll">
-    <table>
-      <caption><b>Bảng 2</b> Tài liệu gốc của các công cụ trong lộ trình.</caption>
-      <thead><tr><th>Chủ đề</th><th>Nguồn</th></tr></thead>
-      <tbody>
-        <tr><td>Docker, Get started</td><td><a href="https://docs.docker.com/get-started/">docs.docker.com/get-started</a></td></tr>
-        <tr><td>Dockerfile reference</td><td><a href="https://docs.docker.com/reference/dockerfile/">docs.docker.com/reference/dockerfile</a></td></tr>
-        <tr><td>Docker Compose</td><td><a href="https://docs.docker.com/compose/">docs.docker.com/compose</a></td></tr>
-        <tr><td>The Twelve-Factor App</td><td><a href="https://12factor.net/">12factor.net</a></td></tr>
-        <tr><td>Nginx, Beginner's Guide</td><td><a href="https://nginx.org/en/docs/beginners_guide.html">nginx.org/en/docs/beginners_guide.html</a></td></tr>
-        <tr><td>Let's Encrypt / Certbot</td><td><a href="https://certbot.eff.org/">certbot.eff.org</a></td></tr>
-        <tr><td>GitLab CI/CD</td><td><a href="https://docs.gitlab.com/ci/">docs.gitlab.com/ci</a></td></tr>
-        <tr><td>Cú pháp <code>.gitlab-ci.yml</code></td><td><a href="https://docs.gitlab.com/ci/yaml/">docs.gitlab.com/ci/yaml</a></td></tr>
-        <tr><td>Kubernetes</td><td><a href="https://kubernetes.io/docs/home/">kubernetes.io/docs</a></td></tr>
-        <tr><td>k3d, cụm Kubernetes học trên máy</td><td><a href="https://k3d.io/">k3d.io</a></td></tr>
-        <tr><td>Helm</td><td><a href="https://helm.sh/docs/">helm.sh/docs</a></td></tr>
-        <tr><td>cert-manager</td><td><a href="https://cert-manager.io/docs/">cert-manager.io/docs</a></td></tr>
-        <tr><td>Rancher</td><td><a href="https://ranchermanager.docs.rancher.com/">ranchermanager.docs.rancher.com</a></td></tr>
-        <tr><td>RKE2</td><td><a href="https://docs.rke2.io/">docs.rke2.io</a></td></tr>
-        <tr><td>Spring Boot Actuator</td><td><a href="https://docs.spring.io/spring-boot/reference/actuator/index.html">docs.spring.io/spring-boot/reference/actuator</a></td></tr>
-        <tr><td>Prometheus</td><td><a href="https://prometheus.io/docs/introduction/overview/">prometheus.io/docs</a></td></tr>
-        <tr><td>Grafana</td><td><a href="https://grafana.com/docs/grafana/latest/">grafana.com/docs/grafana</a></td></tr>
-        <tr><td>Linux man pages</td><td><a href="https://man7.org/linux/man-pages/">man7.org/linux/man-pages</a></td></tr>
-        <tr><td>Chuẩn Internet (RFC)</td><td><a href="https://www.rfc-editor.org/">rfc-editor.org</a></td></tr>
-      </tbody>
-    </table>
-    </div>
-
-    <h2 id="hoc-nen-tang">Học nền tảng, miễn phí</h2>
-    <div class="table-scroll">
-    <table>
-      <caption><b>Bảng 3</b> Nguồn học bổ trợ, chất lượng cao và miễn phí.</caption>
-      <thead><tr><th>Chủ đề</th><th>Nguồn</th></tr></thead>
-      <tbody>
-        <tr><td>Linux từ đầu, rất dễ vào</td><td><a href="https://linuxjourney.com/">linuxjourney.com</a></td></tr>
-        <tr><td>Giải thích một câu lệnh shell bất kỳ</td><td><a href="https://explainshell.com/">explainshell.com</a></td></tr>
-        <tr><td>Lab Linux/Docker/K8s trên trình duyệt</td><td><a href="https://killercoda.com/">killercoda.com</a></td></tr>
-        <tr><td>Sandbox Docker</td><td><a href="https://labs.play-with-docker.com/">labs.play-with-docker.com</a></td></tr>
-        <tr><td>Bài hướng dẫn chính thức của Kubernetes</td><td><a href="https://kubernetes.io/docs/tutorials/">kubernetes.io/docs/tutorials</a></td></tr>
-        <tr><td>Bản đồ nghề DevOps</td><td><a href="https://roadmap.sh/devops">roadmap.sh/devops</a></td></tr>
-        <tr><td>Bảng tra cú pháp nhanh</td><td><a href="https://devhints.io/">devhints.io</a></td></tr>
-      </tbody>
-    </table>
-    </div>
-
-    <h2 id="tieng-viet">Video tiếng Việt</h2>
-    <p>Tìm trên YouTube: <code>Docker tiếng Việt</code>, <code>Kubernetes tiếng Việt</code>,
-    <code>GitLab CI tiếng Việt</code>. Xem xong thì tự gõ lại trên máy mình.</p>
-  </section>
-
+<section class="mod c-blue" id="m0">
+<header class="mod-head">
+  <span class="shp big s0" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M0 · bài 00-02</p>
+    <h3>Phía sau một cú bấm</h3>
+    <p class="mod-intro">Một cú bấm trên trình duyệt đi qua những tầng nào trước khi tới server.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-00">
+  <div class="card-tags"><span class="card-num">00</span><span class="lab-tag lab-local">máy bạn · đang học</span></div>
+  <h4><a href="lessons/00-osi-layers/">Bấm like trên facebook.com: bảy tầng OSI</a></h4>
+  <p>Từ lúc bấm like tới lúc số like tăng, dữ liệu đi qua những bước nào. Mô hình OSI chia việc đó thành bảy tầng; đi qua từng tầng bằng chính cú like, xem mỗi tầng làm gì và bọc thêm gì vào dữ liệu.</p>
+  
+</article>
+<article class="card" id="lesson-01">
+  <div class="card-tags"><span class="card-num">01</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>TCP/IP: Internet chạy thế nào</h4>
+  <p>OSI là bảng chia việc, còn Internet chạy theo bộ giao thức TCP/IP. Dữ liệu bị cắt thành gói tin, router chuyển gói qua nhiều mạng, các nhà mạng báo cho nhau đường đi bằng BGP, DNS là một hệ thống tên chia theo cấp. Bắt gói tin của một request bằng Wireshark để xem từng lớp.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">bảy tầng OSI</button></div>
+</article>
+<article class="card" id="lesson-02">
+  <div class="card-tags"><span class="card-num">02</span><span class="lab-tag lab-reading">chỉ đọc</span></div>
+  <h4>Người làm DevOps nắm chỗ nào trong các tầng</h4>
+  <p>Tầng nào cũng có người lo, nhưng người làm DevOps chỉ cần nắm sâu một số chỗ. Đường đi của một request trên server (DNS, TLS, firewall, reverse proxy, app, database), chặng nào là code của developer, chặng nào là việc của DevOps và SRE, và DevOps, SRE, platform engineering là gì.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">TCP/IP</button><button class="chip" type="button" aria-expanded="false">DNS</button><button class="chip" type="button" aria-expanded="false">HTTP</button></div>
+</article>
+</div>
+</section>
+<section class="mod c-red" id="m1">
+<header class="mod-head">
+  <span class="shp big s1" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M1 · bài 03-10</p>
+    <h3>Một cái máy Linux</h3>
+    <p class="mod-intro">Server gần như luôn là một máy Linux, nên học một máy trước rồi mới tới nhiều máy.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-03">
+  <div class="card-tags"><span class="card-num">03</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Server là cái gì: phần cứng, hệ điều hành, process</h4>
+  <p>Server là một máy tính có CPU, RAM, ổ đĩa, card mạng, chạy một hệ điều hành. App của bạn là một process do kernel quản lý, có vùng nhớ, user và biến môi trường riêng. Mỗi tài nguyên hết theo một kiểu riêng, và hết RAM thì kernel giết process.</p>
+  
+</article>
+<article class="card" id="lesson-04">
+  <div class="card-tags"><span class="card-num">04</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Phòng lab: Linux trên máy Windows</h4>
+  <p>Dựng một máy Linux bằng WSL2 để thực hành, biết terminal và shell là gì, gõ những lệnh đầu tiên, chạy thử một app Spring Boot trên Linux.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">process</button><button class="chip" type="button" aria-expanded="false">kernel</button></div>
+</article>
+<article class="card" id="lesson-05">
+  <div class="card-tags"><span class="card-num">05</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>File, user, quyền</h4>
+  <p>Linux coi gần như mọi thứ là file, file nào cũng có chủ và quyền đọc, ghi, chạy. Permission denied là kernel từ chối vì user đang chạy không có quyền. Thêm root và sudo.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">process</button><button class="chip" type="button" aria-expanded="false">shell</button></div>
+</article>
+<article class="card" id="lesson-06">
+  <div class="card-tags"><span class="card-num">06</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Process, signal, service, log</h4>
+  <p>App chạy từ terminal thì chết theo terminal. systemd giữ app thành service: bật khi máy khởi động, chạy lại khi chết, gom log vào journal. Signal là cách hệ điều hành bảo process dừng.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">process</button><button class="chip" type="button" aria-expanded="false">user và quyền</button></div>
+</article>
+<article class="card" id="lesson-07">
+  <div class="card-tags"><span class="card-num">07</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Shell script</h4>
+  <p>Gom các lệnh hay gõ vào một file bash có biến, điều kiện, vòng lặp và mã thoát, để chạy lại nhiều lần mà không gõ sai.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">shell</button><button class="chip" type="button" aria-expanded="false">lệnh Linux cơ bản</button></div>
+</article>
+<article class="card" id="lesson-08">
+  <div class="card-tags"><span class="card-num">08</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Mạng trên một máy: listen, port, firewall</h4>
+  <p>Nhìn mạng từ bên trong một máy Linux: app listen ở port nào, trên địa chỉ nào (127.0.0.1 hay 0.0.0.0), firewall của máy chặn gì. Gọi tới được thì cần đủ ba thứ, lỗi refused và timeout cho biết thiếu thứ nào. Đọc bằng ss, ip, curl.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">IP</button><button class="chip" type="button" aria-expanded="false">TCP</button><button class="chip" type="button" aria-expanded="false">process</button></div>
+</article>
+<article class="card" id="lesson-09">
+  <div class="card-tags"><span class="card-num">09</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Server chậm: CPU, RAM, đĩa, mạng</h4>
+  <p>Web chậm mà app không báo lỗi thì khoanh vùng theo bốn tài nguyên: CPU bận, hết RAM phải dùng swap, đĩa đầy hoặc đọc ghi chậm, mạng nghẽn. Đọc top, free, df, iostat, ss để biết tài nguyên nào đang hết.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">process</button><button class="chip" type="button" aria-expanded="false">kernel</button><button class="chip" type="button" aria-expanded="false">CPU</button><button class="chip" type="button" aria-expanded="false">RAM</button></div>
+</article>
+<article class="card" id="lesson-10">
+  <div class="card-tags"><span class="card-num">10</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Chẩn đoán theo tầng</h4>
+  <p>Mỗi lỗi là câu trả lời của một thành phần: refused do kernel, 502 và 504 do reverse proxy, 500 do app. Đọc lỗi thì biết hỏng ở tầng nào và bắt đầu tìm từ đâu.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">đường đi của request trên server</button><button class="chip" type="button" aria-expanded="false">listen và port</button><button class="chip" type="button" aria-expanded="false">HTTP</button></div>
+</article>
+</div>
+</section>
+<section class="mod c-yellow" id="m2">
+<header class="mod-head">
+  <span class="shp big s2" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M2 · bài 11-17</p>
+    <h3>Server thật, làm bằng tay</h3>
+    <p class="mod-intro">Đưa app lên một server bằng tay, từng bước một.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-11">
+  <div class="card-tags"><span class="card-num">11</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Kiếm một server để thực hành</h4>
+  <p>Có ba đường: thuê VPS theo tháng, dùng gói miễn phí của các nhà cung cấp cloud, hoặc dựng máy ảo ngay trên máy mình. Mỗi đường tốn gì, giới hạn gì, và những việc phải làm ngay khi nhận máy: cập nhật, tạo user riêng, không dùng root hằng ngày.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Linux</button><button class="chip" type="button" aria-expanded="false">user và quyền</button></div>
+</article>
+<article class="card" id="lesson-12">
+  <div class="card-tags"><span class="card-num">12</span><span class="lab-tag lab-server">server</span></div>
+  <h4>SSH: điều khiển một máy ở xa</h4>
+  <p>SSH cho bạn gõ lệnh trên một máy ở xa qua kết nối mã hoá. Đăng nhập bằng cặp khoá thay mật khẩu, tắt đăng nhập root, copy file lên server.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">IP</button><button class="chip" type="button" aria-expanded="false">port</button><button class="chip" type="button" aria-expanded="false">user</button><button class="chip" type="button" aria-expanded="false">shell</button></div>
+</article>
+<article class="card" id="lesson-13">
+  <div class="card-tags"><span class="card-num">13</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Deploy tay</h4>
+  <p>Đưa file jar lên server, cài Java, đặt cấu hình bằng biến môi trường, chạy thành service. Làm tay hết thì thấy bước nào dễ quên, bước nào dễ lệch giữa hai máy.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">SSH</button><button class="chip" type="button" aria-expanded="false">service</button><button class="chip" type="button" aria-expanded="false">biến môi trường</button></div>
+</article>
+<article class="card" id="lesson-14">
+  <div class="card-tags"><span class="card-num">14</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Nginx</h4>
+  <p>App mở thẳng port ra Internet thì phải tự lo mã hoá và tự chịu mọi request lạ. Nginx là reverse proxy đứng trước app: nhận request rồi chuyển vào app, cho nhiều website dùng chung một máy.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">listen và port</button><button class="chip" type="button" aria-expanded="false">HTTP</button></div>
+</article>
+<article class="card" id="lesson-15">
+  <div class="card-tags"><span class="card-num">15</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Tên miền và HTTPS</h4>
+  <p>Kiếm một tên miền để thực hành, rồi tạo bản ghi DNS trỏ nó về IP của server. Chứng chỉ do CA ký chứng minh server có quyền dùng tên đó; Let's Encrypt cấp miễn phí và tự gia hạn được.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">DNS</button><button class="chip" type="button" aria-expanded="false">TLS</button><button class="chip" type="button" aria-expanded="false">reverse proxy</button></div>
+</article>
+<article class="card" id="lesson-16">
+  <div class="card-tags"><span class="card-num">16</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Hai server sau một load balancer</h4>
+  <p>Một server chết là web chết. Đặt hai bản app sau một load balancer thì request chia cho cả hai, một bản chết thì dồn sang bản còn lại nhờ health check. Muốn vậy app không được giữ trạng thái trong RAM: phiên đăng nhập, file tải lên phải nằm ở chỗ dùng chung.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Nginx</button><button class="chip" type="button" aria-expanded="false">deploy tay</button></div>
+</article>
+<article class="card" id="lesson-17">
+  <div class="card-tags"><span class="card-num">17</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Server để yên ba tháng</h4>
+  <p>Không ai đụng vào thì server vẫn hỏng: log làm đầy đĩa, chứng chỉ hết hạn, bản vá bảo mật chưa cài, database không có backup. Những việc phải làm định kỳ và cách tự động hoá chúng.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">service</button><button class="chip" type="button" aria-expanded="false">log</button><button class="chip" type="button" aria-expanded="false">chứng chỉ</button><button class="chip" type="button" aria-expanded="false">shell script</button></div>
+</article>
+</div>
+</section>
+<section class="mod c-ink" id="m3">
+<header class="mod-head">
+  <span class="shp big s3" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M3 · bài 18-25</p>
+    <h3>Container</h3>
+    <p class="mod-intro">Đóng app cùng mọi thứ nó cần thành một khối, chạy ở máy nào cũng giống nhau.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-18">
+  <div class="card-tags"><span class="card-num">18</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Container là gì</h4>
+  <p>Cài app lên máy bằng tay thì mỗi máy lệch một chút: phiên bản Java, thư viện, cấu hình. Container đóng app cùng mọi thứ nó cần, chạy như một process bị kernel nhốt lại bằng namespace và cgroup. Nó khác máy ảo ở chỗ dùng chung kernel với máy thật.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">process</button><button class="chip" type="button" aria-expanded="false">kernel</button><button class="chip" type="button" aria-expanded="false">cài một app lên server</button></div>
+</article>
+<article class="card" id="lesson-19">
+  <div class="card-tags"><span class="card-num">19</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Image và container</h4>
+  <p>Image là bộ file và cấu hình đóng sẵn, chỉ đọc. Container là một lần chạy image đó. Chạy PostgreSQL bằng Docker mà không cài gì lên máy.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">container</button></div>
+</article>
+<article class="card" id="lesson-20">
+  <div class="card-tags"><span class="card-num">20</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Dockerfile</h4>
+  <p>Viết Dockerfile để đóng app Spring Boot thành image: chọn image nền, copy file, build nhiều giai đoạn, và vì sao thứ tự các dòng ảnh hưởng tới tốc độ build.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">image</button><button class="chip" type="button" aria-expanded="false">container</button></div>
+</article>
+<article class="card" id="lesson-21">
+  <div class="card-tags"><span class="card-num">21</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Network và volume</h4>
+  <p>Container nào cũng có mạng riêng; cùng một network thì container gọi nhau bằng tên. Dữ liệu trong container mất khi xoá container, volume giữ nó lại.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">image</button><button class="chip" type="button" aria-expanded="false">container</button><button class="chip" type="button" aria-expanded="false">IP và port</button><button class="chip" type="button" aria-expanded="false">DNS</button></div>
+</article>
+<article class="card" id="lesson-22">
+  <div class="card-tags"><span class="card-num">22</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Cấu hình, secret và Compose</h4>
+  <p>Một image chạy ở nhiều môi trường thì cấu hình phải đưa vào từ ngoài bằng biến môi trường, mật khẩu không nằm trong image. Compose mô tả cả hệ thống nhiều container trong một file.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Dockerfile</button><button class="chip" type="button" aria-expanded="false">network</button><button class="chip" type="button" aria-expanded="false">volume</button></div>
+</article>
+<article class="card" id="lesson-23">
+  <div class="card-tags"><span class="card-num">23</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Cache và message queue</h4>
+  <p>Database chậm vì bị hỏi đi hỏi lại cùng một thứ thì đặt cache (Redis) phía trước. Việc lâu như gửi mail, xử lý file thì đẩy vào hàng đợi (RabbitMQ, Kafka) cho một process khác làm dần. Chạy cả hai bằng Compose, và những chỗ phải trông: bộ nhớ của Redis, hàng đợi bị dồn.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Compose</button><button class="chip" type="button" aria-expanded="false">database</button></div>
+</article>
+<article class="card" id="lesson-24">
+  <div class="card-tags"><span class="card-num">24</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Registry và image để chạy production</h4>
+  <p>Registry là kho chứa image để server kéo về. Image chạy production thì nên nhỏ, không chạy bằng root, giới hạn bộ nhớ hợp với JVM, và có tag rõ ràng.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Dockerfile</button><button class="chip" type="button" aria-expanded="false">Compose</button></div>
+</article>
+<article class="card" id="lesson-25">
+  <div class="card-tags"><span class="card-num">25</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Dựng lại cả hệ thống bằng container</h4>
+  <p>Từ một thư mục trống, dựng lại app, database, cache, Nginx bằng Dockerfile và Compose trên server. Xong thì điểm lại những chỗ hay hỏng: port trùng, sai tên host database, xoá container mất dữ liệu, image chạy bằng root, hết bộ nhớ.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Dockerfile</button><button class="chip" type="button" aria-expanded="false">Compose</button><button class="chip" type="button" aria-expanded="false">registry</button><button class="chip" type="button" aria-expanded="false">Nginx</button></div>
+</article>
+</div>
+</section>
+<section class="mod c-blue" id="m4">
+<header class="mod-head">
+  <span class="shp big s4" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M4 · bài 26-31</p>
+    <h3>Git và CI/CD với GitLab</h3>
+    <p class="mod-intro">Các bước build, đẩy image, deploy giao cho pipeline làm.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-26">
+  <div class="card-tags"><span class="card-num">26</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Git cho người vận hành</h4>
+  <p>Developer dùng Git để lưu code, người vận hành dựa vào nó để biết bản nào đang chạy và quay về bản cũ. Nhánh, tag, merge request, revert, và cách đặt nhánh theo môi trường.</p>
+  
+</article>
+<article class="card" id="lesson-27">
+  <div class="card-tags"><span class="card-num">27</span><span class="lab-tag lab-gitlab">GitLab</span></div>
+  <h4>Pipeline đầu tiên</h4>
+  <p>Build, đẩy image, SSH vào server, kéo về, chạy lại: làm tay mỗi lần sửa code thì chậm và dễ sai. CI/CD để máy chạy các bước đó mỗi lần có commit. GitLab đọc file .gitlab-ci.yml rồi giao job cho runner chạy.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Git</button><button class="chip" type="button" aria-expanded="false">image</button><button class="chip" type="button" aria-expanded="false">registry</button></div>
+</article>
+<article class="card" id="lesson-28">
+  <div class="card-tags"><span class="card-num">28</span><span class="lab-tag lab-gitlab">GitLab</span></div>
+  <h4>Build, test, đóng image trong pipeline</h4>
+  <p>Chia pipeline thành các stage, job hỏng thì dừng. Đóng image và gắn tag theo mã commit để biết image nào ứng với code nào.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">pipeline</button><button class="chip" type="button" aria-expanded="false">Dockerfile</button></div>
+</article>
+<article class="card" id="lesson-29">
+  <div class="card-tags"><span class="card-num">29</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Deploy tự động, môi trường, rollback</h4>
+  <p>Đưa cùng một image qua dev, staging, production, mỗi nơi chỉ khác cấu hình. Bản mới lỗi thì quay về tag cũ.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">pipeline</button><button class="chip" type="button" aria-expanded="false">registry</button><button class="chip" type="button" aria-expanded="false">deploy tay</button></div>
+</article>
+<article class="card" id="lesson-30">
+  <div class="card-tags"><span class="card-num">30</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Migration database trong pipeline</h4>
+  <p>Bản mới thường kéo theo đổi bảng. Flyway hay Liquibase ghi mỗi lần đổi thành một file có thứ tự, pipeline chạy chúng trước khi app mới lên. Đổi sao cho bản cũ vẫn chạy được trong lúc chuyển, và làm gì khi migration lỗi giữa chừng.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">pipeline</button><button class="chip" type="button" aria-expanded="false">deploy tự động</button><button class="chip" type="button" aria-expanded="false">database</button></div>
+</article>
+<article class="card" id="lesson-31">
+  <div class="card-tags"><span class="card-num">31</span><span class="lab-tag lab-gitlab">GitLab</span></div>
+  <h4>Secret và an toàn của pipeline</h4>
+  <p>Pipeline giữ mật khẩu registry, khoá SSH, token. Cất chúng ở đâu, che khỏi log thế nào, và quét image tìm lỗ hổng đã biết trước khi đẩy lên.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">pipeline</button><button class="chip" type="button" aria-expanded="false">image</button></div>
+</article>
+</div>
+</section>
+<section class="mod c-red" id="m5">
+<header class="mod-head">
+  <span class="shp big s5" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M5 · bài 32-36</p>
+    <h3>Hạ tầng bằng code và cloud</h3>
+    <p class="mod-intro">Server, mạng, bản ghi DNS cũng viết thành code để dựng lại được.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-32">
+  <div class="card-tags"><span class="card-num">32</span><span class="lab-tag lab-reading">chỉ đọc</span></div>
+  <h4>Hạ tầng là code</h4>
+  <p>Server cấu hình bằng tay thì không ai nhớ đã gõ gì, chết là không dựng lại giống được. Viết hạ tầng thành code thì lưu trong git, review được, chạy lại được.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">deploy tay</button><button class="chip" type="button" aria-expanded="false">Git</button></div>
+</article>
+<article class="card" id="lesson-33">
+  <div class="card-tags"><span class="card-num">33</span><span class="lab-tag lab-local">máy bạn</span></div>
+  <h4>Ansible</h4>
+  <p>Ansible SSH vào nhiều máy và đưa chúng về trạng thái mô tả trong playbook. Chạy lại bao nhiêu lần cũng ra cùng kết quả, khác với shell script chạy lại có thể làm hỏng. Thực hành trên vài máy ảo hoặc container giả làm máy.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">SSH</button><button class="chip" type="button" aria-expanded="false">Linux</button><button class="chip" type="button" aria-expanded="false">shell script</button></div>
+</article>
+<article class="card" id="lesson-34">
+  <div class="card-tags"><span class="card-num">34</span><span class="lab-tag lab-cloud">cloud</span></div>
+  <h4>Cloud tối thiểu và IAM</h4>
+  <p>Cloud cho thuê máy ảo, ổ đĩa, load balancer, kho lưu file theo giờ. Ai và máy nào được làm gì trên tài khoản cloud thì IAM quyết. Tiền tính theo cái gì, và đặt cảnh báo chi tiêu để không bị trừ tiền vì quên tắt máy.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">server</button><button class="chip" type="button" aria-expanded="false">IP</button><button class="chip" type="button" aria-expanded="false">load balancer</button></div>
+</article>
+<article class="card" id="lesson-35">
+  <div class="card-tags"><span class="card-num">35</span><span class="lab-tag lab-cloud">cloud</span></div>
+  <h4>Mạng trên cloud: VPC, subnet, NAT, VPN</h4>
+  <p>Máy trên cloud nằm trong một mạng riêng (VPC) chia thành các subnet. Máy ở subnet kín ra Internet qua NAT, còn mạng cloud nối về mạng công ty qua VPN.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">IP</button><button class="chip" type="button" aria-expanded="false">mạng riêng</button><button class="chip" type="button" aria-expanded="false">router</button><button class="chip" type="button" aria-expanded="false">firewall</button></div>
+</article>
+<article class="card" id="lesson-36">
+  <div class="card-tags"><span class="card-num">36</span><span class="lab-tag lab-cloud">cloud</span></div>
+  <h4>Terraform</h4>
+  <p>Ansible cài phần mềm lên máy có sẵn, còn Terraform tạo chính cái máy, cái mạng, bản ghi DNS từ file mô tả. Nó ghi những gì đã tạo vào file state, sửa file thì nó tính ra phải tạo, sửa, xoá những gì.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">cloud</button><button class="chip" type="button" aria-expanded="false">VPC</button></div>
+</article>
+</div>
+</section>
+<section class="mod c-yellow" id="m6">
+<header class="mod-head">
+  <span class="shp big s6" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M6 · bài 37-48</p>
+    <h3>Kubernetes</h3>
+    <p class="mod-intro">Quản container trên nhiều máy.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-37">
+  <div class="card-tags"><span class="card-num">37</span><span class="lab-tag lab-reading">chỉ đọc</span></div>
+  <h4>Vì sao cần Kubernetes</h4>
+  <p>Hai server sau load balancer đã chạy được, nhưng vẫn phải tự đặt container lên từng máy, tự bật lại khi chết, tự thêm máy khi đông người. Kubernetes nhận việc đó: bạn nói muốn chạy gì, nó tự đặt lên máy và tự giữ cho đúng như vậy.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">container</button><button class="chip" type="button" aria-expanded="false">Compose</button><button class="chip" type="button" aria-expanded="false">load balancer</button></div>
+</article>
+<article class="card" id="lesson-38">
+  <div class="card-tags"><span class="card-num">38</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Cụm đầu tiên và Pod</h4>
+  <p>Kiếm một cụm để thực hành: chạy cụm nhỏ ngay trên máy (kind, k3s) hoặc dùng cụm miễn phí trên mạng. Cụm gồm máy control plane và các máy worker; bạn viết trạng thái mong muốn bằng YAML, Kubernetes làm cho cụm khớp với nó. Pod là một hoặc vài container chạy chung mạng và ổ đĩa.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">container</button><button class="chip" type="button" aria-expanded="false">YAML</button></div>
+</article>
+<article class="card" id="lesson-39">
+  <div class="card-tags"><span class="card-num">39</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Deployment</h4>
+  <p>Deployment giữ đủ số pod, pod chết thì tạo lại. Đổi image thì nó thay pod dần dần để web không tắt, lỗi thì quay về bản trước.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Pod</button></div>
+</article>
+<article class="card" id="lesson-40">
+  <div class="card-tags"><span class="card-num">40</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Service và DNS trong cụm</h4>
+  <p>Pod có IP đổi liên tục. Service cho một nhóm pod một tên và một địa chỉ cố định, DNS trong cụm phân giải tên đó.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Pod</button><button class="chip" type="button" aria-expanded="false">DNS</button><button class="chip" type="button" aria-expanded="false">IP và port</button></div>
+</article>
+<article class="card" id="lesson-41">
+  <div class="card-tags"><span class="card-num">41</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Ingress</h4>
+  <p>Service chỉ gọi được từ trong cụm. Ingress nhận request từ ngoài theo tên miền và path rồi chuyển vào Service, làm việc của reverse proxy bên trong cụm.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Service</button><button class="chip" type="button" aria-expanded="false">reverse proxy</button><button class="chip" type="button" aria-expanded="false">HTTPS</button></div>
+</article>
+<article class="card" id="lesson-42">
+  <div class="card-tags"><span class="card-num">42</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>ConfigMap và Secret</h4>
+  <p>Pod chạy trên máy nào cũng được nên cấu hình không thể nằm trong file của một máy. ConfigMap và Secret giữ cấu hình trong cụm và đưa vào pod bằng biến môi trường hoặc file.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Pod</button><button class="chip" type="button" aria-expanded="false">Deployment</button><button class="chip" type="button" aria-expanded="false">biến môi trường</button></div>
+</article>
+<article class="card" id="lesson-43">
+  <div class="card-tags"><span class="card-num">43</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Lưu trữ: PersistentVolume và StatefulSet</h4>
+  <p>Pod chết là ổ đĩa của nó mất theo. PersistentVolume giữ dữ liệu sống lâu hơn pod; StatefulSet cho mỗi pod database một tên cố định và một ổ đĩa riêng.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Pod</button><button class="chip" type="button" aria-expanded="false">Deployment</button><button class="chip" type="button" aria-expanded="false">volume</button></div>
+</article>
+<article class="card" id="lesson-44">
+  <div class="card-tags"><span class="card-num">44</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Tài nguyên và probe</h4>
+  <p>requests và limits nói pod cần và được dùng bao nhiêu CPU, RAM; vượt RAM thì bị OOMKilled. Probe cho Kubernetes biết pod còn sống không và đã nhận request được chưa. Đọc các trạng thái CrashLoopBackOff, Pending, không Ready.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Pod</button><button class="chip" type="button" aria-expanded="false">Deployment</button><button class="chip" type="button" aria-expanded="false">OOM killer</button></div>
+</article>
+<article class="card" id="lesson-45">
+  <div class="card-tags"><span class="card-num">45</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Helm</h4>
+  <p>Một app là nhiều file YAML lặp lại giữa các môi trường. Helm gom chúng thành chart có template và file giá trị, cài, nâng cấp, quay lại bằng một lệnh.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Deployment</button><button class="chip" type="button" aria-expanded="false">Service</button><button class="chip" type="button" aria-expanded="false">Ingress</button><button class="chip" type="button" aria-expanded="false">ConfigMap</button></div>
+</article>
+<article class="card" id="lesson-46">
+  <div class="card-tags"><span class="card-num">46</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Namespace, RBAC, NetworkPolicy</h4>
+  <p>Nhiều team dùng chung cụm thì phải chia: namespace tách tài nguyên, RBAC quy định ai được làm gì, NetworkPolicy quy định pod nào được gọi pod nào.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Pod</button><button class="chip" type="button" aria-expanded="false">Service</button></div>
+</article>
+<article class="card" id="lesson-47">
+  <div class="card-tags"><span class="card-num">47</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Controller, CRD và operator</h4>
+  <p>Deployment tạo lại pod chết là nhờ một controller chạy vòng lặp so trạng thái mong muốn với trạng thái hiện tại. CRD thêm loại tài nguyên mới, operator là controller cho loại đó, ví dụ một operator tự lo PostgreSQL có bản sao và backup.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Deployment</button><button class="chip" type="button" aria-expanded="false">StatefulSet</button></div>
+</article>
+<article class="card" id="lesson-48">
+  <div class="card-tags"><span class="card-num">48</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Dựng lại cả hệ thống trên cụm</h4>
+  <p>Đưa app, database, cache lên cụm bằng Helm, có Ingress và HTTPS. Xong thì điểm lại những chỗ hay hỏng: selector không khớp nhãn, image không kéo được, probe gọi sai đường dẫn, thiếu requests, Secret sai tên.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Helm</button><button class="chip" type="button" aria-expanded="false">Ingress</button><button class="chip" type="button" aria-expanded="false">StatefulSet</button><button class="chip" type="button" aria-expanded="false">probe</button></div>
+</article>
+</div>
+</section>
+<section class="mod c-ink" id="m7">
+<header class="mod-head">
+  <span class="shp big s7" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M7 · bài 49-52</p>
+    <h3>Quan sát hệ thống</h3>
+    <p class="mod-intro">Biết hệ thống đang chạy ra sao mà không phải đợi người dùng báo.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-49">
+  <div class="card-tags"><span class="card-num">49</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Metric: Prometheus và Grafana</h4>
+  <p>Metric là con số đo theo thời gian: CPU, RAM, số request, độ trễ. Prometheus đi lấy metric từ app và máy, Grafana vẽ thành biểu đồ.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">process</button><button class="chip" type="button" aria-expanded="false">HTTP</button><button class="chip" type="button" aria-expanded="false">Kubernetes</button></div>
+</article>
+<article class="card" id="lesson-50">
+  <div class="card-tags"><span class="card-num">50</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Log tập trung</h4>
+  <p>Log nằm rải ở từng pod và mất khi pod chết. Gom log về một chỗ (Loki), ghi log có cấu trúc và có mã request để lọc ra log của một request.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">log</button><button class="chip" type="button" aria-expanded="false">Pod</button></div>
+</article>
+<article class="card" id="lesson-51">
+  <div class="card-tags"><span class="card-num">51</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Trace</h4>
+  <p>Request đi qua nhiều service thì log và metric ở từng nơi không cho biết chậm ở đâu. Trace ghi từng đoạn request đi qua; OpenTelemetry là chuẩn để gắn trace vào app.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">metric</button><button class="chip" type="button" aria-expanded="false">log</button><button class="chip" type="button" aria-expanded="false">HTTP</button></div>
+</article>
+<article class="card" id="lesson-52">
+  <div class="card-tags"><span class="card-num">52</span><span class="lab-tag lab-reading">chỉ đọc</span></div>
+  <h4>eBPF</h4>
+  <p>Trace phải sửa app để gắn vào. eBPF chạy chương trình nhỏ bên trong kernel một cách an toàn, nên thấy được kết nối mạng và lời gọi hệ thống của app mà không sửa app. Nhiều công cụ giám sát và mạng của Kubernetes dựa vào nó.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">kernel</button><button class="chip" type="button" aria-expanded="false">syscall</button><button class="chip" type="button" aria-expanded="false">trace</button></div>
+</article>
+</div>
+</section>
+<section class="mod c-blue" id="m8">
+<header class="mod-head">
+  <span class="shp big s8" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M8 · bài 53-59</p>
+    <h3>Nền tảng</h3>
+    <p class="mod-intro">Nhiều cụm, nhiều team dùng chung.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-53">
+  <div class="card-tags"><span class="card-num">53</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>GitOps với Argo CD</h4>
+  <p>Ai cũng apply vào cụm được thì không ai biết cụm đang chạy gì. GitOps để git giữ trạng thái mong muốn của cụm, Argo CD so cụm với git rồi kéo cụm về giống git.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Kubernetes</button><button class="chip" type="button" aria-expanded="false">Helm</button><button class="chip" type="button" aria-expanded="false">Git</button></div>
+</article>
+<article class="card" id="lesson-54">
+  <div class="card-tags"><span class="card-num">54</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Rancher: quản nhiều cụm</h4>
+  <p>Công ty có nhiều cụm cho nhiều môi trường và khách hàng. Rancher gom chúng về một giao diện: tạo cụm, phân quyền theo project, nâng cấp, xem tài nguyên.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Kubernetes</button><button class="chip" type="button" aria-expanded="false">RBAC</button><button class="chip" type="button" aria-expanded="false">namespace</button></div>
+</article>
+<article class="card" id="lesson-55">
+  <div class="card-tags"><span class="card-num">55</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>OpenShift</h4>
+  <p>OpenShift là bản Kubernetes của Red Hat. Nó có thêm Route thay cho Ingress, build image ngay trong cụm, và mặc định khoá chặt hơn, ví dụ không cho container chạy bằng root. Đưa một app đang chạy trên Kubernetes sang OpenShift thì vướng ở đâu.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Kubernetes</button><button class="chip" type="button" aria-expanded="false">Ingress</button><button class="chip" type="button" aria-expanded="false">RBAC</button></div>
+</article>
+<article class="card" id="lesson-56">
+  <div class="card-tags"><span class="card-num">56</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Secret tập trung</h4>
+  <p>Secret của Kubernetes chỉ là base64 và rải ở từng cụm. Vault hay kho secret của cloud giữ mật khẩu ở một chỗ, External Secrets đưa chúng vào cụm, git không chứa mật khẩu nào.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Secret</button><button class="chip" type="button" aria-expanded="false">GitOps</button></div>
+</article>
+<article class="card" id="lesson-57">
+  <div class="card-tags"><span class="card-num">57</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Bảo mật cụm: policy và audit</h4>
+  <p>RBAC không chặn được container chạy bằng root hay image lạ. Policy (Pod Security, Kyverno) chặn từ lúc tạo, audit log ghi ai đã làm gì trên cụm.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">RBAC</button><button class="chip" type="button" aria-expanded="false">Pod</button><button class="chip" type="button" aria-expanded="false">image</button></div>
+</article>
+<article class="card" id="lesson-58">
+  <div class="card-tags"><span class="card-num">58</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Service mesh</h4>
+  <p>Mã hoá giữa các service, thử lại khi lỗi, chia lưu lượng sang bản mới, nhìn được ai gọi ai: viết vào từng app thì app nào cũng phải viết. Service mesh đặt một proxy cạnh mỗi pod để hạ tầng lo các việc đó, đổi lại thêm độ trễ và thêm thứ phải vận hành.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Service</button><button class="chip" type="button" aria-expanded="false">Ingress</button><button class="chip" type="button" aria-expanded="false">TLS</button><button class="chip" type="button" aria-expanded="false">trace</button></div>
+</article>
+<article class="card" id="lesson-59">
+  <div class="card-tags"><span class="card-num">59</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Nền tảng tự phục vụ</h4>
+  <p>Mỗi team tự viết Dockerfile, pipeline, Helm chart thì mỗi nơi một kiểu. Nền tảng tự phục vụ là bộ mẫu dựng sẵn (template, pipeline chung, chart chung) để developer tự tạo service theo chuẩn của công ty.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Dockerfile</button><button class="chip" type="button" aria-expanded="false">pipeline</button><button class="chip" type="button" aria-expanded="false">Helm</button><button class="chip" type="button" aria-expanded="false">GitOps</button></div>
+</article>
+</div>
+</section>
+<section class="mod c-red" id="m9">
+<header class="mod-head">
+  <span class="shp big s9" aria-hidden="true"></span>
+  <div>
+    <p class="mod-num">M9 · bài 60-67</p>
+    <h3>SRE: giữ hệ thống chạy</h3>
+    <p class="mod-intro">Đặt mức chạy tốt, báo khi lệch, xử lý khi hỏng, và chuẩn bị cho lúc mất hết.</p>
+  </div>
+</header>
+<div class="cards">
+<article class="card" id="lesson-60">
+  <div class="card-tags"><span class="card-num">60</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>SLI, SLO, error budget</h4>
+  <p>Hệ thống nào cũng có lúc hỏng. SLI là con số đo trải nghiệm người dùng, SLO là mức đặt ra cho con số đó, error budget là phần được phép hỏng. Hết budget thì lo ổn định trước, tính năng mới để sau.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">metric</button></div>
+</article>
+<article class="card" id="lesson-61">
+  <div class="card-tags"><span class="card-num">61</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Cảnh báo và trực sự cố</h4>
+  <p>Cảnh báo theo triệu chứng người dùng thấy và theo SLO, không theo từng con số CPU. Ai trực, báo qua đâu, lúc nào gọi thêm người.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">metric</button><button class="chip" type="button" aria-expanded="false">SLO</button></div>
+</article>
+<article class="card" id="lesson-62">
+  <div class="card-tags"><span class="card-num">62</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Xử lý sự cố và postmortem</h4>
+  <p>Khi có sự cố thì khoanh vùng, khôi phục trước, tìm lý do sau. Postmortem ghi lại diễn biến và lý do để sửa hệ thống, không để đổ lỗi cho người.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">chẩn đoán theo tầng</button><button class="chip" type="button" aria-expanded="false">metric</button><button class="chip" type="button" aria-expanded="false">log</button><button class="chip" type="button" aria-expanded="false">cảnh báo</button></div>
+</article>
+<article class="card" id="lesson-63">
+  <div class="card-tags"><span class="card-num">63</span><span class="lab-tag lab-server">server</span></div>
+  <h4>Database khi chạy production</h4>
+  <p>Một máy database chết thì app chết theo. Bản sao (replication), chuyển sang máy dự phòng (failover), connection pool, và tìm truy vấn chậm.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">database</button><button class="chip" type="button" aria-expanded="false">volume</button></div>
+</article>
+<article class="card" id="lesson-64">
+  <div class="card-tags"><span class="card-num">64</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Backup và khôi phục</h4>
+  <p>Backup chỉ có giá trị khi khôi phục được. Backup database và cụm (Velero), thử khôi phục định kỳ, và hai con số RPO, RTO: mất bao nhiêu dữ liệu, dựng lại hết bao lâu.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">database</button><button class="chip" type="button" aria-expanded="false">PersistentVolume</button><button class="chip" type="button" aria-expanded="false">Kubernetes</button></div>
+</article>
+<article class="card" id="lesson-65">
+  <div class="card-tags"><span class="card-num">65</span><span class="lab-tag lab-reading">chỉ đọc</span></div>
+  <h4>Chạy ở nhiều vùng</h4>
+  <p>Khôi phục từ backup mất hàng giờ. Chạy ở hai vùng thì một vùng sập vẫn còn vùng kia, đổi lại dữ liệu phải đồng bộ giữa hai nơi và chi phí tăng lên.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">DNS</button><button class="chip" type="button" aria-expanded="false">load balancer</button><button class="chip" type="button" aria-expanded="false">replication</button><button class="chip" type="button" aria-expanded="false">backup</button></div>
+</article>
+<article class="card" id="lesson-66">
+  <div class="card-tags"><span class="card-num">66</span><span class="lab-tag lab-reading">chỉ đọc</span></div>
+  <h4>Chi phí</h4>
+  <p>Mỗi môi trường, mỗi team tốn bao nhiêu tiền cloud, và cắt ở đâu: máy thừa tài nguyên, môi trường dev chạy cả đêm, ổ đĩa không ai dùng.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">cloud</button><button class="chip" type="button" aria-expanded="false">requests và limits</button></div>
+</article>
+<article class="card" id="lesson-67">
+  <div class="card-tags"><span class="card-num">67</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
+  <h4>Tổng kết: dựng lại từ repo trống</h4>
+  <p>Dựng lại một hệ thống từ đầu: hạ tầng bằng Terraform, cụm, pipeline, GitOps, giám sát, cảnh báo. Xong thì điểm lại những chỗ hay hỏng ở từng phần.</p>
+  <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">container</button><button class="chip" type="button" aria-expanded="false">Kubernetes</button><button class="chip" type="button" aria-expanded="false">pipeline</button><button class="chip" type="button" aria-expanded="false">GitOps</button><button class="chip" type="button" aria-expanded="false">metric</button><button class="chip" type="button" aria-expanded="false">Terraform</button></div>
+</article>
+</div>
+</section>
   </main>
-
-  <footer class="page">
-    <p>Bắt đầu 21/09/2026 · Môi trường: Windows 11 + WSL2 Ubuntu + Docker Desktop</p>
-  </footer>
-
 </div>
 
-<script src="assets/app.js?v=31a8c472"></script>
+<footer class="site-footer">DevOps lang băm · khoá tự học devops và sre</footer>
+
+<script src="assets/home.js?v=cd3da345"></script>
 </body>
 </html>

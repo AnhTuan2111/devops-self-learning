@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 00: Bấm like trên facebook.com, bảy tầng OSI</title>
+<meta name="description" content="Bấm like trên facebook.com thì phía sau trình duyệt xảy ra những gì: dựng bảy tầng của mô hình OSI từ dưới lên, mỗi tầng giải quyết một chuyện tầng dưới còn bỏ dở, rồi đi theo cú like qua cả bảy tầng.">
+<link rel="stylesheet" href="../../assets/style.css?v=31cca467">
+<link rel="stylesheet" href="lesson.css?v=6d854a8b">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="00">
+
+<nav class="topbar"><div class="topbar-inner">
+  <a class="home" href="../../">devops lang băm</a><span class="crumb">/ bai-00</span>
+  <span class="spacer"></span>
+</div></nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 0 · Bài 00</p>
+  <h1>Bấm like trên facebook.com: <span class="hl">bảy tầng OSI</span></h1>
+  <p class="lede">Một cú like đi từ ngón tay bạn tới server của Facebook rồi quay về. Bài này dựng bảy tầng của mô hình
+  OSI từ dưới lên, mỗi tầng giải quyết một chuyện mà tầng ngay dưới còn bỏ dở.</p>
+  <div class="meta">
+    <span class="chip yellow"><i class="stt stt-doing" aria-hidden="true"></i>Đang học</span>
+    <span class="chip">Thực hành: máy bạn</span>
+    <span class="chip">Lab: Git Bash trên Windows</span>
+  </div>
+  <div class="hero-mark tower" role="img" aria-label="Bảy tầng OSI xếp chồng; một gói tin like rơi từ tầng 7 xuống tầng 1, qua tầng 4, 3, 2 thì được bọc thêm một lớp.">
+    <div class="floor c7" data-layer="7"><b>7</b><span>application</span></div>
+    <div class="floor c6" data-layer="6"><b>6</b><span>presentation</span></div>
+    <div class="floor c5" data-layer="5"><b>5</b><span>session</span></div>
+    <div class="floor c4" data-layer="4"><b>4</b><span>transport</span></div>
+    <div class="floor c3" data-layer="3"><b>3</b><span>network</span></div>
+    <div class="floor c2" data-layer="2"><b>2</b><span>data link</span></div>
+    <div class="floor c1" data-layer="1"><b>1</b><span>physical</span></div>
+    <span class="packet" aria-hidden="true"><i class="w2"></i><i class="w3"></i><i class="w4"></i><b>like</b></span>
+  </div>
+</header>
+
+<div class="layout">
+
+<nav class="elevator" aria-label="Đi tới một tầng hay một phần của bài">
+  <a class="el-extra" href="#intro">mở đầu</a>
+  <div class="el-stack">
+    <a class="el-floor c7" href="#application" data-layer="7"><b>7</b><span>application</span></a>
+    <a class="el-floor c6" href="#presentation" data-layer="6"><b>6</b><span>presentation</span></a>
+    <a class="el-floor c5" href="#session" data-layer="5"><b>5</b><span>session</span></a>
+    <a class="el-floor c4" href="#transport" data-layer="4"><b>4</b><span>transport</span></a>
+    <a class="el-floor c3" href="#network" data-layer="3"><b>3</b><span>network</span></a>
+    <a class="el-floor c2" href="#data-link" data-layer="2"><b>2</b><span>data link</span></a>
+    <a class="el-floor c1" href="#physical" data-layer="1"><b>1</b><span>physical</span></a>
+  </div>
+  <a class="el-extra" href="#journey">đường đi</a>
+  <a class="el-extra" href="#lab">lab</a>
+  <a class="el-extra" href="#self-check">tự kiểm tra</a>
+</nav>
+
+<main class="lesson-body">
+
+<!-- Phần: cú like, chia việc thành tầng, mô hình OSI -->
+<section class="part" id="intro">
+<header class="part-head"><p class="part-title">một cú like</p><p class="part-note">phía sau trình duyệt có gì</p></header>
+
+<h2 id="behind-the-click">Phía sau một cú like</h2>
+
+<p>Bạn có bao giờ tự hỏi, lúc gõ facebook.com rồi bấm like một bài, thì phía sau trình duyệt đã xảy ra những chuyện gì
+không? Trên màn hình chỉ thấy cái nút đổi màu và con số tăng lên một. Còn cú bấm đó thì phải rời khỏi máy bạn, đi qua cục
+phát WiFi trong nhà, qua mạng của nhà mạng, qua cả chục thiết bị chuyển tiếp nữa mới tới một server của Facebook. Ở đó nó
+được ghi lại, rồi một câu trả lời đi ngược về để con số trên màn hình bạn tăng lên.</p>
+
+<p>Cả chục thiết bị là mình đếm thật. Ngày 30/10/2026 mình dò đường từ laptop của mình tới facebook.com thì dữ liệu đi qua
+14 chặng, và một lượt đi về mất khoảng 20 mili giây. Bạn sẽ tự dò được đường đó ở phần Lab.</p>
+
+<h2 id="why-layers">Chia việc thành tầng</h2>
+
+<p>Đưa một cú like đi xa như vậy là rất nhiều việc, nên người ta chia nó ra từng phần. Chuyện chia việc này bạn quen rồi:
+viết app Spring Boot thì bạn tách controller, service, repository. Controller nhận request rồi gọi service, service gọi
+repository, repository nói chuyện với database. Controller không cần biết database là PostgreSQL hay MySQL, đổi database
+thì chỉ sửa ở repository.</p>
+
+<p>Mạng máy tính cũng chia việc như vậy. Mỗi phần việc gọi là một <strong>tầng</strong> (layer). Tầng trên nhờ tầng ngay
+dưới làm phần việc của nó, chứ không tự làm thay. Nhờ thế trình duyệt không cần biết máy bạn đang dùng WiFi hay cắm dây
+mạng: đổi từ dây sang WiFi thì chỉ tầng dưới cùng làm khác đi.</p>
+
+<h2 id="osi">Bảy tầng của mô hình OSI</h2>
+
+<p>Vậy chia làm mấy tầng, mỗi tầng lo gì? Cách chia được dạy nhiều nhất là mô hình <strong>OSI</strong> (Open Systems
+Interconnection, kết nối các hệ thống mở). Cái tên nói luôn mục đích của nó: máy của hãng này nói chuyện được với máy của
+hãng khác, miễn là cùng chia việc theo một bản chung. Bản chia việc đó do ISO, tổ chức tiêu chuẩn quốc tế, công bố năm
+1984. Bản đang dùng là ISO/IEC 7498-1:1994, và ITU-T phát hành cùng nội dung dưới số hiệu X.200, tải về miễn phí. Bảy tầng
+được kể tên ở mục 6.1.2 của X.200, như Hình 1.</p>
+
+<figure class="fig">
+<blockquote class="src" lang="en">
+<p>The Reference Model contains seven layers:</p>
+<p>a) the Application Layer (layer 7);<br>
+b) the Presentation Layer (layer 6);<br>
+c) the Session Layer (layer 5);<br>
+d) the Transport Layer (layer 4);<br>
+e) the Network Layer (layer 3);<br>
+f) the Data Link Layer (layer 2); and<br>
+g) the Physical Layer (layer 1).</p>
+</blockquote>
+<figcaption><b>Hình 1</b> Bảy tầng của OSI, trích mục 6.1.2 của
+<a href="https://www.itu.int/rec/T-REC-X.200-199407-I/en">ITU-T X.200</a>, bản tháng 7 năm 1994. Tầng 1 ở dưới cùng,
+sát sợi dây và làn sóng. Tầng 7 ở trên cùng, sát chương trình bạn dùng.</figcaption>
+</figure>
+
+<p>Đọc danh sách ở Hình 1 thì bảy cái tên đứng cạnh nhau, chưa thấy tầng nào cần tới tầng nào, nên rất khó nhớ. Nhưng các
+tầng nối với nhau theo một cách đơn giản: tầng nào cũng giải quyết đúng một chuyện mà tầng ngay dưới nó còn bỏ dở. Vì vậy
+học từ dưới lên là dễ nhất, bắt đầu từ chuyện cơ bản nhất là làm sao chở được dữ liệu từ máy này sang máy khác.</p>
+
+<p>Tên tầng mình giữ tiếng Anh vì tài liệu nào cũng gọi như vậy, và người làm hạ tầng hay gọi luôn theo số, kiểu "lỗi tầng
+7", "load balancer tầng 4". Để nhớ thứ tự từ dưới lên, người ta hay dùng câu <em>Please Do Not Throw Sausage Pizza
+Away</em>: chữ cái đầu mỗi từ ứng với Physical, Data Link, Network, Transport, Session, Presentation, Application.</p>
+
+</section>
+
+<!-- Phần: tầng 1 và 2 -->
+<section class="part" id="lower-layers">
+<header class="part-head"><p class="part-title">tầng</p><span class="part-num"><i class="c1">1</i><i class="c2">2</i></span><p class="part-note">chở bit, tới máy kế bên</p></header>
+
+<h2 id="physical" class="layer-h c1" data-layer="1">Tầng <span class="layer-badge c1">1</span> Physical: chở số 0 và 1</h2>
+
+<p>Máy tính chỉ làm việc với số 0 và 1, mỗi số gọi là một <strong>bit</strong>. Muốn gửi bất cứ thứ gì, kể cả một cú like,
+thì trước hết phải có cách chở bit từ máy này sang máy khác. Đó là việc của tầng 1.</p>
+
+<p>Tầng 1 biến bit thành thứ đi được trong thế giới thật: sóng radio nếu bạn dùng WiFi, xung điện nếu cắm dây mạng, xung ánh
+sáng nếu đi trong cáp quang. Đầu bên kia đổi tín hiệu ngược lại thành bit. Thiết bị làm việc này trong máy bạn là card
+mạng.</p>
+
+<figure class="fig photo side">
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg" data-credit="Ảnh: Dmitry Nosachev · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Dmitry Nosachev · Wikimedia Commons · CC BY-SA 4.0"><img src="img/nic-two-port.webp" width="900" height="620" loading="lazy" alt="Một card mạng máy chủ có tản nhiệt lớn và hai cổng cắm cáp mạng ở mặt gắn vỏ máy."></a>
+  <figcaption><b>Ảnh 1</b> Card mạng Intel X540-T2 của máy chủ, hai cổng cắm dây mạng đồng. Chip trên card đổi bit thành
+  xung điện chạy trên dây, và đổi ngược lại khi nhận.</figcaption>
+</figure>
+
+<p>Ra khỏi nhà thì đoạn đường dài nhất thường là cáp quang. Giữa các châu lục, phần lớn lưu lượng Internet đi qua cáp quang
+đặt dưới đáy biển, như mấy mẫu cáp ở Ảnh 2.</p>
+
+<figure class="fig photo">
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg" data-credit="Ảnh: Lonnie Hagadorn · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Lonnie Hagadorn · Wikimedia Commons · CC BY-SA 4.0"><img src="img/submarine-cable.webp" width="1200" height="803" loading="lazy" alt="Bốn mẫu cáp quang biển cắt ngang đặt cạnh nhau, có nhãn chú thích từng lớp: lõi sợi quang, dây đồng cấp điện, lớp giáp thép."></a>
+  <figcaption><b>Ảnh 2</b> Mẫu cắt ngang của bốn loại cáp quang biển. Sợi quang ở lõi là nơi bit đi thành ánh sáng. Bọc quanh
+  là dây đồng cấp điện cho các bộ khuếch đại dọc tuyến, ngoài cùng là các lớp giáp thép, dày dần ở đoạn gần bờ vì ở đó cáp
+  dễ bị neo tàu kéo đứt.</figcaption>
+</figure>
+
+<p>Tầng 1 chỉ lo chở, không lo bit đi tới máy nào. Mà trong một căn nhà thì laptop, điện thoại, TV cùng bắt chung một sóng
+WiFi. Bit bay ra thì máy nào nhận?</p>
+
+<h2 id="data-link" class="layer-h c2" data-layer="2">Tầng <span class="layer-badge c2">2</span> Data Link: tới đúng thiết bị kế bên</h2>
+
+<p>Để biết bit dành cho máy nào, card mạng nào cũng có một địa chỉ riêng, thường được gắn sẵn từ lúc sản xuất, gọi là
+<strong>địa chỉ MAC</strong>. Địa chỉ MAC viết thành sáu cặp số hex, như card WiFi trên máy mình là
+<code>20-0B-74-xx-xx-xx</code> (mình ẩn ba cặp cuối).</p>
+
+<p>Tầng 2 bọc dữ liệu trong một lớp vỏ ghi MAC gửi và MAC nhận. Dữ liệu đã có lớp vỏ này gọi là <strong>frame</strong>
+(khung). Máy nào nhận được frame mà MAC nhận không phải của mình thì bỏ qua.</p>
+
+<p>Trong mạng nhà bạn, thiết bị chuyển frame theo địa chỉ MAC là switch, nối các máy bằng dây, và access point, cho máy nối
+vào bằng sóng WiFi. Cục phát WiFi trong nhà thường gộp cả hai vào một hộp.</p>
+
+<figure class="fig photo">
+  <div class="photo-row">
+    <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:Lancom_GS-1108-3486.jpg" data-credit="Ảnh: Raimond Spekking · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Raimond Spekking · Wikimedia Commons · CC BY-SA 4.0"><img src="img/switch-8-port.webp" width="1200" height="560" loading="lazy" alt="Một switch màu đen, mặt trước có tám cổng cắm cáp mạng xếp một hàng, đánh số từ 1 tới 8."></a><div class="lbl">switch</div></figure>
+    <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:Unifi_AC_Lite_Access_Point.jpg" data-credit="Ảnh: ServerGuruBrisbane · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: ServerGuruBrisbane · Wikimedia Commons · CC BY-SA 4.0"><img src="img/access-point.webp" width="845" height="956" loading="lazy" alt="Một thiết bị hình đĩa tròn màu trắng gắn trên tường, giữa có một vòng đèn, phía dưới có một sợi cáp mạng đi vào."></a><div class="lbl">access point</div></figure>
+  </div>
+  <figcaption><b>Ảnh 3</b> Hai thiết bị tầng 2. Bên trái là switch tám cổng Lancom GS-1108: máy nào cắm dây vào cổng nào
+  thì switch chuyển frame tới cổng đó theo địa chỉ MAC. Bên phải là access point UniFi AC Lite gắn trên tường, làm cùng
+  việc nhưng bằng sóng WiFi.</figcaption>
+</figure>
+
+<p>Nhưng MAC chỉ dùng được trong một mạng, kiểu trong nhà bạn. Server của Facebook nằm ở một mạng khác, cách nhà bạn cả chục
+mạng, và laptop của bạn không gửi frame thẳng tới đó được. Muốn đi xa thì cần thêm một tầng nữa.</p>
+
+</section>
+
+<!-- Phần: tầng 3 và 4 -->
+<section class="part" id="middle-layers">
+<header class="part-head"><p class="part-title">tầng</p><span class="part-num"><i class="c3">3</i><i class="c4">4</i></span><p class="part-note">đi xa, tới đúng chương trình</p></header>
+
+<h2 id="network" class="layer-h c3" data-layer="3">Tầng <span class="layer-badge c3">3</span> Network: đi qua nhiều mạng tới đúng máy</h2>
+
+<p>Tầng 3 cho mỗi máy một địa chỉ dùng được trên cả Internet, gọi là <strong>địa chỉ IP</strong>. Địa chỉ của facebook.com
+lúc mình hỏi ngày 30/10/2026 là <code>57.144.64.1</code>. Tầng 3 gắn vào dữ liệu một phần đầu ghi IP gửi và IP nhận, và dữ
+liệu có phần đầu này gọi là <strong>gói tin</strong> (packet).</p>
+
+<p>Thiết bị nối các mạng với nhau là <strong>router</strong>. Router nhận gói tin, đọc IP nhận, rồi chuyển gói sang mạng gần
+đích hơn. Router đầu tiên là cục phát WiFi trong nhà bạn. Từ laptop của mình tới facebook.com, gói tin đi qua 14 chặng
+như thế.</p>
+
+<figure class="fig photo side">
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg" data-credit="Ảnh: Evan-Amos · Wikimedia Commons · public domain, đã chuyển đen trắng" aria-label="Nguồn ảnh: Evan-Amos · Wikimedia Commons · public domain"><img src="img/home-router.webp" width="800" height="600" loading="lazy" alt="Một router không dây gia đình màu đen có hai ăng-ten dựng đứng."></a>
+  <figcaption><b>Ảnh 4</b> Một router gia đình. Gói tin nào rời máy bạn để ra Internet cũng qua thiết bị này đầu tiên; nó
+  đọc địa chỉ IP rồi chuyển gói ra mạng của nhà mạng.</figcaption>
+</figure>
+
+<p>Tới đây tầng 2 và tầng 3 ghép thành một bức tranh, và đây là bức tranh đáng nhớ nhất của bài. Địa chỉ IP ghi máy đầu và
+máy cuối, nên nó giữ nguyên suốt đường đi. Còn vỏ MAC chỉ dùng cho một bước nhảy: ở mỗi router, vỏ MAC cũ bị bóc ra,
+router đọc IP để chọn hướng, rồi bọc một vỏ MAC mới ghi địa chỉ của thiết bị kế tiếp.</p>
+
+<figure class="fig">
+<div class="hops">
+  <div class="hop-node">laptop</div>
+  <div class="hop-leg m1"><span class="hop-packet"><i class="hp-ip">IP nhận 57.144.64.1</i><i class="hp-mac">MAC nhận: router nhà</i></span></div>
+  <div class="hop-node">router nhà</div>
+  <div class="hop-leg m2"><span class="hop-packet"><i class="hp-ip">IP nhận 57.144.64.1</i><i class="hp-mac">MAC nhận: router nhà mạng</i></span></div>
+  <div class="hop-node">router nhà mạng</div>
+  <div class="hop-leg m3 more"><span class="hop-packet"><i class="hp-ip">IP nhận 57.144.64.1</i><i class="hp-mac">MAC nhận: server Facebook</i></span></div>
+  <div class="hop-node">server Facebook</div>
+</div>
+<figcaption><b>Hình 2</b> Cùng một gói tin qua từng bước nhảy. Ô IP nhận (vàng) giống hệt nhau ở mọi bước, ô MAC nhận thì mỗi bước một cái mới. Giữa router nhà mạng và server còn nhiều router khác, hình lược bớt.</figcaption>
+</figure>
+
+<p>Gói tin tới đúng máy rồi. Nhưng server của Facebook chạy nhiều chương trình cùng lúc, vậy gói tin này giao cho chương
+trình nào?</p>
+
+<h2 id="transport" class="layer-h c4" data-layer="4">Tầng <span class="layer-badge c4">4</span> Transport: tới đúng chương trình, đủ và đúng thứ tự</h2>
+
+<p>Tầng 4 cho mỗi chương trình nhận kết nối một con số riêng, gọi là <strong>port</strong>. Trang <code>https</code> như
+facebook.com dùng port 443. App Spring Boot bạn chạy ở <code>localhost:8080</code> thì 8080 là port của nó.</p>
+
+<p>Tầng 4 còn lo một chuyện nữa. Mạng chỉ chở từng mẩu nhỏ, trên mạng Ethernet thường thì mỗi mẩu tối đa khoảng 1.500
+byte, và qua cả chục router thì mẩu có thể mất hay tới sai thứ tự.</p>
+
+<p>Giao thức hay dùng nhất ở tầng này là <strong>TCP</strong> (Transmission Control Protocol). TCP cắt dữ liệu thành mẩu,
+đánh số từng mẩu, gửi lại mẩu bị mất, và ráp lại đúng thứ tự ở đầu kia. Trước khi gửi, TCP ở hai máy trao đổi vài mẩu để
+mở một kết nối. Bên cạnh TCP còn UDP, cũng ghi port nhưng không mở kết nối và không gửi lại mẩu mất, hợp với những thứ
+hỏi đáp gọn trong một mẩu.</p>
+
+<p>Tới đây bốn tầng dưới đã đưa được một khối byte tới đúng chương trình trên đúng máy. Nhưng khối byte đó nói gì, viết theo
+kiểu nào để hai chương trình hiểu nhau? Đó là phần của ba tầng trên.</p>
+
+</section>
+
+<!-- Phần: tầng 5, 6, 7 -->
+<section class="part" id="upper-layers">
+<header class="part-head"><p class="part-title">tầng</p><span class="part-num"><i class="c5">5</i><i class="c6">6</i><i class="c7">7</i></span><p class="part-note">phần của chương trình</p></header>
+
+<p>Ba tầng trên nằm trong chính chương trình ở hai đầu, là trình duyệt của bạn và server của Facebook. Các router ở giữa
+không đụng tới chúng.</p>
+
+<h2 id="session" class="layer-h c5" data-layer="5">Tầng <span class="layer-badge c5">5</span> Session: giữ cuộc trao đổi</h2>
+
+<p>Tầng 5 lo mở, giữ và đóng một cuộc trao đổi giữa hai chương trình. Bạn like xong lại like bài khác, cuộn bảng tin, và
+trình duyệt dùng tiếp cuộc trao đổi đang có với server chứ không mở lại từ đầu cho mỗi việc.</p>
+
+<h2 id="presentation" class="layer-h c6" data-layer="6">Tầng <span class="layer-badge c6">6</span> Presentation: hai đầu hiểu dữ liệu như nhau</h2>
+
+<p>Tầng 6 lo dữ liệu được biểu diễn theo một kiểu mà hai đầu cùng hiểu, ví dụ chữ có dấu tiếng Việt phải được đổi thành
+byte theo cùng một bảng mã ở cả hai đầu.</p>
+
+<p>Mã hoá cũng hay được xếp vào tầng này. facebook.com chạy <code>https</code>, chữ <code>s</code> nghĩa là dữ liệu được mã
+hoá bằng <strong>TLS</strong> (Transport Layer Security) trước khi rời máy bạn, nên các thiết bị đứng giữa đường chỉ thấy
+một khối byte không đọc được.</p>
+<p>Tầng 5 và tầng 6 có một điểm lạ: trên Internet ngày nay không có phần mềm nào chỉ làm việc của tầng 5, cũng không có phần
+mềm nào chỉ làm việc của tầng 6. Việc của chúng nằm rải trong trình duyệt, trong thư viện TLS và trong chính app, nên hai
+tầng này thường chỉ được nói lướt như vậy.</p>
+
+<h2 id="application" class="layer-h c7" data-layer="7">Tầng <span class="layer-badge c7">7</span> Application: viết ra lời nhắn like</h2>
+
+<p>Tầng 7 là chỗ cú like được viết ra. Đoạn JavaScript gắn với nút like trên trang facebook.com viết một lời nhắn gửi cho
+server, đại ý "người dùng này like bài viết kia", theo <strong>HTTP</strong> (Hypertext Transfer Protocol), quy ước chung
+về cách trình duyệt và server nói chuyện với nhau.</p>
+
+<p>HTTP thì bạn quen rồi, chỉ là từ phía server: controller có <code>@PostMapping</code> nhận đúng loại lời nhắn này, và
+controller của bạn đứng ở tầng 7. Đường dẫn và nội dung thật mà Facebook dùng thì mình không xem được khi chưa đăng nhập,
+nên Hình 3 chỉ là dạng chung của nó.</p>
+
+<figure class="fig">
+<pre><code>POST /&lt;đường dẫn của Facebook&gt; HTTP/1.1
+Host: www.facebook.com
+Content-Type: application/json
+Cookie: &lt;phiên đăng nhập của bạn&gt;
+
+{"bai_viet": "123456", "hanh_dong": "like"}</code></pre>
+<figcaption><b>Hình 3</b> Dạng chung của một request like, mình viết để minh hoạ, không phải request thật của Facebook. Dòng
+đầu là phương thức và đường dẫn, mấy dòng sau là header, sau một dòng trống là phần thân.</figcaption>
+</figure>
+
+<p>Trước request đó còn một việc nữa, cũng ở tầng 7. Trình duyệt chỉ biết cái tên <code>www.facebook.com</code>, nên nó hỏi
+<strong>DNS</strong> (Domain Name System) để đổi tên thành địa chỉ IP, có địa chỉ rồi tầng 3 mới có cái để ghi vào phần
+đầu IP.</p>
+
+</section>
+
+<!-- Phần: cú like đi qua cả bảy tầng -->
+<section class="part" id="journey">
+<header class="part-head"><p class="part-title">đường đi</p><span class="part-num"><i class="c7">7</i><i class="c6">6</i><i class="c5">5</i><i class="c4">4</i><i class="c3">3</i><i class="c2">2</i><i class="c1">1</i></span><p class="part-note">đi xuống, đi qua, đi lên</p></header>
+
+<p>Đủ bảy tầng rồi. Lúc bạn bấm like, mọi thứ chạy theo chiều ngược với thứ tự vừa học: lời nhắn sinh ra ở tầng 7 rồi đi
+dần xuống tầng 1.</p>
+
+<h2 id="encapsulation">Đi xuống: mỗi tầng bọc thêm một lớp</h2>
+
+<p>Đi từ trên xuống, mỗi tầng nhận thứ tầng trên đưa xuống và coi nó là một khối byte. Nó không đọc bên trong khối đó, chỉ
+gắn thêm phần đầu của mình rồi giao xuống tiếp. Cách xếp lớp này gọi là <strong>encapsulation</strong> (đóng gói). Hình 4
+chạy cả hai chiều: máy bạn đóng gói, server bóc ra.</p>
+
+<figure class="fig">
+<div class="encap">
+    <div class="encap-row">
+      <div class="encap-block mac c2"><b>vỏ MAC</b><span>MAC gửi</span><span>MAC nhận</span><i>tầng 2</i></div>
+      <div class="encap-block ip c3"><b>đầu IP</b><span>IP gửi</span><span>IP nhận</span><i>tầng 3</i></div>
+      <div class="encap-block tcp c4"><b>đầu TCP</b><span>port gửi</span><span>port nhận</span><i>tầng 4</i></div>
+      <div class="encap-block tls"><b>đầu TLS</b></div>
+      <div class="encap-block http c7"><b>lời nhắn HTTP</b><code>POST ... like</code><code>Host: facebook.com</code><i>tầng 7</i></div>
+    </div>
+    <div class="encap-tls"><span><b>TLS mã hoá phần này</b></span></div>
+    <div class="encap-notes"><p>gắn sau cùng, bóc đầu tiên</p><p>viết đầu tiên, đọc sau cùng</p></div>
+    <div class="encap-btns">
+      <span class="encap-phase" data-phase="pack">máy bạn đóng gói</span>
+      <span class="encap-phase" data-phase="unpack">server bóc ra</span>
+      <button class="diagram-btn" type="button" aria-pressed="false">dừng</button>
+    </div>
+  </div>
+<figcaption><b>Hình 4</b> Gói tin chở cú like. Phần bên phải được viết trước, mỗi tầng sau gắn thêm một phần đầu ở bên
+trái; bên nhận bóc theo chiều ngược lại. Tầng 1 không gắn gì, nó chỉ đổi cả dãy này thành tín hiệu.</figcaption>
+</figure>
+
+<div class="callout">
+  <span class="label">Ẩn dụ phong bì lồng phong bì</span>
+  <p>Hình 4 giống một lá thư bỏ vào phong bì, phong bì đó lại bỏ vào một phong bì to hơn, mỗi phong bì ghi một loại địa
+  chỉ: phong bì trong cùng ghi tên chương trình nhận (port), phong bì giữa ghi địa chỉ nhà (IP), phong bì ngoài cùng ghi
+  người đưa thư kế tiếp (MAC). Ẩn dụ này hết đúng ở hai chỗ. Phong bì MAC bị vứt và thay cái mới ở mỗi bước nhảy, còn thư
+  thật thì không ai thay phong bì giữa đường. Và TCP cắt lá thư ra thành nhiều mẩu, mỗi mẩu một bộ phong bì riêng.</p>
+</div>
+
+<h2 id="down-and-up">Đi qua rồi đi lên</h2>
+
+<p>Rời máy bạn ở tầng 1, gói tin đi qua cục phát WiFi, nhà mạng và các router, tới server thì đi ngược từ tầng 1 lên tầng 7:
+card mạng nhận tín hiệu, tầng 2 bóc vỏ MAC, tầng 3 thấy IP nhận đúng là máy mình, tầng 4 đọc port 443 để giao cho đúng
+chương trình và ráp các mẩu lại, TLS giải mã, cuối cùng chương trình của Facebook đọc được lời nhắn like. Câu trả lời
+"đã like" đi lại quy trình đó theo chiều ngược lại.</p>
+
+<figure class="fig">
+<div class="two-towers">
+    <div class="tower-col" data-side="down">
+      <p class="tower-label">máy bạn, đi xuống</p>
+      <div class="cell c7" data-layer="7"><b>7</b><span><small>Application</small>viết lời nhắn like</span></div>
+      <div class="cell c6" data-layer="6"><b>6</b><span><small>Presentation</small>biểu diễn, mã hoá</span></div>
+      <div class="cell c5" data-layer="5"><b>5</b><span><small>Session</small>giữ cuộc trao đổi</span></div>
+      <div class="cell c4" data-layer="4"><b>4</b><span><small>Transport</small>cắt mẩu, đánh số, port</span></div>
+      <div class="cell c3" data-layer="3"><b>3</b><span><small>Network</small>ghi địa chỉ IP</span></div>
+      <div class="cell c2" data-layer="2"><b>2</b><span><small>Data Link</small>ghi địa chỉ MAC</span></div>
+      <div class="cell c1" data-layer="1"><b>1</b><span><small>Physical</small>thành sóng WiFi</span></div>
+    </div>
+    <div class="tower-col" data-side="up">
+      <p class="tower-label">server của Facebook, đi lên</p>
+      <div class="cell c7" data-layer="7"><b>7</b><span><small>Application</small>đọc lời nhắn, ghi like</span></div>
+      <div class="cell c6" data-layer="6"><b>6</b><span><small>Presentation</small>giải mã, đọc dữ liệu</span></div>
+      <div class="cell c5" data-layer="5"><b>5</b><span><small>Session</small>giữ cuộc trao đổi</span></div>
+      <div class="cell c4" data-layer="4"><b>4</b><span><small>Transport</small>ráp mẩu đúng thứ tự</span></div>
+      <div class="cell c3" data-layer="3"><b>3</b><span><small>Network</small>thấy địa chỉ của mình</span></div>
+      <div class="cell c2" data-layer="2"><b>2</b><span><small>Data Link</small>nhận từ máy kế bên</span></div>
+      <div class="cell c1" data-layer="1"><b>1</b><span><small>Physical</small>nhận tín hiệu trên dây</span></div>
+    </div>
+    <div class="bridge"><span>cục phát WiFi, nhà mạng, router</span><i class="dot" aria-hidden="true"></i></div>
+    <div class="btn-row"><button class="diagram-btn" type="button" aria-pressed="false">dừng</button></div>
+  </div>
+<figcaption><b>Hình 5</b> Cú like qua bảy tầng ở hai đầu. Mỗi ô là việc của một tầng. Rê chuột lên một ô thì sáng cùng
+tầng ở tòa bên kia.</figcaption>
+</figure>
+
+<h2 id="router-three-layers">Router chỉ mở tới tầng 3</h2>
+
+<p>Máy bạn và server cần đủ bảy tầng, vì một bên viết lời nhắn còn bên kia đọc nó. Router đứng giữa đường thì chỉ cần ba
+tầng dưới: mục 6.1.6 của X.200 nói việc chuyển tiếp giữa đường được "provided in the lower layers", tức do các tầng dưới
+lo. Hình 6 vẽ lại cảnh đó theo Figure 12 của X.200.</p>
+
+<figure class="fig">
+<div class="three-hosts">
+    <div class="host-col" data-host="client">
+      <p class="host-label">máy bạn</p>
+      <div class="host-cell c7" data-layer="7"><b>7</b><span>Application</span></div>
+      <div class="host-cell c6" data-layer="6"><b>6</b><span>Presentation</span></div>
+      <div class="host-cell c5" data-layer="5"><b>5</b><span>Session</span></div>
+      <div class="host-cell c4" data-layer="4"><b>4</b><span>Transport</span></div>
+      <div class="host-cell c3" data-layer="3"><b>3</b><span>Network</span></div>
+      <div class="host-cell c2" data-layer="2"><b>2</b><span>Data Link</span></div>
+      <div class="host-cell c1" data-layer="1"><b>1</b><span>Physical</span></div>
+    </div>
+    <div class="host-col" data-host="router">
+      <p class="host-label">router</p>
+      <div class="host-gap word">HTTP, hai đầu đọc</div>
+      <div class="host-gap"></div>
+      <div class="host-gap"></div>
+      <div class="host-gap word">TCP, hai đầu đọc</div>
+      <div class="host-cell c3" data-layer="3"><b>3</b><span>Network</span></div>
+      <div class="host-cell c2" data-layer="2"><b>2</b><span>Data Link</span></div>
+      <div class="host-cell c1" data-layer="1"><b>1</b><span>Physical</span></div>
+    </div>
+    <div class="host-col" data-host="server">
+      <p class="host-label">server</p>
+      <div class="host-cell c7" data-layer="7"><b>7</b><span>Application</span></div>
+      <div class="host-cell c6" data-layer="6"><b>6</b><span>Presentation</span></div>
+      <div class="host-cell c5" data-layer="5"><b>5</b><span>Session</span></div>
+      <div class="host-cell c4" data-layer="4"><b>4</b><span>Transport</span></div>
+      <div class="host-cell c3" data-layer="3"><b>3</b><span>Network</span></div>
+      <div class="host-cell c2" data-layer="2"><b>2</b><span>Data Link</span></div>
+      <div class="host-cell c1" data-layer="1"><b>1</b><span>Physical</span></div>
+    </div>
+  </div>
+  <div class="host-btn"><button class="diagram-btn" type="button" aria-pressed="false">dừng</button></div>
+<figcaption><b>Hình 6</b> Router chỉ có ba tầng dưới, vẽ lại theo Figure 12 của ITU-T X.200. Phần đầu TCP và lời nhắn HTTP
+đi qua router mà router không đọc tới.</figcaption>
+</figure>
+
+<p>Hình 6 là bức tranh IP giữ, MAC đổi ở Hình 2 nhìn từ một phía khác: router bóc vỏ MAC, đọc IP ở tầng 3, rồi bọc vỏ MAC
+mới và đẩy đi. Bốn tầng trên chỉ có ở hai máy hai đầu, nên dù có 14 router ở giữa, không router nào biết bạn vừa bấm
+like, và nhờ TLS thì cũng không router nào đọc được dù có muốn.</p>
+
+<h2 id="why-know-layers">Biết tầng để làm gì</h2>
+
+<p>Người làm hạ tầng gặp lỗi mạng thì hỏi trước tiên là hỏng ở tầng nào, vì mỗi tầng hỏng một kiểu và có cách soi riêng.
+Bảng 1 xếp vài triệu chứng hay gặp theo tầng, kèm bên nào viết ra thông báo lỗi đó.</p>
+
+<div class="table-scroll">
+<table class="layer-table">
+  <caption><b>Bảng 1</b> Triệu chứng, tầng hỏng, và ai viết ra thông báo.</caption>
+  <thead><tr><th>Triệu chứng</th><th>Tầng</th><th>Ai viết ra</th><th>Soi bằng</th></tr></thead>
+  <tbody>
+    <tr data-layers="1 2"><td>Biểu tượng mạng gạch chéo, không bắt được WiFi</td><td>1, 2</td><td>hệ điều hành</td><td>xem WiFi, dây mạng</td></tr>
+    <tr data-layers="3"><td><code>tracert</code> dừng ở một router, các dòng sau toàn dấu sao</td><td>3</td><td><code>tracert</code></td><td><code>tracert</code></td></tr>
+    <tr data-layers="4"><td><code>Connection refused</code>: máy đích trả lời ngay là không có chương trình nào nghe ở port đó</td><td>4</td><td>máy đích</td><td><code>curl -v</code></td></tr>
+    <tr data-layers="5 6"><td>Trình duyệt báo chứng chỉ không hợp lệ hoặc hết hạn</td><td>giữa 4 và 7 (TLS)</td><td>trình duyệt</td><td><code>curl -v</code></td></tr>
+    <tr data-layers="7"><td><code>Non-existent domain</code>, <code>Could not resolve host</code></td><td>7 (DNS)</td><td>server DNS, hoặc chương trình không hỏi được DNS</td><td><code>nslookup</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Dòng <code>Could not resolve host</code> có một chỗ dễ lừa: thông báo là của tầng 7, nhưng lý do có khi nằm tận tầng 1.
+Máy mất WiFi thì việc đầu tiên hỏng là hỏi DNS, nên chương trình báo không tìm được tên chứ không báo mất mạng. Lab sẽ cho
+bạn thấy cảnh này.</p>
+
+</section>
+
+<!-- Phần: lab -->
+<section class="part" id="lab">
+<header class="part-head"><p class="part-title">lab</p><p class="part-note">soi từng tầng trên máy bạn</p></header>
+
+<p>Lab này soi cú like ở vài tầng bằng những lệnh có sẵn trên Windows, chạy trong Git Bash. Output là của máy mình ngày
+30/10/2026; máy bạn sẽ ra địa chỉ và thời gian khác, cách đọc thì vẫn vậy.</p>
+
+<pre><code># Lab 1: tầng 2, địa chỉ MAC của các card mạng
+getmac
+
+# Lab 2: tầng 3, dò chuỗi router tới facebook.com
+tracert -d facebook.com
+
+# Lab 3: tầng 7, hỏi DNS
+nslookup facebook.com
+
+# Lab 4: tầng 4 và tầng 7 trong một lần gọi
+curl -v -o /dev/null https://www.facebook.com/
+
+# Lab 5: tự gây lỗi
+nslookup khong-ton-tai-dau-nhe-12345.com</code></pre>
+
+<h2 id="lab-1">Lab 1: tầng 2, địa chỉ MAC</h2>
+
+<pre><code>$ getmac
+Physical Address    Transport Name
+=================== ===========================================
+00-FF-78-xx-xx-xx   \Device\Tcpip_{...}
+E8-9C-25-xx-xx-xx   Media disconnected
+20-0B-74-xx-xx-xx   \Device\Tcpip_{...}</code></pre>
+
+<p>Mỗi dòng là một card mạng, cột trái là địa chỉ MAC (Windows gọi là Physical Address). Máy mình có ba card: một card ảo
+do phần mềm VPN tạo ra, một card đang không nối mạng (<code>Media disconnected</code>, theo mình đoán là cổng dây mạng vì
+máy không cắm dây), và card WiFi đang dùng. Một máy có nhiều card thì có nhiều địa chỉ MAC.</p>
+
+<h2 id="lab-2">Lab 2: tầng 3, dò chuỗi router</h2>
+
+<p>Lệnh <code>tracert</code> trên Windows (trên Linux là <code>traceroute</code>) liệt kê các router mà gói tin đi qua; cờ
+<code>-d</code> bảo lệnh khỏi đổi địa chỉ IP thành tên cho nhanh. Hình 7 là kết quả trên máy mình, địa chỉ các router của
+nhà mạng đã được ẩn vì chúng cho biết mạng nhà mình nằm ở đâu.</p>
+
+<figure class="fig">
+<ol class="route" aria-label="14 chặng từ laptop tới facebook.com">
+    <li class="group" aria-hidden="true">mạng trong nhà</li>
+    <li class="hop home"><span class="node"></span><span class="num">1</span><span class="addr">192.168.10.33</span><span class="ms">3 ms · 1 ms · 1 ms</span></li>
+    <li class="hop home"><span class="node"></span><span class="num">2</span><span class="addr">192.168.1.1</span><span class="ms">1 ms · 1 ms · 1 ms</span></li>
+    <li class="group" aria-hidden="true">mạng của nhà mạng</li>
+    <li class="hop isp"><span class="node"></span><span class="num">3</span><span class="addr">(router nhà mạng, đã ẩn)</span><span class="ms">2 ms · 4 ms · 2 ms</span></li>
+    <li class="hop isp"><span class="node"></span><span class="num">4</span><span class="addr">(router nhà mạng, đã ẩn)</span><span class="ms">21 ms · 2 ms · 2 ms</span></li>
+    <li class="hop isp"><span class="node"></span><span class="num">5</span><span class="addr">(router nhà mạng, đã ẩn)</span><span class="ms">9 ms · 2 ms · 2 ms</span></li>
+    <li class="hop silent"><span class="node"></span><span class="num">6</span><span class="addr">Request timed out.</span><span class="ms">* · * · *</span></li>
+    <li class="hop isp"><span class="node"></span><span class="num">7</span><span class="addr">(router nhà mạng, đã ẩn)</span><span class="ms">4 ms · 2 ms · 2 ms</span></li>
+    <li class="hop isp"><span class="node"></span><span class="num">8</span><span class="addr">(router nhà mạng, đã ẩn)</span><span class="ms">9 ms · 3 ms · 4 ms</span></li>
+    <li class="hop isp"><span class="node"></span><span class="num">9</span><span class="addr">(router nhà mạng, đã ẩn)</span><span class="ms">70 ms · 53 ms · 102 ms</span></li>
+    <li class="group" aria-hidden="true">các mạng tiếp theo</li>
+    <li class="hop"><span class="node"></span><span class="num">10</span><span class="addr">157.240.68.66</span><span class="ms">25 ms · 89 ms · 30 ms</span></li>
+    <li class="hop"><span class="node"></span><span class="num">11</span><span class="addr">147.75.211.10</span><span class="ms">120 ms · * · 27 ms</span></li>
+    <li class="hop"><span class="node"></span><span class="num">12</span><span class="addr">129.134.62.49</span><span class="ms">129 ms · 101 ms · 110 ms</span></li>
+    <li class="hop"><span class="node"></span><span class="num">13</span><span class="addr">129.134.95.218</span><span class="ms">20 ms · 21 ms · 22 ms</span></li>
+    <li class="group" aria-hidden="true">facebook.com</li>
+    <li class="hop target"><span class="node"></span><span class="num">14</span><span class="addr">57.144.64.1</span><span class="ms">19 ms · 19 ms · 19 ms</span></li>
+  </ol>
+  <details class="raw"><summary>output nguyên văn</summary>
+<pre><code>$ tracert -d facebook.com
+Tracing route to facebook.com [57.144.64.1]
+over a maximum of 30 hops:
+
+  1     3 ms     1 ms     1 ms  192.168.10.33
+  2     1 ms     1 ms     1 ms  192.168.1.1
+  3     2 ms     4 ms     2 ms  (router nhà mạng, đã ẩn)
+  4    21 ms     2 ms     2 ms  (router nhà mạng, đã ẩn)
+  5     9 ms     2 ms     2 ms  (router nhà mạng, đã ẩn)
+  6     *        *        *     Request timed out.
+  7     4 ms     2 ms     2 ms  (router nhà mạng, đã ẩn)
+  8     9 ms     3 ms     4 ms  (router nhà mạng, đã ẩn)
+  9    70 ms    53 ms   102 ms  (router nhà mạng, đã ẩn)
+ 10    25 ms    89 ms    30 ms  157.240.68.66
+ 11   120 ms     *       27 ms  147.75.211.10
+ 12   129 ms   101 ms   110 ms  129.134.62.49
+ 13    20 ms    21 ms    22 ms  129.134.95.218
+ 14    19 ms    19 ms    19 ms  57.144.64.1
+
+Trace complete.</code></pre>
+  </details>
+<figcaption><b>Hình 7</b> Đường đi từ laptop của mình tới facebook.com, đo ngày 30/10/2026. Mỗi dòng là một router đã
+chuyển gói tin đi tiếp; ba con số thời gian là ba lần thử, tính cả đi lẫn về.</figcaption>
+</figure>
+
+<p>Hai dòng đầu có địa chỉ <code>192.168...</code>, loại địa chỉ chỉ dùng trong mạng nội bộ: dòng 1 là cục phát WiFi, dòng
+2 theo mình đoán là modem của nhà mạng đặt trong nhà. Dòng 6 toàn dấu sao nghĩa là router đó không trả lời lệnh dò này,
+chứ gói tin không mất ở đó, vì các dòng sau vẫn có. Tới dòng 14 thì ra <code>57.144.64.1</code>, địa chỉ của
+facebook.com. Lệnh chạy hơi lâu, mỗi dòng có dấu sao phải chờ vài giây.</p>
+
+<h2 id="lab-3">Lab 3: tầng 7, hỏi DNS</h2>
+
+<pre><code>$ nslookup facebook.com
+Server:  (tên router, đã ẩn)
+Address:  fe80::10
+
+Non-authoritative answer:
+Name:    facebook.com
+Addresses:  2a03:2880:f31a:1:face:b00c:0:25de
+          57.144.64.1</code></pre>
+
+<p>Khối trên cho biết ai trả lời: cục phát WiFi trong nhà, nó hỏi tiếp giúp rồi đưa lại câu trả lời. Khối dưới là hai địa
+chỉ. <code>57.144.64.1</code> là địa chỉ kiểu cũ, IPv4, cũng là dòng cuối ở Hình 7. Dòng dài kia là địa chỉ kiểu mới,
+IPv6, và trong nó có đoạn <code>face:b00c</code>, đọc lên nghe như "facebook": địa chỉ IPv6 viết bằng hex nên mấy chữ a tới
+f dùng được, và Facebook chọn con số đó cho dễ nhận ra.</p>
+
+<h2 id="lab-4">Lab 4: tầng 4 và tầng 7 trong một lần gọi</h2>
+
+<p><code>curl</code> là chương trình gửi request HTTP từ dòng lệnh, cờ <code>-v</code> bảo nó kể lại từng bước, còn
+<code>-o /dev/null</code> bỏ nội dung trang đi cho output khỏi dài.</p>
+
+<figure class="fig">
+<pre><code>* Host www.facebook.com:443 was resolved.
+* IPv6: (none)
+* IPv4: 57.145.12.1
+*   Trying 57.145.12.1:443...
+* schannel: disabled automatic use of client certificate
+* Connected to www.facebook.com (57.145.12.1) port 443
+&gt; GET / HTTP/1.1
+&gt; Host: www.facebook.com
+&gt; User-Agent: curl/8.10.1
+* schannel: remote party requests renegotiation
+* schannel: renegotiating SSL/TLS connection
+* schannel: SSL/TLS connection renegotiated
+&lt; HTTP/1.1 200 OK</code></pre>
+<figcaption><b>Hình 8</b> Output của <code>curl -v https://www.facebook.com/</code>, ngày 30/10/2026, giữ đúng thứ tự dòng,
+chỉ bỏ bớt các header nhận về và các dòng báo lặp ở cuối. Dòng bắt đầu bằng <code>*</code> là lời curl tự kể,
+<code>&gt;</code> là dữ liệu gửi đi, <code>&lt;</code> là dữ liệu nhận về.</figcaption>
+</figure>
+
+<p>Ba dòng đầu là DNS ở tầng 7 đã trả lời địa chỉ của <code>www.facebook.com</code>; địa chỉ này khác
+<code>facebook.com</code> ở Lab 3 vì đó là hai cái tên khác nhau. Dòng <code>Connected ... port 443</code> là TCP ở tầng 4
+đã mở xong kết nối tới port 443. Sau đó tới lời nhắn HTTP ở tầng 7: <code>GET</code> đi ra, <code>200 OK</code> về. Bắt tay
+TLS diễn ra giữa dòng <code>Connected</code> và dòng <code>GET</code>, nhưng bản curl đi kèm Git for Windows dùng schannel,
+thư viện TLS của Windows, và nó gần như không kể gì về bước này; ba dòng <code>schannel</code> phía sau là server đòi thương
+lượng lại TLS giữa chừng, bỏ qua được.</p>
+
+<h2 id="lab-5">Lab 5: tự gây lỗi</h2>
+
+<p>Bước đầu, hỏi DNS một cái tên chắc chắn chưa ai đăng ký:</p>
+
+<pre><code>$ nslookup khong-ton-tai-dau-nhe-12345.com
+*** (tên router, đã ẩn) can't find khong-ton-tai-dau-nhe-12345.com: Non-existent domain</code></pre>
+
+<p>Lỗi này nằm ở tầng 7: server DNS trả lời được, chỉ là cái tên không có. Lúc đó chưa có kết nối TCP nào được mở, chưa có
+gói tin nào gửi tới server nào, vì chưa có địa chỉ để gửi.</p>
+
+<p>Bước thứ hai, tắt WiFi (và rút dây mạng nếu có cắm), rồi chạy lại Lab 4. Mình chưa chạy bước này trên máy mình, nên dòng
+dưới là kỳ vọng chứ không phải output thật:</p>
+
+<pre><code>$ curl -v -o /dev/null https://www.facebook.com/
+* Could not resolve host: www.facebook.com
+curl: (6) Could not resolve host: www.facebook.com</code></pre>
+
+<p>Hỏng ở tầng 1, nhưng thông báo lại nói về DNS ở tầng 7, vì việc đầu tiên curl làm là hỏi DNS, và không có mạng thì câu
+hỏi đó hỏng trước mọi thứ khác. Muốn phân biệt "tên miền không tồn tại" với "máy mất mạng" thì chạy Lab 3: còn hỏi được DNS
+thì máy vẫn có mạng. Bật WiFi lại rồi chạy lại Lab 4 cho chắc mọi thứ đã về như cũ.</p>
+
+</section>
+
+<!-- Phần: tự kiểm tra, nguồn -->
+<section class="part" id="self-check">
+<header class="part-head"><p class="part-title">tự kiểm tra</p><p class="part-note">tự kiểm tra và nguồn đọc thêm</p></header>
+
+<h2 id="checklist">Tự kiểm tra</h2>
+
+<p>Bấm vào từng dòng khi bạn tự trả lời được mà không nhìn lại bài. Tự chấm bằng cách giải thích cho một người chưa học, bằng
+lời của bạn, kèm một ví dụ.</p>
+
+<ul class="check">
+  <li>Kể được bảy tầng từ dưới lên, mỗi tầng giải quyết chuyện gì mà tầng dưới còn bỏ dở</li>
+  <li>Nói được vì sao chia việc thành tầng, và so được với việc tách controller, service, repository</li>
+  <li>Chỉ ra được địa chỉ MAC thuộc tầng nào, địa chỉ IP thuộc tầng nào, port thuộc tầng nào</li>
+  <li>Giải thích được vì sao địa chỉ IP giữ nguyên suốt đường đi còn vỏ MAC đổi ở mỗi bước nhảy</li>
+  <li>Kể được thứ tự các lớp được gắn vào gói tin lúc cú like đi xuống, và thứ tự bóc ra ở server</li>
+  <li>Nói được router đọc tới tầng mấy, và vì sao router không biết bạn vừa bấm like</li>
+  <li>Đọc được output của <code>curl -v</code> và chỉ ra dòng nào thuộc tầng nào</li>
+  <li>Giải thích được vì sao mất WiFi mà curl lại báo <code>Could not resolve host</code></li>
+</ul>
+
+<h2 id="sources">Nguồn đọc thêm</h2>
+
+<ol class="refs">
+  <li>ITU-T X.200 (07/1994), <em>Information technology, Open Systems Interconnection, Basic Reference Model: The basic
+  model</em>. Văn bản chuẩn của mô hình OSI, tải miễn phí; bảy tầng ở mục 6.1.2, chuyển tiếp ở tầng dưới ở mục 6.1.6.
+  <a href="https://www.itu.int/rec/T-REC-X.200-199407-I/en">itu.int/rec/T-REC-X.200-199407-I</a></li>
+  <li>ISO/IEC 7498-1:1994, cùng nội dung với X.200, phát hành bởi ISO; toàn văn phải trả phí.
+  <a href="https://www.iso.org/standard/20269.html">iso.org/standard/20269.html</a></li>
+  <li>RFC 9110, <em>HTTP Semantics</em>.
+  <a href="https://www.rfc-editor.org/rfc/rfc9110">rfc-editor.org/rfc/rfc9110</a></li>
+  <li>RFC 8446, <em>The Transport Layer Security (TLS) Protocol Version 1.3</em>.
+  <a href="https://www.rfc-editor.org/rfc/rfc8446">rfc-editor.org/rfc/rfc8446</a></li>
+  <li>RFC 9293, <em>Transmission Control Protocol (TCP)</em>.
+  <a href="https://www.rfc-editor.org/rfc/rfc9293">rfc-editor.org/rfc/rfc9293</a></li>
+  <li>RFC 791, <em>Internet Protocol</em>.
+  <a href="https://www.rfc-editor.org/rfc/rfc791">rfc-editor.org/rfc/rfc791</a></li>
+  <li>RFC 1035, <em>Domain Names, Implementation and Specification</em>.
+  <a href="https://www.rfc-editor.org/rfc/rfc1035">rfc-editor.org/rfc/rfc1035</a></li>
+  <li>Microsoft, trang hướng dẫn lệnh <code>tracert</code>.
+  <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/tracert">learn.microsoft.com/…/windows-commands/tracert</a></li>
+  <li>curl, trang hướng dẫn chính thức, gồm cờ <code>-v</code>.
+  <a href="https://curl.se/docs/manpage.html">curl.se/docs/manpage.html</a></li>
+</ol>
+
+</section>
+
+</main>
+
+</div>
+
+<nav class="prevnext">
+  <a href="../../">
+    <span class="dir">Quay lại</span>
+    <span class="t">Lộ trình</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 00 · M0 Phía sau một cú bấm · DevOps lang băm</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=31cca467"></script>
+<script src="lesson.js?v=59d6050f"></script>
+</body>
+</html>
