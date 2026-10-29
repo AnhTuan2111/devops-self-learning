@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00: Bấm like trên facebook.com, bảy tầng OSI</title>
 <meta name="description" content="Bấm like trên facebook.com thì phía sau trình duyệt xảy ra những gì: dựng bảy tầng của mô hình OSI từ dưới lên, mỗi tầng giải quyết một chuyện tầng dưới còn bỏ dở, rồi đi theo cú like qua cả bảy tầng.">
-<link rel="stylesheet" href="../../assets/style.css?v=31cca467">
+<link rel="stylesheet" href="../../assets/style.css?v=4a3a922e">
+<link rel="stylesheet" href="../../assets/terms.css?v=4a3a922e">
 <link rel="stylesheet" href="lesson.css?v=6d854a8b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
@@ -90,7 +91,7 @@ mạng: đổi từ dây sang WiFi thì chỉ tầng dưới cùng làm khác đ
 <p>Vậy chia làm mấy tầng, mỗi tầng lo gì? Cách chia được dạy nhiều nhất là mô hình <strong>OSI</strong> (Open Systems
 Interconnection, kết nối các hệ thống mở). Cái tên nói luôn mục đích của nó: máy của hãng này nói chuyện được với máy của
 hãng khác, miễn là cùng chia việc theo một bản chung. Bản chia việc đó do ISO, tổ chức tiêu chuẩn quốc tế, công bố năm
-1984. Bản đang dùng là ISO/IEC 7498-1:1994, và ITU-T phát hành cùng nội dung dưới số hiệu X.200, tải về miễn phí. Bảy tầng
+1984. Bản đang dùng là ISO/IEC 7498-1:1994, và <button type="button" class="term" data-term="itu-t">ITU-T</button> phát hành cùng nội dung dưới số hiệu X.200, tải về miễn phí. Bảy tầng
 được kể tên ở mục 6.1.2 của X.200, như Hình 1.</p>
 
 <figure class="fig">
@@ -114,7 +115,7 @@ tầng nối với nhau theo một cách đơn giản: tầng nào cũng giải 
 học từ dưới lên là dễ nhất, bắt đầu từ chuyện cơ bản nhất là làm sao chở được dữ liệu từ máy này sang máy khác.</p>
 
 <p>Tên tầng mình giữ tiếng Anh vì tài liệu nào cũng gọi như vậy, và người làm hạ tầng hay gọi luôn theo số, kiểu "lỗi tầng
-7", "load balancer tầng 4". Để nhớ thứ tự từ dưới lên, người ta hay dùng câu <em>Please Do Not Throw Sausage Pizza
+7", "<button type="button" class="term" data-term="load-balancer">load balancer</button> tầng 4". Để nhớ thứ tự từ dưới lên, người ta hay dùng câu <em>Please Do Not Throw Sausage Pizza
 Away</em>: chữ cái đầu mỗi từ ứng với Physical, Data Link, Network, Transport, Session, Presentation, Application.</p>
 
 </section>
@@ -133,7 +134,7 @@ sáng nếu đi trong cáp quang. Đầu bên kia đổi tín hiệu ngược l�
 mạng.</p>
 
 <figure class="fig photo side">
-  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg" data-credit="Ảnh: Dmitry Nosachev · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Dmitry Nosachev · Wikimedia Commons · CC BY-SA 4.0"><img src="img/nic-two-port.webp" width="900" height="620" loading="lazy" alt="Một card mạng máy chủ có tản nhiệt lớn và hai cổng cắm cáp mạng ở mặt gắn vỏ máy."></a>
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg" target="_blank" rel="noopener noreferrer" data-credit="Ảnh: Dmitry Nosachev · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Dmitry Nosachev · Wikimedia Commons · CC BY-SA 4.0"><img src="img/nic-two-port.webp" width="900" height="620" loading="lazy" alt="Một card mạng máy chủ có tản nhiệt lớn và hai cổng cắm cáp mạng ở mặt gắn vỏ máy."></a>
   <figcaption><b>Ảnh 1</b> Card mạng Intel X540-T2 của máy chủ, hai cổng cắm dây mạng đồng. Chip trên card đổi bit thành
   xung điện chạy trên dây, và đổi ngược lại khi nhận.</figcaption>
 </figure>
@@ -142,7 +143,7 @@ mạng.</p>
 đặt dưới đáy biển, như mấy mẫu cáp ở Ảnh 2.</p>
 
 <figure class="fig photo">
-  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg" data-credit="Ảnh: Lonnie Hagadorn · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Lonnie Hagadorn · Wikimedia Commons · CC BY-SA 4.0"><img src="img/submarine-cable.webp" width="1200" height="803" loading="lazy" alt="Bốn mẫu cáp quang biển cắt ngang đặt cạnh nhau, có nhãn chú thích từng lớp: lõi sợi quang, dây đồng cấp điện, lớp giáp thép."></a>
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Submarine_Optical_Cables.jpg" target="_blank" rel="noopener noreferrer" data-credit="Ảnh: Lonnie Hagadorn · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Lonnie Hagadorn · Wikimedia Commons · CC BY-SA 4.0"><img src="img/submarine-cable.webp" width="1200" height="803" loading="lazy" alt="Bốn mẫu cáp quang biển cắt ngang đặt cạnh nhau, có nhãn chú thích từng lớp: lõi sợi quang, dây đồng cấp điện, lớp giáp thép."></a>
   <figcaption><b>Ảnh 2</b> Mẫu cắt ngang của bốn loại cáp quang biển. Sợi quang ở lõi là nơi bit đi thành ánh sáng. Bọc quanh
   là dây đồng cấp điện cho các bộ khuếch đại dọc tuyến, ngoài cùng là các lớp giáp thép, dày dần ở đoạn gần bờ vì ở đó cáp
   dễ bị neo tàu kéo đứt.</figcaption>
@@ -154,7 +155,7 @@ WiFi. Bit bay ra thì máy nào nhận?</p>
 <h2 id="data-link" class="layer-h c2" data-layer="2">Tầng <span class="layer-badge c2">2</span> Data Link: tới đúng thiết bị kế bên</h2>
 
 <p>Để biết bit dành cho máy nào, card mạng nào cũng có một địa chỉ riêng, thường được gắn sẵn từ lúc sản xuất, gọi là
-<strong>địa chỉ MAC</strong>. Địa chỉ MAC viết thành sáu cặp số hex, như card WiFi trên máy mình là
+<strong>địa chỉ MAC</strong>. Địa chỉ MAC viết thành sáu cặp số <button type="button" class="term" data-term="hex">hex</button>, như card WiFi trên máy mình là
 <code>20-0B-74-xx-xx-xx</code> (mình ẩn ba cặp cuối).</p>
 
 <p>Tầng 2 bọc dữ liệu trong một lớp vỏ ghi MAC gửi và MAC nhận. Dữ liệu đã có lớp vỏ này gọi là <strong>frame</strong>
@@ -165,8 +166,8 @@ vào bằng sóng WiFi. Cục phát WiFi trong nhà thường gộp cả hai và
 
 <figure class="fig photo">
   <div class="photo-row">
-    <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:Lancom_GS-1108-3486.jpg" data-credit="Ảnh: Raimond Spekking · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Raimond Spekking · Wikimedia Commons · CC BY-SA 4.0"><img src="img/switch-8-port.webp" width="1200" height="560" loading="lazy" alt="Một switch màu đen, mặt trước có tám cổng cắm cáp mạng xếp một hàng, đánh số từ 1 tới 8."></a><div class="lbl">switch</div></figure>
-    <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:Unifi_AC_Lite_Access_Point.jpg" data-credit="Ảnh: ServerGuruBrisbane · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: ServerGuruBrisbane · Wikimedia Commons · CC BY-SA 4.0"><img src="img/access-point.webp" width="845" height="956" loading="lazy" alt="Một thiết bị hình đĩa tròn màu trắng gắn trên tường, giữa có một vòng đèn, phía dưới có một sợi cáp mạng đi vào."></a><div class="lbl">access point</div></figure>
+    <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:Lancom_GS-1108-3486.jpg" target="_blank" rel="noopener noreferrer" data-credit="Ảnh: Raimond Spekking · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Raimond Spekking · Wikimedia Commons · CC BY-SA 4.0"><img src="img/switch-8-port.webp" width="1200" height="560" loading="lazy" alt="Một switch màu đen, mặt trước có tám cổng cắm cáp mạng xếp một hàng, đánh số từ 1 tới 8."></a><div class="lbl">switch</div></figure>
+    <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:Unifi_AC_Lite_Access_Point.jpg" target="_blank" rel="noopener noreferrer" data-credit="Ảnh: ServerGuruBrisbane · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: ServerGuruBrisbane · Wikimedia Commons · CC BY-SA 4.0"><img src="img/access-point.webp" width="845" height="956" loading="lazy" alt="Một thiết bị hình đĩa tròn màu trắng gắn trên tường, giữa có một vòng đèn, phía dưới có một sợi cáp mạng đi vào."></a><div class="lbl">access point</div></figure>
   </div>
   <figcaption><b>Ảnh 3</b> Hai thiết bị tầng 2. Bên trái là switch tám cổng Lancom GS-1108: máy nào cắm dây vào cổng nào
   thì switch chuyển frame tới cổng đó theo địa chỉ MAC. Bên phải là access point UniFi AC Lite gắn trên tường, làm cùng
@@ -193,7 +194,7 @@ liệu có phần đầu này gọi là <strong>gói tin</strong> (packet).</p>
 như thế.</p>
 
 <figure class="fig photo side">
-  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg" data-credit="Ảnh: Evan-Amos · Wikimedia Commons · public domain, đã chuyển đen trắng" aria-label="Nguồn ảnh: Evan-Amos · Wikimedia Commons · public domain"><img src="img/home-router.webp" width="800" height="600" loading="lazy" alt="Một router không dây gia đình màu đen có hai ăng-ten dựng đứng."></a>
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Linksys-Wireless-G-Router.jpg" target="_blank" rel="noopener noreferrer" data-credit="Ảnh: Evan-Amos · Wikimedia Commons · public domain, đã chuyển đen trắng" aria-label="Nguồn ảnh: Evan-Amos · Wikimedia Commons · public domain"><img src="img/home-router.webp" width="800" height="600" loading="lazy" alt="Một router không dây gia đình màu đen có hai ăng-ten dựng đứng."></a>
   <figcaption><b>Ảnh 4</b> Một router gia đình. Gói tin nào rời máy bạn để ra Internet cũng qua thiết bị này đầu tiên; nó
   đọc địa chỉ IP rồi chuyển gói ra mạng của nhà mạng.</figcaption>
 </figure>
@@ -220,10 +221,10 @@ trình nào?</p>
 
 <h2 id="transport" class="layer-h c4" data-layer="4">Tầng <span class="layer-badge c4">4</span> Transport: tới đúng chương trình, đủ và đúng thứ tự</h2>
 
-<p>Tầng 4 cho mỗi chương trình nhận kết nối một con số riêng, gọi là <strong>port</strong>. Trang <code>https</code> như
+<p>Tầng 4 cho mỗi chương trình nhận kết nối một con số riêng, gọi là <strong>port</strong>. Trang <button type="button" class="term" data-term="https"><code>https</code></button> như
 facebook.com dùng port 443. App Spring Boot bạn chạy ở <code>localhost:8080</code> thì 8080 là port của nó.</p>
 
-<p>Tầng 4 còn lo một chuyện nữa. Mạng chỉ chở từng mẩu nhỏ, trên mạng Ethernet thường thì mỗi mẩu tối đa khoảng 1.500
+<p>Tầng 4 còn lo một chuyện nữa. Mạng chỉ chở từng mẩu nhỏ, trên mạng <button type="button" class="term" data-term="ethernet">Ethernet</button> thường thì mỗi mẩu tối đa khoảng 1.500
 byte, và qua cả chục router thì mẩu có thể mất hay tới sai thứ tự.</p>
 
 <p>Giao thức hay dùng nhất ở tầng này là <strong>TCP</strong> (Transmission Control Protocol). TCP cắt dữ liệu thành mẩu,
@@ -470,7 +471,7 @@ E8-9C-25-xx-xx-xx   Media disconnected
 20-0B-74-xx-xx-xx   \Device\Tcpip_{...}</code></pre>
 
 <p>Mỗi dòng là một card mạng, cột trái là địa chỉ MAC (Windows gọi là Physical Address). Máy mình có ba card: một card ảo
-do phần mềm VPN tạo ra, một card đang không nối mạng (<code>Media disconnected</code>, theo mình đoán là cổng dây mạng vì
+do phần mềm <button type="button" class="term" data-term="vpn">VPN</button> tạo ra, một card đang không nối mạng (<code>Media disconnected</code>, theo mình đoán là cổng dây mạng vì
 máy không cắm dây), và card WiFi đang dùng. Một máy có nhiều card thì có nhiều địa chỉ MAC.</p>
 
 <h2 id="lab-2">Lab 2: tầng 3, dò chuỗi router</h2>
@@ -527,7 +528,7 @@ chuyển gói tin đi tiếp; ba con số thời gian là ba lần thử, tính 
 </figure>
 
 <p>Hai dòng đầu có địa chỉ <code>192.168...</code>, loại địa chỉ chỉ dùng trong mạng nội bộ: dòng 1 là cục phát WiFi, dòng
-2 theo mình đoán là modem của nhà mạng đặt trong nhà. Dòng 6 toàn dấu sao nghĩa là router đó không trả lời lệnh dò này,
+2 theo mình đoán là <button type="button" class="term" data-term="modem">modem</button> của nhà mạng đặt trong nhà. Dòng 6 toàn dấu sao nghĩa là router đó không trả lời lệnh dò này,
 chứ gói tin không mất ở đó, vì các dòng sau vẫn có. Tới dòng 14 thì ra <code>57.144.64.1</code>, địa chỉ của
 facebook.com. Lệnh chạy hơi lâu, mỗi dòng có dấu sao phải chờ vài giây.</p>
 
@@ -664,7 +665,8 @@ lời của bạn, kèm một ví dụ.</p>
 
 </div>
 
-<script src="../../assets/app.js?v=31cca467"></script>
+<script src="../../assets/app.js?v=4a3a922e"></script>
+<script src="../../assets/terms.js?v=4a3a922e"></script>
 <script src="lesson.js?v=59d6050f"></script>
 </body>
 </html>

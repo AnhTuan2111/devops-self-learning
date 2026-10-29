@@ -213,6 +213,14 @@
 
   narrow.addEventListener('change', () => { closePopup(); closeSheet(); });
 
+  // Link sang trang khác mở ở thẻ mới (người học 30/10/2026: "link gì cũng thế"); link nhảy trong cùng trang thì giữ nguyên.
+  document.querySelectorAll('a[href]').forEach((a) => {
+    const href = a.getAttribute('href');
+    if (!href || href.startsWith('#')) return;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+  });
+
   // Thanh tiến độ đọc ở mép trên.
   const bar = document.querySelector('.progress-bar');
   const updateBar = () => {

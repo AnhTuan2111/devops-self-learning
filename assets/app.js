@@ -351,6 +351,17 @@
     });
   }
 
+
+  // ---- 5. Link sang trang khác mở ở thẻ mới (người học 30/10/2026: "link gì cũng thế"); link nhảy trong cùng trang thì giữ nguyên ----
+  function initNewTabLinks() {
+    document.querySelectorAll('a[href]').forEach(function (a) {
+      var href = a.getAttribute('href');
+      if (!href || href.charAt(0) === '#') return;
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener noreferrer');
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initHeroMark();
     initCornerNav();
@@ -359,5 +370,6 @@
     document.querySelectorAll('[data-tabs]').forEach(initTabs);
     measureSticky();
     window.addEventListener('resize', measureSticky);
+    initNewTabLinks();
   });
 })(this);

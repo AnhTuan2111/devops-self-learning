@@ -1,0 +1,17 @@
+/* Thuật ngữ bấm được và khung giải thích ngắn (hành vi ở terms.js). Dùng chung cho trang chủ và trang bài. */
+.term {
+  appearance: none; background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: help;
+  text-decoration: underline dotted var(--blue, #1d4f9f); text-decoration-thickness: 2px; text-underline-offset: 3px;
+}
+.term:hover { text-decoration-color: var(--red, #d42a1f); }
+.term:focus-visible { outline: 2px solid var(--yellow, #f5b800); outline-offset: 2px; }
+.term[aria-expanded="true"] { background: var(--yellow, #f5b800); color: var(--ink, #151515); text-decoration: none; }
+.term-pop {
+  position: absolute; z-index: 60; width: min(330px, calc(100vw - 32px));
+  background: var(--ink, #151515); color: var(--paper, #f3eee4); padding: 11px 14px 12px;
+  border-top: 4px solid var(--yellow, #f5b800); font: 400 14px/1.5 system-ui, "Segoe UI", sans-serif;
+  animation: term-in .15s ease-out both;
+}
+.term-pop b { display: block; margin-bottom: 4px; color: var(--yellow, #f5b800); font: 800 14px/1.2 "LS", "League Spartan", system-ui, sans-serif; }
+@keyframes term-in { from { opacity: 0; translate: 0 -4px; } to { opacity: 1; translate: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .term-pop { animation: none; } }

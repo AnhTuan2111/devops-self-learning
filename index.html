@@ -6,7 +6,8 @@
 <meta name="theme-color" content="#f3eee4">
 <title>DevOps lang băm: lộ trình</title>
 <meta name="description" content="Khoá tự học DevOps và SRE, 68 bài, 10 module, từ bảy tầng OSI tới Kubernetes, GitOps và vận hành.">
-<link rel="stylesheet" href="assets/home.css?v=cd3da345">
+<link rel="stylesheet" href="assets/home.css?v=dafc15ad">
+<link rel="stylesheet" href="assets/terms.css?v=dafc15ad">
 <link rel="icon" href="assets/favicon.svg">
 </head>
 <body>
@@ -53,20 +54,20 @@
 <div class="cards">
 <article class="card" id="lesson-00">
   <div class="card-tags"><span class="card-num">00</span><span class="lab-tag lab-local">máy bạn · đang học</span></div>
-  <h4><a href="lessons/00-osi-layers/">Bấm like trên facebook.com: bảy tầng OSI</a></h4>
+  <h4><a href="lessons/00-osi-layers/" target="_blank" rel="noopener noreferrer">Bấm like trên facebook.com: bảy tầng OSI</a></h4>
   <p>Từ lúc bấm like tới lúc số like tăng, dữ liệu đi qua những bước nào. Mô hình OSI chia việc đó thành bảy tầng; đi qua từng tầng bằng chính cú like, xem mỗi tầng làm gì và bọc thêm gì vào dữ liệu.</p>
   
 </article>
 <article class="card" id="lesson-01">
   <div class="card-tags"><span class="card-num">01</span><span class="lab-tag lab-local">máy bạn</span></div>
   <h4>TCP/IP: Internet chạy thế nào</h4>
-  <p>OSI là bảng chia việc, còn Internet chạy theo bộ giao thức TCP/IP. Dữ liệu bị cắt thành gói tin, router chuyển gói qua nhiều mạng, các nhà mạng báo cho nhau đường đi bằng BGP, DNS là một hệ thống tên chia theo cấp. Bắt gói tin của một request bằng Wireshark để xem từng lớp.</p>
+  <p>OSI là bảng chia việc, còn Internet chạy theo bộ giao thức TCP/IP. Dữ liệu bị cắt thành gói tin, <button type="button" class="term" data-term="router">router</button> chuyển gói qua nhiều mạng, các nhà mạng báo cho nhau đường đi bằng <button type="button" class="term" data-term="bgp">BGP</button>, <button type="button" class="term" data-term="dns">DNS</button> là một hệ thống tên chia theo cấp. Bắt gói tin của một request bằng <button type="button" class="term" data-term="wireshark">Wireshark</button> để xem từng lớp.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">bảy tầng OSI</button></div>
 </article>
 <article class="card" id="lesson-02">
   <div class="card-tags"><span class="card-num">02</span><span class="lab-tag lab-reading">chỉ đọc</span></div>
   <h4>Người làm DevOps nắm chỗ nào trong các tầng</h4>
-  <p>Tầng nào cũng có người lo, nhưng người làm DevOps chỉ cần nắm sâu một số chỗ. Đường đi của một request trên server (DNS, TLS, firewall, reverse proxy, app, database), chặng nào là code của developer, chặng nào là việc của DevOps và SRE, và DevOps, SRE, platform engineering là gì.</p>
+  <p>Tầng nào cũng có người lo, nhưng người làm DevOps chỉ cần nắm sâu một số chỗ. Đường đi của một request trên server (<button type="button" class="term" data-term="dns">DNS</button>, <button type="button" class="term" data-term="tls">TLS</button>, <button type="button" class="term" data-term="firewall">firewall</button>, <button type="button" class="term" data-term="reverse-proxy">reverse proxy</button>, app, database), chặng nào là code của developer, chặng nào là việc của DevOps và SRE, và DevOps, SRE, platform engineering là gì.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">TCP/IP</button><button class="chip" type="button" aria-expanded="false">DNS</button><button class="chip" type="button" aria-expanded="false">HTTP</button></div>
 </article>
 </div>
@@ -126,7 +127,7 @@
 <article class="card" id="lesson-10">
   <div class="card-tags"><span class="card-num">10</span><span class="lab-tag lab-local">máy bạn</span></div>
   <h4>Chẩn đoán theo tầng</h4>
-  <p>Mỗi lỗi là câu trả lời của một thành phần: refused do kernel, 502 và 504 do reverse proxy, 500 do app. Đọc lỗi thì biết hỏng ở tầng nào và bắt đầu tìm từ đâu.</p>
+  <p>Mỗi lỗi là câu trả lời của một thành phần: refused do kernel, 502 và 504 do <button type="button" class="term" data-term="reverse-proxy">reverse proxy</button>, 500 do app. Đọc lỗi thì biết hỏng ở tầng nào và bắt đầu tìm từ đâu.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">đường đi của request trên server</button><button class="chip" type="button" aria-expanded="false">listen và port</button><button class="chip" type="button" aria-expanded="false">HTTP</button></div>
 </article>
 </div>
@@ -162,13 +163,13 @@
 <article class="card" id="lesson-14">
   <div class="card-tags"><span class="card-num">14</span><span class="lab-tag lab-server">server</span></div>
   <h4>Nginx</h4>
-  <p>App mở thẳng port ra Internet thì phải tự lo mã hoá và tự chịu mọi request lạ. Nginx là reverse proxy đứng trước app: nhận request rồi chuyển vào app, cho nhiều website dùng chung một máy.</p>
+  <p>App mở thẳng <button type="button" class="term" data-term="port">port</button> ra Internet thì phải tự lo mã hoá và tự chịu mọi request lạ. Nginx là <button type="button" class="term" data-term="reverse-proxy">reverse proxy</button> đứng trước app: nhận request rồi chuyển vào app, cho nhiều website dùng chung một máy.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">listen và port</button><button class="chip" type="button" aria-expanded="false">HTTP</button></div>
 </article>
 <article class="card" id="lesson-15">
   <div class="card-tags"><span class="card-num">15</span><span class="lab-tag lab-server">server</span></div>
   <h4>Tên miền và HTTPS</h4>
-  <p>Kiếm một tên miền để thực hành, rồi tạo bản ghi DNS trỏ nó về IP của server. Chứng chỉ do CA ký chứng minh server có quyền dùng tên đó; Let's Encrypt cấp miễn phí và tự gia hạn được.</p>
+  <p>Kiếm một tên miền để thực hành, rồi tạo bản ghi <button type="button" class="term" data-term="dns">DNS</button> trỏ nó về <button type="button" class="term" data-term="ip">IP</button> của server. Chứng chỉ do CA ký chứng minh server có quyền dùng tên đó; Let's Encrypt cấp miễn phí và tự gia hạn được.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">DNS</button><button class="chip" type="button" aria-expanded="false">TLS</button><button class="chip" type="button" aria-expanded="false">reverse proxy</button></div>
 </article>
 <article class="card" id="lesson-16">
@@ -234,13 +235,13 @@
 <article class="card" id="lesson-24">
   <div class="card-tags"><span class="card-num">24</span><span class="lab-tag lab-server">server</span></div>
   <h4>Registry và image để chạy production</h4>
-  <p>Registry là kho chứa image để server kéo về. Image chạy production thì nên nhỏ, không chạy bằng root, giới hạn bộ nhớ hợp với JVM, và có tag rõ ràng.</p>
+  <p>Registry là kho chứa image để server kéo về. Image chạy production thì nên nhỏ, không chạy bằng root, giới hạn bộ nhớ hợp với <button type="button" class="term" data-term="jvm">JVM</button>, và có tag rõ ràng.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Dockerfile</button><button class="chip" type="button" aria-expanded="false">Compose</button></div>
 </article>
 <article class="card" id="lesson-25">
   <div class="card-tags"><span class="card-num">25</span><span class="lab-tag lab-server">server</span></div>
   <h4>Dựng lại cả hệ thống bằng container</h4>
-  <p>Từ một thư mục trống, dựng lại app, database, cache, Nginx bằng Dockerfile và Compose trên server. Xong thì điểm lại những chỗ hay hỏng: port trùng, sai tên host database, xoá container mất dữ liệu, image chạy bằng root, hết bộ nhớ.</p>
+  <p>Từ một thư mục trống, dựng lại app, database, cache, Nginx bằng Dockerfile và Compose trên server. Xong thì điểm lại những chỗ hay hỏng: <button type="button" class="term" data-term="port">port</button> trùng, sai tên host database, xoá container mất dữ liệu, image chạy bằng root, hết bộ nhớ.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Dockerfile</button><button class="chip" type="button" aria-expanded="false">Compose</button><button class="chip" type="button" aria-expanded="false">registry</button><button class="chip" type="button" aria-expanded="false">Nginx</button></div>
 </article>
 </div>
@@ -264,7 +265,7 @@
 <article class="card" id="lesson-27">
   <div class="card-tags"><span class="card-num">27</span><span class="lab-tag lab-gitlab">GitLab</span></div>
   <h4>Pipeline đầu tiên</h4>
-  <p>Build, đẩy image, SSH vào server, kéo về, chạy lại: làm tay mỗi lần sửa code thì chậm và dễ sai. CI/CD để máy chạy các bước đó mỗi lần có commit. GitLab đọc file .gitlab-ci.yml rồi giao job cho runner chạy.</p>
+  <p>Build, đẩy image, <button type="button" class="term" data-term="ssh">SSH</button> vào server, kéo về, chạy lại: làm tay mỗi lần sửa code thì chậm và dễ sai. CI/CD để máy chạy các bước đó mỗi lần có commit. GitLab đọc file .gitlab-ci.yml rồi giao job cho runner chạy.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Git</button><button class="chip" type="button" aria-expanded="false">image</button><button class="chip" type="button" aria-expanded="false">registry</button></div>
 </article>
 <article class="card" id="lesson-28">
@@ -288,7 +289,7 @@
 <article class="card" id="lesson-31">
   <div class="card-tags"><span class="card-num">31</span><span class="lab-tag lab-gitlab">GitLab</span></div>
   <h4>Secret và an toàn của pipeline</h4>
-  <p>Pipeline giữ mật khẩu registry, khoá SSH, token. Cất chúng ở đâu, che khỏi log thế nào, và quét image tìm lỗ hổng đã biết trước khi đẩy lên.</p>
+  <p>Pipeline giữ mật khẩu registry, khoá <button type="button" class="term" data-term="ssh">SSH</button>, token. Cất chúng ở đâu, che khỏi log thế nào, và quét image tìm lỗ hổng đã biết trước khi đẩy lên.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">pipeline</button><button class="chip" type="button" aria-expanded="false">image</button></div>
 </article>
 </div>
@@ -312,13 +313,13 @@
 <article class="card" id="lesson-33">
   <div class="card-tags"><span class="card-num">33</span><span class="lab-tag lab-local">máy bạn</span></div>
   <h4>Ansible</h4>
-  <p>Ansible SSH vào nhiều máy và đưa chúng về trạng thái mô tả trong playbook. Chạy lại bao nhiêu lần cũng ra cùng kết quả, khác với shell script chạy lại có thể làm hỏng. Thực hành trên vài máy ảo hoặc container giả làm máy.</p>
+  <p>Ansible <button type="button" class="term" data-term="ssh">SSH</button> vào nhiều máy và đưa chúng về trạng thái mô tả trong playbook. Chạy lại bao nhiêu lần cũng ra cùng kết quả, khác với shell script chạy lại có thể làm hỏng. Thực hành trên vài máy ảo hoặc container giả làm máy.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">SSH</button><button class="chip" type="button" aria-expanded="false">Linux</button><button class="chip" type="button" aria-expanded="false">shell script</button></div>
 </article>
 <article class="card" id="lesson-34">
   <div class="card-tags"><span class="card-num">34</span><span class="lab-tag lab-cloud">cloud</span></div>
   <h4>Cloud tối thiểu và IAM</h4>
-  <p>Cloud cho thuê máy ảo, ổ đĩa, load balancer, kho lưu file theo giờ. Ai và máy nào được làm gì trên tài khoản cloud thì IAM quyết. Tiền tính theo cái gì, và đặt cảnh báo chi tiêu để không bị trừ tiền vì quên tắt máy.</p>
+  <p>Cloud cho thuê máy ảo, ổ đĩa, <button type="button" class="term" data-term="load-balancer">load balancer</button>, kho lưu file theo giờ. Ai và máy nào được làm gì trên tài khoản cloud thì IAM quyết. Tiền tính theo cái gì, và đặt cảnh báo chi tiêu để không bị trừ tiền vì quên tắt máy.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">server</button><button class="chip" type="button" aria-expanded="false">IP</button><button class="chip" type="button" aria-expanded="false">load balancer</button></div>
 </article>
 <article class="card" id="lesson-35">
@@ -330,7 +331,7 @@
 <article class="card" id="lesson-36">
   <div class="card-tags"><span class="card-num">36</span><span class="lab-tag lab-cloud">cloud</span></div>
   <h4>Terraform</h4>
-  <p>Ansible cài phần mềm lên máy có sẵn, còn Terraform tạo chính cái máy, cái mạng, bản ghi DNS từ file mô tả. Nó ghi những gì đã tạo vào file state, sửa file thì nó tính ra phải tạo, sửa, xoá những gì.</p>
+  <p>Ansible cài phần mềm lên máy có sẵn, còn Terraform tạo chính cái máy, cái mạng, bản ghi <button type="button" class="term" data-term="dns">DNS</button> từ file mô tả. Nó ghi những gì đã tạo vào file state, sửa file thì nó tính ra phải tạo, sửa, xoá những gì.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">cloud</button><button class="chip" type="button" aria-expanded="false">VPC</button></div>
 </article>
 </div>
@@ -348,13 +349,13 @@
 <article class="card" id="lesson-37">
   <div class="card-tags"><span class="card-num">37</span><span class="lab-tag lab-reading">chỉ đọc</span></div>
   <h4>Vì sao cần Kubernetes</h4>
-  <p>Hai server sau load balancer đã chạy được, nhưng vẫn phải tự đặt container lên từng máy, tự bật lại khi chết, tự thêm máy khi đông người. Kubernetes nhận việc đó: bạn nói muốn chạy gì, nó tự đặt lên máy và tự giữ cho đúng như vậy.</p>
+  <p>Hai server sau <button type="button" class="term" data-term="load-balancer">load balancer</button> đã chạy được, nhưng vẫn phải tự đặt container lên từng máy, tự bật lại khi chết, tự thêm máy khi đông người. Kubernetes nhận việc đó: bạn nói muốn chạy gì, nó tự đặt lên máy và tự giữ cho đúng như vậy.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">container</button><button class="chip" type="button" aria-expanded="false">Compose</button><button class="chip" type="button" aria-expanded="false">load balancer</button></div>
 </article>
 <article class="card" id="lesson-38">
   <div class="card-tags"><span class="card-num">38</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
   <h4>Cụm đầu tiên và Pod</h4>
-  <p>Kiếm một cụm để thực hành: chạy cụm nhỏ ngay trên máy (kind, k3s) hoặc dùng cụm miễn phí trên mạng. Cụm gồm máy control plane và các máy worker; bạn viết trạng thái mong muốn bằng YAML, Kubernetes làm cho cụm khớp với nó. Pod là một hoặc vài container chạy chung mạng và ổ đĩa.</p>
+  <p>Kiếm một cụm để thực hành: chạy cụm nhỏ ngay trên máy (kind, k3s) hoặc dùng cụm miễn phí trên mạng. Cụm gồm máy control plane và các máy worker; bạn viết trạng thái mong muốn bằng <button type="button" class="term" data-term="yaml">YAML</button>, Kubernetes làm cho cụm khớp với nó. Pod là một hoặc vài container chạy chung mạng và ổ đĩa.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">container</button><button class="chip" type="button" aria-expanded="false">YAML</button></div>
 </article>
 <article class="card" id="lesson-39">
@@ -366,13 +367,13 @@
 <article class="card" id="lesson-40">
   <div class="card-tags"><span class="card-num">40</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
   <h4>Service và DNS trong cụm</h4>
-  <p>Pod có IP đổi liên tục. Service cho một nhóm pod một tên và một địa chỉ cố định, DNS trong cụm phân giải tên đó.</p>
+  <p>Pod có <button type="button" class="term" data-term="ip">IP</button> đổi liên tục. Service cho một nhóm pod một tên và một địa chỉ cố định, DNS trong cụm phân giải tên đó.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Pod</button><button class="chip" type="button" aria-expanded="false">DNS</button><button class="chip" type="button" aria-expanded="false">IP và port</button></div>
 </article>
 <article class="card" id="lesson-41">
   <div class="card-tags"><span class="card-num">41</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
   <h4>Ingress</h4>
-  <p>Service chỉ gọi được từ trong cụm. Ingress nhận request từ ngoài theo tên miền và path rồi chuyển vào Service, làm việc của reverse proxy bên trong cụm.</p>
+  <p>Service chỉ gọi được từ trong cụm. Ingress nhận request từ ngoài theo tên miền và path rồi chuyển vào Service, làm việc của <button type="button" class="term" data-term="reverse-proxy">reverse proxy</button> bên trong cụm.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Service</button><button class="chip" type="button" aria-expanded="false">reverse proxy</button><button class="chip" type="button" aria-expanded="false">HTTPS</button></div>
 </article>
 <article class="card" id="lesson-42">
@@ -396,7 +397,7 @@
 <article class="card" id="lesson-45">
   <div class="card-tags"><span class="card-num">45</span><span class="lab-tag lab-cluster">cụm Kubernetes</span></div>
   <h4>Helm</h4>
-  <p>Một app là nhiều file YAML lặp lại giữa các môi trường. Helm gom chúng thành chart có template và file giá trị, cài, nâng cấp, quay lại bằng một lệnh.</p>
+  <p>Một app là nhiều file <button type="button" class="term" data-term="yaml">YAML</button> lặp lại giữa các môi trường. Helm gom chúng thành chart có template và file giá trị, cài, nâng cấp, quay lại bằng một lệnh.</p>
   <div class="needs"><span class="needs-label">Cần biết</span><button class="chip" type="button" aria-expanded="false">Deployment</button><button class="chip" type="button" aria-expanded="false">Service</button><button class="chip" type="button" aria-expanded="false">Ingress</button><button class="chip" type="button" aria-expanded="false">ConfigMap</button></div>
 </article>
 <article class="card" id="lesson-46">
@@ -574,6 +575,7 @@
 
 <footer class="site-footer">DevOps lang băm · khoá tự học devops và sre</footer>
 
-<script src="assets/home.js?v=cd3da345"></script>
+<script src="assets/terms.js?v=dafc15ad"></script>
+<script src="assets/home.js?v=dafc15ad"></script>
 </body>
 </html>

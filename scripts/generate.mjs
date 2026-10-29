@@ -26,6 +26,8 @@ import { makeArt } from './readme-art.mjs';
 
 // Bộ sinh hình Bauhaus sống trong assets/app.js (trang bài dùng nó để vẽ ấn ký đầu trang).
 const Bauhaus = createRequire(import.meta.url)('../assets/app.js');
+// Bảng thuật ngữ dùng chung (assets/terms.js): trang chủ tự gắn tooltip cho lần nhắc đầu tiên trong mô tả mỗi bài.
+const GLOSSARY = createRequire(import.meta.url)('../assets/terms.js');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
@@ -34,8 +36,8 @@ const asset = (p) => readFileSync(join(ROOT, 'assets', p));
 // Số phiên bản tài sản = hash nội dung. Gắn vào đường dẫn (?v=…) để khi CSS/JS đổi, trình duyệt buộc
 // phải tải bản mới; GitHub Pages cho trình duyệt giữ bản cũ tới 10 phút.
 const hashOf = (...files) => { const h = createHash('sha1'); files.forEach((f) => h.update(asset(f))); return h.digest('hex').slice(0, 8); };
-const ASSET_V = hashOf('style.css', 'app.js');
-const HOME_V = hashOf('home.css', 'home.js');
+const ASSET_V = hashOf('style.css', 'app.js', 'terms.css', 'terms.js');
+const HOME_V = hashOf('home.css', 'home.js', 'terms.css', 'terms.js');
 
 const curriculum = readJson('curriculum.json');
 const progress = existsSync(join(ROOT, 'progress.json')) ? readJson('progress.json') : { lessons: {} };
@@ -71,6 +73,26 @@ const shapeOf = (i) => `s${i % 10}`;
 const rangeOf = (m) => `${m.lessons[0].id}-${m.lessons.at(-1).id}`;
 const anchor = (m) => m.id.toLowerCase();
 
+// Gắn tooltip cho lần nhắc đầu tiên của mỗi thuật ngữ trong một đoạn mô tả. Thuật ngữ dài xét trước (TCP/IP trước IP),
+// và không bao giờ gắn vào chữ đã nằm trong một nút thuật ngữ khác.
+const TERMS = Object.entries(GLOSSARY).sort((a, b) => b[1].label.length - a[1].label.length);
+const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+function withTerms(text, title = '') {
+  let html = esc(text);
+  for (const [key, { label }] of TERMS) {
+    // Thuật ngữ là chính chủ đề của bài (nằm trong tên bài) thì không cần tooltip
+    if (new RegExp(`(^|[^\\p{L}])${escRe(label)}($|[^\\p{L}])`, 'iu').test(title)) continue;
+    const re = new RegExp(`(^|[^\\p{L}\\p{N}/>-])(${escRe(label)})(?=$|[^\\p{L}\\p{N}</-])`, 'u');
+    let done = false;
+    html = html.split(/(<button[^>]*>.*?<\/button>)/).map((part) => {
+      if (done || part.startsWith('<button') || !re.test(part)) return part;
+      done = true;
+      return part.replace(re, `$1<button type="button" class="term" data-term="${key}">$2</button>`);
+    }).join('');
+  }
+  return html;
+}
+
 /* ------------------------------------------------------------------ */
 /* index.html                                                          */
 /* ------------------------------------------------------------------ */
@@ -87,14 +109,14 @@ const tocItems = modules.map((m, i) =>
 const lessonCard = (l) => {
   const st = STATUS_TEXT[statusOf(l.id)];
   const tag = esc(meta.lab[l.lab]) + (st ? ` · ${st}` : '');
-  const title = hasPage(l) ? `<a href="${dirOf(l)}/">${esc(l.title)}</a>` : esc(l.title);
+  const title = hasPage(l) ? `<a href="${dirOf(l)}/" target="_blank" rel="noopener noreferrer">${esc(l.title)}</a>` : esc(l.title);
   const needs = l.needs.length
     ? `<div class="needs"><span class="needs-label">Cần biết</span>${l.needs.map((k) => `<button class="chip" type="button" aria-expanded="false">${esc(k)}</button>`).join('')}</div>`
     : '';
   return `<article class="card" id="lesson-${l.id}">
   <div class="card-tags"><span class="card-num">${l.id}</span><span class="lab-tag lab-${l.lab}">${tag}</span></div>
   <h4>${title}</h4>
-  <p>${esc(l.desc)}</p>
+  <p>${withTerms(l.desc, l.title)}</p>
   ${needs}
 </article>`;
 };
@@ -122,6 +144,7 @@ const indexHtml = `<!doctype html>
 <title>${esc(meta.title)}: lộ trình</title>
 <meta name="description" content="${esc(meta.subtitle)}, ${allLessons.length} bài, ${modules.length} module, từ bảy tầng OSI tới Kubernetes, GitOps và vận hành.">
 <link rel="stylesheet" href="assets/home.css?v=${HOME_V}">
+<link rel="stylesheet" href="assets/terms.css?v=${HOME_V}">
 <link rel="icon" href="assets/favicon.svg">
 </head>
 <body>
@@ -162,6 +185,7 @@ ${moduleSections}
 
 <footer class="site-footer">${esc(meta.title)} · ${esc(meta.subtitle.toLocaleLowerCase('vi'))}</footer>
 
+<script src="assets/terms.js?v=${HOME_V}"></script>
 <script src="assets/home.js?v=${HOME_V}"></script>
 </body>
 </html>
@@ -234,7 +258,7 @@ if (existsSync(join(ROOT, 'lessons'))) {
         return existsSync(fp) ? createHash('sha1').update(readFileSync(fp)).digest('hex').slice(0, 8) : null;
       };
       const t = s
-        .replace(/(assets\/(?:style\.css|app\.js))(?:\?v=[0-9a-f]+)?"/g, `$1?v=${ASSET_V}"`)
+        .replace(/(assets\/(?:style\.css|app\.js|terms\.css|terms\.js))(?:\?v=[0-9a-f]+)?"/g, `$1?v=${ASSET_V}"`)
         .replace(/"(lesson\.(?:css|js))(?:\?v=[0-9a-f]+)?"/g, (m, f) => (lessonV(f) ? `"${f}?v=${lessonV(f)}"` : m));
       if (t !== s) { writeFileSync(p, t, 'utf8'); versioned++; }
     }
