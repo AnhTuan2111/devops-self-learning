@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 01: TCP/IP, Internet chạy thế nào</title>
+<meta name="description" content="Internet không chạy theo bảy tầng OSI mà theo bộ giao thức TCP/IP. Dữ liệu bị cắt thành gói tin, router tra bảng route để chuyển từng gói, các nhà mạng báo đường cho nhau bằng BGP, DNS là một hệ thống tên chia theo cấp; cuối bài bắt gói tin thật bằng Wireshark.">
+<link rel="stylesheet" href="../../assets/style.css?v=4a3a922e">
+<link rel="stylesheet" href="../../assets/terms.css?v=4a3a922e">
+<link rel="stylesheet" href="lesson.css?v=58a2cedb">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="01">
+
+<nav class="topbar"><div class="topbar-inner">
+  <a class="home" href="../../">devops lang băm</a><span class="crumb">/ bai-01</span>
+  <span class="spacer"></span>
+</div></nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 0 · Bài 01</p>
+  <h1>TCP/IP: <span class="hl">Internet chạy thế nào</span></h1>
+  <p class="lede">Một cú like không đi thành một khối. Nó bị cắt ra từng gói tin, mỗi gói tự tìm đường qua các router,
+  tới nơi thì được ráp lại. Bài này đi theo những gói tin đó: router chọn đường ra sao, các nhà mạng báo đường cho nhau
+  thế nào, và cái tên facebook.com được đổi ra địa chỉ ở đâu.</p>
+  <div class="meta">
+    <span class="chip yellow"><i class="stt stt-doing" aria-hidden="true"></i>Đang học</span>
+    <span class="chip">Thực hành: máy bạn</span>
+    <span class="chip">Lab: Git Bash và WSL Ubuntu</span>
+  </div>
+  <figure class="hero-mark mesh" aria-label="Bốn gói tin của cùng một lời nhắn đi bốn đường khác nhau qua một lưới router, tới nơi lộn thứ tự, một gói bị mất và được gửi lại, cuối cùng được ráp lại theo số thứ tự.">
+    <svg class="mesh-svg" viewBox="0 0 360 230" aria-hidden="true"></svg>
+    <div class="mesh-tray" aria-hidden="true">
+      <span class="tray-label">tới nơi</span>
+      <span class="tray-slots"><i>1</i><i>2</i><i>3</i><i>4</i></span>
+    </div>
+    <figcaption class="mesh-note"><span class="mesh-status">bốn gói, bốn đường</span></figcaption>
+  </figure>
+</header>
+
+<div class="layout">
+
+<nav class="line-nav" aria-label="Đi tới một phần của bài">
+  <span class="line-track" aria-hidden="true"><span class="line-fill"></span><span class="line-dot"><b>TTL</b><em>64</em></span></span>
+  <a href="#two-models"><i aria-hidden="true"></i>hai mô hình</a>
+  <a href="#packets"><i aria-hidden="true"></i>gói tin</a>
+  <a href="#routing-table"><i aria-hidden="true"></i>bảng route</a>
+  <a href="#ttl"><i aria-hidden="true"></i>TTL</a>
+  <a href="#bgp"><i aria-hidden="true"></i>BGP</a>
+  <a href="#dns"><i aria-hidden="true"></i>DNS</a>
+  <a href="#lab"><i aria-hidden="true"></i>lab</a>
+  <a href="#self-check"><i aria-hidden="true"></i>tự kiểm tra</a>
+</nav>
+
+<main class="lesson-body">
+
+<!-- Phần: OSI và TCP/IP -->
+<section class="part" id="two-models">
+<header class="part-head"><p class="part-title">hai mô hình</p><p class="part-note">bảng chia việc và bộ giao thức đang chạy</p></header>
+
+<h2 id="no-osi-on-the-wire">Không có giao thức nào tên OSI</h2>
+
+<p>Bảy tầng OSI chia đường đi của cú like thành bảy phần việc, từ chở bit ở tầng 1 tới viết lời nhắn HTTP ở tầng 7.
+Nhưng nếu bắt gói tin thật trên máy bạn để xem, như phần Lab cuối bài sẽ làm, thì bạn sẽ không gặp một giao thức nào
+mang tên OSI. Bạn sẽ gặp Ethernet, IP, TCP, UDP, HTTP, DNS. Đó là các giao thức của bộ <strong>TCP/IP</strong>, bộ giao
+thức mà Internet đang chạy.</p>
+
+<p>OSI là một bảng chia việc viết trên giấy, còn TCP/IP là phần mềm đang chạy trong mọi máy nối Internet, từ laptop của
+bạn tới server của Facebook. Bộ giao thức này cũng chia tầng, nhưng chỉ chia làm bốn. Bốn tầng đó được ghi trong RFC
+1122, văn bản năm 1989 quy định một máy nối Internet phải làm được những gì. RFC (Request for Comments) là loạt văn bản
+mà các chuẩn của Internet được công bố trong đó, đánh số tăng dần, đọc miễn phí.</p>
+
+<figure class="fig">
+<blockquote class="src" lang="en">
+<p>The protocol layers used in the Internet architecture are as follows: […] Application Layer […] Transport Layer […]
+Internet Layer […] Link Layer</p>
+<p>The application layer of the Internet suite essentially combines the functions of the top two layers --
+Presentation and Application -- of the OSI reference model.</p>
+</blockquote>
+<figcaption><b>Hình 1</b> Trích mục 1.1.3 của <a href="https://www.rfc-editor.org/rfc/rfc1122">RFC 1122</a>, tháng 10 năm
+1989; dấu […] là chỗ lược phần giải thích từng tầng. Tạm dịch: các tầng giao thức của kiến trúc Internet gồm
+Application, Transport, Internet và Link; tầng Application của Internet về cơ bản gộp việc của hai tầng trên cùng trong
+OSI là Presentation và Application.</figcaption>
+</figure>
+
+<p>Đặt bốn tầng này cạnh bảy tầng OSI thì thấy hai tầng giữa khớp gần như một một: tầng Transport của TCP/IP là tầng 4
+của OSI, chỗ của TCP và UDP; tầng Internet là tầng 3, chỗ của IP và router. Khác nhau ở hai đầu. Tầng Link gộp tầng 1 và
+tầng 2 của OSI, vì RFC 1122 chỉ đòi máy nói được với mạng nó nối thẳng vào, còn nói bằng sóng WiFi hay xung điện thì để
+chuẩn của từng loại mạng lo. Tầng Application thì trùm cả ba tầng 5, 6, 7, đúng chỗ Bài 00 đã thấy là trên Internet
+không có phần mềm nào chỉ làm việc của tầng 5 hay tầng 6.</p>
+
+<figure class="fig">
+<div class="merge">
+  <div class="merge-col osi">
+    <p class="merge-label">OSI, 7 tầng</p>
+    <div class="m-cell c7"><b>7</b><span>Application</span></div>
+    <div class="m-cell c6"><b>6</b><span>Presentation</span></div>
+    <div class="m-cell c5"><b>5</b><span>Session</span></div>
+    <div class="m-cell c4"><b>4</b><span>Transport</span></div>
+    <div class="m-cell c3"><b>3</b><span>Network</span></div>
+    <div class="m-cell c2"><b>2</b><span>Data Link</span></div>
+    <div class="m-cell c1"><b>1</b><span>Physical</span></div>
+  </div>
+  <div class="merge-col tcpip">
+    <p class="merge-label">TCP/IP, 4 tầng</p>
+    <div class="t-block app"><span>Application</span><small>HTTP, DNS, TLS</small></div>
+    <div class="t-block tra"><span>Transport</span><small>TCP, UDP</small></div>
+    <div class="t-block int"><span>Internet</span><small>IP</small></div>
+    <div class="t-block lnk"><span>Link</span><small>Ethernet, WiFi</small></div>
+  </div>
+</div>
+<figcaption><b>Hình 2</b> Hai bảng tầng đặt cạnh nhau. Tầng Transport và tầng Internet khớp với tầng 4 và tầng 3 của OSI;
+tầng Application và tầng Link mỗi tầng gộp vài tầng của OSI. Các khối gộp tự tách ra theo OSI rồi gộp lại.</figcaption>
+</figure>
+
+<p>Vậy sách này dạy bảy tầng, sách kia bốn tầng, thì sách nào sai? Không sách nào sai, cả hai tả cùng một chồng việc,
+chỉ khác chỗ gộp hay tách. Còn khi người làm hạ tầng nói "tầng 4", "tầng 7", thì con số đó là số của OSI. Theo mình
+là vì bảy tầng chia nhỏ hơn: TCP/IP gộp sợi dây và địa chỉ MAC vào chung tầng Link, nên muốn nói riêng về sợi dây thì
+phải mượn số 1 của OSI. Giao thức thì theo TCP/IP, số tầng thì gọi theo OSI, bài này cũng gọi như vậy.</p>
+
+<h2 id="history">TCP/IP có trước</h2>
+
+<p>Bộ giao thức này có trước cả bảng OSI. Tháng 5 năm 1974, Vint Cerf và Bob Kahn công bố bài <em>A Protocol for Packet
+Network Intercommunication</em>, tả cách cho nhiều mạng khác nhau nói chuyện được với nhau. Giao thức trong bài về sau
+được tách làm hai, TCP và IP. ARPANET, mạng nghiên cứu do Bộ Quốc phòng Mỹ tài trợ và là tiền thân của Internet, đặt
+mục tiêu chuyển hẳn sang TCP/IP: RFC 801 ghi "The goal is to make a complete switch over from the NCP to IP/TCP by 1
+January 1983", tức bỏ hẳn giao thức cũ là NCP trước ngày 1/1/1983. ISO công bố mô hình OSI năm 1984, lúc ARPANET đã chạy
+TCP/IP được một năm.</p>
+
+<figure class="fig photo">
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:CerfKahnMedalOfFreedom.jpg" data-credit="Ảnh: Paul Morse, Nhà Trắng · Wikimedia Commons · public domain, đã chuyển đen trắng" aria-label="Nguồn ảnh: Paul Morse, Nhà Trắng · Wikimedia Commons · public domain"><img src="img/cerf-kahn-2005.webp" width="1030" height="656" loading="lazy" alt="Ba người đàn ông mặc vest đứng trong một căn phòng trang trọng; hai người bên trái và ở giữa đeo huân chương trên cổ."></a>
+  <figcaption><b>Ảnh 1</b> Vint Cerf (trái) và Bob Kahn (giữa) nhận Huân chương Tự do của Tổng thống Mỹ ngày 9/11/2005,
+  vì công sức góp phần tạo ra Internet; người bên phải là Tổng thống George W. Bush. Ba mươi mốt năm trước đó, hai người
+  cùng viết bài báo đặt nền cho TCP/IP.</figcaption>
+</figure>
+
+</section>
+
+<!-- Phần: gói tin -->
+<section class="part" id="packets">
+<header class="part-head"><p class="part-title">gói tin</p><p class="part-note">mỗi gói tự đi, không ai giữ đường</p></header>
+
+<h2 id="packet-switching">Cắt thành gói, mỗi gói tự đi</h2>
+
+<p>Muốn thấy Internet khác điện thoại bàn ngày xưa ở đâu thì nhìn vào chuyện giữ đường. Lúc bạn gọi điện thoại bàn, tổng
+đài nối một đường dây từ máy bạn tới máy người kia, và đường đó dành riêng cho cuộc gọi cho tới khi một bên gác máy. Hai
+người im lặng thì đường vẫn bị giữ, không ai khác dùng được. Cách làm đó gọi là chuyển mạch kênh (circuit switching).</p>
+
+<p>Internet không giữ đường cho ai. Dữ liệu bị cắt thành từng mẩu nhỏ, mỗi mẩu được gắn phần đầu IP ghi đủ địa chỉ nơi gửi
+và nơi nhận, thành một <strong>gói tin</strong> như Bài 00 đã gọi. Gói nào cũng mang đủ địa chỉ nên router không cần
+biết gói trước của cùng lời nhắn đã đi đường nào; nó đọc địa chỉ nhận của gói đang cầm trên tay, chọn hướng, đẩy đi, rồi
+quên luôn. Trên cùng một sợi cáp, gói của bạn đi xen với gói của hàng nghìn người khác, nên lúc bạn không gửi gì thì sợi
+cáp không bị bỏ phí. Cách làm này gọi là <strong>chuyển mạch gói</strong> (packet switching), và hình động ở đầu trang
+chạy đúng chuyện đó.</p>
+
+<figure class="fig photo side">
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Interface_Message_Processor_-_BBN_Arpanet_Router_-_Computer_History_Museum_(2007-11-10_23.06.56_by_Carlo_Nardone).jpg" data-credit="Ảnh: Carlo Nardone · Wikimedia Commons · CC BY-SA 2.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Carlo Nardone · Wikimedia Commons · CC BY-SA 2.0"><img src="img/imp-arpanet.webp" width="1000" height="700" loading="lazy" alt="Mặt trước một tủ máy màu sáng, có hai hàng đèn tròn, các công tắc gạt và tấm biển ghi Interface Message Processor, developed for the Advanced Research Projects Agency by Bolt Beranek and Newman Inc."></a>
+  <figcaption><b>Ảnh 2</b> Interface Message Processor (IMP) của hãng BBN, trưng bày ở Computer History Museum. Đây là máy
+  chuyển gói tin của ARPANET, tiền thân của router ngày nay; ARPANET chạy từ năm 1969.</figcaption>
+</figure>
+
+<p>Không ai giữ đường thì có ba chuyện xảy ra. Một là hai gói của cùng một lời nhắn có thể đi hai đường khác nhau, vì
+giữa hai lần gói đi qua, router có thể đổi hướng. Hai là gói tới nơi có thể lộn thứ tự, gói đi đường ngắn tới trước gói
+đi đường dài. Ba là gói có thể mất: router nhận nhiều gói hơn sức đẩy đi thì hàng chờ của nó đầy, gói tới sau bị bỏ.</p>
+
+<p>IP không cứu ba chuyện đó, và nó nói thẳng ra như vậy ngay trong văn bản đặc tả của nó. Mục 1.4 của
+<a href="https://www.rfc-editor.org/rfc/rfc791">RFC 791</a>, văn bản đặc tả IP năm 1981, ghi "The internet protocol does
+not provide a reliable communication facility", tức giao thức IP không cung cấp đường truyền tin cậy, và câu ngay sau
+nói thêm là không có xác nhận nào cả, kể cả giữa hai đầu lẫn giữa từng chặng. IP chỉ cố đưa từng gói tới đúng địa chỉ,
+được thì tốt, không được thì thôi.</p>
+
+<p>Phần cứu nằm ở hai đầu. TCP trên máy bạn và trên server, như Bài 00 đã nói, đánh số từng mẩu, gửi lại mẩu bị mất,
+ráp lại đúng thứ tự. Router ở giữa chỉ đọc tới tầng 3 nên không biết gì về chuyện đánh số đó. Việc khó được đẩy về hai
+đầu, router giữ được đơn giản và chạy nhanh. Lúc router hỏng, gói tin đi vòng qua router khác, còn cuộc trao đổi giữa hai
+đầu vẫn tiếp tục, vì không có đường dây nào bị đứt giữa chừng như cuộc gọi điện thoại.</p>
+
+<h2 id="one-request-many-packets">Một request là bao nhiêu gói tin</h2>
+
+<p>Một request nhỏ như <code>curl http://example.com/</code> cũng không phải một gói tin. Lúc mình bắt gói tin của
+request đó trên máy mình ngày 30/10/2026 thì đếm được 12 gói, như Bảng 1. Cách bắt thì bạn sẽ tự làm ở Lab 5.</p>
+
+<div class="table-scroll">
+<table class="packet-table">
+  <caption><b>Bảng 1</b> 12 gói tin của một lần <code>curl http://example.com/</code>, đọc từ output của tshark (cột Info
+  rút gọn). Máy mình là 172.21.21.136, example.com là 104.20.23.154.</caption>
+  <thead><tr><th>Gói</th><th>Chiều</th><th>Dài (byte)</th><th>Là gì</th></tr></thead>
+  <tbody>
+    <tr class="g-hs"><td>1</td><td>đi</td><td>74</td><td>TCP <code>SYN</code>: xin mở kết nối tới port 80</td></tr>
+    <tr class="g-hs"><td>2</td><td>về</td><td>74</td><td>TCP <code>SYN, ACK</code>: server đồng ý</td></tr>
+    <tr class="g-hs"><td>3</td><td>đi</td><td>66</td><td>TCP <code>ACK</code>: kết nối mở xong</td></tr>
+    <tr class="g-data"><td>4</td><td>đi</td><td>141</td><td>HTTP <code>GET / HTTP/1.1</code></td></tr>
+    <tr><td>5</td><td>về</td><td>66</td><td>TCP <code>ACK</code>: server báo đã nhận gói 4</td></tr>
+    <tr class="g-data"><td>6</td><td>về</td><td>994</td><td>phần đầu của câu trả lời <code>HTTP/1.1 200 OK</code></td></tr>
+    <tr class="g-data"><td>7</td><td>về</td><td>71</td><td>phần cuối của câu trả lời</td></tr>
+    <tr><td>8, 9</td><td>đi</td><td>66</td><td>TCP <code>ACK</code>: máy mình báo đã nhận gói 6, 7</td></tr>
+    <tr class="g-fin"><td>10</td><td>đi</td><td>66</td><td>TCP <code>FIN, ACK</code>: xin đóng kết nối</td></tr>
+    <tr class="g-fin"><td>11</td><td>về</td><td>66</td><td>TCP <code>FIN, ACK</code>: server cũng đóng</td></tr>
+    <tr class="g-fin"><td>12</td><td>đi</td><td>66</td><td>TCP <code>ACK</code>: đóng xong</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Ba gói đầu là cái Bài 00 gọi là "trao đổi vài mẩu để mở một kết nối": máy mình gửi <code>SYN</code> (synchronize, xin
+mở), server trả <code>SYN, ACK</code>, máy mình đáp <code>ACK</code> (acknowledge, đã nhận). Ba bước này có tên là bắt tay
+ba bước (three-way handshake). Lời nhắn HTTP chỉ chiếm một gói, gói 4. Câu trả lời thì bị cắt làm hai gói, 994 byte và 71
+byte, và TCP ở máy mình ráp hai gói đó lại trước khi đưa cho curl. Còn lại toàn là gói báo đã nhận và gói đóng kết nối,
+tức phần việc TCP làm để bù cho chỗ IP không lo.</p>
+
+</section>
+
+<!-- Phần: router tra bảng route -->
+<section class="part" id="routing-table">
+<header class="part-head"><p class="part-title">router chọn đường</p><p class="part-note">tra bảng, khớp dài nhất thắng</p></header>
+
+<h2 id="table">Bảng route</h2>
+
+<p>Router đọc địa chỉ IP nhận rồi chọn hướng, vậy nó chọn dựa vào đâu? Mỗi router giữ một bảng, mỗi dòng ghi "gói tới dải
+địa chỉ này thì đẩy ra hướng kia". Bảng đó gọi là <strong>bảng route</strong> (routing table). Laptop của bạn
+cũng có một bảng route chứ không riêng gì router, vì trước khi gói tin rời máy, Windows cũng phải chọn đẩy nó ra card mạng nào và
+giao cho thiết bị nào.</p>
+
+<p>Bảng route ghi dải địa chỉ chứ không ghi từng địa chỉ, vì Internet có hàng tỷ địa chỉ và không bảng nào chứa hết. Dải
+địa chỉ được viết theo kiểu <code>10.88.88.0/24</code>: con số sau dấu gạch chéo nói bao nhiêu bit đầu của địa chỉ là cố
+định. Địa chỉ IPv4 dài 32 bit, viết thành bốn số, mỗi số 8 bit. <code>/24</code> nghĩa là 24 bit đầu, tức ba số đầu
+<code>10.88.88</code>, phải giống hệt, còn 8 bit cuối thì tuỳ, nên dải này có 256 địa chỉ từ <code>10.88.88.0</code> tới
+<code>10.88.88.255</code>. Phần cố định ấy gọi là <strong>prefix</strong>, và cách viết có dấu gạch chéo được đặc tả trong
+RFC 4632.</p>
+
+<p>Windows in bảng route bằng lệnh <code>route print -4</code>. Nó ghi độ dài prefix theo kiểu cũ, gọi là netmask, viết
+thành bốn số: bit nào cố định thì là 1, nên <code>255.255.255.0</code> là 24 bit 1, tức <code>/24</code>;
+<code>255.0.0.0</code> là <code>/8</code>; <code>0.0.0.0</code> là <code>/0</code>, không bit nào cố định. Hình 3 là bảng
+route trên laptop của mình sáng 30/10/2026, lúc đó máy nối WiFi có địa chỉ <code>10.88.88.161</code>, mình bỏ bớt các
+dòng dành cho gửi một lúc nhiều máy.</p>
+
+<figure class="fig">
+<pre><code>$ route print -4
+IPv4 Route Table
+===========================================================================
+Active Routes:
+Network Destination        Netmask          Gateway       Interface  Metric
+          0.0.0.0          0.0.0.0      10.88.88.88     10.88.88.161     30
+       10.88.88.0    255.255.255.0         On-link      10.88.88.161    286
+        127.0.0.0        255.0.0.0         On-link         127.0.0.1    331
+        127.0.0.1  255.255.255.255         On-link         127.0.0.1    331
+      172.21.16.0    255.255.240.0         On-link       172.21.16.1   5256
+[…]</code></pre>
+<figcaption><b>Hình 3</b> Năm dòng của bảng route trên Windows, ngày 30/10/2026. Cột Gateway là thiết bị sẽ nhận gói;
+<code>On-link</code> nghĩa là máy đích nằm ngay trong mạng đó, gửi thẳng tới nó được. Cột Interface là địa chỉ của card
+mạng mà gói đi ra.</figcaption>
+</figure>
+
+<p>Đọc từ dưới lên: <code>172.21.16.0/20</code> là mạng ảo giữa Windows và WSL; hai dòng <code>127...</code> là mạng chỉ
+nằm trong chính máy, <code>127.0.0.1</code> là <code>localhost</code> mà app Spring Boot của bạn vẫn chạy trên đó;
+<code>10.88.88.0/24</code> là mạng WiFi máy đang nối. Dòng trên cùng là <code>0.0.0.0/0</code>, không bit nào cố định nên
+địa chỉ nào cũng khớp, và nó bảo giao gói cho <code>10.88.88.88</code>, chính là cục phát WiFi. Dòng đó gọi là
+<strong>default route</strong>, đường mặc định: không có dòng nào cụ thể hơn thì đi đường này.</p>
+
+<h2 id="longest-prefix">Khớp dài nhất thắng</h2>
+
+<p>Một địa chỉ có thể khớp nhiều dòng một lúc. <code>127.0.0.1</code> khớp <code>0.0.0.0/0</code> vì dòng đó khớp mọi
+địa chỉ, khớp <code>127.0.0.0/8</code>, khớp luôn <code>127.0.0.1/32</code>. Lúc đó máy chọn dòng có prefix dài nhất, tức
+dòng cố định nhiều bit nhất, vì dòng đó nói về đích cụ thể nhất. Luật này gọi là <strong>khớp dài nhất</strong> (longest
+prefix match), và router nào trên Internet cũng chọn đường theo đúng luật này. Nhờ nó mà dòng <code>0.0.0.0/0</code> nằm
+chung bảng với các dòng khác được: nó khớp mọi thứ nhưng ngắn nhất, nên chỉ thắng khi không còn dòng nào khác khớp.</p>
+
+<figure class="fig">
+<div class="lookup">
+  <div class="lookup-pick">
+    <span class="lookup-title">gửi tới</span>
+    <button type="button" class="ip-chip" data-ip="57.144.64.1">57.144.64.1 <small>facebook.com</small></button>
+    <button type="button" class="ip-chip" data-ip="10.88.88.20">10.88.88.20 <small>máy cùng WiFi</small></button>
+    <button type="button" class="ip-chip" data-ip="127.0.0.1">127.0.0.1 <small>localhost</small></button>
+    <button type="button" class="ip-chip" data-ip="172.21.21.136">172.21.21.136 <small>WSL</small></button>
+  </div>
+  <div class="lookup-bits" aria-live="polite"><span class="bits-ip">57.144.64.1</span><span class="bits-row"></span></div>
+  <ol class="lookup-rows">
+    <li data-net="0.0.0.0" data-len="0" data-via="10.88.88.88, cục phát WiFi"><code>0.0.0.0/0</code><span class="lr-bar"><i></i></span><span class="lr-via">10.88.88.88</span><span class="lr-res"></span></li>
+    <li data-net="10.88.88.0" data-len="24" data-via="gửi thẳng trong mạng WiFi"><code>10.88.88.0/24</code><span class="lr-bar"><i></i></span><span class="lr-via">On-link</span><span class="lr-res"></span></li>
+    <li data-net="127.0.0.0" data-len="8" data-via="chính máy này"><code>127.0.0.0/8</code><span class="lr-bar"><i></i></span><span class="lr-via">On-link</span><span class="lr-res"></span></li>
+    <li data-net="127.0.0.1" data-len="32" data-via="chính máy này"><code>127.0.0.1/32</code><span class="lr-bar"><i></i></span><span class="lr-via">On-link</span><span class="lr-res"></span></li>
+    <li data-net="172.21.16.0" data-len="20" data-via="mạng ảo sang WSL"><code>172.21.16.0/20</code><span class="lr-bar"><i></i></span><span class="lr-via">On-link</span><span class="lr-res"></span></li>
+  </ol>
+  <p class="lookup-out" aria-live="polite">chọn một địa chỉ ở trên</p>
+  <label class="lookup-try">thử địa chỉ khác <input type="text" inputmode="decimal" placeholder="vd 10.88.88.200" maxlength="15" spellcheck="false"></label>
+</div>
+<figcaption><b>Hình 4</b> Tra bảng route ở Hình 3. Bấm một địa chỉ: hàng bit trên cùng là 32 bit của địa chỉ đó, mỗi dòng
+của bảng tô số bit đầu nó đòi phải khớp; dòng khớp được nhiều bit nhất thắng. Gõ địa chỉ khác vào ô dưới để thử.</figcaption>
+</figure>
+
+<p>Thử với <code>57.144.64.1</code> của facebook.com thì chỉ có dòng <code>0.0.0.0/0</code> khớp, nên gói đi cục phát
+WiFi. Cục phát WiFi cũng có bảng route của nó, ngắn hơn cả bảng của laptop: một dòng cho mạng trong nhà, một dòng mặc định
+đẩy mọi thứ ra nhà mạng. Càng vào sâu trong mạng của nhà mạng thì bảng càng dài. Ở những router không còn ai để đẩy "mọi
+thứ còn lại" lên nữa, bảng phải có dòng cho từng dải địa chỉ của cả Internet. Bảng đó lấy từ đâu ra thì để tới phần BGP.</p>
+
+</section>
+
+<!-- Phần: TTL -->
+<section class="part" id="ttl">
+<header class="part-head"><p class="part-title">TTL</p><p class="part-note">mỗi router trừ một, về không thì bỏ</p></header>
+
+<h2 id="loops">Khi hai router đẩy qua đẩy lại</h2>
+
+<p>Bảng route do người cấu hình hoặc do phần mềm tự dựng, nên có lúc sai. Giả sử router A tưởng đường tới facebook.com
+đi qua B, còn B lại tưởng đường đó đi qua A. Gói tin tới A thì bị đẩy sang B, tới B thì bị đẩy về A, cứ thế mãi. Không
+có gì chặn thì gói tin đó chạy vòng tròn cho tới khi một trong hai bảng được sửa, và trong lúc đó nó chiếm chỗ trên
+đường truyền của các gói khác.</p>
+
+<p>Thứ chặn nó là một ô trong phần đầu IP tên là <strong>TTL</strong> (Time to Live, thời gian sống). Máy gửi đặt sẵn một
+con số vào ô đó, Linux mặc định là 64. Router nào chuyển gói đi tiếp cũng phải trừ con số đó đi ít nhất 1, và gói nào có
+TTL về 0 thì bị bỏ. Gói chạy vòng tròn vì thế chỉ sống được tối đa 64 chặng. RFC 791 nói mục đích của ô này đúng như vậy:
+"The intention is to cause undeliverable datagrams to be discarded, and to bound the maximum datagram lifetime", tức để
+gói không giao được thì bị bỏ, và để đời của một gói có giới hạn.</p>
+
+<p>Router bỏ gói vì TTL về 0 thì không im lặng bỏ, nó gửi một lời báo về cho máy gửi: "gói của anh hết hạn ở chỗ tôi".
+Lời báo đó đi bằng <strong>ICMP</strong> (Internet Control Message Protocol), giao thức các router và máy dùng để báo lỗi
+và hỏi thăm nhau ở tầng 3, đặc tả trong RFC 792. Loại báo này tên là Time Exceeded. Lệnh <code>ping</code> mà bạn hay
+dùng để thử một máy còn sống không cũng chạy bằng ICMP: nó gửi một lời hỏi Echo Request và chờ lời đáp Echo Reply.</p>
+
+<h2 id="tracert-explained">Lệnh tracert ở Bài 00 chạy bằng TTL</h2>
+
+<p>Bài 00 dùng <code>tracert</code> để đếm 14 router từ laptop tới facebook.com. Lệnh đó không có cách nào hỏi thẳng "đường
+đi gồm những router nào", vì không router nào trả lời câu hỏi đó. Nó dùng TTL để buộc từng router tự lộ mặt. Trang hướng
+dẫn của Microsoft tả lại như sau: tracert gửi gói đầu tiên với TTL bằng 1, gói sau tăng thêm 1, cho tới khi máy đích trả
+lời. Gói TTL 1 hết hạn ở router đầu tiên, router đó gửi về lời báo Time Exceeded, và địa chỉ nguồn của lời báo chính là
+địa chỉ của router đó. Gói TTL 2 hết hạn ở router thứ hai, cứ thế tới cuối.</p>
+
+<figure class="fig">
+<div class="probe">
+  <div class="probe-path">
+    <span class="p-node src">máy bạn</span>
+    <span class="p-node r" data-hop="1">router 1</span>
+    <span class="p-node r" data-hop="2">router 2</span>
+    <span class="p-node r" data-hop="3">router 3</span>
+    <span class="p-node r" data-hop="4">router 4</span>
+    <span class="p-node dst" data-hop="5">facebook.com</span>
+    <span class="probe-pkt" aria-hidden="true"><b>TTL</b><em>1</em></span>
+  </div>
+  <ol class="probe-log" aria-live="polite">
+    <li data-hop="1"><span>1</span><code>10.88.88.88</code><small>cục phát WiFi</small></li>
+    <li data-hop="2"><span>2</span><code>(nhà mạng, đã ẩn)</code><small>Time Exceeded</small></li>
+    <li data-hop="3"><span>3</span><code>(nhà mạng, đã ẩn)</code><small>Time Exceeded</small></li>
+    <li data-hop="4"><span>4</span><code>…</code><small>Time Exceeded</small></li>
+    <li data-hop="5"><span>5</span><code>57.144.64.1</code><small>Echo Reply, tới nơi</small></li>
+  </ol>
+</div>
+<figcaption><b>Hình 5</b> tracert dò đường bằng TTL. Mỗi lượt gửi một gói với TTL lớn hơn lượt trước một đơn vị; mỗi
+router trừ 1, router nào trừ về 0 thì bỏ gói và gửi lời báo Time Exceeded về (gói lam đi ngược), và cột bên phải ghi
+thêm một dòng. Hình rút đường đi xuống còn năm chặng; ba dòng đầu là kết quả thật ở Lab 2.</figcaption>
+</figure>
+
+<p>Hiểu cách này rồi thì dòng toàn dấu sao ở chặng 6 trong Bài 00 có lời giải: router ở chặng đó vẫn chuyển gói đi tiếp,
+nhưng không gửi lời báo Time Exceeded về, hoặc lời báo bị chặn trên đường về. Trang hướng dẫn của Microsoft cũng ghi đúng
+trường hợp này: có router không gửi Time Exceeded nên tracert không thấy nó, và in một hàng dấu sao.</p>
+
+</section>
+
+<!-- Phần: BGP -->
+<section class="part" id="bgp">
+<header class="part-head"><p class="part-title">giữa các nhà mạng</p><p class="part-note">AS, BGP, và ngày Facebook biến mất</p></header>
+
+<h2 id="as">Mỗi nhà mạng là một AS</h2>
+
+<p>Router ở sâu trong Internet phải có dòng cho từng dải địa chỉ của cả thế giới, và không ai gõ tay được bảng đó. Các nhà
+mạng phải tự báo cho nhau. Trước khi xem chúng báo nhau thế nào, cần một cái tên cho "một nhà mạng" theo nghĩa kỹ thuật.</p>
+
+<p>Mạng của một nhà mạng, của một công ty lớn như Facebook, hay của một trường đại học, nhìn từ ngoài vào là một khối:
+bên trong có bao nhiêu router, nối nhau thế nào là việc của họ, bên ngoài chỉ cần biết khối đó chứa những dải địa chỉ nào.
+Một khối như vậy gọi là <strong>AS</strong> (Autonomous System, hệ tự quản). RFC 4271 định nghĩa nó là "a set of routers
+under a single technical administration", một nhóm router dưới cùng một bên quản lý kỹ thuật. Mỗi AS có một số hiệu riêng.
+Mạng của Facebook là AS32934; ngày 30/10/2026 mình tra thì AS này quảng bá 555 dải địa chỉ ra Internet, trong đó 233
+dải IPv4 (cách tra ở Lab 4), và <code>57.144.64.1</code> của facebook.com nằm trong dải <code>57.144.64.0/23</code>.</p>
+
+<p>Các AS gặp nhau ở chỗ nào? Có hai cách. Hai AS lớn có thể kéo dây nối thẳng router của nhau. Nhiều AS cũng có thể cùng
+đặt router vào một toà nhà chung, nối chung vào một hệ thống switch, rồi cặp nào muốn nói chuyện thì nói qua đó. Chỗ chung
+đó gọi là điểm trao đổi Internet, IXP (Internet Exchange Point), và Ảnh 3 là một góc của AMS-IX ở Amsterdam, một trong
+những IXP lớn nhất thế giới.</p>
+
+<figure class="fig photo">
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:AMS-IX_optical_patch_panel.jpg" data-credit="Ảnh: Fabienne Serriere · Wikimedia Commons · CC BY-SA 3.0, đã cắt khung và chuyển đen trắng" aria-label="Nguồn ảnh: Fabienne Serriere · Wikimedia Commons · CC BY-SA 3.0"><img src="img/amsix-patch-panel.webp" width="1200" height="800" loading="lazy" alt="Một tủ thiết bị nhìn từ trên xuống, hàng trăm sợi cáp quang uốn cong cắm vào các ổ cắm xếp thành nhiều cột, mỗi sợi có nhãn đánh số."></a>
+  <figcaption><b>Ảnh 3</b> Tủ đấu cáp quang của AMS-IX, Amsterdam, chụp tháng 5 năm 2008. Mỗi sợi cáp có nhãn số là một
+  đường nối giữa thiết bị của IXP với router của một AS thành viên; gói tin từ AS này sang AS kia đi qua những sợi như
+  thế. Ảnh gốc màu vàng, đã chuyển đen trắng.</figcaption>
+</figure>
+
+<h2 id="bgp-announce">BGP: báo cho nhau "tôi giữ dải này"</h2>
+
+<p>Giao thức các AS dùng để báo đường cho nhau là <strong>BGP</strong> (Border Gateway Protocol). RFC 4271 mở đầu bằng câu
+"The Border Gateway Protocol (BGP) is an inter-Autonomous System routing protocol", BGP là giao thức định tuyến giữa các
+AS, và việc chính của nó là trao đổi thông tin "tới được dải nào" với các router BGP khác.</p>
+
+<p>Chạy ra sao thì đi theo dải <code>57.144.64.0/23</code>. Router BGP của Facebook báo cho các AS nối với nó: "dải
+<code>57.144.64.0/23</code> ở chỗ tôi, đường đi là <code>32934</code>". Một AS nhận được, kiểu AS3491 của PCCW Global, ghi
+dòng đó vào bảng của mình rồi báo tiếp cho các AS nối với nó, nhưng ghi thêm số của mình vào đầu: "đường đi là
+<code>3491 32934</code>". Lời báo cứ thế lan ra, mỗi lần qua một AS thì dài thêm một số. Dãy số đó gọi là AS path, đọc
+từ trái sang phải là đi từ AS gần mình tới AS giữ dải địa chỉ. Một AS nhận được nhiều lời báo cho cùng một dải thì chọn
+một đường, thường là đường đi qua ít AS hơn, còn tính cả giá tiền và hợp đồng giữa các bên.</p>
+
+<p>Đường đi đó xem được thật. RIPE NCC, tổ chức cấp địa chỉ IP cho châu Âu và Trung Đông, đặt máy thu ở nhiều IXP để
+ghi lại các lời báo BGP, rồi cho tra miễn phí trên trang RIPEstat. Sáng 30/10/2026 mình tra dải
+<code>57.144.64.0/23</code> thì thấy, chẳng hạn, ở Singapore có router
+thấy đường <code>3491 32934</code>, ở Frankfurt có router thấy <code>2914 32934</code> (2914 là NTT), còn ở Amsterdam có
+router thấy đường dài năm AS <code>202365 50673 174 1299 32934</code>, qua Cogent (174) và Arelion (1299). Hình 6 dựng lại
+một phần những đường đó.</p>
+
+<figure class="fig">
+<div class="bgp">
+  <svg class="bgp-svg" viewBox="0 0 640 300" role="img" aria-label="Sơ đồ các AS: AS32934 của Facebook nối với AS3491, AS18106, AS2914, AS1299; AS1299 nối AS174, AS174 nối AS50673, AS50673 nối AS202365. Lời báo dải 57.144.64.0/23 lan từ AS32934 ra các AS khác, mỗi AS ghi AS path nó nhận được."></svg>
+  <div class="bgp-btns">
+    <span class="bgp-state" aria-live="polite">dải 57.144.64.0/23 đang được quảng bá</span>
+    <button class="diagram-btn bgp-withdraw" type="button">rút quảng bá</button>
+    <button class="diagram-btn bgp-announce" type="button">quảng bá lại</button>
+  </div>
+</div>
+<figcaption><b>Hình 6</b> Lời báo BGP lan ra từ AS32934. Ô bên cạnh mỗi AS là AS path nó nhận được; tám AS và các đường
+nối lấy từ những AS path thật trên RIPEstat ngày 30/10/2026, chỉ là một mảnh rất nhỏ của Internet. Bấm "rút quảng bá"
+để xem điều xảy ra khi AS32934 thôi báo.</figcaption>
+</figure>
+
+<p>Còn đường từ nhà bạn thì sao? Nhìn lại 14 chặng của tracert ở Bài 00: tra từng địa chỉ từ chặng 10 trở đi trên RIPEstat
+thì <code>157.240.68.66</code> nằm trong dải <code>157.240.0.0/17</code>, <code>129.134.62.49</code> và
+<code>129.134.95.218</code> nằm trong <code>129.134.0.0/17</code>, cả hai đều do AS32934 quảng bá; còn
+<code>147.75.211.10</code> không nằm trong dải nào được quảng bá, nhưng tra whois, dịch vụ cho biết ai đăng ký một dải
+địa chỉ, thì tên mạng của nó là <code>FB-NET-208-20</code>. Tức là từ chặng 10, gói tin đã đi trong mạng của Facebook. Từ chặng 9 của nhà mạng sang chặng
+10 của Facebook chỉ một bước, nên theo mình đoán thì nhà mạng nhà mình nối thẳng với Facebook, ở một IXP hoặc bằng dây
+riêng; mình chưa có cách xem bảng BGP của nhà mạng để kiểm.</p>
+
+<h2 id="facebook-2021">Ngày Facebook tự rút đường của mình</h2>
+
+<p>BGP chạy dựa trên lời báo. AS nào thôi báo một dải thì các AS khác xoá dòng đó khỏi bảng, và dải đó biến mất khỏi
+Internet, dù máy bên trong vẫn chạy. Ngày 4/10/2021, Facebook và các dịch vụ khác của hãng không vào được suốt nhiều giờ vì
+đúng chuyện này.</p>
+
+<p>Bài tường thuật của Facebook đăng ngày hôm sau, <em>More details about the October 4 outage</em> của Santosh Janardhan,
+kể lại theo thứ tự. Trong một lần bảo trì, một lệnh được chạy "with the intention to assess the availability of global
+backbone capacity", để đo dung lượng còn trống của mạng xương sống, nhưng nó "unintentionally took down all the connections
+in our backbone network", vô tình cắt mọi kết nối trong mạng xương sống nối các trung tâm dữ liệu của họ. Server DNS của
+Facebook được cài sẵn một luật an toàn: "our DNS servers disable those BGP advertisements if they themselves can not speak
+to our data centers", không nói chuyện được với trung tâm dữ liệu thì tự rút lời báo BGP cho dải địa chỉ của chính chúng.
+Mạng xương sống đứt, nên mọi server DNS cùng rút. Kết quả, theo chính bài đó: "our DNS servers became unreachable even
+though they were still operational", server DNS vẫn chạy mà không ai tới được.</p>
+
+<p>Không tới được server DNS của Facebook thì không ai đổi được facebook.com ra địa chỉ, kể cả nhân viên Facebook, và bài
+viết kể là họ phải "sent engineers onsite to the data centers", cử kỹ sư tới tận trung tâm dữ liệu để dò lỗi và khởi động
+lại hệ thống. Hình 6 có nút "rút quảng bá" để bạn xem cảnh các AS lần lượt
+xoá đường; dải trong hình là <code>57.144.64.0/23</code> của facebook.com hôm nay, còn năm 2021 thứ bị rút là các dải chứa
+server DNS. Server DNS là gì và vì sao mất nó thì cả trang biến mất, đó là chuyện của phần sau.</p>
+
+</section>
+
+<!-- Phần: DNS -->
+<section class="part" id="dns">
+<header class="part-head"><p class="part-title">DNS</p><p class="part-note">một cái tên, ba cấp, và một bộ nhớ đệm</p></header>
+
+<h2 id="dns-levels">Tên cũng chia cấp như địa chỉ</h2>
+
+<p>Bài 00 nói trình duyệt hỏi DNS để đổi <code>www.facebook.com</code> ra địa chỉ IP, và ở Lab 3 cục phát WiFi trong nhà
+trả lời câu hỏi đó. Nhưng cục phát WiFi không thể giữ địa chỉ của mọi tên miền trên đời, cũng như router không giữ được
+dòng cho từng địa chỉ. DNS giải quyết chuyện đó bằng cách chia tên ra theo cấp, mỗi cấp do một bên giữ.</p>
+
+<p>Đọc tên <code>facebook.com</code> từ phải sang trái. Sau chữ <code>com</code> còn một dấu chấm ẩn, gọi là gốc
+(root). Gốc biết ai giữ <code>com</code>. Người giữ <code>com</code> biết ai giữ <code>facebook.com</code>. Người giữ
+<code>facebook.com</code> mới biết địa chỉ thật của <code>facebook.com</code>. Không ai biết hết, mỗi cấp chỉ biết chỉ
+đường xuống cấp dưới. Server giữ câu trả lời thật cho một tên, ở đây là server của Facebook, gọi là server có thẩm quyền
+(authoritative) cho tên đó.</p>
+
+<p>Gốc có 13 cái tên, từ <code>a.root-servers.net</code> tới <code>m.root-servers.net</code>. Trang root-servers.org ghi
+"The 13 root name servers are operated by 12 independent organisations", 13 tên do 12 tổ chức độc lập vận hành. Mỗi tên
+không phải một máy: ngày 30/10/2026 trang đó đếm được 2.049 bản chạy khắp thế giới, các bản cùng một tên dùng chung một
+địa chỉ, và router đưa câu hỏi tới bản gần nhất. Cách nhiều máy dùng chung một địa chỉ như vậy gọi là anycast.</p>
+
+<h2 id="resolver">Ai đi hỏi từng cấp</h2>
+
+<p>Laptop của bạn không tự đi hỏi gốc. Nó hỏi một server DNS hỏi hộ, gọi là <strong>resolver</strong>. Resolver có thể là
+cục phát WiFi, server DNS của nhà mạng, hay một dịch vụ công cộng như <code>1.1.1.1</code> của Cloudflare. Resolver đi hỏi
+lần lượt gốc, rồi <code>com</code>, rồi server của Facebook, nhận địa chỉ, đưa lại cho laptop.</p>
+
+<p>Lệnh <code>dig +trace</code> trên Linux làm đúng việc của resolver và in ra từng bước. Mình chạy nó trong WSL ngày
+30/10/2026, và Hình 7 là ba bước cuối, cắt bớt các dòng lặp.</p>
+
+<figure class="fig">
+<pre><code>$ dig +trace +nodnssec facebook.com @1.1.1.1
+.			516112	IN	NS	a.root-servers.net.
+[… 12 dòng tương tự, tới m.root-servers.net …]
+;; Received 239 bytes from 1.1.1.1#53(1.1.1.1) in 19 ms
+
+com.			172800	IN	NS	m.gtld-servers.net.
+[… 12 dòng tương tự …]
+;; Received 865 bytes from 192.5.5.241#53(f.root-servers.net) in 4 ms
+
+facebook.com.		172800	IN	NS	a.ns.facebook.com.
+facebook.com.		172800	IN	NS	b.ns.facebook.com.
+facebook.com.		172800	IN	NS	c.ns.facebook.com.
+facebook.com.		172800	IN	NS	d.ns.facebook.com.
+;; Received 284 bytes from 192.54.112.30#53(h.gtld-servers.net) in 275 ms
+
+facebook.com.		60	IN	A	57.144.64.1
+;; Received 57 bytes from 185.89.218.12#53(c.ns.facebook.com) in 223 ms</code></pre>
+<figcaption><b>Hình 7</b> <code>dig +trace</code> đi từ gốc xuống, ngày 30/10/2026. Mỗi khối là một câu trả lời, dòng
+<code>Received ... from</code> cuối khối nói ai trả lời và mất bao lâu. <code>NS</code> nghĩa là "hỏi tiếp server này",
+<code>A</code> là địa chỉ IPv4.</figcaption>
+</figure>
+
+<p>Đọc từng khối. Khối đầu: <code>1.1.1.1</code> cho danh sách 13 tên gốc. Khối hai: <code>f.root-servers.net</code> không
+biết facebook.com ở đâu, nó chỉ trả lời "<code>com</code> thì hỏi một trong 13 server <code>gtld-servers.net</code>", và
+nó trả lời trong 4 mili giây, nhanh vì một bản của f-root nằm ngay gần máy mình. Khối ba:
+<code>h.gtld-servers.net</code> trả lời "facebook.com thì hỏi <code>a</code> tới <code>d.ns.facebook.com</code>". Khối cuối:
+<code>c.ns.facebook.com</code>, server có thẩm quyền, trả lời <code>57.144.64.1</code>. Các server DNS của
+Facebook bị rút đường năm 2021 ở phần BGP chính là bốn server <code>ns.facebook.com</code> ở khối ba. Mất đường tới bốn server đó
+thì không resolver nào đi được bước cuối.</p>
+
+<figure class="fig">
+<div class="dns-walk">
+  <div class="dw-stage">
+    <div class="dw-node laptop" data-n="laptop"><b>laptop</b><small>hỏi facebook.com</small></div>
+    <div class="dw-node resolver" data-n="resolver"><b>resolver</b><small>1.1.1.1</small>
+      <span class="dw-cache"><i>cache</i><em class="dw-ttl">trống</em></span></div>
+    <div class="dw-tree">
+      <div class="dw-node auth root" data-n="root"><b>.</b><small>f.root-servers.net</small></div>
+      <div class="dw-node auth tld" data-n="tld"><b>com.</b><small>h.gtld-servers.net</small></div>
+      <div class="dw-node auth fb" data-n="fb"><b>facebook.com.</b><small>c.ns.facebook.com</small></div>
+    </div>
+    <span class="dw-msg" aria-hidden="true"></span>
+  </div>
+  <p class="dw-log" aria-live="polite">bấm "hỏi" để resolver đi hỏi từng cấp</p>
+  <div class="dw-btns"><button class="diagram-btn dw-ask" type="button">hỏi</button><button class="diagram-btn dw-ask2" type="button">hỏi lại ngay</button></div>
+</div>
+<figcaption><b>Hình 8</b> Resolver đi hỏi từng cấp rồi cất câu trả lời vào cache. Thời gian trên mỗi bước là thời gian
+thật ở Hình 7. Bấm "hỏi lại ngay" thì resolver trả lời từ cache, không đi hỏi ai, và con số TTL trong cache cứ đếm lùi.</figcaption>
+</figure>
+
+<h2 id="dns-cache">Con số 60 và bộ nhớ đệm</h2>
+
+<p>Mỗi câu trả lời DNS kèm một con số, cột thứ hai ở Hình 7. Câu trả lời cuối có số <code>60</code>: đó là TTL của câu trả
+lời, tính bằng giây, và nó nói resolver được giữ câu trả lời này trong bộ nhớ đệm (cache) tối đa 60 giây. Trong 60 giây đó,
+ai hỏi lại facebook.com thì resolver trả lời luôn từ cache, khỏi đi hỏi ba cấp. TTL ở đây là một ô khác với TTL trong phần
+đầu IP, chỉ trùng tên vì cùng nói về "sống được bao lâu".</p>
+
+<p>Con số này đọc được tận mắt. Hỏi thẳng <code>c.ns.facebook.com</code> thì luôn được 60. Hỏi resolver mặc định của WSL thì
+mình được <code>facebook.com. 53 IN A 57.144.64.1</code>: câu trả lời đã nằm trong cache được 7 giây, còn sống 53 giây.
+Hỏi <code>1.1.1.1</code> hai lần cách nhau 20 giây thì lần đầu được TTL 40 với địa chỉ <code>57.144.64.1</code>, lần sau
+được TTL 48 với địa chỉ <code>57.145.12.1</code>. Lần sau TTL lại lớn hơn, địa chỉ lại khác, vì <code>1.1.1.1</code> cũng
+không phải một máy: hai câu hỏi rơi vào hai máy khác nhau, mỗi máy có cache riêng, cất câu trả lời vào lúc khác nhau, và
+Facebook không trả lời mọi người cùng một địa chỉ.</p>
+
+<p>Cache là lý do một tên miền đổi địa chỉ thì không phải ai cũng thấy ngay. Bạn sửa DNS cho tên miền của mình trỏ sang
+server mới, nhưng resolver nào đang giữ câu trả lời cũ thì cứ trả câu cũ cho tới khi hết TTL. Facebook đặt TTL 60 giây để
+đổi địa chỉ nhanh; còn danh sách server của <code>com</code> có TTL 172800, tức hai ngày, vì nó gần như không bao giờ đổi.</p>
+
+</section>
+
+<!-- Phần: lab -->
+<section class="part" id="lab">
+<header class="part-head"><p class="part-title">lab</p><p class="part-note">bảng route, TTL, DNS, BGP, và bắt gói tin</p></header>
+
+<p>Lab chạy ở hai chỗ: Git Bash trên Windows cho lệnh của Windows, và WSL Ubuntu cho lệnh của Linux. Output là của máy
+mình ngày 30/10/2026; máy bạn sẽ ra địa chỉ khác, cách đọc thì vẫn vậy. Trong WSL, cài các công cụ trước:</p>
+
+<pre><code># WSL Ubuntu: dig, traceroute, whois và tshark (bản dòng lệnh của Wireshark)
+sudo apt update
+sudo apt install -y dnsutils traceroute whois tshark</code></pre>
+
+<p>Lúc cài <code>tshark</code>, Ubuntu có thể hỏi có cho người dùng thường bắt gói tin không; chọn gì cũng được, vì lab
+chạy <code>tshark</code> bằng <code>sudo</code>. Máy mình cài được TShark 4.6.4, dig 9.20.24 và traceroute 2.1.6.</p>
+
+<h2 id="lab-1">Lab 1: đọc bảng route của máy bạn</h2>
+
+<pre><code># Git Bash trên Windows
+route print -4
+
+# WSL Ubuntu
+ip route</code></pre>
+
+<p>Trên Windows, tìm dòng <code>0.0.0.0</code> để biết cục phát WiFi của bạn có địa chỉ gì, và dòng có Netmask
+<code>255.255.255.0</code> để biết mạng WiFi của bạn là dải nào. Trong WSL, bảng ngắn hơn nhiều:</p>
+
+<pre><code>$ ip route
+default via 172.21.16.1 dev eth0 proto kernel
+172.21.16.0/20 dev eth0 proto kernel scope link src 172.21.21.136</code></pre>
+
+<p>Linux viết thẳng độ dài prefix sau dấu gạch chéo. Dòng <code>default</code> là <code>0.0.0.0/0</code>, và nó đẩy mọi thứ cho
+<code>172.21.16.1</code>, chính là địa chỉ của Windows trong mạng ảo, khớp với dòng <code>172.21.16.0</code> ở bảng route
+của Windows. Gói tin từ WSL ra Internet vì thế đi qua bảng route của Windows thêm một lần nữa.</p>
+
+<h2 id="lab-2">Lab 2: tự gây lỗi, cho gói tin chết sớm</h2>
+
+<p>Lệnh <code>ping</code> của Windows có cờ <code>-i</code> để tự đặt TTL. Đặt TTL nhỏ hơn số chặng tới đích thì gói tin
+không bao giờ tới nơi, và bạn nhận về đúng lời báo mà tracert dùng:</p>
+
+<pre><code>$ ping -n 1 -i 1 facebook.com
+Pinging facebook.com [57.144.64.1] with 32 bytes of data:
+Reply from 10.88.88.88: TTL expired in transit.
+
+$ ping -n 1 -i 2 facebook.com
+Reply from (router nhà mạng, đã ẩn): TTL expired in transit.
+
+$ ping -n 1 -i 3 facebook.com
+Reply from (router nhà mạng, đã ẩn): TTL expired in transit.</code></pre>
+
+<p>Đọc kỹ dòng <code>Reply from</code>: lời đáp không đến từ facebook.com mà đến từ router đã bỏ gói, và câu
+<code>TTL expired in transit</code> là cách Windows in lời báo Time Exceeded. TTL 1 chết ở cục phát WiFi, TTL 2 và 3 chết ở
+hai router của nhà mạng. Bạn vừa tự làm tay ba dòng đầu của tracert. Giờ sửa lỗi: bỏ cờ <code>-i</code> để Windows dùng TTL
+mặc định của nó, và gói tới được facebook.com:</p>
+
+<pre><code>$ ping -n 1 facebook.com</code></pre>
+
+<p>Lần này dòng <code>Reply from</code> phải là <code>57.144.64.1</code> hay một địa chỉ khác của Facebook, kèm thời gian
+đi về.</p>
+
+<h2 id="lab-3">Lab 3: đi hỏi DNS từng cấp</h2>
+
+<pre><code># WSL Ubuntu
+dig +trace +nodnssec facebook.com @1.1.1.1
+dig +noall +answer facebook.com
+dig +noall +answer +norec facebook.com @c.ns.facebook.com</code></pre>
+
+<p>Lệnh đầu cho ra Hình 7. Cờ <code>@1.1.1.1</code> là bắt buộc trên máy mình: không có nó thì <code>dig +trace</code> hỏi
+server DNS mặc định của WSL ở <code>10.255.255.254</code>, và server đó không trả lời câu hỏi danh sách gốc:</p>
+
+<pre><code>$ dig +trace +nodnssec facebook.com
+;; communications error to 10.255.255.254#53: timed out
+;; communications error to 10.255.255.254#53: timed out
+;; communications error to 10.255.255.254#53: timed out
+;; no servers could be reached</code></pre>
+
+<p>Hỏi thường thì server đó trả lời bình thường, mình chỉ gặp lỗi với câu hỏi danh sách gốc và chưa tìm hiểu vì sao. Hai
+lệnh sau so TTL: hỏi qua resolver thì TTL nhỏ hơn 60 vì câu trả lời đã nằm trong cache một lúc, hỏi thẳng server có thẩm
+quyền, cờ <code>+norec</code> bảo nó đừng đi hỏi hộ ai, thì được đúng 60.</p>
+
+<h2 id="lab-4">Lab 4: tra AS của một địa chỉ</h2>
+
+<pre><code># Git Bash hoặc WSL, cần mạng
+curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=57.144.64.1"</code></pre>
+
+<p>Output là một khối JSON dài, mình rút ra mấy trường chính:</p>
+
+<pre><code>"resource": "57.144.64.0/23",
+"announced": true,
+"asns": [ { "asn": 32934, "holder": "FACEBOOK - Facebook, Inc." } ]</code></pre>
+
+<p><code>resource</code> là dải địa chỉ chứa <code>57.144.64.1</code>, <code>announced</code> cho biết dải đó đang được
+quảng bá trên BGP, và <code>asns</code> là AS đang quảng bá nó. Thay <code>57.144.64.1</code> bằng địa chỉ của các chặng
+trong tracert ở Bài 00 để tự xem gói tin vào mạng của Facebook từ chặng nào. Muốn xem AS path thì thay
+<code>prefix-overview</code> bằng <code>looking-glass</code> và đổi resource thành dải <code>57.144.64.0/23</code>; mỗi dòng
+<code>as_path</code> trong output là một đường như ở Hình 6.</p>
+
+<h2 id="lab-5">Lab 5: bắt gói tin bằng Wireshark</h2>
+
+<p>Wireshark là chương trình bắt lại các gói tin đi qua card mạng rồi bóc từng lớp cho bạn đọc. Nó có hai bản: bản có giao
+diện tải ở wireshark.org, và bản dòng lệnh tên <code>tshark</code>, cùng một bộ bóc gói, đã cài ở đầu lab. Ảnh 4 là giao
+diện của bản đồ hoạ, mở một gói hỏi DNS.</p>
+
+<figure class="fig photo shot">
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Wireshark_Network_Analyzer_Screen.png" data-credit="Ảnh: Laurachappell · Wikimedia Commons · CC BY-SA 4.0, đã cắt và vẽ thêm khung màu" aria-label="Nguồn ảnh: Laurachappell · Wikimedia Commons · CC BY-SA 4.0"><img src="img/wireshark-dns.webp" width="1149" height="200" loading="lazy" alt="Giao diện Wireshark: một dòng gói tin DNS hỏi www.google.com, bên dưới là các dòng Frame, Ethernet II, Internet Protocol Version 4, User Datagram Protocol, Domain Name System xếp chồng."></a>
+  <figcaption><b>Ảnh 4</b> Một gói hỏi DNS mở bằng Wireshark. Các dòng xếp từ lớp ngoài vào lớp trong:
+  <span class="kw"><i class="key k-red" aria-hidden="true"></i>vỏ Ethernet</span> ghi hai địa chỉ MAC,
+  <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>phần đầu IPv4</span> ghi hai địa chỉ IP,
+  <span class="kw"><i class="key k-blue" aria-hidden="true"></i>phần đầu UDP</span> ghi hai port, dòng cuối là câu hỏi DNS.
+  Dòng Frame trên cùng là ghi chú của Wireshark về độ dài gói, không phải một lớp trong gói.</figcaption>
+</figure>
+
+<p>Trong WSL, bắt gói của một request HTTP thường (không phải https, để còn đọc được lời nhắn). Lệnh thứ nhất chạy
+<code>tshark</code> ở nền, bắt mọi gói đi qua port 80 trên card <code>eth0</code> trong 10 giây và ghi vào tệp; trong 10
+giây đó chạy curl:</p>
+
+<pre><code># WSL Ubuntu
+sudo tshark -i eth0 -f "tcp port 80" -a duration:10 -w /tmp/http.pcapng &amp;
+sleep 2; curl -s -o /dev/null http://example.com/; wait
+
+tshark -n -r /tmp/http.pcapng
+tshark -n -r /tmp/http.pcapng -Y frame.number==4 -O eth,ip,tcp,http -x</code></pre>
+
+<p>Lệnh <code>tshark -n -r</code> đọc lại tệp vừa bắt và in mỗi gói một dòng, chính là 12 dòng ở Bảng 1. Lệnh cuối mở
+riêng gói số 4, gói chở lời nhắn GET: <code>-O</code> chọn các lớp muốn bóc chi tiết, <code>-x</code> in thêm toàn bộ byte
+của gói dưới dạng hex. Hình 9 dựng lại 141 byte đó.</p>
+
+<figure class="fig">
+<div class="dissect">
+  <ul class="dx-layers">
+    <li data-layer="eth" class="c2"><b>Ethernet II</b><small>byte 0-13 · MAC nhận, MAC gửi, loại</small></li>
+    <li data-layer="ip" class="c3"><b>IPv4</b><small>byte 14-33 · TTL 64, 172.21.21.136 tới 104.20.23.154</small></li>
+    <li data-layer="tcp" class="c4"><b>TCP</b><small>byte 34-65 · port 47430 tới 80</small></li>
+    <li data-layer="http" class="c7"><b>HTTP</b><small>byte 66-140 · GET / HTTP/1.1</small></li>
+  </ul>
+  <div class="dx-hex" aria-label="141 byte của gói tin số 4 dạng hex"></div>
+  <p class="dx-field" aria-live="polite">rê chuột hoặc chạm vào một lớp, hoặc một byte</p>
+</div>
+<details class="raw"><summary>output nguyên văn của tshark, phần hex</summary>
+<pre><code>0000  00 15 5d 8a 9e 59 00 15 5d bb 07 66 08 00 45 00   ..]..Y..]..f..E.
+0010  00 7f 6d e2 40 00 40 06 8b 4b ac 15 15 88 68 14   ..m.@.@..K....h.
+0020  17 9a b9 46 00 50 5f 14 57 f1 c4 02 1d 98 80 18   ...F.P_.W.......
+0030  00 3f 41 bd 00 00 01 01 08 0a e9 ab 47 b4 be 66   .?A.........G..f
+0040  38 75 47 45 54 20 2f 20 48 54 54 50 2f 31 2e 31   8uGET / HTTP/1.1
+0050  0d 0a 48 6f 73 74 3a 20 65 78 61 6d 70 6c 65 2e   ..Host: example.
+0060  63 6f 6d 0d 0a 55 73 65 72 2d 41 67 65 6e 74 3a   com..User-Agent:
+0070  20 63 75 72 6c 2f 38 2e 31 38 2e 30 0d 0a 41 63    curl/8.18.0..Ac
+0080  63 65 70 74 3a 20 2a 2f 2a 0d 0a 0d 0a            cept: */*....</code></pre>
+</details>
+<figcaption><b>Hình 9</b> 141 byte của gói số 4, bắt trên máy mình ngày 30/10/2026. Mỗi ô là một byte viết bằng hai ký tự
+<button type="button" class="term" data-term="hex">hex</button>; màu của ô cho biết byte đó thuộc lớp nào. Rê lên một lớp để tô các byte của nó, rê lên một byte để biết nó là trường
+gì.</figcaption>
+</figure>
+
+<p>Đếm byte là thấy Hình 4 của Bài 00 hiện ra bằng số thật. 14 byte đầu là vỏ Ethernet: sáu byte MAC nhận, sáu byte MAC gửi,
+hai byte <code>08 00</code> nói phần sau là IPv4. Hai địa chỉ MAC đều bắt đầu bằng <code>00:15:5d</code>, loại địa chỉ
+Windows cấp cho card mạng ảo, vì gói này đi ra từ WSL. 20 byte tiếp là phần đầu IP, trong đó byte thứ 23 là
+<code>40</code>, tức 64, chính là TTL mặc định của Linux, và tám byte <code>ac 15 15 88 68 14 17 9a</code> là hai địa chỉ
+IP. 32 byte sau là phần đầu TCP, bắt đầu bằng <code>b9 46</code> và <code>00 50</code>, tức port 47430 của curl và port 80
+của server. 75 byte cuối là lời nhắn HTTP, đọc thẳng được bằng mắt ở cột chữ bên phải output.</p>
+
+<p>Thử thêm một bước: bắt gói của <code>curl https://example.com/</code> với bộ lọc <code>"tcp port 443"</code>, rồi mở gói
+chở dữ liệu. Ba lớp đầu vẫn đọc được như cũ, còn phần sau phần đầu TCP chỉ là một khối byte không đọc được, vì TLS đã mã hoá
+nó trước khi rời máy, đúng như Bài 00 nói về các thiết bị đứng giữa đường.</p>
+
+</section>
+
+<!-- Phần: tự kiểm tra, nguồn -->
+<section class="part" id="self-check">
+<header class="part-head"><p class="part-title">tự kiểm tra</p><p class="part-note">tự kiểm tra và nguồn đọc thêm</p></header>
+
+<h2 id="checklist">Tự kiểm tra</h2>
+
+<p>Bấm vào từng dòng khi bạn tự trả lời được mà không nhìn lại bài, bằng lời của bạn, kèm một ví dụ.</p>
+
+<ul class="check">
+  <li>Kể được bốn tầng của TCP/IP, mỗi tầng ứng với tầng nào của OSI, và vì sao người ta vẫn gọi số tầng theo OSI</li>
+  <li>Nói được chuyển mạch gói khác chuyển mạch kênh ở đâu, và ba chuyện có thể xảy ra với gói tin vì không ai giữ đường</li>
+  <li>Chỉ ra được trong 12 gói của một lần curl, gói nào là bắt tay, gói nào chở dữ liệu, gói nào đóng kết nối</li>
+  <li>Đọc được <code>10.88.88.0/24</code> có bao nhiêu địa chỉ, và đổi được netmask <code>255.255.240.0</code> ra độ dài prefix</li>
+  <li>Cho một địa chỉ và bảng route ở Hình 3, chỉ ra được dòng nào thắng và vì sao</li>
+  <li>Giải thích được TTL dùng để làm gì, và tracert dựa vào TTL để tìm từng router thế nào</li>
+  <li>Nói được AS là gì, BGP báo cái gì cho nhau, và đọc được một AS path như <code>3491 32934</code></li>
+  <li>Kể lại được vì sao ngày 4/10/2021 server DNS của Facebook vẫn chạy mà không ai tới được</li>
+  <li>Kể được resolver đi qua những cấp nào để đổi facebook.com ra địa chỉ, và con số TTL trong câu trả lời DNS nói gì</li>
+  <li>Bắt được gói tin của một request bằng <code>tshark</code> và chỉ ra byte nào là TTL, byte nào là port</li>
+</ul>
+
+<h2 id="sources">Nguồn đọc thêm</h2>
+
+<ol class="refs">
+  <li>RFC 1122, <em>Requirements for Internet Hosts: Communication Layers</em> (1989). Bốn tầng ở mục 1.1.3.
+  <a href="https://www.rfc-editor.org/rfc/rfc1122">rfc-editor.org/rfc/rfc1122</a></li>
+  <li>RFC 791, <em>Internet Protocol</em> (1981). IP không tin cậy ở mục 1.4, ô Time to Live ở mục 3.1.
+  <a href="https://www.rfc-editor.org/rfc/rfc791">rfc-editor.org/rfc/rfc791</a></li>
+  <li>RFC 792, <em>Internet Control Message Protocol</em> (1981). Lời báo Time Exceeded và Echo.
+  <a href="https://www.rfc-editor.org/rfc/rfc792">rfc-editor.org/rfc/rfc792</a></li>
+  <li>RFC 9293, <em>Transmission Control Protocol (TCP)</em>. Bắt tay ba bước, số thứ tự, gửi lại.
+  <a href="https://www.rfc-editor.org/rfc/rfc9293">rfc-editor.org/rfc/rfc9293</a></li>
+  <li>RFC 4632, <em>Classless Inter-domain Routing (CIDR)</em>. Cách viết prefix có dấu gạch chéo.
+  <a href="https://www.rfc-editor.org/rfc/rfc4632">rfc-editor.org/rfc/rfc4632</a></li>
+  <li>RFC 4271, <em>A Border Gateway Protocol 4 (BGP-4)</em>. Định nghĩa AS ở mục 1.1.
+  <a href="https://www.rfc-editor.org/rfc/rfc4271">rfc-editor.org/rfc/rfc4271</a></li>
+  <li>RFC 1034, <em>Domain Names, Concepts and Facilities</em>. Cây tên miền, resolver, TTL.
+  <a href="https://www.rfc-editor.org/rfc/rfc1034">rfc-editor.org/rfc/rfc1034</a></li>
+  <li>RFC 801, <em>NCP/TCP Transition Plan</em> (1981). Kế hoạch chuyển ARPANET sang TCP/IP trước 1/1/1983.
+  <a href="https://www.rfc-editor.org/rfc/rfc801">rfc-editor.org/rfc/rfc801</a></li>
+  <li>V. Cerf, R. Kahn, <em>A Protocol for Packet Network Intercommunication</em>, IEEE Transactions on Communications,
+  tháng 5 năm 1974. <a href="https://ieeexplore.ieee.org/document/1092259">ieeexplore.ieee.org/document/1092259</a></li>
+  <li>Santosh Janardhan, <em>More details about the October 4 outage</em>, Engineering at Meta, 5/10/2021.
+  <a href="https://engineering.fb.com/2021/10/05/networking-traffic/outage-details/">engineering.fb.com/2021/10/05/networking-traffic/outage-details</a></li>
+  <li>Root Server Technical Operations Association, danh sách 13 root server và số bản đang chạy.
+  <a href="https://root-servers.org/">root-servers.org</a></li>
+  <li>RIPEstat Data API của RIPE NCC, nguồn số liệu AS và AS path trong bài.
+  <a href="https://stat.ripe.net/docs/data_api">stat.ripe.net/docs/data_api</a></li>
+  <li>Microsoft, trang hướng dẫn lệnh <code>tracert</code>, phần tả cách dùng TTL.
+  <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/tracert">learn.microsoft.com/…/windows-commands/tracert</a></li>
+  <li>Wireshark, trang hướng dẫn của <code>tshark</code> bản 4.6.
+  <a href="https://www.wireshark.org/docs/man-pages/tshark.html">wireshark.org/docs/man-pages/tshark.html</a></li>
+</ol>
+
+</section>
+
+</main>
+
+</div>
+
+<nav class="prevnext">
+  <a href="../00-osi-layers/">
+    <span class="dir">Bài trước</span>
+    <span class="t">Bài 00: Bấm like trên facebook.com, bảy tầng OSI</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 01 · M0 Phía sau một cú bấm · DevOps lang băm</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=4a3a922e"></script>
+<script src="../../assets/terms.js?v=4a3a922e"></script>
+<script src="lesson.js?v=ee7d95fd"></script>
+</body>
+</html>

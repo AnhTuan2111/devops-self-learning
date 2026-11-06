@@ -66,8 +66,8 @@
   const stops = [...elevator.querySelectorAll('a')];
   const targets = stops.map((a) => document.getElementById(a.getAttribute('href').slice(1)));
   function updateElevator() {
-    // Bài giảng từ tầng 1 lên tầng 7 trong khi thang máy xếp tầng 7 trên cùng, nên không chọn theo thứ tự nút
-    // mà chọn đoạn nằm gần vạch đọc nhất ở phía trên nó.
+    // Nút xếp theo thứ tự đoạn trên trang (tầng 1 trên cùng, vì bài giảng từ tầng 1 lên tầng 7), nên cuộn xuống thì
+    // nút sáng cũng đi xuống. Chọn đoạn nằm gần vạch đọc nhất ở phía trên nó.
     const line = innerHeight * 0.3;
     let current = 0, best = -Infinity;
     targets.forEach((t, i) => {

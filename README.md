@@ -16,7 +16,7 @@ Một cú bấm trên trình duyệt đi qua những tầng nào trước khi t�
 | # | Bài | Cần biết | Thực hành | Trạng thái |
 |---|---|---|---|---|
 | `00` | [Bấm like trên facebook.com: bảy tầng OSI](https://anhtuan2111.github.io/devops-self-learning/lessons/00-osi-layers/) | không | máy bạn | đang học |
-| `01` | TCP/IP: Internet chạy thế nào | bảy tầng OSI | máy bạn | chưa học |
+| `01` | [TCP/IP: Internet chạy thế nào](https://anhtuan2111.github.io/devops-self-learning/lessons/01-tcp-ip/) | bảy tầng OSI | máy bạn | đang học |
 | `02` | Người làm DevOps nắm chỗ nào trong các tầng | TCP/IP, DNS, HTTP | chỉ đọc | chưa học |
 
 ### M1 · Một cái máy Linux
