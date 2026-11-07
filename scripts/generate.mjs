@@ -31,7 +31,10 @@ const GLOSSARY = createRequire(import.meta.url)('../assets/terms.js');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
-const asset = (p) => readFileSync(join(ROOT, 'assets', p));
+// Đổi CRLF về LF trước khi băm: Git trên Windows lấy tệp ra với CRLF, trên Linux (CI, GitHub Pages) là LF; không đổi thì
+// hai máy ra hai mã ?v= khác nhau cho cùng một nội dung.
+const lf = (buf) => buf.toString('utf8').replace(/\r\n/g, '\n');
+const asset = (p) => lf(readFileSync(join(ROOT, 'assets', p)));
 
 // Số phiên bản tài sản = hash nội dung. Gắn vào đường dẫn (?v=…) để khi CSS/JS đổi, trình duyệt buộc
 // phải tải bản mới; GitHub Pages cho trình duyệt giữ bản cũ tới 10 phút.
@@ -255,7 +258,7 @@ if (existsSync(join(ROOT, 'lessons'))) {
       // lesson.css và lesson.js riêng của từng bài cũng gắn ?v= theo nội dung của chính tệp đó
       const lessonV = (f) => {
         const fp = join(ROOT, 'lessons', d, f);
-        return existsSync(fp) ? createHash('sha1').update(readFileSync(fp)).digest('hex').slice(0, 8) : null;
+        return existsSync(fp) ? createHash('sha1').update(lf(readFileSync(fp))).digest('hex').slice(0, 8) : null;
       };
       const t = s
         .replace(/(assets\/(?:style\.css|app\.js|terms\.css|terms\.js))(?:\?v=[0-9a-f]+)?"/g, `$1?v=${ASSET_V}"`)
