@@ -1,0 +1,25 @@
+# Lệnh kiểm cho mọi pull request và mỗi lần push lên main. Không deploy: GitHub Pages vẫn phục vụ thẳng từ nhánh main.
+name: check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: trang chủ và README đã sinh lại sau khi sửa curriculum.json, progress.json, CSS, JS
+        run: |
+          node scripts/generate.mjs
+          git diff --exit-code
+      - name: sơ đồ ASCII thẳng cột
+        run: node scripts/check-diagrams.mjs
+      - name: không có dấu gạch dài, gạch vừa
+        run: |
+          if git grep -nP '[\x{2013}\x{2014}]' -- . ':!*.webp' ':!*.png' ':!*.jpg' ':!*.woff2'; then exit 1; fi
