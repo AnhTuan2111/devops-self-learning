@@ -1,0 +1,143 @@
+/* Riêng Bài 03: mọi thứ thị giác xoay quanh việc kernel chia phần cứng cho các process. Đầu trang là bốn nhân CPU chia
+   lượt cho năm process; Hình 2 là thanh RAM của một server đầy dần tới lúc OOM killer giết process lớn nhất.
+   Chữ, ảnh, khối chú thích, bảng vẫn lấy từ assets/style.css. Hành vi ở lesson.js. */
+
+:root {
+  /* Màu riêng của bài, ngoài bảng màu chung ở assets/style.css */
+  --on-color: var(--surface);   /* chữ trên nền đỏ, lam */
+  --core-bg: #262626;           /* ô một nhân CPU trên nền đen */
+  --core-idle: #333333;         /* nhân chưa có process */
+  --kernel-ram: #3a3a3a;        /* phần RAM của kernel */
+}
+
+/* Mỗi process một màu, dùng chung cho đầu trang và Hình 2 */
+.p-java     { --p: var(--red);    --p-on: var(--on-color); }
+.p-nginx    { --p: var(--blue);   --p-on: var(--on-color); }
+.p-postgres { --p: var(--yellow); --p-on: var(--ink); }
+.p-bash     { --p: var(--ink);    --p-on: var(--paper); }
+.p-backup   { --p: var(--sunk);   --p-on: var(--ink); }
+
+::selection { background: var(--red); color: var(--on-color); }
+.hl::selection { background: var(--ink); color: var(--paper); }
+
+/* ---------------- Đầu trang: chữ bên trái, bốn nhân CPU bên phải ---------------- */
+@media (min-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr) 340px; column-gap: 44px; align-items: center; }
+  .hero > * { grid-column: 1; }
+  .hero > .cpu { grid-column: 2; grid-row: 1 / span 4; margin: 0; }
+}
+@media (max-width: 899px) { .hero > .cpu { grid-row: auto; margin: 26px 0 0; } }
+.cpu { width: 100%; max-width: 340px; margin: 0; display: grid; gap: 10px; }
+.cpu-cores {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 12px;
+  background: var(--ink); border: 4px solid var(--ink);
+}
+.core { display: grid; gap: 6px; padding: 8px; background: var(--core-bg); }
+.core-name { font: 700 11px/1 var(--f-display); text-transform: lowercase; color: var(--yellow); }
+.core-slot {
+  display: grid; place-items: center; height: 46px; background: var(--p, var(--core-idle)); color: var(--p-on, var(--paper));
+  font: 800 15px/1 var(--f-display); transition: background .2s, color .2s;
+}
+.core-slot.swap { animation: swap .32s ease-out; }
+@keyframes swap { from { opacity: .2; transform: scaleY(.6); } to { opacity: 1; transform: none; } }
+.cpu-queue { display: flex; align-items: center; gap: 10px; }
+.q-label { font: 700 12px/1 var(--f-display); text-transform: lowercase; color: var(--ink-3); width: 58px; flex: none; }
+.q-items { display: flex; gap: 4px; flex-wrap: wrap; min-height: 30px; }
+.q-items span {
+  display: grid; place-items: center; padding: 0 10px; height: 30px; background: var(--p); color: var(--p-on);
+  font: 800 12px/1 var(--f-display);
+}
+.cpu-note { margin: 0; font: 600 13px/1.35 var(--f-display); text-transform: lowercase; color: var(--ink-2); }
+
+/* ---------------- Khung: điều hướng bên trái, bài bên phải ---------------- */
+.layout { display: block; }
+@media (min-width: 1000px) {
+  .layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); column-gap: 40px; align-items: start; }
+}
+.board-nav {
+  position: sticky; top: var(--topbar-h, 0px); z-index: 30; background: var(--paper);
+  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+  margin: 0 -16px 18px; padding: 8px 16px; border-bottom: var(--rule-m) solid var(--ink);
+}
+.board-nav::-webkit-scrollbar { display: none; }
+.board-nav a {
+  flex: none; display: flex; align-items: center; gap: 8px; padding: 0 12px; min-height: 38px;
+  font: 700 13px/1 var(--f-display); text-transform: lowercase; text-decoration: none; color: var(--ink);
+  background: var(--surface); transition: background .2s, color .2s;
+}
+/* Mỗi phần một chân cắm nhỏ, như chân của một con chip */
+.board-nav a i { width: 10px; height: 16px; background: var(--line); flex: none; transition: background .2s; }
+.board-nav a.active { background: var(--ink); color: var(--paper); }
+.board-nav a.active i { background: var(--red); }
+.board-nav a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+@media (min-width: 1000px) {
+  .board-nav {
+    top: calc(var(--topbar-h, 0px) + 16px); flex-direction: column; gap: 0; overflow: visible;
+    margin: 0; padding: 10px; border: 4px solid var(--ink); background: var(--surface);
+  }
+  .board-nav a { min-height: 42px; font-size: 14px; background: none; }
+  .board-nav a:hover { background: var(--sunk); }
+  .board-nav a.active:hover { background: var(--ink); }
+}
+
+/* ---------------- Các phần của bài (cùng khuôn với các bài trước) ---------------- */
+.part {
+  background: var(--surface); border-top: var(--rule-xl) solid var(--ink);
+  padding: 6px 16px 26px; margin: 0 0 34px; scroll-margin-top: calc(var(--topbar-h, 0px) + 70px);
+}
+@media (min-width: 700px) { .part { padding: 10px 40px 34px; } }
+.part-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 20px 0 6px; }
+.part-title { font: 800 clamp(26px, 4vw, 36px)/1.05 var(--f-display); text-transform: lowercase; letter-spacing: -.02em; margin: 0; }
+.part-note { width: 100%; margin: 4px 0 0; font: 600 14px/1.3 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
+@media (min-width: 700px) { .part-note { width: auto; margin: 0 0 0 auto; } }
+.part h2 { scroll-margin-top: calc(var(--topbar-h, 0px) + 70px); }
+
+.reveal { opacity: 0; translate: 0 22px; transition: opacity .5s ease-out, translate .5s cubic-bezier(.2, .8, .2, 1); }
+.reveal.shown { opacity: 1; translate: 0 0; }
+
+.diagram-btn {
+  appearance: none; border: var(--rule-s) solid var(--ink); background: var(--surface); color: var(--ink);
+  font: 700 13px/1 var(--f-display); text-transform: lowercase; padding: 9px 12px 8px; cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.diagram-btn:hover { background: var(--yellow); }
+.diagram-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.diagram-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* ---------------- Hình 2: thanh RAM của một server ---------------- */
+.ram { display: grid; gap: 10px; }
+.ram-bar {
+  display: flex; height: 64px; background: repeating-linear-gradient(90deg, var(--paper) 0 10px, var(--surface) 10px 20px);
+  border: 4px solid var(--ink); overflow: hidden;
+}
+/* Bề ngang mỗi khúc theo MB trên 4 GB; không có JS thì thanh đứng ở lúc script sao lưu mới chạy */
+.ram-seg {
+  display: grid; place-items: center; min-width: 0; overflow: hidden; background: var(--p, var(--line)); color: var(--p-on, var(--ink));
+  font: 800 13px/1 var(--f-display); white-space: nowrap; border-right: 2px solid var(--ink);
+  transition: flex-basis .6s cubic-bezier(.4, 0, .2, 1), background .25s;
+}
+.ram-seg b { overflow: hidden; text-overflow: clip; padding: 0 4px; }
+.ram-seg.kernel { flex: 0 0 15%; background: var(--kernel-ram); color: var(--paper); }
+.ram-seg.nginx { flex: 0 0 5%; }
+.ram-seg.postgres { flex: 0 0 22.5%; }
+.ram-seg.java { flex: 0 0 42.5%; }
+.ram-seg.backup { flex: 0 0 7.5%; }
+.ram-seg.java { --p: var(--red); --p-on: var(--on-color); }
+.ram-seg.nginx { --p: var(--blue); --p-on: var(--on-color); }
+.ram-seg.postgres { --p: var(--yellow); --p-on: var(--ink); }
+.ram-seg.backup { --p: var(--sunk); --p-on: var(--ink); }
+.ram-seg.marked { background: var(--ink); color: var(--yellow); }
+.ram.full .ram-bar { border-color: var(--red); }
+.ram-scale { display: flex; justify-content: space-between; font: 600 12px/1 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
+.ram-log { margin: 4px 0 0; padding-left: 1.4em; display: grid; gap: 4px; }
+.ram-log li { color: var(--ink-3); transition: color .2s; }
+.ram-log li.now { color: var(--ink); font-weight: 600; }
+.ram-btns { display: flex; justify-content: flex-end; }
+@media (max-width: 560px) { .ram-seg { font-size: 10.5px; } }
+
+/* ---------------- Chuyển động ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1; translate: none; }
+}
+.core-slot.p-bash { outline: 2px solid var(--paper); outline-offset: -5px; }
