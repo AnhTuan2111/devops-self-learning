@@ -33,14 +33,14 @@ Cột "Lab" cho biết phần thực hành của bài làm ở đâu:
 |---|---|---|---|
 | `00` | [Bấm like trên facebook.com: bảy tầng OSI](https://anhtuan2111.github.io/devops-self-learning/lessons/00-osi-layers/) | không | máy bạn |
 | `01` | [TCP/IP: Internet chạy thế nào](https://anhtuan2111.github.io/devops-self-learning/lessons/01-tcp-ip/) | bảy tầng OSI | máy bạn |
-| `02` | Người làm DevOps nắm chỗ nào trong các tầng | TCP/IP, DNS, HTTP | chỉ đọc |
+| `02` | [Người làm DevOps nắm chỗ nào trong các tầng](https://anhtuan2111.github.io/devops-self-learning/lessons/02-where-devops-fits/) | TCP/IP, DNS, HTTP | chỉ đọc |
 
 ### M1 · Một cái máy Linux
 
 | Số | Bài | Cần biết | Lab |
 |---|---|---|---|
-| `03` | Server là cái gì: phần cứng, hệ điều hành, process | không | máy bạn |
-| `04` | Phòng lab: Linux trên máy Windows | process, kernel | máy bạn |
+| `03` | [Server là cái gì: phần cứng, hệ điều hành, process](https://anhtuan2111.github.io/devops-self-learning/lessons/03-what-is-a-server/) | không | máy bạn |
+| `04` | [Phòng lab: Linux trên máy Windows](https://anhtuan2111.github.io/devops-self-learning/lessons/04-linux-lab/) | process, kernel | máy bạn |
 | `05` | File, user, quyền | process, shell | máy bạn |
 | `06` | Process, signal, service, log | process, user và quyền | máy bạn |
 | `07` | Shell script | shell, lệnh Linux cơ bản | máy bạn |
