@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: trang chủ và README đã sinh lại sau khi sửa curriculum.json, progress.json, CSS, JS
+      - name: trang chủ và README đã sinh lại sau khi sửa curriculum.json, CSS, JS
         run: |
           node scripts/generate.mjs
           git diff --exit-code
