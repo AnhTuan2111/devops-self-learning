@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 02: Người làm DevOps nắm chỗ nào trong các tầng</title>
+<meta name="description" content="Từ lúc người dùng gõ tên miền, request đi qua DNS, firewall, Nginx, bước bắt tay TLS, tới app rồi database. Mỗi chỗ hỏng cho ra một lời báo khác nhau, nên biết chương trình nào viết ra lời báo là biết request dừng ở đâu, và hầu hết các chỗ ấy là việc của người làm DevOps.">
+<link rel="stylesheet" href="../../assets/style.css?v=fca8b97f">
+<link rel="stylesheet" href="../../assets/terms.css?v=fca8b97f">
+<link rel="stylesheet" href="lesson.css?v=1d0f9555">
+<link rel="icon" href="../../assets/favicon.svg">
+</head>
+<body data-lesson="02">
+
+<nav class="topbar"><div class="topbar-inner">
+  <a class="home" href="../../">devops lang băm</a><span class="crumb">/ lesson-02</span>
+  <span class="spacer"></span>
+</div></nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Module 0 · Bài 02</p>
+  <h1>Người làm DevOps nắm <span class="hl">chỗ nào trong các tầng</span></h1>
+  <p class="lede">App chạy ngon ở <code>localhost:8080</code>, đưa lên server thì người dùng báo không vào được, mà log của app không có dòng nào về request của người dùng. Request đã dừng ở đâu, và chỗ đó là việc của ai?</p>
+  <div class="meta">
+    <span class="chip">Lab: đọc output, chạy lại bằng Git Bash nếu muốn</span>
+  </div>
+  <figure class="trip" aria-label="Một request đi qua sáu chỗ: DNS, firewall, Nginx, TLS, app, database. Năm chỗ là việc của người làm DevOps, chỉ app là code bạn viết.">
+    <div class="trip-grid" aria-hidden="true">
+      <span class="trip-stop" data-stop="dns"><b>DNS</b><em>devops</em></span>
+      <span class="trip-stop" data-stop="firewall"><b>firewall</b><em>devops</em></span>
+      <span class="trip-stop" data-stop="nginx"><b>Nginx</b><em>devops</em></span>
+      <span class="trip-stop" data-stop="db"><b>database</b><em>devops</em></span>
+      <span class="trip-stop mine" data-stop="app"><b>app</b><em>code của bạn</em></span>
+      <span class="trip-stop" data-stop="tls"><b>TLS</b><em>devops</em></span>
+      <i class="trip-dot"></i>
+    </div>
+    <figcaption class="trip-note">request đi qua sáu chỗ, chỉ một chỗ là code bạn viết</figcaption>
+  </figure>
+</header>
+
+<div class="layout">
+
+<nav class="stop-nav" aria-label="Đi tới một phần của bài">
+  <a href="#path"><i aria-hidden="true"></i>đường đi</a>
+  <a href="#stops"><i aria-hidden="true"></i>từng chỗ</a>
+  <a href="#authors"><i aria-hidden="true"></i>ai báo lỗi</a>
+  <a href="#owners"><i aria-hidden="true"></i>việc của ai</a>
+  <a href="#lab"><i aria-hidden="true"></i>lab</a>
+  <a href="#self-check"><i aria-hidden="true"></i>tự kiểm tra</a>
+</nav>
+
+<main class="lesson-body">
+
+<!-- Phần: đường đi -->
+<section class="part" id="path">
+<header class="part-head"><p class="part-title">đường đi</p><p class="part-note">từ tên miền tới controller</p></header>
+
+<h2 id="local-vs-server">Trên máy bạn chạy, lên server thì không</h2>
+
+<p>Trên máy bạn, trình duyệt gọi <code>localhost:8080</code> là vào thẳng app Spring Boot. Không có tên miền nào phải đổi ra
+địa chỉ, không có bộ lọc nào xét gói tin đi vào, không có chứng chỉ nào phải kiểm tra, cũng không có chương trình nào đứng chắn giữa trình duyệt với app. Đưa app lên
+server rồi thì khác. Người dùng gõ <code>https://shop.example.com</code>, và trước khi request vào tới controller của bạn, nó phải đi qua bốn chỗ mà trên máy bạn không có. Đó là DNS, một bộ lọc ở server gọi là <button type="button" class="term" data-term="firewall">firewall</button>, một chương trình đứng chắn trước app, và bước bắt tay TLS.</p>
+
+<p>Vậy nên lời báo "không vào được" của người dùng chưa nói được gì. Request có thể dừng ở bất cứ chỗ nào trong bốn chỗ ấy, và khi đó log của app không có dòng nào, vì request chưa bao giờ tới app. Muốn biết nó dừng ở đâu thì trước hết phải biết
+nó đi qua những đâu.</p>
+
+<figure class="fig">
+<pre class="diagram">
+  phía người dùng                            phía server
+  ───────────────                            ─────────────────────────────────────────────
+  trình duyệt ── hỏi DNS ── mở kết nối ──┬── firewall ── Nginx ── app ── database
+                                         │               │         │
+                                         │   bắt tay TLS ┘   code của bạn
+                                         │
+                            (router, nhà mạng ở giữa)
+</pre>
+<figcaption><b>Hình 1</b> Đường đi của một request từ trình duyệt tới database. Trình duyệt hỏi DNS trước, rồi mới mở kết nối tới server. Ở cửa server, một bộ lọc gọi là firewall cho kết nối đi qua; một chương trình đứng trước app, ở đây là Nginx, nhận kết nối, bắt tay TLS rồi chuyển request vào app.</figcaption>
+</figure>
+
+<p>Trong cả đường đi ở Hình 1, chỉ app là code bạn viết. Trong bốn chỗ máy bạn không có, DNS bạn đã gặp ở Bài 01, lúc resolver đi hỏi từng cấp. Ba chỗ còn lại là firewall, Nginx và bước bắt tay TLS, đều nằm ở phía server. Từ máy người dùng tới server, kết nối TCP còn đi qua các router của nhà mạng, nhưng router không nằm ở hai đầu nên bài không xếp nó vào sáu chỗ.</p>
+
+<p>Firewall, Nginx và app không đọc gói tin sâu như nhau, mà đọc sâu tới đâu thì chỉ báo lỗi được tới đó. Firewall chỉ đọc tới địa chỉ và port ở tầng 3 và tầng 4 của Bài 00, nên nó không viết được mã HTTP; Nginx và app đọc hết request HTTP ở tầng 7.</p>
+
+<h2 id="reverse-proxy">Nginx đứng trước app</h2>
+
+<p>Ở máy bạn, app tự nhận request ở port 8080. Trên server, người ta thường không để người dùng gọi thẳng vào port 8080 mà đặt
+một chương trình khác đứng trước. Chương trình ấy nhận request ở port 443, port mặc định của HTTPS, lo phần TLS, rồi chuyển
+request vào app ở port 8080 trên cùng máy. App vẫn chạy như trên máy bạn, chỉ khác là người gọi nó giờ là chương trình kia
+chứ không phải trình duyệt. Chương trình đứng trước app theo cách đó gọi là <strong>reverse proxy</strong>, và Nginx là một reverse proxy rất hay gặp.</p>
+
+<figure class="fig photo">
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Reverse_proxy_h2g2bob.svg" data-credit="Ảnh: H2g2bob · Wikimedia Commons · CC0, đã chuyển đen trắng" aria-label="Nguồn ảnh: H2g2bob · Wikimedia Commons · CC0"><img src="img/reverse-proxy.webp" width="1600" height="600" loading="lazy" alt="Sơ đồ: đám mây Internet nối hai chiều với ô Proxy, ô Proxy nối hai chiều với ô Web server; Proxy và Web server nằm trong khung nét đứt ghi Internal network, phía trên ghi example.com."></a>
+  <figcaption><b>Ảnh 1</b> Sơ đồ reverse proxy trên Wikimedia Commons. Người dùng ngoài Internet chỉ nói chuyện với ô Proxy
+  (Nginx); ô Web server (app của bạn) nằm phía sau, chỉ nhận request do Proxy chuyển vào. Sơ đồ vẽ hai ô ở hai máy, còn trong bài này Nginx và app chạy trên cùng một server, chỉ khác port.</figcaption>
+</figure>
+
+<p>Vì sao phải thêm một chỗ nữa trên đường đi? Lý do hay gặp là một server chạy nhiều app, mỗi app một port, mà người dùng
+chỉ gõ tên miền. Nginx nhìn tên miền trong request rồi chuyển vào đúng app. Chứng chỉ TLS cũng gắn ở Nginx một lần, các app
+phía sau không phải lo. Cái giá là đường đi dài thêm một chỗ, và chỗ ấy cũng có thể hỏng.</p>
+
+</section>
+
+<!-- Phần: từng chỗ -->
+<section class="part" id="stops">
+<header class="part-head"><p class="part-title">từng chỗ</p><p class="part-note">mỗi chỗ làm gì, hỏng thì người dùng thấy gì</p></header>
+
+<p>Biết đường đi rồi, nhưng người dùng không nhìn thấy đường đi, họ chỉ thấy một lời báo lỗi. Mỗi chỗ hỏng thì lời báo ấy trông thế nào? Mình chạy <code>curl</code> trên Git Bash để xem lời báo ở từng chỗ. Các lệnh chạy ngày 14/11/2026 trên Windows 11, curl 8.10.1; riêng lần gọi <code>/notes</code> ở mục database chạy trên Ubuntu trong WSL. Cờ <code>-s</code> bảo curl im lặng, không in thanh tiến trình và cũng không in dòng lỗi; thêm <code>-S</code> thì curl vẫn in dòng lỗi. Ở bốn chỗ trước app, curl in một dòng lỗi có số trong ngoặc như (6) hay (28); con số trong ngoặc là mã lỗi của curl, còn chữ đi sau nó kể curl dừng ở bước nào bằng lời.</p>
+
+<h2 id="stop-dns">DNS: không có tên này</h2>
+
+<p>Bước đầu tiên là đổi tên miền ra địa chỉ. Nếu tên miền gõ sai hay chưa ai đăng ký, DNS trả lời "không có tên này"; nếu tên có mà chưa trỏ tới địa chỉ nào, DNS trả lời tên ấy không có địa chỉ. Trong cả hai trường hợp, request dừng ngay trên máy người dùng. Nó chưa rời máy, nên server không biết gì.</p>
+
+<pre><code>$ curl -sS https://this-name-does-not-exist-12345.com/
+curl: (6) Could not resolve host: this-name-does-not-exist-12345.com</code></pre>
+
+<figure class="fig photo shot">
+  <a class="img-src" href="img/browser-nxdomain.webp" data-credit="Ảnh: mình tự chụp, Microsoft Edge, 03/10/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/browser-nxdomain.webp" width="1512" height="820" loading="lazy" alt="Trang lỗi của trình duyệt Edge: biểu tượng tờ giấy buồn, dòng Hmmm… can't reach this page, và mã DNS_PROBE_FINISHED_NXDOMAIN."></a>
+  <figcaption><b>Ảnh 2</b> Cùng lỗi ấy trong trình duyệt. Mã <code>DNS_PROBE_FINISHED_NXDOMAIN</code> ở cuối trang là chỗ đáng
+  đọc: NXDOMAIN là chữ server DNS dùng để nói tên này không tồn tại.</figcaption>
+</figure>
+
+<h2 id="stop-firewall">Firewall và Nginx: không ai trả lời, hay có người từ chối</h2>
+
+<p>Có địa chỉ rồi, máy người dùng mở kết nối TCP tới port 443 của server. Trên server, trước mọi chương trình, firewall xem từng gói tin đi vào rồi cho qua hay chặn theo luật người quản trị đặt, kiểu "chỉ mở port 443 cho người dùng và port 22 cho người quản trị đăng nhập". Gói tin bị chặn thì firewall thường bỏ đi mà không báo lại, nên phía người dùng cứ chờ tới khi hết giờ, gọi là timeout.</p>
+
+<p>Mình không có server bật firewall để thử, nên gọi <code>10.255.255.1</code>. Mạng nhà mình không có máy nào mang địa chỉ này, nên gói tin đi mà không ai trả lời, giống lúc firewall bỏ gói tin. Lệnh gọi <code>http://</code> nên curl kết nối tới port 80; port nào bị firewall chặn thì curl cũng chờ tới hết giờ như nhau. Cờ <code>--connect-timeout 5</code> bảo curl chỉ chờ 5 giây:</p>
+
+<pre><code>$ curl -sS --connect-timeout 5 http://10.255.255.1/
+curl: (28) Failed to connect to 10.255.255.1 port 80 after 5014 ms: Timeout was reached</code></pre>
+
+<p>Còn nếu firewall cho qua mà trên server không có chương trình nào nhận kết nối ở port ấy, kiểu Nginx đang tắt, thì hệ điều
+hành của server trả lời ngay là từ chối. Hai lỗi nghe giống nhau nhưng khác ở chỗ có người trả lời hay không:</p>
+
+<pre><code>$ curl -sS http://127.0.0.1:9999/
+curl: (7) Failed to connect to 127.0.0.1 port 9999 after 2010 ms: Could not connect to server</code></pre>
+
+<p>Ở dòng trên, mình gọi port 9999 trên chính máy mình, nơi không có chương trình nào nhận kết nối. Hai giây trong dòng ấy không phải lúc chờ ai trả lời. Windows ở phía curl tự thử lại vài lần rồi mới báo lỗi, và lần nào bên nhận cũng từ chối ngay. Còn ở lần timeout, không ai nói gì cả, curl tự viết dòng (28) khi chờ đủ 5 giây.</p>
+
+<figure class="fig photo shot side">
+  <a class="img-src" href="img/browser-refused.webp" data-credit="Ảnh: mình tự chụp, Microsoft Edge, 03/10/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/browser-refused.webp" width="1512" height="820" loading="lazy" alt="Trang lỗi của Edge: Hmmm… can't reach this page, 127.0.0.1 refused to connect, mã ERR_CONNECTION_REFUSED."></a>
+  <figcaption><b>Ảnh 3</b> Edge gọi <code>127.0.0.1:9999</code>. Dòng "refused to connect" nghĩa là hệ điều hành ở đầu kia, ở đây là chính máy mình, có trả lời, và câu trả lời là từ chối.</figcaption>
+</figure>
+
+<h2 id="stop-tls">TLS: chứng chỉ hết hạn</h2>
+
+<p>Kết nối mở xong, trình duyệt và Nginx bắt tay TLS. Trong bước bắt tay, Nginx gửi chứng chỉ của tên miền, một tệp chứng minh server này là chủ của <code>shop.example.com</code>. Chứng chỉ ấy có ngày hết hạn.
+Hết hạn mà không ai gia hạn thì trình duyệt từ chối đi tiếp, dù server, Nginx và app vẫn chạy bình thường.</p>
+
+<pre><code>$ curl -sS https://expired.badssl.com/
+curl: (35) schannel: next InitializeSecurityContext failed: SEC_E_CERT_EXPIRED (0x80090328) - The received certificate has expired.</code></pre>
+
+<figure class="fig photo shot">
+  <a class="img-src" href="img/expired-cert.webp" data-credit="Ảnh: mình tự chụp, Microsoft Edge, 04/10/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/expired-cert.webp" width="1512" height="820" loading="lazy" alt="Trang cảnh báo của Edge với dòng Your connection isn't private và mã NET::ERR_CERT_DATE_INVALID."></a>
+  <figcaption><b>Ảnh 4</b> Edge mở <code>expired.badssl.com</code>, một trang dựng sẵn với chứng chỉ đã hết hạn từ 12/04/2015.
+  Trang cảnh báo này do trình duyệt tự viết sau khi kiểm tra ngày trên chứng chỉ; server không gửi trang nào cả.</figcaption>
+</figure>
+
+<p>Trang cảnh báo này dễ làm người ta đoán sai. Nó che hết nội dung, trông như cả trang sập, nên dễ nghĩ server đã sập. Nhưng trình duyệt chỉ hiện được cảnh báo này khi đã có địa chỉ và đã mở được kết nối, tức DNS, firewall và Nginx đều đã chạy tốt.</p>
+
+<h2 id="stop-app">Nginx và app: 502, 504, 500</h2>
+
+<p>Qua TLS rồi, Nginx đọc request và chuyển vào app ở port 8080. Từ chỗ này trở đi, mọi lời báo lỗi đều là một câu trả lời
+HTTP có mã số, vì chương trình viết ra nó đã đọc được request. Có điều chương trình viết ra mã số ấy không phải lúc nào cũng
+là app.</p>
+
+<p>Nếu app không chạy, Nginx gọi vào port 8080 thì bị từ chối, và chính Nginx viết trang lỗi 502 Bad Gateway gửi về người
+dùng. Nếu app chạy mà chậm quá, Nginx chờ hết giờ rồi viết trang 504 Gateway Time-out. Cả hai trang đều có chữ <code>nginx</code> ở cuối, chữ ký của chương trình đã viết ra hai trang ấy.</p>
+
+<div class="photo-row n2 shots">
+  <figure><a class="img-src" href="img/nginx-502.webp" data-credit="Ảnh: mình tự chụp, Nginx 1.30.5 chạy trên Windows, 30/09/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/nginx-502.webp" width="680" height="208" loading="lazy" alt="Trang trắng, dòng chữ to 502 Bad Gateway, bên dưới có đường kẻ và chữ nginx/1.30.5."></a><div class="lbl">app không chạy</div></figure>
+  <figure><a class="img-src" href="img/nginx-504.webp" data-credit="Ảnh: mình tự chụp, Nginx 1.30.5 chạy trên Windows, 30/09/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/nginx-504.webp" width="680" height="208" loading="lazy" alt="Trang trắng, dòng chữ to 504 Gateway Time-out, bên dưới có đường kẻ và chữ nginx/1.30.5."></a><div class="lbl">app trả lời quá chậm</div></figure>
+  <figcaption><b>Ảnh 5</b> Hai trang lỗi do Nginx 1.30.5 viết ra khi app phía sau không trả lời được. Dòng cuối của cả hai là
+  chữ ký <code>nginx/1.30.5</code>.</figcaption>
+</div>
+
+<p>Còn khi app chạy, nhận request, mà code ném exception, thì app tự trả mã 500. Trang lỗi lúc ấy là trang của Spring Boot,
+không có chữ <code>nginx</code> nào.</p>
+
+<figure class="fig photo shot">
+  <a class="img-src" href="img/whitelabel-500.webp" data-credit="Ảnh: mình tự chụp, Spring Boot 4.1.1, 03/10/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/whitelabel-500.webp" width="1158" height="300" loading="lazy" alt="Trang Whitelabel Error Page của Spring Boot, ghi There was an unexpected error (type=Internal Server Error, status=500)."></a>
+  <figcaption><b>Ảnh 6</b> Whitelabel Error Page, trang lỗi mặc định của Spring Boot, khi một controller ném
+  <code>IllegalStateException</code>. Request đã vào tới code của bạn, nên lỗi này thuộc phần của bạn.</figcaption>
+</figure>
+
+<h2 id="stop-db">Database: app sống mà vẫn lỗi</h2>
+
+<p>Chỗ cuối cùng trên đường đi là database. App Spring Boot thường đọc, ghi dữ liệu ở một database chạy riêng, như PostgreSQL.
+Nếu database tắt, app vẫn chạy, vẫn nhận request, nhưng mỗi lần cần dữ liệu thì không kết nối được và trả 500. App mẫu của khoá là một app Spring Boot nhỏ lưu ghi chú vào PostgreSQL. Mình chạy nó trên Ubuntu trong <button type="button" class="term" data-term="wsl">WSL</button> mà không bật PostgreSQL.</p>
+
+<p>Rồi mình gọi <code>/notes</code>, đường dẫn cần đọc database, kèm cờ <code>-i</code> để curl in cả dòng trạng thái và header của câu trả lời:</p>
+
+<pre><code>$ curl -s -i http://localhost:8080/notes
+HTTP/1.1 500
+Content-Type: application/json
+...</code></pre>
+
+<p>Người dùng chỉ thấy mã 500, giống hệt khi code ném exception. Lý do thật nằm trong log của app, ở dòng app báo không kết nối
+được tới database:</p>
+
+<pre><code>java.net.ConnectException: Connection refused (connect failed)</code></pre>
+
+<p>Dòng này cùng chữ "refused" với trang lỗi của Edge ở Ảnh 3, khi gọi port không ai nhận. Chỉ khác là bên bị từ chối giờ là app, và port bị gọi mà không ai nhận là 5432 của PostgreSQL.</p>
+
+</section>
+
+<!-- Phần: ai báo lỗi -->
+<section class="part" id="authors">
+<header class="part-head"><p class="part-title">ai báo lỗi</p><p class="part-note">lời báo nào cũng có người viết</p></header>
+
+<h2 id="every-error-has-an-author">Mỗi lời báo lỗi có một chương trình viết ra</h2>
+
+<p>Đi hết sáu chỗ, lời báo lỗi nào người dùng thấy cũng do một chương trình viết ra: curl hay
+trình duyệt, Nginx, hoặc app. Biết ai viết thì biết request đã đi tới đâu. Có mã HTTP như 502, 500 là request đã qua DNS,
+firewall và TLS, vì phải có chương trình đọc được request mới viết ra mã số. Không có mã HTTP mà chỉ có dòng lỗi của curl hay trang lỗi của trình duyệt thì chưa chương trình nào đọc được request. Lúc ấy request dừng ở DNS, ở firewall, ở port 443 khi Nginx không chạy, hay ở bước bắt tay TLS.</p>
+
+<p>Hình 2 cho bạn tự làm hỏng từng chỗ. Bấm vào một chỗ để làm hỏng nó, request sẽ đi lại từ đầu, dừng ở chỗ hỏng đầu tiên,
+và màn hình người dùng hiện lời báo, kèm tên chương trình đã viết ra lời báo đó.</p>
+
+<figure class="fig">
+<div class="breaker" data-state="idle">
+  <ol class="breaker-path">
+    <li><button type="button" class="bk-stop" data-stop="dns" aria-pressed="false"><b>DNS</b><span>đổi tên ra địa chỉ</span></button></li>
+    <li><button type="button" class="bk-stop" data-stop="firewall" aria-pressed="false"><b>firewall</b><span>cho port 443 vào</span></button></li>
+    <li><button type="button" class="bk-stop" data-stop="nginx" aria-pressed="false"><b>Nginx</b><span>nhận kết nối</span></button></li>
+    <li><button type="button" class="bk-stop" data-stop="tls" aria-pressed="false"><b>TLS</b><span>chứng chỉ còn hạn</span></button></li>
+    <li><button type="button" class="bk-stop mine" data-stop="app" aria-pressed="false"><b>app</b><span>chạy ở port 8080</span></button></li>
+    <li><button type="button" class="bk-stop" data-stop="db" aria-pressed="false"><b>database</b><span>PostgreSQL</span></button></li>
+  </ol>
+  <div class="breaker-screen" aria-live="polite">
+    <p class="bk-label">màn hình người dùng</p>
+    <p class="bk-msg"><code>HTTP/1.1 200</code></p>
+    <p class="bk-author">mọi chỗ chạy bình thường, app trả lời 200</p>
+  </div>
+  <p class="breaker-hint">bấm vào một chỗ để làm hỏng nó, bấm lần nữa để sửa</p>
+</div>
+<figcaption><b>Hình 2</b> Làm hỏng từng chỗ trên đường đi. Lời báo trong màn hình dựng lại từ output thật ở phần trước: đổi địa chỉ thành <code>shop.example.com</code>, port thành 443, và lược bớt chữ ở vài dòng dài. Request trong hình gọi <code>/notes</code>, đường dẫn cần đọc database. Chương trình nào viết lời báo thì lời báo chỉ kể được những gì chương trình ấy biết. Ở ô database, curl chỉ nhận được mã 500, còn lý do thì app ghi vào log của chính nó.</figcaption>
+</figure>
+
+<p>Làm hỏng hai chỗ cùng lúc trong Hình 2 thì màn hình chỉ hiện lỗi của chỗ đứng trước. Sửa xong chỗ ấy thì lời báo đổi sang lỗi của chỗ sau, nên lời báo đổi là dấu hiệu chỗ trước đã sửa xong, dù web vẫn chưa vào được.</p>
+
+<p>Bảng 1 gom mọi lời báo ở phần trước, mỗi dòng đi từ thứ người dùng thấy tới chỗ request dừng và lý do hay gặp.</p>
+
+<div class="table-scroll">
+<table class="error-table">
+<caption><b>Bảng 1</b> Từ lời báo người dùng thấy tới chỗ hỏng</caption>
+<thead><tr><th>Người dùng thấy</th><th>Ai viết ra</th><th>Request dừng ở</th><th>Lý do hay gặp</th></tr></thead>
+<tbody>
+<tr><td><code>Could not resolve host</code>, NXDOMAIN</td><td>curl, trình duyệt, theo câu trả lời của DNS</td><td>DNS</td><td>tên miền gõ sai, chưa trỏ, hết hạn</td></tr>
+<tr><td><code>Timeout was reached</code></td><td>curl tự viết khi chờ hết giờ, không ai trả lời</td><td>firewall, hoặc không có máy nào ở địa chỉ ấy</td><td>firewall chặn port, server tắt</td></tr>
+<tr><td><code>Could not connect</code>, refused</td><td>curl, theo lời từ chối của hệ điều hành bên server</td><td>Nginx: port 443 không có chương trình nào nhận</td><td>Nginx không chạy, sai port</td></tr>
+<tr><td><code>CERT_EXPIRED</code>, trang cảnh báo của trình duyệt</td><td>curl, trình duyệt tự kiểm tra</td><td>bắt tay TLS</td><td>chứng chỉ hết hạn</td></tr>
+<tr><td>502 Bad Gateway, chữ <code>nginx</code></td><td>Nginx</td><td>Nginx, khi gọi vào app</td><td>app không chạy</td></tr>
+<tr><td>504 Gateway Time-out, chữ <code>nginx</code></td><td>Nginx</td><td>Nginx, khi chờ app</td><td>app quá chậm</td></tr>
+<tr><td>500, trang của Spring Boot</td><td>app</td><td>app</td><td>code ném exception, database không kết nối được</td></tr>
+</tbody>
+</table>
+</div>
+
+</section>
+
+<!-- Phần: việc của ai -->
+<section class="part" id="owners">
+<header class="part-head"><p class="part-title">việc của ai</p><p class="part-note">chỗ nào người làm DevOps phải nắm</p></header>
+
+<h2 id="who-owns-what">Những chỗ không phải code</h2>
+
+<p>Ở đầu bài, log của app không có dòng nào về request ấy. Theo Bảng 1, request đã dừng ở DNS, ở firewall, ở Nginx, ở bước bắt tay TLS, hoặc đã tới Nginx mà app không chạy để nhận. Không chỗ nào trong số đó là code. Không ai sửa được lỗi DNS bằng cách sửa controller. Lúc ấy người phải vào cuộc là người làm DevOps, người
+lo cho mọi thứ quanh app để app chạy được trên server và đến được tay người dùng.</p>
+
+<div class="table-scroll">
+<table>
+<caption><b>Bảng 2</b> Mỗi chỗ trên đường đi, người làm DevOps làm gì ở đó</caption>
+<thead><tr><th>Chỗ</th><th>Người làm DevOps làm gì</th></tr></thead>
+<tbody>
+<tr><td>DNS</td><td>tạo, sửa bản ghi trỏ tên miền về địa chỉ server; gia hạn tên miền</td></tr>
+<tr><td>firewall</td><td>chỉ mở những port cần mở, như 443 cho người dùng, 22 cho người quản trị</td></tr>
+<tr><td>Nginx</td><td>cài, cấu hình làm reverse proxy chuyển request vào app</td></tr>
+<tr><td>TLS</td><td>xin chứng chỉ, gắn vào Nginx, gia hạn trước khi hết hạn</td></tr>
+<tr><td>app</td><td>build, đưa lên server, chạy, cài để app tự bật lại khi chết; code bên trong vẫn là của developer</td></tr>
+<tr><td>database</td><td>chạy database, sao lưu dữ liệu, khôi phục khi hỏng</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Ở dòng app, ranh giới nằm giữa code và cách code chạy. Exception trong controller là việc của developer, còn app không chạy
+vì server hết bộ nhớ, hay chạy bản cũ vì quên đưa bản mới lên, là việc của người làm DevOps. Trong nhiều công ty nhỏ, hai việc
+ấy do cùng một người làm.</p>
+
+<p>Có những chỗ người làm DevOps không sửa được: router và BGP giữa các nhà mạng, phần cứng của công ty cho thuê server. Khi chúng hỏng, người làm DevOps phải đọc ra được lỗi nằm ở đó rồi báo cho bên giữ chỗ ấy.</p>
+
+<figure class="fig photo">
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:NOC-IUPUI.jpg" data-credit="Ảnh: Alan Levine · Wikimedia Commons · CC BY 2.0, đã cắt khung và chuyển đen trắng" aria-label="Nguồn ảnh: Alan Levine · Wikimedia Commons · CC BY 2.0"><img src="img/noc-room.webp" width="1200" height="800" loading="lazy" alt="Một phòng làm việc nhiều bàn, mỗi bàn hai ba màn hình máy tính và điện thoại bàn; trên tường có dải màn hình lớn vẽ bản đồ đường mạng."></a>
+  <figcaption><b>Ảnh 7</b> Phòng giám sát mạng của một trường đại học ở Mỹ. Màn hình lớn trên tường vẽ các đường mạng mà người ngồi trong phòng giữ. Lỗi nằm ở router hay đường mạng thì người làm DevOps báo cho một phòng như thế này.</figcaption>
+</figure>
+
+<h2 id="breaks-by-itself">Chỗ tự hỏng khi không ai đụng vào</h2>
+
+<p>Code chỉ đổi khi có người sửa. Nhiều chỗ quanh app thì tự hỏng theo thời gian. Chứng chỉ TLS có hạn dùng,
+thường vài tháng, nên app không đổi gì mà tới ngày chứng chỉ hết hạn thì người dùng thấy trang cảnh báo như Ảnh 4. Tên miền cũng có hạn, quên gia hạn lâu thì tên bị xoá, và DNS trả NXDOMAIN như Ảnh 2. App ghi log mỗi ngày một ít, để lâu thì đầy ổ đĩa của server, và app bắt đầu lỗi dù không ai đưa bản mới nào lên.</p>
+
+<p>Quay lại app ở đầu bài, muốn biết request dừng ở đâu thì đọc lời báo và tìm chương trình đã viết ra nó,
+như Bảng 1. Còn chỗ đó là việc của ai thì gần như mọi chỗ trước app và sau app là việc của người làm DevOps, vì những chỗ ấy không phải code, nhưng chỗ nào hỏng thì người dùng cũng không vào được web.</p>
+
+</section>
+
+<!-- Phần: lab -->
+<section class="part" id="lab">
+<header class="part-head"><p class="part-title">lab</p><p class="part-note">đọc output, đoán chỗ hỏng</p></header>
+
+<p>Lab này chủ yếu là đọc. Mỗi khối dưới đây là output thật trên máy mình, chạy ngày 14/11/2026 trên Windows 11, Git Bash, curl 8.10.1. Đọc xong, bạn tự trả lời hai câu: ai viết ra dòng này, và request đã dừng ở chỗ nào trong Hình 1 hay Hình 2. Lab 1 và Lab 3 có ô "Đáp án" ở cuối, bấm vào thì mở ra. Muốn chạy lại thì mở Git Bash và gõ lại lệnh trong khối. Con số mili giây trên máy bạn có thể khác. Dòng <code>...</code> là chỗ mình lược bớt output.</p>
+
+<h2 id="lab-1">Lab 1: ba lời báo không có mã HTTP</h2>
+
+<pre><code>$ curl -sS http://localhost:5432/
+curl: (7) Failed to connect to localhost port 5432 after 2233 ms: Could not connect to server
+
+$ curl -sS https://wrong.host.badssl.com/
+curl: (60) schannel: SNI or certificate check failed: SEC_E_WRONG_PRINCIPAL (0x80090322) - The target principal name is incorrect.
+...
+
+$ curl -sS https://this-name-does-not-exist-12345.com/
+curl: (6) Could not resolve host: this-name-does-not-exist-12345.com</code></pre>
+
+<p>Port 5432 là port mặc định của PostgreSQL; laptop của mình không chạy PostgreSQL. Trang <code>wrong.host.badssl.com</code>
+dựng sẵn một chứng chỉ cấp cho tên miền khác với tên bạn gọi.</p>
+
+<details class="raw"><summary>Đáp án</summary>
+<p>Cả ba lời báo đều do curl viết, không có mã HTTP, nên chưa chương trình nào đọc được request. Ở lời báo đầu, gói tin tới được laptop của mình nhưng hệ điều hành từ chối mở kết nối, vì không chương trình nào nhận ở port 5432. Đó là trường hợp của ô Nginx trong Hình 2 lúc Nginx tắt. Ở lời báo thứ hai, request dừng ở bước bắt tay TLS, vì chứng chỉ server gửi về mang tên khác nên curl tự dừng; DNS và kết nối đều đã chạy. Ở lời báo thứ ba, request dừng ở DNS, vì server DNS trả lời không có tên này.</p>
+</details>
+
+<h2 id="lab-2">Lab 2: tự gây lỗi rồi tự sửa</h2>
+
+<p>Bước này bạn tự làm hỏng một chỗ rồi sửa nó, trên chính máy bạn. Nếu bạn có app Spring Boot nào trong máy thì chạy nó ở
+port 8080, rồi gọi bằng curl:</p>
+
+<pre><code>$ curl -s http://localhost:8080/</code></pre>
+
+<p>App trả lời được tức là app đang nhận kết nối ở port 8080. Giờ tắt app bằng Ctrl+C ở cửa sổ đang chạy nó, rồi gọi lại, lần này thêm cờ <code>-S</code> để curl in lỗi ra. Ngày 14/11/2026 mình tắt app mẫu của khoá rồi gọi lại, curl in ra:</p>
+
+<pre><code>$ curl -sS http://localhost:8080/
+curl: (7) Failed to connect to localhost port 8080 after 2220 ms: Could not connect to server</code></pre>
+
+<p>Ở đây không có Nginx đứng trước, curl gọi thẳng vào port 8080, nên hệ điều hành từ chối và curl in lỗi (7), chứ không có ai viết trang 502. Lỗi này giống lời báo đầu của Lab 1: máy vẫn trả lời, chỉ không có ai nhận kết nối ở port 8080. Bật lại app rồi gọi lần nữa thì curl in ra câu trả lời của app.</p>
+
+<h2 id="lab-3">Lab 3: có mã HTTP rồi</h2>
+
+<p>Lệnh đầu gọi <code>httpbin.org</code>, một trang công khai để thử HTTP. Lệnh thứ hai gọi một đường dẫn không có trên <code>example.com</code>. Cờ <code>-w "%{http_code}\n"</code> bảo curl in mã HTTP rồi xuống dòng, còn <code>-o /dev/null</code> bỏ phần thân đi, nên chỉ còn lại con số.</p>
+
+<pre><code>$ curl -sS -i https://httpbin.org/status/502
+HTTP/1.1 502 Bad Gateway
+...
+
+
+$ curl -sS -o /dev/null -w "%{http_code}\n" https://example.com/no-such-page
+404</code></pre>
+
+
+
+<details class="raw"><summary>Đáp án</summary>
+<p>Cả hai đều có mã HTTP, nên request đã qua DNS, firewall và TLS, tới được một chương trình đọc request. Dòng 502 ở đây lại không do Nginx viết: <code>httpbin.org/status/502</code> trả về mã nào bạn hỏi, nên ở đây app của httpbin viết ra 502. Chỉ nhìn con số thì không biết ai viết; phải nhìn chữ ký, như chữ <code>nginx</code> ở cuối trang trong Ảnh 5, mà output ở đây đã lược mất phần ấy. Dòng 404 là server của <code>example.com</code> trả lời không có trang ấy, tức mọi
+chỗ trên đường đi đều chạy, chỉ là đường dẫn không tồn tại.</p>
+</details>
+
+</section>
+
+<!-- Phần: tự kiểm tra -->
+<section class="part" id="self-check">
+<header class="part-head"><p class="part-title">tự kiểm tra</p><p class="part-note">câu hỏi để tự thử lại</p></header>
+
+<h2 id="checklist">Tự kiểm tra</h2>
+
+<ul class="check">
+  <li>Người dùng thấy trang "Your connection isn't private". Bạn gia hạn chứng chỉ xong thì họ thấy 502 kèm chữ <code>nginx</code>. Lúc này request đã qua những chỗ nào, và chỗ nào cần kiểm tra tiếp?</li>
+  <li>Người dùng thấy 504 kèm chữ <code>nginx</code>, còn log của app có dòng nhận request đó. Request đã tới app chưa, và chỗ nào cần xem tiếp?</li>
+  <li>Bạn mở port 443 trên firewall xong, lời báo của curl đổi từ <code>Timeout was reached</code> sang <code>Could not
+  connect</code>. Như vậy firewall đã sửa được chưa, và chỗ hỏng tiếp theo nằm ở đâu?</li>
+  <li>Người dùng thấy 500, log của app có dòng <code>Connection refused</code>. Đây là việc của developer hay của người làm
+  DevOps?</li>
+  <li>App không ai đụng tới suốt một năm, sáng nay trình duyệt báo <code>NET::ERR_CERT_DATE_INVALID</code>, còn tối qua vẫn vào được. Request dừng ở đâu, lời báo này do ai viết, và việc gì đã bị quên?</li>
+</ul>
+
+<h2 id="sources">Nguồn đọc thêm</h2>
+
+<ol class="refs">
+  <li>Nginx, trang hướng dẫn dùng Nginx làm reverse proxy.
+  <a href="https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/">docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy</a></li>
+  <li>RFC 9110, <em>HTTP Semantics</em>, mục 15.6 về các mã 5xx, gồm 500, 502, 504.
+  <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.6">rfc-editor.org/rfc/rfc9110#section-15.6</a></li>
+  <li>curl, danh sách mã lỗi của curl (6, 7, 28, 35, 60 trong bài).
+  <a href="https://curl.se/libcurl/c/libcurl-errors.html">curl.se/libcurl/c/libcurl-errors.html</a></li>
+  <li>badssl.com, các trang dựng sẵn với chứng chỉ hỏng để thử trình duyệt.
+  <a href="https://badssl.com/">badssl.com</a></li>
+</ol>
+
+</section>
+
+</main>
+
+</div>
+
+<nav class="prevnext">
+  <a href="../01-tcp-ip/">
+    <span class="dir">Bài trước</span>
+    <span class="t">Bài 01: TCP/IP, Internet chạy thế nào</span>
+  </a>
+</nav>
+
+<footer class="page">
+  <p>Bài 02 · M0 Phía sau một cú bấm · DevOps lang băm</p>
+</footer>
+
+</div>
+
+<script src="../../assets/app.js?v=fca8b97f"></script>
+<script src="../../assets/terms.js?v=fca8b97f"></script>
+<script src="lesson.js?v=86173da3"></script>
+</body>
+</html>
