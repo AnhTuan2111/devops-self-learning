@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Sinh trang chủ và README từ curriculum.json + progress.json.
+ * Sinh trang chủ và README từ curriculum.json.
  *
  *   node scripts/generate.mjs
  *
@@ -43,7 +43,6 @@ const ASSET_V = hashOf('style.css', 'app.js', 'terms.css', 'terms.js');
 const HOME_V = hashOf('home.css', 'home.js', 'terms.css', 'terms.js');
 
 const curriculum = readJson('curriculum.json');
-const progress = existsSync(join(ROOT, 'progress.json')) ? readJson('progress.json') : { lessons: {} };
 const meta = curriculum.meta;
 const modules = curriculum.modules;
 const allLessons = modules.flatMap((m) => m.lessons.map((l) => ({ ...l, moduleId: m.id })));
@@ -60,12 +59,9 @@ for (const l of allLessons) {
   if (!Array.isArray(l.needs)) throw new Error(`Bài ${l.id}: needs phải là danh sách khái niệm`);
 }
 
-const statusOf = (id) => progress.lessons?.[id]?.status ?? 'todo';
 const dirOf = (l) => `lessons/${l.id}-${l.slug}`;
 const hasPage = (l) => existsSync(join(ROOT, dirOf(l), 'index.html'));
-const doneCount = allLessons.filter((l) => statusOf(l.id) === 'done').length;
 const SITE = 'https://anhtuan2111.github.io/devops-self-learning/';
-const STATUS_TEXT = { done: 'đã xong', doing: 'đang học', todo: '' };
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -110,8 +106,7 @@ const tocItems = modules.map((m, i) =>
   `<li><a class="c-${colorOf(i)}" href="#${anchor(m)}"><span class="shp ${shapeOf(i)}"></span><span class="toc-name">${esc(m.title)}</span><span class="toc-range">${rangeOf(m)}</span></a></li>`).join('');
 
 const lessonCard = (l) => {
-  const st = STATUS_TEXT[statusOf(l.id)];
-  const tag = esc(meta.lab[l.lab]) + (st ? ` · ${st}` : '');
+  const tag = esc(meta.lab[l.lab]);
   const title = hasPage(l) ? `<a href="${dirOf(l)}/" target="_blank" rel="noopener noreferrer">${esc(l.title)}</a>` : esc(l.title);
   const needs = l.needs.length
     ? `<div class="needs"><span class="needs-label">Cần biết</span>${l.needs.map((k) => `<button class="chip" type="button" aria-expanded="false">${esc(k)}</button>`).join('')}</div>`
@@ -199,32 +194,28 @@ writeFileSync(join(ROOT, 'index.html'), indexHtml, 'utf8');
 /* README.md                                                           */
 /* ------------------------------------------------------------------ */
 
-const currentLesson = allLessons.find((l) => statusOf(l.id) === 'doing') ?? allLessons.find((l) => statusOf(l.id) === 'todo');
 const artCount = makeArt(ROOT, Bauhaus).write({
   cardData: {
-    done: doneCount,
     total: allLessons.length,
     modules: modules.length,
-    current: currentLesson && { id: currentLesson.id, status: statusOf(currentLesson.id), title: currentLesson.title.toLocaleLowerCase('vi') },
-    strip: modules.map((m) => m.lessons.map((l) => statusOf(l.id))),
+    moduleSizes: modules.map((m) => m.lessons.length),
   },
   lessonIds: allLessons.map((l) => l.id),
 });
 
 const readmeModules = modules.map((m) => {
   const rows = m.lessons.map((l) => {
-    const st = statusOf(l.id);
     const name = hasPage(l) ? `[${l.title}](${SITE}${dirOf(l)}/)` : l.title;
-    return `| \`${l.id}\` | ${name} | ${l.needs.join(', ') || 'không'} | ${meta.lab[l.lab]} | ${STATUS_TEXT[st] || 'chưa học'} |`;
+    return `| \`${l.id}\` | ${name} | ${l.needs.join(', ') || 'không'} | ${meta.lab[l.lab]} |`;
   }).join('\n');
   return `### ${m.id} · ${m.title}
 
-| Số | Bài | Cần biết | Lab | Trạng thái |
-|---|---|---|---|---|
+| Số | Bài | Cần biết | Lab |
+|---|---|---|---|
 ${rows}`;
 }).join('\n\n');
 
-const readme = `<a href="${SITE}"><img src="assets/readme/card.svg" width="100%" alt="${meta.title}: đã xong ${doneCount}/${allLessons.length} bài. Bấm để mở bản web."></a>
+const readme = `<a href="${SITE}"><img src="assets/readme/card.svg" width="100%" alt="${meta.title}: khoá tự học DevOps, ${allLessons.length} bài. Bấm để mở bản web."></a>
 
 # ${meta.title}
 
@@ -240,8 +231,7 @@ Bản web của khoá nằm ở ${SITE}.
 Mục lục có ${allLessons.length} bài, chia thành ${modules.length} module. Người mới nên đọc từ Bài 00. Bài nào cũng đọc riêng được
 nếu bạn đã biết các khái niệm ghi ở cột "Cần biết" của bài đó; bài ghi "không" thì đọc được ngay.
 
-Cột "Trạng thái" ghi tiến độ của mình. Bài đã viết thì tên bài có link; bài ghi "đang học" thì đọc được rồi, nhưng mình còn
-đang sửa nên nội dung có thể thay đổi.
+Bài đã viết thì tên bài có link sang bản web.
 
 Cột "Lab" cho biết phần thực hành của bài làm ở đâu:
 
@@ -286,5 +276,5 @@ if (existsSync(join(ROOT, 'lessons'))) {
 }
 
 console.log(`OK  index.html + README.md + .nojekyll + ${artCount} ảnh README (assets/readme/) đã cập nhật`);
-console.log(`OK  ${allLessons.length} bài · ${doneCount} xong · ${allLessons.filter(hasPage).length} bài đã có trang viết tay` +
+console.log(`OK  ${allLessons.length} bài · ${allLessons.filter(hasPage).length} bài đã có trang viết tay` +
   ` · trang chủ v=${HOME_V} · trang bài v=${ASSET_V}${versioned ? ` (cập nhật ${versioned} trang)` : ''}`);
