@@ -33,6 +33,9 @@
     'vpc': { label: 'VPC', tip: 'Mạng riêng của bạn trên cloud, chỉ những máy bạn cho vào mới nằm trong đó.' },
     'yaml': { label: 'YAML', tip: 'Định dạng tệp cấu hình viết bằng thụt lề, Kubernetes, GitLab CI, Docker Compose đều dùng.' },
     'jvm': { label: 'JVM', tip: 'Máy ảo Java, chương trình chạy file .class và .jar; app Spring Boot chạy bên trong nó.' },
+    'root': { label: 'root', tip: 'User có mọi quyền trên một máy Linux, làm gì cũng được, kể cả xoá hỏng cả máy.' },
+    'wsl': { label: 'WSL', tip: 'Windows Subsystem for Linux, tính năng của Windows cho chạy một máy Linux (thường là Ubuntu) ngay bên trong Windows, có cửa sổ dòng lệnh riêng.' },
+    'sudo': { label: 'sudo', tip: 'Chữ đặt trước một lệnh trên Linux để chạy lệnh đó bằng quyền quản trị, như khi cài phần mềm hay bắt gói tin; máy sẽ hỏi mật khẩu của bạn.' },
   };
   if (typeof module === 'object' && module.exports) module.exports = GLOSSARY;
   if (typeof document === 'undefined') return;

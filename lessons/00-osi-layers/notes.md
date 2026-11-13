@@ -9,7 +9,7 @@ Chỗ ghi output lab thật, lỗi đã gặp, câu hỏi còn treo. Địa ch�
   Windows dùng schannel nên không kể bắt tay TLS.
 - `tracert -d facebook.com`: 14 chặng, chặng cuối 19 ms; chặng 6 không trả lời.
 - `getmac`: ba card (VPN ảo, một card không nối mạng, WiFi).
-- `nslookup khong-ton-tai-dau-nhe-12345.com`: `Non-existent domain`.
+- `nslookup this-name-does-not-exist-12345.com` (chạy lại ngày 13/11/2026 với tên tiếng Anh): `Non-existent domain`.
 
 ## Chưa chạy
 
