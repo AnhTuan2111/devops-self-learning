@@ -14,12 +14,12 @@
   // Khái niệm mà tên không xuất hiện nguyên chữ trong tên hay mô tả bài dạy nó thì chỉ tay ở đây.
   const ALIASES = {
     'oom killer': ['03'], 'kernel': ['03'], 'process': ['03'], 'syscall': ['03'], 'cpu': ['03', '09'], 'ram': ['03', '09'],
-    'cài một app lên server': ['13'], 'deploy tay': ['13'], 'biến môi trường': ['03', '13'],
-    'lệnh linux cơ bản': ['04'], 'linux': ['04'], 'shell': ['04'], 'router': ['01'], 'mạng riêng': ['01', '08'],
-    'reverse proxy': ['14'], 'chứng chỉ': ['15'], 'log': ['06'], 'git': ['26'], 'yaml': [], 'database': [],
-    'container': ['18', '19'], 'dns': ['01', '15'], 'pipeline': ['27', '28'], 'load balancer': ['16', '34'],
+    'cài một app lên server': ['13'], 'deploy tay': ['13'], 'biến môi trường': ['13', '22'],
+    'lệnh linux cơ bản': ['04'], 'linux': ['04'], 'shell': ['04'], 'router': ['01'], 'mạng riêng': ['08'],
+    'reverse proxy': ['14'], 'chứng chỉ': ['15'], 'log': ['06'], 'git': ['26'], 'yaml': [], 'secret': ['42'], 'database': ['62'], 'đường đi của request trên server': ['02'],
+    'container': ['18', '19'], 'dns': ['01'], 'pipeline': ['27', '28'], 'load balancer': ['16'],
     'listen và port': ['08'], 'ip và port': ['08'], 'tcp/ip': ['01'], 'volume': ['21', '43'],
-    'http': ['00', '01'], 'image': ['19', '20'], 'cloud': ['34'], 'server': ['03', '11'], 'tls': ['02', '15'],
+    'http': ['00', '01'], 'image': ['19', '20'], 'cloud': ['34'], 'server': ['03', '11'], 'tls': ['00', '02', '15'],
   };
 
   // Tìm một từ đứng riêng (không dính vào chữ khác), để "IP" không khớp vào "Pipeline".
@@ -95,20 +95,21 @@
   }
   const lessonList = (found) => found.length
     ? found.map((c) => `<a href="#lesson-${c.id}"><b>${c.id}</b><span>${c.title}</span></a>`).join('')
-    : '<span class="empty">Không có bài riêng trong khoá, chỉ cần biết ở mức dùng hằng ngày.</span>';
+    : '<span class="empty">Chưa có bài nào đứng trước dạy riêng khái niệm này, nên bạn chỉ cần biết nó ở mức đã dùng khi viết app hằng ngày.</span>';
   function showTaught(chip) {
     if (openChip === chip) return;
     closePopup();
     const found = lessonsTeaching(chip.textContent, chip.closest('.card').id.replace('lesson-', ''));
+    const title = found.length ? `Bài dạy ${chip.textContent}` : `Cần biết: ${chip.textContent}`;
     if (narrow.matches) {
-      openSheet(`<p class="sheet-title">${chip.textContent} · dạy ở</p><div class="sheet-list">${lessonList(found)}</div>`, `${chip.textContent} dạy ở`);
+      openSheet(`<p class="sheet-title">${title}</p><div class="sheet-list">${lessonList(found)}</div>`, title);
       chip.setAttribute('aria-expanded', 'true');
       openChip = chip;
       return;
     }
     popup = document.createElement('div');
     popup.className = 'taught-pop';
-    popup.innerHTML = `<span class="taught-title">${chip.textContent} · dạy ở</span>` + lessonList(found);
+    popup.innerHTML = `<span class="taught-title">${title}</span>` + lessonList(found);
     document.body.append(popup);
     const r = chip.getBoundingClientRect();
     const left = Math.min(r.left + scrollX, scrollX + document.documentElement.clientWidth - popup.offsetWidth - 16);

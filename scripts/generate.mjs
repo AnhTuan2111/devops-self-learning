@@ -5,7 +5,7 @@
  *   node scripts/generate.mjs
  *
  * Tạo ra:
- *   index.html:   trang chủ "DevOps lang băm": lưới 10 module, dải ô bài, mục lục dính, thẻ bài
+ *   index.html:   trang chủ "DevOps lang băm": lưới module, dải ô bài, mục lục dính, thẻ bài
  *                 (giao diện ở assets/home.css, hành vi ở assets/home.js)
  *   README.md:    mục lục dạng markdown cho GitHub
  *   assets/readme/: ảnh SVG cho README (xem scripts/readme-art.mjs)
@@ -157,7 +157,7 @@ const indexHtml = `<!doctype html>
   <div class="hero-text">
     <h1>devops <span class="hl">lang băm</span></h1>
   </div>
-  <nav class="hero-shapes" aria-label="Mười module">
+  <nav class="hero-shapes" aria-label="Các module">
     <div class="shape-scroll">${shapeTiles}</div>
     <button class="search-btn" type="button" aria-expanded="false" aria-controls="search-drop"><span class="ic-search" aria-hidden="true"></span>tìm</button>
     <div class="search-drop" id="search-drop" role="search">
@@ -219,9 +219,7 @@ const readmeModules = modules.map((m) => {
   }).join('\n');
   return `### ${m.id} · ${m.title}
 
-${m.intro}
-
-| # | Bài | Cần biết | Thực hành | Trạng thái |
+| Số | Bài | Cần biết | Lab | Trạng thái |
 |---|---|---|---|---|
 ${rows}`;
 }).join('\n\n');
@@ -230,10 +228,29 @@ const readme = `<a href="${SITE}"><img src="assets/readme/card.svg" width="100%"
 
 # ${meta.title}
 
-${meta.goal}
+Khoá tự học DevOps bằng tiếng Việt, viết cho người đã làm được app Java, Spring Boot nhưng chưa làm việc với server, mạng,
+container hay Kubernetes. Khoá đi từ đường đi của một request trên Internet tới lúc đưa app lên cụm Kubernetes và theo dõi app
+khi nó đã chạy. Mình viết khoá này trong lúc tự học, học tới đâu viết tới đó, nên phần lớn bài trong mục lục dưới đây mới có
+tên, chưa có nội dung. "Lang băm" là cách mình gọi đùa, vì khoá không cấp bằng hay chứng chỉ nào.
 
-${allLessons.length} bài, ${modules.length} module. Mỗi bài đọc riêng được; bài nào cần biết trước khái niệm gì thì ghi ở cột "Cần biết".
-Cột "Thực hành" cho biết lab chạy ở đâu: máy bạn, server, cloud, GitLab, cụm Kubernetes, hoặc chỉ đọc.
+Bản web của khoá nằm ở ${SITE}.
+
+## Cách đọc mục lục
+
+Mục lục có ${allLessons.length} bài, chia thành ${modules.length} module. Người mới nên đọc từ Bài 00. Bài nào cũng đọc riêng được
+nếu bạn đã biết các khái niệm ghi ở cột "Cần biết" của bài đó; bài ghi "không" thì đọc được ngay.
+
+Cột "Trạng thái" ghi tiến độ của mình. Bài đã viết thì tên bài có link; bài ghi "đang học" thì đọc được rồi, nhưng mình còn
+đang sửa nên nội dung có thể thay đổi.
+
+Cột "Lab" cho biết phần thực hành của bài làm ở đâu:
+
+- "máy bạn": làm ngay trên máy của bạn.
+- "server": cần một server để thực hành; Bài 11 hướng dẫn cách kiếm một server.
+- "cloud": cần một tài khoản ở một hãng cloud, tức nơi cho thuê máy theo giờ.
+- "GitLab": cần một tài khoản GitLab để lưu code và chạy các bước build, deploy tự động.
+- "cụm Kubernetes": cần một cụm Kubernetes; cụm để thực hành dựng được ngay trên máy của bạn.
+- "chỉ đọc": bài không có phần thực hành.
 
 ## Mục lục
 
