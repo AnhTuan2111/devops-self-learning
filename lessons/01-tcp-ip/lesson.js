@@ -95,7 +95,7 @@
       arrived = [];
       slots.forEach((s) => { s.textContent = ''; s.className = ''; });
       tray.classList.remove('done');
-      status.textContent = 'một lời nhắn, cắt thành bốn gói';
+      status.textContent = 'một request, cắt thành bốn gói';
       await hold(700);
       status.textContent = 'mỗi gói tự đi, router chỉ đọc địa chỉ nhận';
       const go = (n, route, speed, delay) => hold(delay).then(() => {
@@ -104,7 +104,7 @@
           if (n === 3 && k === 'E') {
             rt.E.classList.add('drop'); boom.classList.remove('on'); void boom.getBBox(); boom.classList.add('on');
             g.classList.add('lost');
-            status.textContent = 'router đầy hàng chờ, gói 3 bị bỏ';
+            status.textContent = 'hàng chờ của router đầy, gói 3 bị bỏ';
             setTimeout(() => rt.E.classList.remove('drop'), 700);
             return false;
           }
@@ -119,7 +119,7 @@
       ]);
       status.textContent = `tới nơi lộn thứ tự: ${arrived.join(' ')}, thiếu gói 3`;
       await hold(1300);
-      status.textContent = 'TCP ở hai đầu phát hiện thiếu, gửi lại gói 3';
+      status.textContent = 'máy nhận báo thiếu gói 3, TCP ở máy gửi gửi lại gói ấy';
       const again = makePacket(3);
       await travel(again, 'SBFHD', 0.12, (k) => (k === 'D' ? true : flash(k, 'busy')));
       again.remove();
@@ -249,7 +249,7 @@
         if (!reduced) await wait(520);
         if (me !== run) return;
         r.classList.add(hit ? 'match' : 'miss');
-        r.querySelector('.lr-res').textContent = hit ? `khớp ${len} bit` : 'không khớp';
+        r.querySelector('.lr-res').textContent = hit ? (len === 0 ? "khớp mọi địa chỉ" : `khớp ${len} bit`) : 'không khớp';
         if (hit && (!best || len > Number(best.dataset.len))) best = r;
       }
       bitEls.forEach((b) => b.classList.remove('on'));
@@ -315,7 +315,7 @@
         await wait(380);
         // Lời báo đi ngược về máy bạn: Time Exceeded từ router, hay Echo Reply từ đích
         const atDst = nodes[stop].classList.contains('dst');
-        pkt.classList.add('back'); tag.textContent = atDst ? 'reply' : 'ICMP'; ttlEl.textContent = atDst ? 'ok' : 'hết';
+        pkt.classList.add('back'); tag.textContent = atDst ? 'đáp' : 'hết hạn'; ttlEl.textContent = atDst ? 'ok' : 'hết';
         pkt.style.left = xOf(nodes[0]);
         await wait(420 + stop * 60);
         nodes[stop].classList.replace('hit', 'seen');
@@ -396,7 +396,7 @@
     async function spread(withdraw) {
       if (busy) return;
       busy = true; btnW.disabled = true; btnA.disabled = true;
-      state.textContent = withdraw ? 'AS32934 thôi quảng bá, lời rút lan ra' : 'AS32934 báo: dải 57.144.64.0/23 ở chỗ tôi';
+      state.textContent = withdraw ? 'AS32934 rút quảng bá, các AS lần lượt xoá đường' : 'AS32934 quảng bá: dải 57.144.64.0/23 ở chỗ tôi';
       state.classList.toggle('down', withdraw);
       let depth = 0;
       for (const asn of order) {
@@ -416,8 +416,8 @@
       }
       if (!reduced) await wait(700);
       state.textContent = withdraw
-        ? 'mọi AS đã xoá đường: gói tới 57.144.64.0/23 không còn chỗ để đi'
-        : 'dải 57.144.64.0/23 đang được quảng bá; ô vàng là AS path mỗi AS nhận được';
+        ? 'mọi AS đã xoá đường, gói tới 57.144.64.0/23 không còn đường để đi'
+        : 'dải 57.144.64.0/23 đang được quảng bá; ô vàng là AS path mỗi AS gửi tiếp cho AS kế bên';
       busy = false;
       btnW.disabled = withdraw; btnA.disabled = !withdraw;
     }
@@ -478,10 +478,10 @@
       log.innerHTML = 'cache trống, resolver hỏi gốc';
       await hop('resolver', 'root', 'facebook.com?');
       log.innerHTML = '<code>f.root-servers.net</code>, 4 ms: com thì hỏi <code>gtld-servers.net</code>';
-      await hop('root', 'resolver', 'hỏi com.', true);
+      await hop('root', 'resolver', 'đi hỏi com.', true);
       await hop('resolver', 'tld', 'facebook.com?');
       log.innerHTML = '<code>h.gtld-servers.net</code>, 275 ms: hỏi <code>ns.facebook.com</code>';
-      await hop('tld', 'resolver', 'hỏi ns.facebook.com', true);
+      await hop('tld', 'resolver', 'đi hỏi ns.facebook.com', true);
       await hop('resolver', 'fb', 'facebook.com?');
       log.innerHTML = '<code>c.ns.facebook.com</code>, 223 ms: <code>57.144.64.1</code>, TTL 60';
       await hop('fb', 'resolver', '57.144.64.1 TTL 60', true);
@@ -528,26 +528,26 @@
       [0, 5, 'MAC nhận <code>00:15:5d:8a:9e:59</code>, card ảo phía Windows'],
       [6, 11, 'MAC gửi <code>00:15:5d:bb:07:66</code>, card mạng của WSL'],
       [12, 13, 'loại <code>08 00</code>: phần sau là IPv4'],
-      [14, 14, '<code>45</code>: IPv4, phần đầu dài 5 x 4 = 20 byte'],
-      [15, 15, 'DSCP và ECN, để trống'],
-      [16, 17, 'tổng độ dài của gói IP: <code>00 7f</code> = 127 byte'],
-      [18, 19, 'số định danh của gói, dùng khi phải cắt gói'],
-      [20, 21, 'cờ: <code>40 00</code> = không được cắt gói này'],
-      [22, 22, 'TTL: <code>40</code> = 64, mỗi router trừ 1'],
-      [23, 23, 'giao thức bên trong: <code>06</code> = TCP'],
-      [24, 25, 'checksum của phần đầu IP'],
-      [26, 29, 'IP gửi <code>ac 15 15 88</code> = 172.21.21.136'],
-      [30, 33, 'IP nhận <code>68 14 17 9a</code> = 104.20.23.154, example.com'],
-      [34, 35, 'port gửi <code>b9 46</code> = 47430, curl'],
-      [36, 37, 'port nhận <code>00 50</code> = 80, http'],
-      [38, 41, 'số thứ tự (sequence number)'],
+      [14, 14, '<code>45</code>: số 4 là IPv4, số 5 là độ dài phần đầu tính theo khối 4 byte, 5 khối là 20 byte'],
+      [15, 15, 'ô đánh dấu độ ưu tiên của gói, để trống'],
+      [16, 17, 'tổng độ dài của gói IP: <code>00 7f</code>, tức 127 byte'],
+      [18, 19, 'số định danh của gói'],
+      [20, 21, 'cờ <code>40 00</code>: router không được cắt gói này thành gói nhỏ hơn'],
+      [22, 22, 'TTL <code>40</code>, tức 64, mỗi router trừ 1'],
+      [23, 23, 'giao thức bên trong: <code>06</code>, tức TCP'],
+      [24, 25, 'mã kiểm tra lỗi của phần đầu IP'],
+      [26, 29, 'IP gửi <code>ac 15 15 88</code>, tức 172.21.21.136'],
+      [30, 33, 'IP nhận <code>68 14 17 9a</code>, tức 104.20.23.154 của example.com'],
+      [34, 35, 'port gửi <code>b9 46</code>, tức 47430 của curl'],
+      [36, 37, 'port nhận <code>00 50</code>, tức 80 của http'],
+      [38, 41, 'số thứ tự TCP đánh cho mẩu này (sequence number)'],
       [42, 45, 'số báo đã nhận (acknowledgment number)'],
-      [46, 46, '<code>80</code>: phần đầu TCP dài 8 x 4 = 32 byte'],
-      [47, 47, 'cờ <code>18</code> = PSH, ACK'],
-      [48, 49, 'cửa sổ nhận: còn nhận được bao nhiêu byte'],
-      [50, 51, 'checksum của TCP'],
-      [52, 53, 'urgent pointer, để trống'],
-      [54, 65, 'tuỳ chọn TCP: hai NOP và một Timestamps'],
+      [46, 46, '<code>80</code>: phần đầu TCP dài 8 khối 4 byte, tức 32 byte'],
+      [47, 47, 'cờ <code>18</code>: ACK báo đã nhận, kèm cờ PSH bảo bên nhận đưa dữ liệu lên chương trình ngay'],
+      [48, 49, 'máy gửi gói này báo nó còn nhận thêm được bao nhiêu byte'],
+      [50, 51, 'mã kiểm tra lỗi của phần TCP'],
+      [52, 53, 'ô dành cho dữ liệu khẩn, gói này không dùng nên để 0'],
+      [54, 65, 'tuỳ chọn TCP, ở đây là thời điểm gửi'],
     ];
     const hexBox = dissect.querySelector('.dx-hex');
     const field = dissect.querySelector('.dx-field');
