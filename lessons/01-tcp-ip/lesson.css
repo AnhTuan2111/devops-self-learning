@@ -132,18 +132,25 @@
 @media (min-width: 700px) { .part-note { width: auto; margin: 0 0 0 auto; } }
 .part h2 { scroll-margin-top: calc(var(--topbar-h, 0px) + 90px); }
 @media (min-width: 1100px) {
-  /* Một cột 960px ở giữa cho mọi khối của thân bài (chữ, hình, bảng, code, danh sách), nên cả bài chỉ có một mép trái và
-     một mép phải; riêng biển ga chạy hết bề ngang. Độ rộng tính bằng px chứ không bằng ch, vì ch đổi theo cỡ chữ của từng
-     phần tử. Thêm .lesson-body cho mạnh hơn các luật margin riêng của danh sách nguồn, danh sách tự kiểm tra. */
-  .lesson-body .part > * { max-width: 960px; margin-left: auto; margin-right: auto; }
-  .lesson-body .part > .part-head { max-width: none; }
-  /* Tên ga và chấm ga thẳng mép trái cột chữ, chỉ vạch đen chạy hết bề ngang */
-  .lesson-body .part > .part-head { padding-left: max(0px, (100% - 960px) / 2); padding-right: max(0px, (100% - 960px) / 2); }
-  .lesson-body .part > .part-head::before { left: max(0px, (100% - 960px) / 2); }
-  /* Ảnh lệch phải thôi trôi ra mép trang, đứng trong cột như mọi ảnh khác: ảnh hai phần ba, chú thích một phần ba */
+  /* Thân bài chia hai cột kiểu báo, chạy từ mép trái tới mép phải: chữ chảy hết cột trái rồi sang cột phải; hình, bảng, code,
+     ảnh và khối trích dẫn rộng hết bề ngang, xen giữa các đoạn chữ. Biển ga cũng chạy hết bề ngang, nên vạch ngang và chữ
+     cùng chiếm một chiều rộng, không còn vạch dài mà chữ nằm giữa. */
+  .lesson-body .part > * { max-width: none; margin-left: 0; margin-right: 0; }
+  .lesson-body .part > .part-head,
+  .lesson-body .part > figure, .lesson-body .part > pre, .lesson-body .part > .table-scroll, .lesson-body .part > details,
+  .lesson-body .part > blockquote, .lesson-body .part > .callout, .lesson-body .part > ol, .lesson-body .part > ul.check,
+  .lesson-body .part > h2 { column-span: all; }
+  /* lesson.js gom các đoạn chữ liền nhau thành một cụm: cụm dài chảy hai cột, cụm ngắn đứng một cột canh trái */
+  .lesson-body .part > .run.cols { columns: 2; column-gap: 64px; column-fill: balance; }
+  .lesson-body .part > .run.narrow, .lesson-body .part > p { max-width: 860px; }
+  .run > p { orphans: 2; widows: 2; }
+  .run > :first-child { margin-top: 0; }
+  .run > h3 { break-after: avoid; }
+  /* Tiêu đề h2 chạy hết hàng (vạch mảnh trên, chữ lớn), chữ ngay dưới nó mới chảy hai cột */
+  .lesson-body .part > h2 { margin-bottom: 18px; }
+  /* Ảnh có chú thích bên cạnh giữ khuôn ảnh 2/3 + chú thích 1/3, rộng hết hàng */
   .lesson-body .part > figure.photo.side {
-    float: none; width: auto; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: 26px;
-    margin: 26px auto;
+    float: none; width: auto; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: 26px; margin: 26px 0;
   }
   .lesson-body .part > figure.photo.side > figcaption { margin-top: 0; padding-top: 9px; border-top: var(--rule-m) solid var(--ink); }
 }
@@ -422,7 +429,7 @@ details.raw pre { margin-top: 10px; }
 .mesh { gap: 6px; }
 /* Chấm ga chạy dọc vạch theo thứ tự ga (lesson.js gắn --k từ 0 ở ga đầu tới 1 ở ga cuối), nên nhìn chấm là biết đang ở đâu trên tuyến */
 .lesson-body .part > .part-head::before, .part-head::before {
-  left: calc(max(0px, (100% - 960px) / 2) + var(--k, 0) * (min(100%, 960px) - 32px));
+  left: calc(var(--k, 0) * (100% - 32px));
 }
 /* Dòng mô tả của ga nằm ngay dưới tên ga, canh trái */
 .part-head .part-note, .part-note { width: 100%; margin: 2px 0 0; font-size: 17px; }
@@ -431,3 +438,5 @@ details.raw pre { margin-top: 10px; }
 .part-title { font-size: clamp(22px, 2vw, 28px); }
 .part-ttl { align-self: center; }
 .part-head .part-note, .part-note { width: auto; margin: 0; font-size: 16px; }
+/* Biển ga thẳng mép trái trang chữ */
+@media (min-width: 1100px) { .lesson-body .part > .part-head { padding-left: 0; padding-right: 0; } .lesson-body .part > .part-head::before { left: calc(var(--k, 0) * (100% - 32px)); } }

@@ -7,7 +7,7 @@
 <meta name="description" content="Internet chạy bằng bộ protocol TCP/IP: dữ liệu được cắt thành packet, router tra routing table để chuyển từng packet, các nhà mạng announce đường cho nhau bằng BGP, còn DNS là một hệ thống tên chia theo cấp. Cuối bài bắt packet thật bằng tshark.">
 <link rel="stylesheet" href="../../assets/style.css?v=04240645">
 <link rel="stylesheet" href="../../assets/terms.css?v=04240645">
-<link rel="stylesheet" href="lesson.css?v=3d138799">
+<link rel="stylesheet" href="lesson.css?v=f40cba9a">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01">
@@ -108,8 +108,16 @@ rồi khép lại.</figcaption>
 
 <h2 id="history">TCP/IP có trước</h2>
 
-<p>TCP/IP có trước OSI. Vint Cerf và Bob Kahn công bố bài báo đặt nền cho TCP/IP năm 1974, ARPANET, tiền thân của Internet,
-chuyển hẳn sang TCP/IP ngày 1/1/1983, còn ISO tới năm 1984 mới công bố mô hình OSI.</p>
+<p>Mô hình OSI và TCP/IP đều chia việc nối mạng thành layer, vậy vì sao Internet chạy bằng protocol của TCP/IP, còn bạn
+không gặp protocol nào tên OSI? Câu trả lời nằm ở thứ tự hai bên ra đời và ở hướng đi của mỗi bên. TCP/IP lớn lên từ một mạng
+đang chạy: ARPANET đã nối máy của các trường đại học và viện nghiên cứu ở Mỹ từ năm 1969, Vint Cerf và Bob Kahn công bố bài
+báo đặt nền cho TCP/IP năm 1974 để mạng ấy nối được với những mạng khác, và protocol được sửa dần theo chỗ nào chạy không
+được. ISO, tổ chức đặt ra các tiêu chuẩn quốc tế, đi ngược lại. Từ năm 1977 họ vẽ mô hình trước, tức mô hình bảy layer của
+OSI, rồi mới tính protocol cho từng layer.</p>
+
+<p>Đặc tả của IP và TCP được công bố thành RFC 791 và RFC 793 năm 1981, và ngày 1/1/1983 cả ARPANET chuyển hẳn sang TCP/IP.
+ISO tới năm 1984 mới công bố mô hình OSI, lúc ấy Internet đã chạy bằng TCP/IP rồi. Đổi một mạng đang có người dùng sang
+protocol khác tốn hơn nhiều so với giữ nguyên, nên TCP/IP ở lại.</p>
 
 <figure class="fig photo">
   <a class="img-src" href="https://commons.wikimedia.org/wiki/File:CerfKahnMedalOfFreedom.jpg" data-credit="Ảnh: Paul Morse, Nhà Trắng · Wikimedia Commons · public domain, đã chuyển đen trắng" aria-label="Nguồn ảnh: Paul Morse, Nhà Trắng · Wikimedia Commons · public domain"><img src="img/cerf-kahn-2005.webp" width="1030" height="656" loading="lazy" alt="Ba người đàn ông mặc vest đứng trong một căn phòng trang trọng; hai người bên trái và ở giữa đeo huân chương trên cổ."></a>
@@ -695,6 +703,6 @@ port 80 của server, còn 75 byte cuối là request HTTP, đọc thẳng đư�
 
 <script src="../../assets/app.js?v=04240645"></script>
 <script src="../../assets/terms.js?v=04240645"></script>
-<script src="lesson.js?v=fa7c08fd"></script>
+<script src="lesson.js?v=d432da7d"></script>
 </body>
 </html>

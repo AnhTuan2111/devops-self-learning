@@ -196,6 +196,17 @@
   // ---------- Hiện dần khi cuộn tới ----------
   // Lớp js trên <html>: chỉ khi script chạy thì hình mới ẩn chờ hiện dần; tắt JS thì mọi hình hiện sẵn
   document.documentElement.classList.add('js');
+  // Gom các đoạn chữ liền nhau (p, h3) trong mỗi mục thành một cụm .run; cụm từ 380 ký tự trở lên chảy hai cột ở màn rộng
+  document.querySelectorAll('.part').forEach((part) => {
+    let run = null;
+    [...part.children].forEach((el) => {
+      if (el.matches('p, h3')) {
+        if (!run) { run = document.createElement('div'); run.className = 'run'; part.insertBefore(run, el); }
+        run.appendChild(el);
+      } else run = null;
+    });
+    part.querySelectorAll(':scope > .run').forEach((r) => r.classList.add(r.textContent.length >= 380 ? 'cols' : 'narrow'));
+  });
   // Chấm ga: vị trí trên vạch theo thứ tự ga
   (() => {
     const heads = document.querySelectorAll('.part > .part-head');

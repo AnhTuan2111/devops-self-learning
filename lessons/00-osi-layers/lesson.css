@@ -401,13 +401,39 @@ details.raw pre { margin-top: 10px; }
 }
 /* Màn hẹp: số layer đứng đầu tiêu đề lab, cách chữ một khoảng */
 .layer-h > .layer-badge { margin-right: .35em; }
-/* Thước đo layer của mỗi lab: tòa bảy tầng thu nhỏ, layer lab chạm tới thì tô màu của layer ấy, còn lại chỉ có viền */
-.lab-meter { display: grid; gap: 3px; width: 100%; margin: 10px 0 14px; }
-.lab-meter i { display: grid; grid-template-columns: 22px 1fr; align-items: center; height: 20px; border: 2px solid var(--line); color: var(--ink-3); font-style: normal; }
-.lab-meter i b { font: 700 12px/1 var(--f-mono); text-align: center; }
-.lab-meter i.on { background: var(--t); color: var(--t-on); border-color: var(--t); }
-.lab-meter em { font: 700 14px/1.2 var(--f-display); font-style: normal; text-transform: lowercase; margin-top: 6px; }
+/* Ở lề mỗi lab: thứ bạn sẽ thấy khi chạy xong, lấy từ output thật trong lab; vạch trái mang màu layer của lab */
+.lab-peek { display: grid; gap: 4px; margin: 10px 0 14px; padding: 4px 0 4px 12px; border-left: 8px solid var(--t); }
+.lab-peek small { font: 700 13px/1 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
+.lab-peek b { font: 800 20px/1.15 var(--f-mono); overflow-wrap: anywhere; }
+.lab-peek.big b { font: 800 38px/1 var(--f-display); }
+.lab-peek, .lab-peek * { text-transform: none; }
+.lab-peek small { text-transform: lowercase; }
+.lab-peek em { font: 500 14px/1.35 var(--f-sans); font-style: normal; color: var(--ink-2); }
 @media (min-width: 1100px) {
   .lab-h { position: relative; }
-  .lab-meter { position: absolute; left: calc(-1 * (var(--margin-col) + 48px)); top: -8px; width: var(--margin-col); margin: 0; }
+  .lab-peek { position: absolute; left: calc(-1 * (var(--margin-col) + 48px)); top: -4px; width: var(--margin-col); margin: 0; }
+}
+
+/* ---------------- Lab thành tab ---------------- */
+.lab-tabs { position: relative; display: flex; gap: 6px; flex-wrap: wrap; margin: 22px 0 6px; padding-bottom: 8px; border-bottom: var(--rule-m) solid var(--ink); }
+.lab-tab { appearance: none; display: grid; gap: 2px; text-align: left; min-width: 118px; padding: 10px 14px 9px; background: var(--surface); color: var(--ink); border: var(--rule-s) solid var(--ink); cursor: pointer; transition: background .2s, color .2s, transform .2s; }
+.lab-tab small { font: 700 12px/1 var(--f-display); text-transform: lowercase; color: var(--ink-3); transition: color .2s; }
+.lab-tab b { font: 800 17px/1.1 var(--f-mono); }
+.lab-tab:hover { transform: translateY(-3px); }
+.lab-tab:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.lab-tab[aria-selected="true"] { background: var(--t, var(--ink)); color: var(--t-on, var(--paper)); border-color: var(--t, var(--ink)); }
+.lab-tab[aria-selected="true"] small { color: inherit; opacity: .85; }
+/* Thanh trượt dưới hàng tab báo tab đang mở: chạy bằng transform nên mượt */
+.lab-tab-mark { position: absolute; left: 0; bottom: -8px; height: 8px; background: var(--red); transition: transform .35s cubic-bezier(.2, .8, .2, 1), width .35s cubic-bezier(.2, .8, .2, 1); }
+.lab-panel[hidden] { display: none; }
+@keyframes lab-in-fwd { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+@keyframes lab-in-back { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: none; } }
+.lab-panel.in-fwd { animation: lab-in-fwd .42s cubic-bezier(.2, .8, .2, 1); }
+.lab-panel.in-back { animation: lab-in-back .42s cubic-bezier(.2, .8, .2, 1); }
+@media (prefers-reduced-motion: reduce) { .lab-panel.in-fwd, .lab-panel.in-back { animation: none; } .lab-tab-mark, .lab-tab { transition: none; } }
+@media (min-width: 1100px) {
+  /* Panel chiếm cả cột chữ lẫn cột phải: hình và output rộng hết, chữ giữ độ dài dòng của cột chữ */
+  .lab.tabbed > .lab-tabs, .part#lab > .lab-panel { grid-column: 2 / 4; }
+  .lab-panel > p, .lab-panel > h2 { max-width: 74ch; }
+  .lab-panel > h2 { margin-top: 22px; border-top: 0; }
 }

@@ -90,6 +90,69 @@
   // ---------- Hiện dần khi cuộn tới (chỉ một lần, đây là lúc vào trang chứ không phải chuyển động của sơ đồ) ----------
   // Lớp js trên <html>: chỉ khi script chạy thì hình mới ẩn chờ hiện dần; tắt JS thì mọi hình hiện sẵn
   document.documentElement.classList.add('js');
+
+  // Lab thành tab: bấm tên lab thì lab ấy trượt vào, các lab khác ẩn. Không có JS thì cả bốn lab hiện nối tiếp.
+  (() => {
+    const lab = document.getElementById('lab');
+    if (!lab) return;
+    const heads = [...lab.querySelectorAll(':scope > h2.lab-h')];
+    if (heads.length < 2) return;
+    const panels = heads.map((h, i) => {
+      const panel = document.createElement('div');
+      panel.className = 'lab-panel'; panel.id = 'lab-panel-' + (i + 1); panel.setAttribute('role', 'tabpanel');
+      h.before(panel);
+      let n = h;
+      while (n && !(n !== h && n.matches('h2.lab-h'))) { const next = n.nextElementSibling; panel.appendChild(n); n = next; }
+      return panel;
+    });
+    const bar = document.createElement('div');
+    bar.className = 'lab-tabs'; bar.setAttribute('role', 'tablist'); bar.setAttribute('aria-label', 'Chọn lab');
+    const marker = document.createElement('i'); marker.className = 'lab-tab-mark'; marker.setAttribute('aria-hidden', 'true');
+    const names = ['MAC', 'tracert', 'nslookup', 'curl'];
+    const tabs = heads.map((h, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-controls', panels[i].id);
+      const peek = h.querySelector('.lab-peek');
+      b.className = 'lab-tab ' + ([...(peek ? peek.classList : [])].find((c) => /^c\d$/.test(c)) || '');
+      b.innerHTML = '<small>lab ' + (i + 1) + '</small><b>' + names[i] + '</b>';
+      b.addEventListener('click', () => show(i, true));
+      bar.appendChild(b); return b;
+    });
+    bar.appendChild(marker);
+    panels[0].before(bar);
+    let current = -1;
+    function place() {
+      const t = tabs[Math.max(current, 0)];
+      marker.style.transform = 'translateX(' + t.offsetLeft + 'px)';
+      marker.style.width = t.offsetWidth + 'px';
+    }
+    function show(i, userClick) {
+      if (i === current) return;
+      const dir = i > current ? 1 : -1;
+      panels.forEach((p, k) => {
+        const on = k === i;
+        p.hidden = !on;
+        p.classList.remove('in-fwd', 'in-back');
+        if (on && current !== -1 && !reduced) { void p.offsetWidth; p.classList.add(dir > 0 ? 'in-fwd' : 'in-back'); }
+      });
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      current = i; place();
+      if (userClick) history.replaceState(null, '', '#lab-' + (i + 1));
+    }
+    bar.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const k = (current + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
+      show(k, true); tabs[k].focus(); e.preventDefault();
+    });
+    // Link #lab-N (kể cả từ nơi khác trong trang) mở đúng tab rồi cuộn tới
+    const fromHash = () => { const m = /^#lab-(\d)$/.exec(location.hash); if (m && panels[m[1] - 1]) { show(m[1] - 1, false); return true; } return false; };
+    window.addEventListener('hashchange', fromHash);
+    document.addEventListener('click', (e) => { const a = e.target.closest && e.target.closest('a[href^="#lab-"]'); if (a) setTimeout(fromHash, 0); });
+    addEventListener('resize', place);
+    if (!fromHash()) show(0, false);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+    lab.classList.add('tabbed');
+  })();
   const revealIo = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (e.isIntersecting) { e.target.classList.add('shown'); revealIo.unobserve(e.target); }
   }), { rootMargin: '0px 0px -8% 0px' });

@@ -176,7 +176,7 @@ Trong khối lệnh cũng vậy, dòng mở đầu bằng <code>PS&gt;</code> ha
 không gõ chính dấu ấy, rồi bấm Enter; các dòng còn lại là output máy in ra.</p>
 
 <h3 class="step-h" id="lab-1"><span data-shell="ps">bước 1</span> Chạy lệnh cài</h3>
-<aside class="rail-note done-note"><p><b>xong khi</b> cửa sổ Ubuntu tự mở và hỏi tên user, mật khẩu.</p><p><b>lệch thì</b> bộ cài đòi khởi động lại thì khởi động lại Windows, rồi mở Ubuntu bằng phím Windows.</p></aside>
+<aside class="rail-note done-note"><p><b>xong khi</b> cửa sổ Ubuntu tự mở và hỏi tên user, mật khẩu.</p><p><b>chưa được thì</b> nếu bộ cài đòi khởi động lại, khởi động lại Windows rồi mở Ubuntu bằng phím Windows.</p></aside>
 <p>Mở PowerShell bằng quyền quản trị: chuột phải vào PowerShell trong menu Start, chọn Run as administrator. Rồi chạy lệnh cài; option
 <code>-d Ubuntu</code> chọn distro Ubuntu. Theo trang hướng dẫn của Microsoft, lệnh này tự bật tính năng Virtual Machine Platform, nên bạn không phải bật bằng tay; nó còn tải kernel Linux, tải Ubuntu, và có thể đòi khởi động lại Windows. Máy của mình đã cài từ trước nên mình không có output
 của lần cài.</p>
@@ -187,7 +187,7 @@ của lần cài.</p>
 khẩu, vì bước 5 cần nó.</p>
 
 <h3 class="step-h" id="lab-2"><span data-shell="ps">bước 2</span> Kiểm tra Ubuntu chạy bằng WSL2</h3>
-<aside class="rail-note done-note"><p><b>xong khi</b> cột <code>VERSION</code> của dòng Ubuntu là 2.</p><p><b>lệch thì</b> ra 1 thì chạy <code>wsl --set-version Ubuntu 2</code> trong PowerShell.</p></aside>
+<aside class="rail-note done-note"><p><b>xong khi</b> cột <code>VERSION</code> của dòng Ubuntu là 2.</p><p><b>chưa được thì</b> nếu ra 1, chạy <code>wsl --set-version Ubuntu 2</code> trong PowerShell.</p></aside>
 <p>Trong PowerShell (bỏ qua bước 1 thì mở PowerShell bình thường, không cần quyền quản trị), chạy hai lệnh dưới. Option <code>-l</code> liệt kê các distro đã cài. Option <code>-v</code> in thêm trạng thái của mỗi distro, và cho biết nó chạy bằng WSL1 hay WSL2; WSL1 là version cũ, không có VM. Lệnh <code>wsl --version</code> in version của phần mềm WSL và của kernel Linux đang cài.</p>
 </div>
 <pre class="band"><code>PS&gt; wsl -l -v
@@ -303,7 +303,7 @@ cd is a shell builtin</code></pre>
 
 <div class="prose">
 <h3 class="step-h" id="lab-4"><span>bước 4</span> Xem cây thư mục</h3>
-<aside class="rail-note done-note"><p><b>xong khi</b> <code>ls /mnt</code> có chữ <code>c</code>.</p><p><b>lệch thì</b> không có thì chạy <code>wsl --shutdown</code> trong PowerShell rồi mở lại Ubuntu.</p></aside>
+<aside class="rail-note done-note"><p><b>xong khi</b> <code>ls /mnt</code> có chữ <code>c</code>.</p><p><b>chưa được thì</b> nếu không có, chạy <code>wsl --shutdown</code> trong PowerShell rồi mở lại Ubuntu.</p></aside>
 <p>Gõ hai lệnh dưới vào cửa sổ Ubuntu. Thư mục <code>/</code> là gốc của cây thư mục, và <code>ls /</code> in những gì nằm ở gốc ấy. Trong đó có <code>home</code>, nơi chứa home directory <code>/home/user</code> mà <code>pwd</code> in ra lúc nãy. Các thư mục còn lại trong khối dưới thì bạn cứ đọc lướt. Còn <code>ls /mnt</code> in các ổ Windows mà WSL2 gắn vào thư mục <code>/mnt</code>.
 Ở dòng cuối của khối dưới, <code>c</code> là ổ C, <code>x</code> là ổ X trên máy mình; máy bạn có ổ nào thì thấy chữ cái của ổ ấy. Hai mục <code>wsl</code>, <code>wslg</code> là thư mục WSL2 tự tạo, không phải ổ đĩa, nên bạn cứ bỏ qua. Không thấy <code>c</code> thì WSL2 chưa gắn ổ C vào. Chạy <code>wsl --shutdown</code> trong PowerShell để tắt hẳn VM của WSL2, rồi mở lại Ubuntu cho nó khởi động lại và gắn ổ.</p>
 </div>
@@ -358,7 +358,7 @@ E: Unable to fetch some archives, maybe run apt update or try with --fix-missing
 
 <div class="prose">
 <h3 class="step-h" id="lab-6"><span>bước 6</span> Kiểm tra Java</h3>
-<aside class="rail-note done-note"><p><b>xong khi</b> dòng đầu output có số 25.</p><p><b>lệch thì</b> báo <code>command not found</code> thì tìm dòng bắt đầu bằng <code>E:</code> trong output của bước 5.</p></aside>
+<aside class="rail-note done-note"><p><b>xong khi</b> dòng đầu output có số 25.</p><p><b>chưa được thì</b> nếu bash báo <code>command not found</code>, tìm dòng bắt đầu bằng <code>E:</code> trong output của bước 5.</p></aside>
 <p>Gõ <code>java -version</code> vào cửa sổ Ubuntu; dòng đầu output phải có số 25. Nếu bash báo <code>command not found</code> thì bước 5 chưa cài xong; đọc lại output của lệnh <code>apt install</code>, tìm dòng báo lỗi, tức dòng bắt đầu bằng <code>E:</code>.</p>
 </div>
 <pre class="band"><code>$ java -version
@@ -368,7 +368,7 @@ OpenJDK 64-Bit Server VM (build 25.0.5.0.3+1-1-26.04.1-Ubuntu, mixed mode, shari
 
 <div class="prose">
 <h3 class="step-h" id="lab-7"><span>bước 7</span> Chép tệp jar sang Ubuntu</h3>
-<aside class="rail-note done-note"><p><b>xong khi</b> <code>ls -l ~/lab</code> có <code>sample-app.jar</code> nặng 24.505.709 byte.</p><p><b>lệch thì</b> báo <code>No such file or directory</code> thì path sau <code>/mnt</code> chưa khớp chỗ để repo.</p></aside>
+<aside class="rail-note done-note"><p><b>xong khi</b> <code>ls -l ~/lab</code> có <code>sample-app.jar</code> nặng 24.505.709 byte.</p><p><b>chưa được thì</b> nếu <code>cp</code> báo <code>No such file or directory</code>, path sau <code>/mnt</code> chưa khớp chỗ bạn để repo.</p></aside>
 <p>Tệp jar của app mẫu đã build trên Windows ở Bài 03, nằm trong thư mục <code>lab/sample-app/target</code> của repo. Java trên Ubuntu chạy thẳng được tệp jar nằm trong <code>/mnt</code>, nhưng đọc tệp của Windows qua <code>/mnt</code> chậm hơn đọc tệp của chính Ubuntu. Vì vậy bạn chép tệp jar vào thư mục <code>~/lab</code>, tức thư mục <code>lab</code> trong home directory <code>/home/user</code>. Nếu ở Bài 03 bạn clone repo ngay lúc mở Git Bash thì repo nằm ở <code>C:\Users\&lt;tên bạn&gt;\devops-self-learning</code>, trong Ubuntu là <code>/mnt/c/Users/&lt;tên bạn&gt;/devops-self-learning</code>. Lệnh <code>cp</code> dưới viết theo path ấy: bạn thay <code>&lt;tên bạn&gt;</code> bằng tên thư mục user Windows của bạn, cả dấu <code>&lt;</code> và <code>&gt;</code>. Không nhớ tên ấy thì gõ <code>ls /mnt/c/Users</code> để xem. Repo để chỗ khác thì thay cả đoạn trước <code>/lab/sample-app</code> bằng chỗ ấy; repo của mình nằm ở ổ X, trong Ubuntu là <code>/mnt/x/IdeaProjects/devops_selfLearning</code>.</p>
 <p>Gõ lần lượt ba lệnh dưới vào cửa sổ Ubuntu. Lệnh <code>mkdir -p</code> tạo thư mục <code>~/lab</code>, và nếu thư mục đã có thì nó cũng không báo lỗi. Rồi <code>cp</code> chép tệp jar từ path thứ nhất sang thư mục ấy, và <code>ls -l</code> in tên tệp trong thư mục ấy kèm cỡ tính bằng byte để bạn so với lúc build. Dòng <code>total</code> và cột quyền ở đầu thì bạn cứ đọc lướt; cột cỡ tệp và cột ngày giờ thì đoạn dưới nói.</p>
 </div>
@@ -383,7 +383,7 @@ giờ quốc tế chậm hơn giờ Việt Nam 7 tiếng. Nếu <code>cp</code> 
 <code>/mnt</code> chưa khớp chỗ bạn để repo, hoặc bạn chưa build tệp jar ở Bài 03.</p>
 
 <h3 class="step-h" id="lab-8"><span>bước 8</span> Chạy app</h3>
-<aside class="rail-note done-note"><p><b>xong khi</b> dòng cuối ghi <code>PID = ..., listening on port 8080</code>.</p><p><b>lệch thì</b> cửa sổ này để yên cho app chạy, bước 9 mở cửa sổ khác.</p></aside>
+<aside class="rail-note done-note"><p><b>xong khi</b> dòng cuối ghi <code>PID = ..., listening on port 8080</code>.</p><p><b>lưu ý</b> để yên cửa sổ này cho app chạy; bước 9 gõ lệnh ở một cửa sổ khác.</p></aside>
 <p>Tệp jar chạy được trên Linux mà không cần build lại, vì jar chứa bytecode của JVM, máy nào có Java cũng chạy được. Chạy nó y như
 trên Windows: gõ lần lượt hai lệnh dưới vào cửa sổ Ubuntu. Dòng cần đọc là dòng cuối, nơi app mẫu in PID. Mình bỏ cột ngày giờ ở đầu hai dòng log cho gọn.</p>
 </div>
@@ -396,7 +396,7 @@ INFO 2338 --- [sample-app] [           main] sampleapp.SampleApp                
 
 <div class="prose">
 <h3 class="step-h" id="lab-9"><span>bước 9</span> Gọi app từ cửa sổ thứ hai</h3>
-<aside class="rail-note done-note"><p><b>xong khi</b> curl in <code>{"pid":...,"app":"sample-app"}</code>, PID trùng số ở bước 8.</p><p><b>lệch thì</b> báo không kết nối được thì xem lại cửa sổ chạy app ở bước 8 còn chạy không.</p></aside>
+<aside class="rail-note done-note"><p><b>xong khi</b> curl in <code>{"pid":...,"app":"sample-app"}</code>, PID trùng số ở bước 8.</p><p><b>chưa được thì</b> nếu curl báo không kết nối được, xem cửa sổ chạy app ở bước 8 còn chạy không.</p></aside>
 <p>Cứ để app chạy trong cửa sổ ấy, rồi mở thêm một cửa sổ Ubuntu nữa từ menu Start để gọi nó. App mẫu trả về PID của nó. Vẫn tệp jar ấy, vẫn code ấy, nhưng giờ nó là một process trên kernel Linux, PID 2338.</p>
 </div>
 <pre class="band"><code>$ curl -s http://localhost:8080/
@@ -404,7 +404,7 @@ INFO 2338 --- [sample-app] [           main] sampleapp.SampleApp                
 
 <div class="prose">
 <h3 class="step-h" id="lab-10"><span>bước 10</span> Tắt app</h3>
-<aside class="rail-note done-note"><p><b>xong khi</b> dấu <code>$</code> hiện lại ở cửa sổ đã chạy app.</p><p><b>lệch thì</b> app chưa dừng thì bấm Ctrl+C thêm lần nữa trong cửa sổ ấy.</p></aside>
+<aside class="rail-note done-note"><p><b>xong khi</b> dấu <code>$</code> hiện lại ở cửa sổ đã chạy app.</p><p><b>chưa được thì</b> nếu app chưa dừng, bấm Ctrl+C thêm một lần nữa trong cửa sổ ấy.</p></aside>
 <p>Quay về cửa sổ đang chạy app, bấm Ctrl+C. App in vài dòng log báo nó đang dừng, rồi bash hiện lại prompt. Thư mục <code>~/lab</code> và Java cứ để
 lại, lần sau mở Ubuntu là có sẵn. Đóng hết các cửa sổ Ubuntu, kể cả cửa sổ thứ hai ở bước 9, thì WSL2 tự tắt VM sau một lúc; muốn tắt ngay thì chạy
 <code>wsl --shutdown</code> trong PowerShell.</p>
