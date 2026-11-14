@@ -1,7 +1,7 @@
 // Riêng Bài 04: Hình 1 cho hai cửa sổ gõ cùng lệnh (lặp khi đang trên màn hình), mỗi dải terminal tự gõ lệnh rồi in output khi
 // cuộn tới lần đầu, Hình 2 cho bấm lệnh để xem lệnh xuống tới kernel nào, Hình 3 chạy vòng lặp của shell.
 // Mọi lệnh và output là output thật trong bài. Bật giảm chuyển động thì không gõ, không lặp, mọi khối hiện sẵn.
-// Không có JS thì Hình 1 và các dải terminal hiện đủ chữ, Hình 2 hiện hai chồng lớp, Hình 3 hiện sáu bước bằng chữ.
+// Không có JS thì Hình 1 và các dải terminal hiện đủ chữ, Hình 2 hiện hai chồng layer, Hình 3 hiện sáu bước bằng chữ.
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -77,25 +77,25 @@
         cmd: 'uname -s',
         win: { out: 'MINGW64_NT-10.0-26300', down: ['shell', 'kernel'] },
         linux: { out: 'Linux', down: ['shell', 'kernel'] },
-        note: 'Bên phải, kernel Linux trả lời là Linux. Bên trái, chữ MINGW64 do Git Bash thêm vào, báo lệnh đang chạy bằng bộ chương trình Windows của Git Bash. Trong phần còn lại của chuỗi, NT là tên kernel Windows, 10.0 là số phiên bản, 26300 là số build; Windows 11 vẫn mang số 10.0.',
+        note: 'Bên phải, kernel Linux trả lời là Linux. Bên trái, chữ MINGW64 do Git Bash thêm vào, báo lệnh đang chạy bằng bộ chương trình Windows của Git Bash. Trong phần còn lại của chuỗi, NT là tên kernel Windows, 10.0 là version, 26300 là số build; Windows 11 vẫn mang số 10.0.',
       },
       'uname-r': {
         cmd: 'uname -r',
         win: { out: '3.4.10-bc1f6498.x86_64', down: ['shell', 'kernel'] },
         linux: { out: '6.18.33.2-microsoft-standard-WSL2', down: ['shell', 'kernel'] },
-        note: 'Bên phải là phiên bản kernel Linux; bên trái là phiên bản thư viện giúp các lệnh của Git Bash chạy được trên Windows.',
+        note: 'Bên phải là version kernel Linux; bên trái là version library giúp các lệnh của Git Bash chạy được trên Windows.',
       },
       free: {
         cmd: 'free -h',
         win: { out: 'bash: free: command not found', down: ['shell'] },
         linux: { out: '               total        used        free      shared  buff/cache   available\nMem:            10Gi       1.3Gi       5.8Gi       4.7Mi       3.8Gi       9.4Gi', down: ['shell', 'kernel'] },
-        note: 'Git Bash không có lệnh free. Kernel Linux trả lời tổng 10 GB, mức trần RAM của máy ảo, không phải 15,2 GB của laptop.',
+        note: 'Git Bash không có lệnh free. Kernel Linux trả lời tổng 10 GB, mức trần RAM của VM, không phải 15,2 GB của laptop.',
       },
       which: {
         cmd: 'which ls',
         win: { out: '/usr/bin/ls', down: ['shell', 'kernel'] },
         linux: { out: '/usr/bin/ls', down: ['shell', 'kernel'] },
-        note: 'Cùng một đường dẫn, nhưng bên trái là tệp chương trình Windows, bên phải là tệp chương trình Linux.',
+        note: 'Cùng một path, nhưng bên trái là tệp chương trình Windows, bên phải là tệp chương trình Linux.',
       },
     };
     const btns = [...dual.querySelectorAll('[data-cmd]')];
@@ -115,7 +115,7 @@
         code.textContent = '';
         await typeInto(code, `$ ${c.cmd}`, hold);
         if (id !== run) return;
-        // Lệnh đi xuống từng lớp, lớp cuối nó tới thì tô đậm
+        // Lệnh đi xuống từng layer, layer cuối nó tới thì tô đậm
         for (const ly of c[side].down) {
           layers.forEach((l) => l.classList.replace('hit', 'pass'));
           box.querySelector(`[data-ly="${ly}"]`).classList.add('hit');

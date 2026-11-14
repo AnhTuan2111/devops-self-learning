@@ -14,9 +14,9 @@ Bản web của khoá nằm ở https://anhtuan2111.github.io/devops-self-learni
 | Số | Bài | Cần biết | Lab |
 |---|---|---|---|
 | | **M0 · Phía sau một cú bấm** | | |
-| `00` | [Bấm like trên facebook.com: bảy tầng OSI](https://anhtuan2111.github.io/devops-self-learning/lessons/00-osi-layers/) | không | máy bạn |
-| `01` | [TCP/IP: Internet chạy thế nào](https://anhtuan2111.github.io/devops-self-learning/lessons/01-tcp-ip/) | bảy tầng OSI | máy bạn |
-| `02` | [Người làm DevOps nắm chỗ nào trong các tầng](https://anhtuan2111.github.io/devops-self-learning/lessons/02-where-devops-fits/) | TCP/IP, DNS, HTTP | chỉ đọc |
+| `00` | [Bấm like trên facebook.com: bảy layer OSI](https://anhtuan2111.github.io/devops-self-learning/lessons/00-osi-layers/) | không | máy bạn |
+| `01` | [TCP/IP: Internet chạy thế nào](https://anhtuan2111.github.io/devops-self-learning/lessons/01-tcp-ip/) | bảy layer OSI | máy bạn |
+| `02` | [Người làm DevOps nắm chỗ nào trong các layer](https://anhtuan2111.github.io/devops-self-learning/lessons/02-where-devops-fits/) | TCP/IP, DNS, HTTP | chỉ đọc |
 | | **M1 · Một cái máy Linux** | | |
 | `03` | [Server là cái gì: phần cứng, hệ điều hành, process](https://anhtuan2111.github.io/devops-self-learning/lessons/03-what-is-a-server/) | không | máy bạn |
 | `04` | [Phòng lab: Linux trên máy Windows](https://anhtuan2111.github.io/devops-self-learning/lessons/04-linux-lab/) | process, kernel | máy bạn |
@@ -25,15 +25,15 @@ Bản web của khoá nằm ở https://anhtuan2111.github.io/devops-self-learni
 | `07` | Shell script | shell, lệnh Linux cơ bản | máy bạn |
 | `08` | Mạng trên một máy: listen, port, firewall | IP, TCP, process | máy bạn |
 | `09` | Server chậm: CPU, RAM, đĩa, mạng | process, kernel, CPU, RAM | máy bạn |
-| `10` | Chẩn đoán theo tầng | đường đi của request trên server, listen và port, HTTP | máy bạn |
+| `10` | Chẩn đoán theo layer | đường đi của request trên server, listen và port, HTTP | máy bạn |
 | | **M2 · Server thật, làm bằng tay** | | |
 | `11` | Kiếm một server để thực hành | Linux, user và quyền | server |
 | `12` | SSH: điều khiển một máy ở xa | IP, port, user, shell | server |
 | `13` | Deploy tay | SSH, service | server |
 | `14` | Nginx | listen và port, HTTP | server |
-| `15` | Tên miền và HTTPS | DNS, TLS, reverse proxy | server |
+| `15` | Domain và HTTPS | DNS, TLS, reverse proxy | server |
 | `16` | Hai server sau một load balancer | Nginx, deploy tay | server |
-| `17` | Server để yên ba tháng | service, log, chứng chỉ, shell script | server |
+| `17` | Server để yên ba tháng | service, log, certificate, shell script | server |
 | | **M3 · Container** | | |
 | `18` | Container là gì | process, kernel, cài một app lên server | máy bạn |
 | `19` | Image và container | container | máy bạn |
@@ -50,8 +50,8 @@ Bản web của khoá nằm ở https://anhtuan2111.github.io/devops-self-learni
 | `29` | Deploy tự động, môi trường, rollback | pipeline, registry, deploy tay | server |
 | `30` | Migration database trong pipeline | pipeline, deploy tự động, database | server |
 | `31` | Secret và an toàn của pipeline | pipeline, image | GitLab |
-| | **M5 · Hạ tầng bằng code và cloud** | | |
-| `32` | Hạ tầng là code | deploy tay, Git | chỉ đọc |
+| | **M5 · Hạ layer bằng code và cloud** | | |
+| `32` | Hạ layer là code | deploy tay, Git | chỉ đọc |
 | `33` | Ansible | SSH, Linux, shell script | máy bạn |
 | `34` | Cloud tối thiểu và IAM | server, IP, load balancer | cloud |
 | `35` | Mạng trên cloud: VPC, subnet, NAT, VPN | IP, mạng riêng, router, firewall | cloud |
@@ -83,7 +83,7 @@ Bản web của khoá nằm ở https://anhtuan2111.github.io/devops-self-learni
 | `58` | Trace | metric, log, HTTP | cụm Kubernetes |
 | `59` | eBPF | kernel, syscall, trace | chỉ đọc |
 | `60` | Cảnh báo và trực sự cố | metric, log | cụm Kubernetes |
-| `61` | Xử lý sự cố và postmortem | chẩn đoán theo tầng, metric, log, cảnh báo | cụm Kubernetes |
+| `61` | Xử lý sự cố và postmortem | chẩn đoán theo layer, metric, log, cảnh báo | cụm Kubernetes |
 | `62` | Database khi chạy production | database, volume | server |
 | `63` | Backup và khôi phục | database, PersistentVolume, Kubernetes | cụm Kubernetes |
 | `64` | Tổng kết: dựng lại từ repo trống | container, Kubernetes, pipeline, GitOps, metric, Terraform | cụm Kubernetes |

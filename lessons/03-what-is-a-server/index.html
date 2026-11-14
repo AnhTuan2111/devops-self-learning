@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 03: Server là cái gì: phần cứng, hệ điều hành, process</title>
-<meta name="description" content="Server là một máy tính có CPU, RAM, ổ đĩa, card mạng và một hệ điều hành. App Spring Boot chạy trên đó thành một process; kernel chia CPU và RAM cho các process, và khi RAM hết thì kernel giết bớt process để lấy lại bộ nhớ.">
-<link rel="stylesheet" href="../../assets/style.css?v=fca8b97f">
-<link rel="stylesheet" href="../../assets/terms.css?v=fca8b97f">
+<meta name="description" content="Server là một máy tính có CPU, RAM, ổ đĩa, NIC và một hệ điều hành. App Spring Boot chạy trên đó thành một process; kernel chia CPU và RAM cho các process, và khi RAM hết thì kernel giết bớt process để lấy lại bộ nhớ.">
+<link rel="stylesheet" href="../../assets/style.css?v=4e53e8bb">
+<link rel="stylesheet" href="../../assets/terms.css?v=4e53e8bb">
 <link rel="stylesheet" href="lesson.css?v=c69416d1">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
@@ -32,7 +32,7 @@
 </header>
 
 <!-- Cột trái: cái máy, dính trên màn hình, đổi cảnh theo đoạn đang đọc ở cột phải -->
-<figure class="fig machine" id="machine-fig" data-scene="box" aria-label="Hình 1: một server gồm ba lớp. Trên cùng là các process, giữa là kernel, dưới là phần cứng: CPU bốn nhân, RAM, ổ đĩa có tệp sample-app.jar, card mạng. Sổ port nằm ở lớp kernel. Hình đổi theo đoạn bạn đang đọc.">
+<figure class="fig machine" id="machine-fig" data-scene="box" aria-label="Hình 1: một server gồm ba layer. Trên cùng là các process, giữa là kernel, dưới là phần cứng: CPU bốn core, RAM, ổ đĩa có tệp sample-app.jar, NIC. Bảng listening port nằm ở layer kernel. Hình đổi theo đoạn bạn đang đọc.">
   <div class="mc-layer mc-procs" aria-hidden="true">
     <p class="mc-name">process</p>
     <ul class="proc-list">
@@ -46,7 +46,7 @@
   </div>
   <div class="mc-layer mc-kernel" aria-hidden="true">
     <p class="mc-name">kernel</p>
-    <p class="kernel-jobs"><span data-k="cpu">chia CPU</span><span data-k="ram">chia RAM</span><span data-k="port">ghi sổ port</span><span data-k="disk">đọc ghi ổ đĩa</span></p>
+    <p class="kernel-jobs"><span data-k="cpu">chia CPU</span><span data-k="ram">chia RAM</span><span data-k="port">ghi bảng listening port</span><span data-k="disk">đọc ghi ổ đĩa</span></p>
     <table class="ports"><thead><tr><th>port</th><th>PID</th></tr></thead><tbody><tr data-port="443"><td>443</td><td>911</td></tr><tr data-port="5432"><td>5432</td><td>1204</td></tr><tr data-port="8080"><td>8080</td><td>6088</td></tr></tbody></table>
   </div>
   <div class="mc-layer mc-hw" aria-hidden="true">
@@ -73,13 +73,13 @@
         <ul class="files"><li class="file" data-f="jar"><code>sample-app.jar</code><span>23 MB</span></li><li class="file" data-f="log"><code>app.log</code><span>log</span></li><li class="file" data-f="pg"><code>dữ liệu PostgreSQL</code><span></span></li></ul>
       </div>
       <div class="hw" data-hw="nic">
-        <p class="hw-name">card mạng</p>
+        <p class="hw-name">NIC</p>
         <p class="nic-note">request của người dùng đi vào qua đây</p>
       </div>
     </div>
   </div>
   <p class="mc-say" aria-hidden="true"></p>
-  <figcaption><b>Hình 1</b> Một server có ba lớp: trên cùng là các chương trình đang chạy, dưới cùng là phần cứng, ở giữa là phần hệ điều hành chia phần cứng cho các chương trình. Trên màn rộng, hình đổi theo đoạn bạn đang đọc ở cột bên phải; trên màn hẹp, hình nằm ở đầu bài và tự chạy qua từng cảnh. Chữ kernel ở lớp giữa, bốn việc ghi cạnh nó và mũi tên system call được giảng ở mục kernel. Các con số trong hình là ví dụ cho dễ nhìn, trừ những con số lấy từ lệnh và output chép trong bài, như PID 6088, tệp jar 23 MB, giới hạn 300 MB.</figcaption>
+  <figcaption><b>Hình 1</b> Một server có ba layer: trên cùng là các chương trình đang chạy, dưới cùng là phần cứng, ở giữa là phần hệ điều hành chia phần cứng cho các chương trình. Trên màn rộng, hình đổi theo đoạn bạn đang đọc ở cột bên phải; trên màn hẹp, hình nằm ở đầu bài và tự chạy qua từng cảnh. Chữ kernel ở layer giữa, bốn việc ghi cạnh nó và mũi tên system call được giảng ở mục kernel. Các con số trong hình là ví dụ cho dễ nhìn, trừ những con số lấy từ lệnh và output chép trong bài, như PID 6088, tệp jar 23 MB, giới hạn 300 MB.</figcaption>
 </figure>
 
 <div class="reading">
@@ -97,15 +97,15 @@ một tủ máy ở một toà nhà nào đó.</p>
 <figure class="fig photo wide">
   <a class="img-src" href="https://xkcd.com/908/" data-credit="Truyện: Randall Munroe · xkcd 908 · CC BY-NC 2.5, đã chuyển đen trắng" aria-label="Nguồn truyện: Randall Munroe, xkcd 908"><img src="img/xkcd-the-cloud.webp" width="1480" height="472" loading="lazy" alt="Truyện tranh năm khung: một người thấy cái hộp đặt dưới sàn và hỏi đó là gì, người đội mũ ngồi ở bàn trả lời đó là The Cloud; dây của cái hộp chạy ngang phòng tới bàn người đội mũ."></a>
   <figcaption><b>Ảnh 1</b> xkcd 908, <em>The Cloud</em> (2011). Một người thấy cái hộp dưới sàn và hỏi đó là gì, người đội mũ
-  ngồi ở bàn trả lời: "The Cloud". Người hỏi tưởng cloud là một mạng server khổng lồ ở đâu đó; người đội mũ đáp rằng ai cũng thuê server của người khác, và rốt cuộc tất cả đều chạy trên cái hộp này. Truyện nói quá ở chỗ cả cloud dồn về một cái hộp dưới sàn, trong khi mỗi nhà cung cấp cloud có rất nhiều trung tâm dữ liệu, tức những toà nhà chuyên đặt server. Còn chuyện cloud là server của người khác thì có thật.</figcaption>
+  ngồi ở bàn trả lời: "The Cloud". Người hỏi tưởng cloud là một mạng server khổng lồ ở đâu đó; người đội mũ đáp rằng ai cũng thuê server của người khác, và rốt cuộc tất cả đều chạy trên cái hộp này. Truyện nói quá ở chỗ cả cloud dồn về một cái hộp dưới sàn, trong khi mỗi nhà cung cấp cloud có rất nhiều data center, tức những toà nhà chuyên đặt server. Còn chuyện cloud là server của người khác thì có thật.</figcaption>
 </figure>
 
-<p>Server thường khác laptop ở chỗ nó không có màn hình, không có bàn phím, và chạy suốt ngày đêm. Nó hay nằm cùng hàng trăm cái máy khác trong một trung tâm dữ liệu, có điện dự phòng và điều hoà. Người quản trị không
+<p>Server thường khác laptop ở chỗ nó không có màn hình, không có bàn phím, và chạy suốt ngày đêm. Nó hay nằm cùng hàng trăm cái máy khác trong một data center, có điện dự phòng và điều hoà. Người quản trị không
 ngồi trước nó mà điều khiển nó từ xa.</p>
 
 <figure class="fig photo small">
-  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg" data-credit="Ảnh: Derrick Coetzee · Wikimedia Commons · CC0, đã cắt khung và chuyển đen trắng" aria-label="Nguồn ảnh: Derrick Coetzee · Wikimedia Commons · CC0"><img src="img/server-rack.webp" width="720" height="960" loading="lazy" alt="Mặt sau một tủ máy chủ: nhiều máy xếp chồng, dây mạng và dây điện bó thành từng chùm chạy dọc hai bên."></a>
-  <figcaption><b>Ảnh 2</b> Mặt sau một tủ máy ở trung tâm dữ liệu NERSC, Mỹ. Mỗi tầng trong tủ là một server, mỗi sợi dây là
+  <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg" data-credit="Ảnh: Derrick Coetzee · Wikimedia Commons · CC0, đã cắt khung và chuyển đen trắng" aria-label="Nguồn ảnh: Derrick Coetzee · Wikimedia Commons · CC0"><img src="img/server-rack.webp" width="720" height="960" loading="lazy" alt="Mặt sau một tủ server: nhiều máy xếp chồng, dây mạng và dây điện bó thành từng chùm chạy dọc hai bên."></a>
+  <figcaption><b>Ảnh 2</b> Mặt sau một tủ máy ở data center NERSC, Mỹ. Mỗi layer trong tủ là một server, mỗi sợi dây là
   một đường mạng hay một đường điện.</figcaption>
 </figure>
 
@@ -118,9 +118,9 @@ người dùng đi vào qua nó. Hàng dưới cùng của Hình 1 là bốn mó
   <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:AMD_Ryzen_9_9950X.jpg" data-credit="Ảnh: 4300streetcar · Wikimedia Commons · CC BY 4.0, đã tách nền và chuyển đen trắng" aria-label="Nguồn ảnh: 4300streetcar · Wikimedia Commons · CC BY 4.0"><img src="img/cpu.webp" width="800" height="600" loading="lazy" alt="Một con chip CPU vuông, mặt trên kim loại có in chữ AMD Ryzen."></a><div class="lbl">CPU: chạy chương trình</div></figure>
   <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png" data-credit="Ảnh: PantheraLeo1359531 · Wikimedia Commons · CC BY 4.0, đã tách nền và chuyển đen trắng" aria-label="Nguồn ảnh: PantheraLeo1359531 · Wikimedia Commons · CC BY 4.0"><img src="img/ram.webp" width="800" height="600" loading="lazy" alt="Một thanh RAM dài, hẹp, có hàng chip đen và chân cắm vàng ở mép dưới."></a><div class="lbl">RAM: giữ dữ liệu đang dùng</div></figure>
   <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:Western_Digital_SN850X_NVME_solid_state_drive_8TB_front_side.jpg" data-credit="Ảnh: 4300streetcar · Wikimedia Commons · CC BY 4.0, đã tách nền và chuyển đen trắng" aria-label="Nguồn ảnh: 4300streetcar · Wikimedia Commons · CC BY 4.0"><img src="img/nvme-ssd.webp" width="800" height="600" loading="lazy" alt="Một ổ SSD dạng thanh nhỏ, dẹt, có nhãn dán ở mặt trên."></a><div class="lbl">ổ đĩa: giữ tệp lâu dài</div></figure>
-  <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg" data-credit="Ảnh: afrank99 · Wikimedia Commons · CC BY-SA 2.0, đã tách nền và chuyển đen trắng" aria-label="Nguồn ảnh: afrank99 · Wikimedia Commons · CC BY-SA 2.0"><img src="img/nic-pci.webp" width="800" height="600" loading="lazy" alt="Một tấm card mạng có một cổng cắm dây mạng ở đầu, chân cắm vàng ở mép dưới."></a><div class="lbl">card mạng: nối ra mạng</div></figure>
-  <figcaption><b>Ảnh 3</b> Bốn món chính của một server, cũng là bốn món trong laptop của bạn. Server trong trung tâm dữ liệu
-  thường có CPU mạnh hơn, nhiều RAM hơn và card mạng nhanh hơn, nhưng mỗi món vẫn làm việc của nó như trong laptop.</figcaption>
+  <figure><a class="img-src" href="https://commons.wikimedia.org/wiki/File:Ethernet_NIC_100Mbit_PCI.jpg" data-credit="Ảnh: afrank99 · Wikimedia Commons · CC BY-SA 2.0, đã tách nền và chuyển đen trắng" aria-label="Nguồn ảnh: afrank99 · Wikimedia Commons · CC BY-SA 2.0"><img src="img/nic-pci.webp" width="800" height="600" loading="lazy" alt="Một tấm NIC có một cổng cắm dây mạng ở đầu, chân cắm vàng ở mép dưới."></a><div class="lbl">NIC: nối ra mạng</div></figure>
+  <figcaption><b>Ảnh 3</b> Bốn món chính của một server, cũng là bốn món trong laptop của bạn. Server trong data center
+  thường có CPU mạnh hơn, nhiều RAM hơn và NIC nhanh hơn, nhưng mỗi món vẫn làm việc của nó như trong laptop.</figcaption>
 </div>
 
 <p>Server cũng không phải lúc nào cũng mạnh hơn laptop. Laptop mình dùng để viết bài này có CPU AMD Ryzen 5 7535HS và 15,2 GB RAM, còn gói server rẻ nhất cho thuê trên Internet thì ít RAM hơn thế nhiều. Mạnh hay yếu thì trên bốn món ấy vẫn chạy một hệ điều hành, như Windows trên laptop của bạn. Nên những gì bạn sắp
@@ -151,16 +151,16 @@ Dòng dưới đây in ra khi mình chạy app ngày 14/11/2026 trên Windows 11
 mới. Output của <code>netstat</code>, <code>taskkill</code>, <code>tasklist</code> dưới đây và ở phần lab đều chép từ lần chạy đầu, lúc PID là 6088.</p>
 
 <p>Process 6088 ấy chiếm chỗ trong RAM nhiều hơn hẳn tệp jar mà nó chạy từ đó. Tệp <code>sample-app.jar</code> nặng 24.505.709 byte, khoảng 23 MB. Còn process chạy từ tệp ấy chiếm 183.884 KB trong RAM, khoảng 180 MB, gần gấp tám lần. Con số 183.884 KB ấy lấy từ cột <code>Mem Usage</code> của lệnh <code>tasklist</code>,
-lệnh in danh sách process của Windows mà phần lab sẽ chạy. Phần chênh là chương trình <code>java</code>, các thư viện nó nạp, và
+lệnh in danh sách process của Windows mà phần lab sẽ chạy. Phần chênh là chương trình <code>java</code>, các library nó nạp, và
 mọi object app tạo ra lúc chạy.</p>
 
 <h2 id="process-holds-port" data-scene="port">Process giữ port</h2>
 
-<p data-scene="port">Ngoài RAM, process còn giữ cả port. App mẫu xin hệ điều hành cho nhận kết nối ở port 8080, và từ lúc đó hệ
-điều hành ghi port 8080 kèm PID 6088 vào một bảng, mình gọi là sổ port.</p>
+<p data-scene="port">Ngoài RAM, process còn giữ cả port. App mẫu xin hệ điều hành cho listen ở port 8080, và từ lúc đó hệ
+điều hành ghi port 8080 kèm PID 6088 vào một bảng, mình gọi là bảng listening port.</p>
 
-<p data-scene="port">Muốn xem sổ port thì dùng lệnh <code>netstat -ano</code> của Windows.
-Mặc định <code>netstat</code> chỉ in các kết nối đang mở; cờ <code>a</code> in thêm những port đang chờ kết nối, cờ <code>n</code> in địa chỉ và port bằng số, còn cờ <code>o</code> thêm cột
+<p data-scene="port">Muốn xem bảng listening port thì dùng lệnh <code>netstat -ano</code> của Windows.
+Mặc định <code>netstat</code> chỉ in các kết nối đang mở; option <code>a</code> in thêm những port đang listen, option <code>n</code> in địa chỉ và port bằng số, còn option <code>o</code> thêm cột
 PID.</p>
 
 <p>Output của <code>netstat</code> dài cả trăm dòng, nên mình lọc nó bằng lệnh <code>grep</code>. <code>grep</code> chỉ giữ những dòng chứa chuỗi bạn đưa cho nó, ở đây là <code>:8080</code>.</p>
@@ -171,11 +171,11 @@ PID.</p>
   TCP    0.0.0.0:8080           0.0.0.0:0              LISTENING       6088
   TCP    [::]:8080              [::]:0                 LISTENING       6088</code></pre>
 
-<p>Cột cuối là PID, cột trước nó là trạng thái; <code>LISTENING</code> nghĩa là port đang chờ kết nối. Hai dòng ứng với hai loại địa chỉ, IPv4 và IPv6, nhưng cùng thuộc một process.</p>
+<p>Cột cuối là PID, cột trước nó là trạng thái; <code>LISTENING</code> nghĩa là port đang listen. Hai dòng ứng với hai loại địa chỉ, IPv4 và IPv6, nhưng cùng thuộc một process.</p>
 
-<p data-scene="port">Hai dòng ấy chỉ nằm trong sổ khi process 6088 còn sống. Process chết thì hệ điều hành xoá dòng của nó khỏi sổ, port 8080 lại trống, và ai gọi vào cũng bị từ chối. Mọi object app đang giữ trong RAM cũng mất theo, còn tệp jar trên ổ đĩa thì không mất gì. Muốn tự tay giết process theo PID thì dùng lệnh <code>taskkill</code>. Cờ <code>/F</code> bảo Windows giết ngay, nên app không kịp chạy đoạn code nó thường chạy trước khi tắt, như đóng kết nối tới database.</p>
+<p data-scene="port">Hai dòng ấy chỉ nằm trong bảng listening port khi process 6088 còn sống. Process chết thì hệ điều hành xoá dòng của nó khỏi bảng, port 8080 lại trống, và ai gọi vào cũng bị từ chối. Mọi object app đang giữ trong RAM cũng mất theo, còn tệp jar trên ổ đĩa thì không mất gì. Muốn tự tay giết process theo PID thì dùng lệnh <code>taskkill</code>. Option <code>/F</code> bảo Windows giết ngay, nên app không kịp chạy đoạn code nó thường chạy trước khi tắt, như đóng kết nối tới database.</p>
 
-<p data-scene="kill">Có điều cờ của <code>taskkill</code> mở đầu bằng dấu <code>/</code>, không phải dấu <code>-</code> như <code>netstat</code>. Git Bash coi chữ nào mở đầu bằng một dấu <code>/</code> là đường dẫn và đổi nó thành đường dẫn Windows, nên <code>taskkill</code> không còn nhận ra cờ. Chữ mở đầu bằng hai dấu <code>//</code> thì Git Bash không đổi thành đường dẫn mà chỉ bỏ bớt một dấu, nên <code>taskkill</code> vẫn nhận được <code>/F</code>. Vì thế trong Git Bash phải gõ <code>//F</code> và <code>//PID</code>:</p>
+<p data-scene="kill">Có điều option của <code>taskkill</code> mở đầu bằng dấu <code>/</code>, không phải dấu <code>-</code> như <code>netstat</code>. Git Bash coi chữ nào mở đầu bằng một dấu <code>/</code> là path và đổi nó thành Windows path, nên <code>taskkill</code> không còn nhận ra option. Chữ mở đầu bằng hai dấu <code>//</code> thì Git Bash không đổi thành path mà chỉ bỏ bớt một dấu, nên <code>taskkill</code> vẫn nhận được <code>/F</code>. Vì thế trong Git Bash phải gõ <code>//F</code> và <code>//PID</code>:</p>
 
 <pre data-scene="kill"><code>$ taskkill //F //PID 6088
 SUCCESS: The process with PID 6088 has been terminated.
@@ -190,12 +190,11 @@ curl: (7) Failed to connect to localhost port 8080 after 2220 ms: Could not conn
 <!-- Phần: kernel -->
 <section class="part" id="kernel">
 
-<h2 id="who-hands-out" data-scene="core">Ai cấp RAM, ai ghi sổ port</h2>
+<h2 id="who-hands-out" data-scene="core">Ai cấp RAM, ai ghi bảng listening port</h2>
 
-<p data-scene="core">Ở phần trước, mọi việc đều do hệ điều hành làm: cấp vùng RAM, ghi sổ port, xoá dòng port của process khỏi
-sổ khi process chết. Nhưng hệ điều hành gồm rất nhiều thứ, cả màn hình đăng nhập lẫn trình quản lý tệp. Phần làm những việc kể
+<p data-scene="core">Ở phần trước, mọi việc đều do hệ điều hành làm: cấp vùng RAM, ghi bảng listening port, xoá dòng port của process khỏi bảng khi process chết. Nhưng hệ điều hành gồm rất nhiều thứ, cả màn hình đăng nhập lẫn trình quản lý tệp. Phần làm những việc kể
 trên là lõi của nó, chương trình đầu tiên của hệ điều hành được nạp lên khi máy khởi động và chạy suốt tới khi tắt máy. Lõi ấy gọi là
-<strong>kernel</strong>, lớp giữa của Hình 1.</p>
+<strong>kernel</strong>, layer giữa của Hình 1.</p>
 
 <figure class="fig photo small">
   <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Version_7_UNIX_SIMH_PDP11_Kernels_Shell.png" data-credit="Ảnh: Huihermit · Wikimedia Commons · CC0, đã cắt khung, phóng to và thêm khung đánh dấu" aria-label="Nguồn ảnh: Huihermit · Wikimedia Commons · CC0"><img src="img/unix-v7-kernel.webp" width="836" height="832" loading="lazy" alt="Cửa sổ terminal nền đen chữ trắng liệt kê tệp của Unix bản 7: các tệp hệ thống trong đó có init, sáu tệp kernel tên kết thúc bằng unix, và tệp /bin/sh."></a>
@@ -203,23 +202,23 @@ trên là lõi của nó, chương trình đầu tiên của hệ điều hành 
 </figure>
 
 <p data-scene="kernel">Process không phải việc gì cũng nhờ kernel. Nó chạy trên CPU và đọc ghi vùng RAM của mình trực tiếp. Nhưng muốn thêm RAM, đọc một tệp hay
-nhận kết nối ở một port thì nó phải xin kernel, và kernel kiểm tra process có được phép làm việc đó không rồi mới làm hộ. Lời xin ấy gọi là system call, mũi tên đi
-xuống giữa lớp process và lớp kernel ở Hình 1.</p>
+listen ở một port thì nó phải xin kernel, và kernel kiểm tra process có được phép làm việc đó không rồi mới làm hộ. Lời xin ấy gọi là system call, mũi tên đi
+xuống giữa layer process và layer kernel ở Hình 1.</p>
 
-<p data-scene="kernel">Process đọc ghi RAM không cần hỏi kernel, vậy cái gì ngăn nó đụng sang vùng của process khác? Kernel ghi vùng RAM nào thuộc process nào vào một bảng. Mỗi lần một process đọc ghi RAM, CPU tra bảng ấy, và nếu chỗ đó thuộc process khác thì CPU chặn lại rồi báo cho kernel. Sổ port cũng do kernel giữ, nên một port đã ghi cho process này thì process khác xin sẽ bị từ
+<p data-scene="kernel">Process đọc ghi RAM không cần hỏi kernel, vậy cái gì ngăn nó đụng sang vùng của process khác? Kernel ghi vùng RAM nào thuộc process nào vào một bảng. Mỗi lần một process đọc ghi RAM, CPU tra bảng ấy, và nếu chỗ đó thuộc process khác thì CPU chặn lại rồi báo cho kernel. Bảng listening port cũng do kernel giữ, nên một port đã ghi cho process này thì process khác xin sẽ bị từ
 chối.</p>
 
 <h2 id="sharing-cpu" data-scene="cpu">Chia CPU: mỗi process một lượt</h2>
 
-<p data-scene="cpu">Một CPU ngày nay có nhiều nhân, và mỗi lúc một nhân chỉ chạy được một chương trình. CPU của laptop mình có 6 nhân, mà lúc
-đếm thì Windows đang chạy 264 process. Không thể chia mỗi process một nhân được, nên kernel cho một process chạy trên một nhân
-trong một khoảng rất ngắn, rồi cất nó sang một bên, cho process khác chạy, và cứ xoay vòng như vậy rất nhiều lần mỗi giây. Ô CPU ở Hình 1 vẽ bốn nhân và năm process, process nào chưa tới lượt thì đứng ở hàng chờ.</p>
+<p data-scene="cpu">Một CPU ngày nay có nhiều core, và mỗi lúc một core chỉ chạy được một chương trình. CPU của laptop mình có 6 core, mà lúc
+đếm thì Windows đang chạy 264 process. Không thể chia mỗi process một core được, nên kernel cho một process chạy trên một core
+trong một khoảng rất ngắn, rồi cất nó sang một bên, cho process khác chạy, và cứ xoay vòng như vậy rất nhiều lần mỗi giây. Ô CPU ở Hình 1 vẽ bốn core và năm process, process nào chưa tới lượt thì đứng ở hàng chờ.</p>
 
 <p data-scene="cpu">Vì kernel đổi lượt rất nhanh, bạn thấy mọi process như cùng chạy một lúc. Còn khi có quá nhiều process cùng cần CPU, mỗi process
 phải chờ lượt lâu hơn, nên app trả lời chậm đi mà vẫn chạy.</p>
 
 <p data-scene="cpu">Nói kỹ hơn thì kernel chia lượt cho từng thread chứ không cho cả process. Process <code>java</code> của bạn có
-nhiều thread, và các thread ấy có thể chạy cùng lúc trên nhiều nhân. Hình 1 vẽ mỗi process thành một khối cho dễ nhìn.</p>
+nhiều thread, và các thread ấy có thể chạy cùng lúc trên nhiều core. Hình 1 vẽ mỗi process thành một khối cho dễ nhìn.</p>
 
 <h2 id="sharing-ram" data-scene="ram">Chia RAM: mỗi process một vùng</h2>
 
@@ -244,15 +243,15 @@ là <strong>OOM killer</strong>, OOM là viết tắt của out of memory, tức
 <code>lab</code> của bài.</p>
 
 <p data-scene="full">Trong 15,2 GB RAM của laptop, WSL cho Ubuntu ấy dùng tối đa 10 GB. Con số này đọc từ lệnh <code>free -h</code>,
-lệnh in lượng RAM mà Ubuntu thấy; cờ <code>-h</code> ghi số bằng GB, MB cho dễ đọc:</p>
+lệnh in lượng RAM mà Ubuntu thấy; option <code>-h</code> ghi số bằng GB, MB cho dễ đọc:</p>
 
 <pre data-scene="oom"><code>$ free -h
                total        used        free      shared  buff/cache   available
 Mem:            10Gi       1.2Gi       4.9Gi       4.7Mi       4.7Gi       9.5Gi</code></pre>
 
-<p data-scene="oom">Để khỏi phải làm đầy cả 10 GB, mình chạy chương trình Python bằng lệnh <code>systemd-run</code>. Lệnh này đặt cho riêng process ấy một giới hạn RAM. Cờ <code>-p MemoryMax=300M</code> cho nó tối đa 300 MB, còn cờ <code>-p MemorySwapMax=0</code> cấm đẩy dữ liệu xuống swap, nên chạm 300 MB là hết chỗ ngay.</p>
+<p data-scene="oom">Để khỏi phải làm đầy cả 10 GB, mình chạy chương trình Python bằng lệnh <code>systemd-run</code>. Lệnh này đặt cho riêng process ấy một giới hạn RAM. Option <code>-p MemoryMax=300M</code> cho nó tối đa 300 MB, còn option <code>-p MemorySwapMax=0</code> cấm đẩy dữ liệu xuống swap, nên chạm 300 MB là hết chỗ ngay.</p>
 
-<p data-scene="oom">Cờ <code>--scope</code> cho lệnh chạy ngay trong
+<p data-scene="oom">Option <code>--scope</code> cho lệnh chạy ngay trong
 cửa sổ đang gõ và in output ra đó. Chữ <button type="button" class="term" data-term="sudo">sudo</button> ở đầu chạy lệnh bằng
 quyền quản trị của Linux, vì đặt giới hạn RAM cần quyền ấy:</p>
 
@@ -267,9 +266,9 @@ $ echo $?
 137</code></pre>
 
 <p data-scene="oom">Process in tới 250 MB rồi im bặt, không có dòng lỗi nào. Nó không kịp in gì, vì kernel giết nó ngay khi nó xin
-vượt giới hạn. Lệnh <code>echo $?</code> in mã thoát của lệnh vừa chạy, tức con số một chương trình trả lại khi kết thúc, giống số bạn truyền vào <code>System.exit()</code> trong Java. Process thoát êm thì mã là 0, còn 137 nghĩa là process bị giết ngay, không được chạy thêm dòng code nào.</p>
+vượt giới hạn. Lệnh <code>echo $?</code> in exit code của lệnh vừa chạy, tức con số một chương trình trả lại khi kết thúc, giống số bạn truyền vào <code>System.exit()</code> trong Java. Process thoát êm thì mã là 0, còn 137 nghĩa là process bị giết ngay, không được chạy thêm dòng code nào.</p>
 
-<p data-scene="oom">Mã 137 mới cho biết process bị giết, chưa cho biết ai giết. Kernel ghi việc ấy vào log riêng của nó, đọc bằng lệnh <code>dmesg</code>. Cờ <code>-i</code> của <code>grep</code> bảo nó không phân biệt chữ hoa, chữ thường:</p>
+<p data-scene="oom">Mã 137 mới cho biết process bị giết, chưa cho biết ai giết. Kernel ghi việc ấy vào log riêng của nó, đọc bằng lệnh <code>dmesg</code>. Option <code>-i</code> của <code>grep</code> bảo nó không phân biệt chữ hoa, chữ thường:</p>
 
 <pre data-scene="oom"><code>$ sudo dmesg | grep -i "killed process"
 Memory cgroup out of memory: Killed process 2628 (python3) total-vm:323280kB, anon-rss:306432kB, ...</code></pre>
@@ -317,7 +316,7 @@ nên lúc người dùng thấy 502, RAM lại đang còn chỗ. Muốn biết a
 trong <code>dmesg</code> như ở trên, vì app bị giết không kịp ghi gì vào log của nó.</p>
 
 <p class="answer" data-scene="score">Vậy gõ <code>java -jar</code> trên server thì kernel nạp chương trình lên RAM thành một process,
-chia cho nó CPU theo lượt và một vùng RAM riêng, rồi khi app xin port 8080 thì ghi PID của nó vào sổ port. Còn app đang chạy ngon
+chia cho nó CPU theo lượt và một vùng RAM riêng, rồi khi app xin port 8080 thì ghi PID của nó vào bảng listening port. Còn app đang chạy ngon
 mà tự nhiên biến mất thì một lý do hay gặp là RAM của cả máy hết, và kernel đã chọn giết nó để cứu những process còn lại.</p>
 
 </section>
@@ -333,7 +332,7 @@ Output trong các khối là của mình, chạy ngày 14/11/2026 trên Windows 
 <ol class="steps">
 
 <li id="lab-1"><h3>Kiểm tra Java và Maven</h3>
-<p>App mẫu cần Java 21 trở lên để chạy, và Maven để build. Hai lệnh dưới in phiên bản; dòng đầu output của mỗi lệnh là dòng cần đọc.
+<p>App mẫu cần Java 21 trở lên để chạy, và Maven để build. Hai lệnh dưới in version; dòng đầu output của mỗi lệnh là dòng cần đọc.
 Nếu Git Bash báo <code>command not found</code> thì máy chưa cài thứ ấy, hoặc vừa cài mà cửa sổ Git Bash đã mở từ trước đó. Chưa cài thì cài bằng bộ cài chính thức; cài xong thì đóng Git Bash rồi mở lại.</p>
 <pre><code>$ java -version
 java version "25.0.2" 2026-01-20 LTS
@@ -349,7 +348,7 @@ Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)
 $ cd devops-self-learning/lab/sample-app</code></pre></li>
 
 <li id="lab-3"><h3>Build tệp jar</h3>
-<p>Cờ <code>-q</code> bảo Maven chỉ in khi có lỗi, nên build xong mà không thấy dòng nào là được. Lần đầu Maven tải thư viện về
+<p>Option <code>-q</code> bảo Maven chỉ in khi có lỗi, nên build xong mà không thấy dòng nào là được. Lần đầu Maven tải library về
 nên chạy lâu hơn các lần sau. Rồi lệnh <code>ls -l</code> in thông tin của tệp vừa build; cột số đứng trước ngày là cỡ tệp, tính bằng
 byte.</p>
 <pre><code>$ mvn -q package
@@ -372,7 +371,7 @@ Ghi lại con số ấy, các bước sau cần nó. Cứ để app chạy ở c
   TCP    [::]:8080              [::]:0                 LISTENING       6088</code></pre></li>
 
 <li id="lab-6"><h3>Từ PID ra tên chương trình và RAM nó giữ</h3>
-<p>Lệnh <code>tasklist</code> in danh sách process; cờ <code>//FI</code> kèm điều kiện <code>"PID eq 6088"</code> chỉ giữ lại process
+<p>Lệnh <code>tasklist</code> in danh sách process; option <code>//FI</code> kèm điều kiện <code>"PID eq 6088"</code> chỉ giữ lại process
 có PID ấy, <code>eq</code> nghĩa là bằng. Thay 6088 bằng PID của bạn. Cột <code>Image Name</code> cho biết process là chương trình
 nào, cột <code>Mem Usage</code> là RAM nó đang giữ.</p>
 <pre><code>$ tasklist //FI "PID eq 6088"
@@ -385,8 +384,8 @@ java.exe                      6088 Console                    3    183,884 K</co
 nhiều lần.</p></li>
 
 <li id="lab-8"><h3>Tắt app bằng PID, xem port trống lại</h3>
-<p>Ở cửa sổ thứ hai, giết process bằng <code>taskkill</code>, thay 6088 bằng PID của bạn. Ở cửa sổ đầu, log của app dừng lại và dấu nhắc <code>$</code> hiện ra, tức là cửa sổ ấy lại gõ lệnh được.
-Gọi lại app thì curl báo không kết nối được. Cuối cùng chạy lại <code>netstat</code> để xem port 8080 đã trống chưa. Có lần <code>netstat</code> của mình in dòng 8080 với trạng thái <code>FIN_WAIT_1</code> hay <code>CLOSED</code> thay cho <code>LISTENING</code>, chạy lại thì hết; mình chưa tìm ra vì sao. Nên lệnh cuối lọc thêm chữ <code>LISTENING</code>, trạng thái của port đang chờ kết nối. Lệnh ấy không in gì là port 8080 đã trống, máy về như lúc chưa làm lab.</p>
+<p>Ở cửa sổ thứ hai, giết process bằng <code>taskkill</code>, thay 6088 bằng PID của bạn. Ở cửa sổ đầu, log của app dừng lại và prompt <code>$</code> hiện ra, tức là cửa bảng ấy lại gõ lệnh được.
+Gọi lại app thì curl báo không kết nối được. Cuối cùng chạy lại <code>netstat</code> để xem port 8080 đã trống chưa. Có lần <code>netstat</code> của mình in dòng 8080 với trạng thái <code>FIN_WAIT_1</code> hay <code>CLOSED</code> thay cho <code>LISTENING</code>, chạy lại thì hết; mình chưa tìm ra vì sao. Nên lệnh cuối lọc thêm chữ <code>LISTENING</code>, trạng thái của port đang listen. Lệnh ấy không in gì là port 8080 đã trống, máy về như lúc chưa làm lab.</p>
 <pre><code>$ taskkill //F //PID 6088
 SUCCESS: The process with PID 6088 has been terminated.
 
@@ -397,9 +396,9 @@ $ netstat -ano | grep ":8080" | grep LISTENING
 </code></pre></li>
 
 <li id="lab-9"><h3>Trên Ubuntu: xem kernel giết một process</h3>
-<p>Mở Ubuntu từ menu Start. Trong Ubuntu, ổ C của Windows hiện thành thư mục <code>/mnt/c</code>, ổ D thành <code>/mnt/d</code>, cứ thế theo tên ổ. Mở Git Bash ra là đang ở thư mục <code>C:\Users\&lt;tên bạn&gt;</code>, nên nếu bạn chạy <code>git clone</code> ở bước 2 ngay lúc đó thì repo nằm ở <code>/mnt/c/Users/&lt;tên bạn&gt;/devops-self-learning</code>. Clone ở chỗ khác thì đổi đường dẫn trong lệnh <code>cd</code> dưới đây theo chỗ ấy.</p>
+<p>Mở Ubuntu từ menu Start. Trong Ubuntu, ổ C của Windows hiện thành thư mục <code>/mnt/c</code>, ổ D thành <code>/mnt/d</code>, cứ thế theo tên ổ. Mở Git Bash ra là đang ở thư mục <code>C:\Users\&lt;tên bạn&gt;</code>, nên nếu bạn chạy <code>git clone</code> ở bước 2 ngay lúc đó thì repo nằm ở <code>/mnt/c/Users/&lt;tên bạn&gt;/devops-self-learning</code>. Clone ở chỗ khác thì đổi path trong lệnh <code>cd</code> dưới đây theo chỗ ấy.</p>
 <p>Lệnh <code>systemd-run</code> chỉ chạy được khi máy có systemd, chương trình bật và quản lý các chương trình khác. Process đầu tiên kernel chạy sau khi nạp xong luôn mang PID 1 và gọi là init, như tệp <code>init</code> ở Ảnh 4. Trên Ubuntu ngày nay, init thường là systemd, nên muốn biết máy có systemd không thì xem tên process PID 1.</p>
-<p>Lệnh <code>ps</code> in danh sách process của Linux, giống <code>tasklist</code> của Windows. Lệnh đầu trong khối dưới, <code>ps -p 1 -o comm=</code>, in tên của process PID 1: cờ <code>-p 1</code> chọn process có PID 1, cờ <code>-o comm=</code> chỉ in tên chương trình và bỏ dòng tiêu đề.</p>
+<p>Lệnh <code>ps</code> in danh sách process của Linux, giống <code>tasklist</code> của Windows. Lệnh đầu trong khối dưới, <code>ps -p 1 -o comm=</code>, in tên của process PID 1: option <code>-p 1</code> chọn process có PID 1, option <code>-o comm=</code> chỉ in tên chương trình và bỏ dòng tiêu đề.</p>
 <p>Nếu nó in ra chữ khác <code>systemd</code> thì WSL của bạn chưa bật systemd; trang <a href="https://learn.microsoft.com/en-us/windows/wsl/systemd">Use systemd to manage Linux services with WSL</a> của Microsoft chỉ cách bật. Không muốn bật thì dừng lab ở đây.</p>
 <p>Python thì kiểm tra bằng <code>python3 --version</code>; báo <code>command not found</code> thì cài bằng <code>sudo apt install python3</code>. Cuối cùng <code>cd</code> vào thư mục lab.</p>
 <pre><code>$ ps -p 1 -o comm=
@@ -430,8 +429,8 @@ Memory cgroup out of memory: Killed process 2628 (python3) total-vm:323280kB, an
 <h2 id="checklist">Tự kiểm tra</h2>
 
 <ul class="check">
-  <li>Bạn chạy hai bản app từ cùng một tệp jar, một bản ở port 8080, một bản ở port 8081. Sổ port ghi mỗi port kèm PID nào, và hai port ấy có chung một PID không?</li>
-  <li>Server có 2 nhân và Nginx đứng trước app. Có 40 process cùng cần CPU, RAM còn trống nhiều, Nginx được đặt để chờ app trả lời tối đa vài phút mới bỏ. Người dùng thấy app chậm hay thấy 502? Đổi lại, CPU rảnh mà RAM đầy thì sao?</li>
+  <li>Bạn chạy hai bản app từ cùng một tệp jar, một bản ở port 8080, một bản ở port 8081. Bảng listening port ghi mỗi port kèm PID nào, và hai port ấy có chung một PID không?</li>
+  <li>Server có 2 core và Nginx đứng trước app. Có 40 process cùng cần CPU, RAM còn trống nhiều, Nginx được đặt để chờ app trả lời tối đa vài phút mới bỏ. Người dùng thấy app chậm hay thấy 502? Đổi lại, CPU rảnh mà RAM đầy thì sao?</li>
   <li>App bị giết lúc 2 giờ sáng. Log của app dừng ở 1:58, không có dòng lỗi nào. Vì sao log của app không giúp được, và
   bạn tìm bằng chứng ở đâu?</li>
   <li>App đang chạy ở port 8080 bị kernel giết lúc hết RAM. Bạn chạy lại nó ngay thì nó có gặp lỗi port 8080 đã bị chiếm không? Vì
@@ -459,7 +458,7 @@ Memory cgroup out of memory: Killed process 2628 (python3) total-vm:323280kB, an
 <nav class="prevnext">
   <a href="../02-where-devops-fits/">
     <span class="dir">Bài trước</span>
-    <span class="t">Bài 02: Người làm DevOps nắm chỗ nào trong các tầng</span>
+    <span class="t">Bài 02: Người làm DevOps nắm chỗ nào trong các layer</span>
   </a>
 </nav>
 
@@ -472,8 +471,8 @@ Memory cgroup out of memory: Killed process 2628 (python3) total-vm:323280kB, an
 
 </div>
 
-<script src="../../assets/app.js?v=fca8b97f"></script>
-<script src="../../assets/terms.js?v=fca8b97f"></script>
-<script src="lesson.js?v=8cc7c762"></script>
+<script src="../../assets/app.js?v=4e53e8bb"></script>
+<script src="../../assets/terms.js?v=4e53e8bb"></script>
+<script src="lesson.js?v=27685816"></script>
 </body>
 </html>

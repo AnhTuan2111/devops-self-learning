@@ -1,6 +1,6 @@
 // Riêng Bài 03: Hình 1 là cái máy ở cột trái, đổi cảnh theo đoạn đang đọc ở cột phải (mỗi đoạn mang data-scene); ở màn hẹp
 // nó tự chạy qua các cảnh khi đang nằm trên màn hình. Hình 2 kể một đêm server hết RAM, lặp khi đang nằm trên màn hình.
-// Bật giảm chuyển động thì mỗi cảnh hiện ngay trạng thái cuối, không chạy. Không có JS thì Hình 1 hiện đủ ba lớp, Hình 2 hiện
+// Bật giảm chuyển động thì mỗi cảnh hiện ngay trạng thái cuối, không chạy. Không có JS thì Hình 1 hiện đủ ba layer, Hình 2 hiện
 // thanh RAM lúc script sao lưu vừa chạy, kèm năm bước bằng chữ.
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -29,7 +29,7 @@
     const note = (t) => { $('.ram-note').textContent = t; };
     const NAMES = { java: 'java', nginx: 'nginx', postgres: 'postgres', bash: 'bash', backup: 'sao lưu' };
 
-    // CPU: bốn nhân chia lượt cho các process đang bật, process còn lại đứng ở hàng chờ
+    // CPU: bốn core chia lượt cho các process đang bật, process còn lại đứng ở hàng chờ
     const cores = $$('.core i');
     const queue = $('.q-items');
     const paintCpu = (list, start, animate) => {
@@ -46,7 +46,7 @@
       }
     };
 
-    // Trạng thái nền của mỗi cảnh: process nào bật, RAM chia ra sao, port nào có trong sổ
+    // Trạng thái nền của mỗi cảnh: process nào bật, RAM chia ra sao, port nào có trong bảng
     const base = (on) => {
       Object.keys(NAMES).forEach((p) => { const el = proc(p); el.classList.toggle('on', on.includes(p)); el.classList.remove('dead', 'hot'); });
       backupLabel('sao lưu', 'PID 2410'); ramName('4 GB'); note('');
@@ -64,7 +64,7 @@
       async box(t) {
         base([]);
         const parts = [['cpu', 'CPU: chạy từng bước của chương trình'], ['ram', 'RAM: giữ dữ liệu chương trình đang dùng'],
-          ['disk', 'ổ đĩa: giữ những thứ phải còn sau khi tắt máy, như tệp jar, log'], ['nic', 'card mạng: request của người dùng đi vào qua đây']];
+          ['disk', 'ổ đĩa: giữ những thứ phải còn sau khi tắt máy, như tệp jar, log'], ['nic', 'NIC: request của người dùng đi vào qua đây']];
         for (const [h, text] of parts) { hw(h); say(text); if (!(await t.wait(1700))) return; }
         hw('cpu', 'ram', 'disk', 'nic'); say('bốn món ấy cũng có trong laptop của bạn');
         await t.wait(1800);
@@ -86,10 +86,10 @@
       },
       async port(t) {
         base(['java']); hw('nic'); job('port'); port(8080, 'off');
-        say('app xin hệ điều hành cho nhận kết nối ở port 8080');
+        say('app xin hệ điều hành cho listen ở port 8080');
         if (!(await t.wait(1600))) return;
         job('port'); port(8080, 'on');
-        say('sổ port ghi thêm một dòng: port 8080 kèm PID 6088');
+        say('bảng listening port ghi thêm một dòng: port 8080 kèm PID 6088');
         await t.wait(2600);
       },
       async kill(t) {
@@ -103,7 +103,7 @@
       },
       async core(t) {
         base(['java', 'nginx', 'postgres', 'bash']); job('cpu', 'ram', 'port', 'disk');
-        say('kernel là lõi của hệ điều hành, nạp lên đầu tiên; nó chia CPU, cấp RAM và ghi sổ port cho các process');
+        say('kernel là lõi của hệ điều hành, nạp lên đầu tiên; nó chia CPU, cấp RAM và ghi bảng listening port cho các process');
         await t.wait(3000);
       },
       async full(t) {
@@ -114,7 +114,7 @@
       },
       async kernel(t) {
         base(['java', 'nginx', 'postgres', 'bash']);
-        const asks = [['java xin thêm RAM', 'ram', 'ram'], ['java xin đọc tệp sample-app.jar', 'disk', 'disk'], ['java xin nhận kết nối ở port 8080', 'port', 'nic']];
+        const asks = [['java xin thêm RAM', 'ram', 'ram'], ['java xin đọc tệp sample-app.jar', 'disk', 'disk'], ['java xin listen ở port 8080', 'port', 'nic']];
         for (const [text, k, h] of asks) {
           say(`system call: ${text}; kernel kiểm tra rồi làm hộ`); job(k); hw(h);
           if (h === 'disk') file('jar', true); else file('jar', false);
@@ -124,7 +124,7 @@
       async cpu(t) {
         const list = ['java', 'nginx', 'postgres', 'bash', 'backup'];
         base(list); hw('cpu'); job('cpu');
-        say('bốn nhân mà năm process, nên kernel cho mỗi process chạy một lượt ngắn rồi cất sang bên, đưa process đang chờ vào');
+        say('bốn core mà năm process, nên kernel cho mỗi process chạy một lượt ngắn rồi cất sang bên, đưa process đang chờ vào');
         for (let i = 1; i <= 10; i++) { if (!(await t.wait(900))) return; paintCpu(list, i, true); }
       },
       async ram(t) {
@@ -151,7 +151,7 @@
         $('.ram-bar').classList.add('full'); say('python3 xin thêm 50 MB nữa; cộng phần Python tự dùng là vượt 300 MB');
         if (!(await t.wait(1500))) return;
         proc('backup').classList.add('dead'); ram({ backup: 0 }); $('.ram-bar').classList.remove('full');
-        note('Killed process 2628 (python3)'); say('kernel giết PID 2628 ngay, mã thoát 137, không kịp in dòng lỗi nào');
+        note('Killed process 2628 (python3)'); say('kernel giết PID 2628 ngay, exit code 137, không kịp in dòng lỗi nào');
         await t.wait(2600);
       },
       async score(t) {

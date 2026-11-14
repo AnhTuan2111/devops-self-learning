@@ -1,4 +1,4 @@
-// Riêng Bài 00: gói tin rơi qua tòa bảy tầng ở đầu trang, thang máy sáng tầng đang đọc, và bốn sơ đồ chạy lặp liên tục.
+// Riêng Bài 00: packet rơi qua tòa bảy layer ở đầu trang, thang máy sáng layer đang đọc, và bốn sơ đồ chạy lặp liên tục.
 // Sơ đồ chỉ chạy khi đang nằm trên màn hình; bật giảm chuyển động thì đứng yên ở trạng thái cuối.
 // Không có JS thì mọi thứ vẫn hiện đủ, chỉ đứng yên.
 (() => {
@@ -34,7 +34,7 @@
     })();
   }
 
-  // ---------- Tòa bảy tầng ở đầu trang ----------
+  // ---------- Tòa bảy layer ở đầu trang ----------
   const tower = document.querySelector('.tower');
   if (tower) {
     const floors = [...tower.querySelectorAll('.floor')];
@@ -61,12 +61,12 @@
     }, { rest: 900 });
   }
 
-  // ---------- Thang máy: sáng tầng đang đọc ----------
+  // ---------- Thang máy: sáng layer đang đọc ----------
   const elevator = document.querySelector('.elevator');
   const stops = [...elevator.querySelectorAll('a')];
   const targets = stops.map((a) => document.getElementById(a.getAttribute('href').slice(1)));
   function updateElevator() {
-    // Nút xếp theo thứ tự đoạn trên trang (tầng 1 trên cùng, vì bài giảng từ tầng 1 lên tầng 7), nên cuộn xuống thì
+    // Nút xếp theo thứ tự đoạn trên trang (layer 1 trên cùng, vì bài giảng từ layer 1 lên layer 7), nên cuộn xuống thì
     // nút sáng cũng đi xuống. Chọn đoạn nằm gần vạch đọc nhất ở phía trên nó.
     const line = innerHeight * 0.3;
     let current = 0, best = -Infinity;
@@ -109,7 +109,7 @@
         for (const c of up) await step(c);
       },
     }, { pauseBtn: towers.querySelector('.diagram-btn') });
-    // Rê lên một ô thì sáng cùng tầng ở tòa bên kia
+    // Rê lên một ô thì sáng cùng layer ở tòa bên kia
     const clearMatch = () => towers.querySelectorAll('.cell.match').forEach((c) => c.classList.remove('match'));
     towers.addEventListener('mouseover', (e) => {
       const cell = e.target.closest('.cell');
@@ -129,7 +129,7 @@
     io.observe(el);
   }
 
-  // ---------- Hình 4 và Hình 5: chỉ hiện một lần, không lặp (chỉ mô hình bảy tầng mới cần chạy liên tục) ----------
+  // ---------- Hình 4 và Hình 5: chỉ hiện một lần, không lặp (chỉ mô hình bảy layer mới cần chạy liên tục) ----------
   const tcp = document.querySelector('.tcp-header');
   onceVisible(tcp, () => tcp.classList.add('shown'));
   const route = document.querySelector('.route');
@@ -147,7 +147,7 @@
     const showPhase = (name) => phases.forEach((p) => p.classList.toggle('active', p.dataset.phase === name));
     loop(encap, {
       async run() {
-        // Máy bạn: tầng trên viết trước, mỗi tầng dưới gắn thêm một lớp ở bên trái
+        // Máy bạn: layer trên viết trước, mỗi layer dưới gắn thêm một header ở bên trái
         showPhase('pack');
         encap.classList.remove('tls-on');
         encap.querySelectorAll('.encap-block').forEach((b) => b.classList.remove('on', 'peeled', 'read'));
@@ -176,7 +176,7 @@
     }, { pauseBtn: encap.querySelector('.diagram-btn'), rest: 300 });
   }
 
-  // ---------- Hình 7: gói tin qua router ----------
+  // ---------- Hình 7: packet qua router ----------
   const hosts = document.querySelector('.three-hosts');
   if (hosts) {
     const cell = (host, layer) => hosts.querySelector(`[data-host="${host}"] .host-cell[data-layer="${layer}"]`);
@@ -198,7 +198,7 @@
     }, { pauseBtn: document.querySelector('.host-btn .diagram-btn') });
   }
 
-  // ---------- Bảng 1: rê lên một dòng thì thang máy soi tầng tương ứng ----------
+  // ---------- Bảng 1: rê lên một dòng thì thang máy soi layer tương ứng ----------
   document.querySelectorAll('.layer-table tbody tr').forEach((tr) => {
     const layers = (tr.dataset.layers || '').split(' ').filter(Boolean);
     tr.addEventListener('mouseenter', () => layers.forEach((l) => elevator.querySelector(`.el-floor[data-layer="${l}"]`)?.classList.add('hint')));
