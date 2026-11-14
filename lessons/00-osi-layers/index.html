@@ -76,10 +76,14 @@ tới facebook.com là 14 chặng, và ở phần Lab bạn sẽ tự dò đư�
 controller, service và repository. Mỗi phần việc gọi là một <strong>layer</strong>. Layer nào cũng chỉ lo phần của
 mình, phần còn lại nhờ layer ngay dưới làm, nên browser không cần biết máy bạn đang dùng WiFi hay cắm dây mạng.</p>
 
-<p>Trong app, controller nhờ service bằng cách gọi hàm và truyền tham số. Các layer của mạng không gọi hàm sang nhau được,
-vì máy nào cũng có một bộ layer riêng, nên layer ở máy gửi và layer tương ứng ở máy nhận nằm ở hai máy khác nhau. Chúng nhắn
-nhau bằng cách khác: layer ở máy gửi viết điều cần nhắn thành vài dòng chữ đặt ngay trước dữ liệu, gọi là <strong>header</strong>,
-rồi đưa cả khối xuống layer dưới. Tới máy nhận, mỗi layer bóc phần header của mình ra đọc, rồi đưa phần còn lại lên layer trên.</p>
+<p>Cả chồng layer ấy nằm trên từng máy: laptop của bạn có một chồng đủ các layer, server của Facebook cũng có một chồng như
+vậy. Cú like đi xuống từ layer trên cùng tới layer dưới cùng của laptop, qua dây mạng, rồi đi lên từ layer dưới cùng tới layer
+trên cùng của server.</p>
+
+<p>Trong app, controller nhờ service bằng cách gọi hàm. Layer ở laptop và layer cùng bậc ở server thì nằm ở hai máy khác nhau,
+không gọi hàm sang nhau được, nên chúng nhắn nhau bằng cách khác. Layer ở laptop viết điều cần nhắn thành vài dòng chữ đặt
+ngay trước dữ liệu, gọi là <strong>header</strong>, rồi đưa cả khối xuống layer dưới. Tới server, mỗi layer bóc phần header của
+mình ra đọc, rồi đưa phần còn lại lên layer trên.</p>
 
 <h2 id="osi">Bảy layer của mô hình OSI</h2>
 
