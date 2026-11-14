@@ -42,12 +42,14 @@
     loop(tower, {
       async run() {
         packet.className = 'packet';
-        packet.style.top = '5px';
+        // Request like nằm giữa chiều cao của dải đang sáng
+        const mid = (f) => `${f.offsetTop + (f.offsetHeight - packet.offsetHeight) / 2}px`;
+        packet.style.top = mid(floors[0]);
         await wait(300);
         for (const floor of floors) {
           floors.forEach((f) => f.classList.remove('active'));
           floor.classList.add('active');
-          packet.style.top = `${floor.offsetTop + 5}px`;
+          packet.style.top = mid(floor);
           const layer = Number(floor.dataset.layer);
           if (layer <= 4) packet.classList.add(`has${layer}`);
           await wait(430);

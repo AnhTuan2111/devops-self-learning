@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00: Bấm like trên facebook.com, bảy layer OSI</title>
 <meta name="description" content="Bấm like trên facebook.com thì phía sau browser xảy ra những gì: dựng bảy layer của mô hình OSI từ dưới lên, rồi đi theo cú like qua cả bảy layer.">
-<link rel="stylesheet" href="../../assets/style.css?v=4e53e8bb">
-<link rel="stylesheet" href="../../assets/terms.css?v=4e53e8bb">
-<link rel="stylesheet" href="lesson.css?v=6d854a8b">
+<link rel="stylesheet" href="../../assets/style.css?v=8257e0ab">
+<link rel="stylesheet" href="../../assets/terms.css?v=8257e0ab">
+<link rel="stylesheet" href="lesson.css?v=e634ca0b">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00">
@@ -28,13 +28,13 @@
     <span class="chip">Lab: Git Bash trên máy bạn</span>
   </div>
   <div class="hero-mark tower" role="img" aria-label="Bảy layer OSI xếp chồng; request like rơi từ layer 7 xuống layer 1, qua layer 4, 3, 2 thì được bọc thêm một header.">
-    <div class="floor c7" data-layer="7"><b>7</b><span>application</span></div>
-    <div class="floor c6" data-layer="6"><b>6</b><span>presentation</span></div>
-    <div class="floor c5" data-layer="5"><b>5</b><span>session</span></div>
-    <div class="floor c4" data-layer="4"><b>4</b><span>transport</span></div>
-    <div class="floor c3" data-layer="3"><b>3</b><span>network</span></div>
-    <div class="floor c2" data-layer="2"><b>2</b><span>data link</span></div>
-    <div class="floor c1" data-layer="1"><b>1</b><span>physical</span></div>
+    <div class="floor c7" data-layer="7"><b>7</b><span>application</span><em>viết ra request like</em></div>
+    <div class="floor c6" data-layer="6"><b>6</b><span>presentation</span><em>hai đầu hiểu dữ liệu như nhau</em></div>
+    <div class="floor c5" data-layer="5"><b>5</b><span>session</span><em>giữ cuộc trao đổi</em></div>
+    <div class="floor c4" data-layer="4"><b>4</b><span>transport</span><em>tới đúng chương trình, đủ và đúng thứ tự</em></div>
+    <div class="floor c3" data-layer="3"><b>3</b><span>network</span><em>đi qua nhiều mạng tới đúng máy</em></div>
+    <div class="floor c2" data-layer="2"><b>2</b><span>data link</span><em>tới thiết bị kế bên</em></div>
+    <div class="floor c1" data-layer="1"><b>1</b><span>physical</span><em>chở số 0 và 1</em></div>
     <span class="packet" aria-hidden="true"><i class="w2"></i><i class="w3"></i><i class="w4"></i><b>like</b></span>
   </div>
 </header>
@@ -115,11 +115,11 @@ layer nào cũng giải quyết một chuyện mà layer ngay dưới nó không
 
 <p>Máy tính chỉ làm việc với số 0 và số 1, mỗi số gọi là một <strong>bit</strong>. Layer 1 biến bit thành tín hiệu đi được
 trong thế giới thật: sóng radio nếu bạn dùng WiFi, xung điện nếu cắm dây mạng, xung ánh sáng nếu đi trong cáp quang. Thiết
-bị làm việc này trong máy bạn là NIC.</p>
+bị làm việc này trong máy bạn là NIC (network interface card), tấm card cắm vào máy để nối với mạng.</p>
 
 <figure class="fig photo side">
   <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Intel_X540-T2.jpg" target="_blank" rel="noopener noreferrer" data-credit="Ảnh: Dmitry Nosachev · Wikimedia Commons · CC BY-SA 4.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Dmitry Nosachev · Wikimedia Commons · CC BY-SA 4.0"><img src="img/nic-two-port.webp" width="900" height="620" loading="lazy" alt="Một NIC dùng cho server, có tản nhiệt lớn và hai cổng cắm cáp mạng ở mặt gắn vỏ máy."></a>
-  <figcaption><b>Ảnh 1</b> Card mạng Intel X540-T2 dùng cho server. Chip trên card đổi bit thành xung điện chạy trên dây, và
+  <figcaption><b>Ảnh 1</b> NIC Intel X540-T2 dùng cho server. Chip trên card đổi bit thành xung điện chạy trên dây, và
   đổi ngược lại khi nhận.</figcaption>
 </figure>
 
@@ -136,7 +136,7 @@ thì máy nào nhận?</p>
 
 <h2 id="data-link" class="layer-h c2" data-layer="2">Layer <span class="layer-badge c2">2</span> Data Link: tới thiết bị kế bên</h2>
 
-<p>Card mạng nào cũng có một địa chỉ riêng gắn từ lúc sản xuất, gọi là <strong>địa chỉ MAC</strong>, viết thành sáu cặp ký
+<p>NIC nào cũng có một địa chỉ riêng gắn từ lúc sản xuất, gọi là <strong>địa chỉ MAC</strong>, viết thành sáu cặp ký
 tự <button type="button" class="term" data-term="hex">hex</button>, như <code>20-0B-74-xx-xx-xx</code> trên máy mình. Layer 2
 ghi MAC gửi và MAC nhận vào một header gắn trước dữ liệu, mình gọi là MAC header, và máy nào thấy MAC nhận không phải của nó
 thì bỏ qua. Dữ liệu đã có MAC header gọi là <strong>frame</strong>.</p>
@@ -371,7 +371,7 @@ các lệnh ở cột cuối bạn sẽ chạy ở phần Lab.</p>
   <tbody>
     <tr data-layers="1 2"><td>Biểu tượng mạng bị gạch chéo, không bắt được WiFi</td><td>1, 2</td><td>hệ điều hành</td><td>xem lại WiFi, dây mạng</td></tr>
     <tr data-layers="3"><td>Lệnh dò đường dừng ở một router, các router sau không trả lời (<code>tracert</code> in dấu sao)</td><td>3</td><td><code>tracert</code></td><td><code>tracert</code>, lệnh dò các router trên đường đi</td></tr>
-    <tr data-layers="4"><td><code>Connection refused</code>: không có chương trình nào chờ listen ở port đó</td><td>4</td><td>curl in ra, sau khi máy đích từ chối</td><td><code>curl -v</code>, lệnh gửi request HTTP rồi kể lại từng bước</td></tr>
+    <tr data-layers="4"><td><code>Connection refused</code>: không có chương trình nào listen ở port đó</td><td>4</td><td>curl in ra, sau khi máy đích từ chối</td><td><code>curl -v</code>, lệnh gửi request HTTP rồi kể lại từng bước</td></tr>
     <tr data-layers="6"><td>Browser báo certificate không hợp lệ hoặc hết hạn (certificate là giấy tờ server đưa ra để chứng minh nó là trang bạn muốn vào)</td><td>6 (TLS)</td><td>Browser</td><td><code>curl -v</code></td></tr>
     <tr data-layers="7"><td><code>Non-existent domain</code></td><td>7 (DNS)</td><td><code>nslookup</code> in ra, khi server DNS báo tên không tồn tại</td><td><code>nslookup</code>, lệnh hỏi DNS</td></tr>
     <tr data-layers="7"><td><code>Could not resolve host</code></td><td>7, hoặc 1 tới 3 nếu máy mất mạng</td><td>curl in ra, khi không đổi được tên thành địa chỉ</td><td><code>nslookup</code></td></tr>
@@ -580,8 +580,8 @@ của Windows để encrypt, mà schannel gần như không báo lại gì; mấ
 
 </div>
 
-<script src="../../assets/app.js?v=4e53e8bb"></script>
-<script src="../../assets/terms.js?v=4e53e8bb"></script>
-<script src="lesson.js?v=5feba17c"></script>
+<script src="../../assets/app.js?v=8257e0ab"></script>
+<script src="../../assets/terms.js?v=8257e0ab"></script>
+<script src="lesson.js?v=27a9e29e"></script>
 </body>
 </html>

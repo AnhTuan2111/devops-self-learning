@@ -61,8 +61,8 @@ a { color: inherit; }
   display: grid; place-items: center; transition: background .25s;
 }
 .shape-tile .shp { animation: spring .6s cubic-bezier(.2, .9, .3, 1.35) both; transition: transform .45s cubic-bezier(.2, .9, .3, 1.2); }
-.shape-tile b { position: absolute; left: 8px; bottom: 6px; font: 800 13px/1 var(--f-d); color: var(--ink-3); }
-.shape-tile:focus-visible { background: var(--sunk); outline: none; }
+.shape-tile b { position: absolute; left: 8px; bottom: 6px; font: 800 13px/1 var(--f-d); color: var(--ink-3); transition: color .25s; }
+.shape-tile:focus-visible { background: var(--sunk); outline: 3px solid var(--ink); outline-offset: -3px; }
 .shape-tile:focus-visible .shp { transform: rotate(90deg) scale(1.12); }
 @media (hover: hover) {
   .shape-tile:hover { background: var(--sunk); }
@@ -85,7 +85,7 @@ a { color: inherit; }
   display: grid; place-items: center; transition: translate .2s, scale .2s;
 }
 .tile span { font: 700 11px/1 var(--f-d); color: var(--on); }
-.tile:focus-visible { translate: 0 -6px; scale: 1.15; z-index: 3; outline: none; }
+.tile:focus-visible { translate: 0 -6px; scale: 1.15; z-index: 3; outline: 3px solid var(--ink); outline-offset: 2px; }
 @media (hover: hover) { .tile:hover { translate: 0 -6px; scale: 1.15; z-index: 3; } }
 @media (hover: hover) and (min-width: 700px) {
   .tile::after {
@@ -157,11 +157,11 @@ a { color: inherit; }
 }
 .toc a .shp { transition: transform .4s cubic-bezier(.2, .9, .3, 1.2); }
 .toc a:hover, .toc a:focus-visible { background: var(--surface); outline: none; }
+.toc a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .toc a:hover .shp, .toc a:focus-visible .shp { transform: rotate(90deg); }
 .toc-range { font: 700 13px/1 var(--f-d); color: var(--ink-3); }
 
 main { min-width: 0; padding-bottom: 40px; }
-h2 { font: 800 30px/1.1 var(--f-d); border-top: 3px solid var(--ink); padding-top: 14px; margin: 56px 0 16px; }
 
 /* ---------- Module ---------- */
 .mod { margin-top: 72px; border-top: 8px solid var(--acc); }
@@ -169,7 +169,7 @@ h2 { font: 800 30px/1.1 var(--f-d); border-top: 3px solid var(--ink); padding-to
 .mod-head .shp { transition: transform .45s cubic-bezier(.2, .9, .3, 1.2); }
 @media (hover: hover) { .mod-head:hover .shp { transform: rotate(90deg) scale(1.12); } }
 .mod-num { font: 700 14px/1 var(--f-d); letter-spacing: .04em; color: var(--ink-3); margin: 0 0 8px; }
-.mod-head h3 { font: 800 clamp(28px, 4vw, 40px)/1.05 var(--f-d); margin: 0 0 8px; letter-spacing: -.02em; }
+.mod-head h2 { font: 800 clamp(28px, 4vw, 40px)/1.05 var(--f-d); margin: 0 0 8px; letter-spacing: -.02em; }
 .mod-intro { margin: 0; color: var(--ink-2); }
 @media (max-width: 560px) { .mod-head { --sz: 56px; gap: 16px; } }
 
@@ -194,7 +194,7 @@ h2 { font: 800 30px/1.1 var(--f-d); border-top: 3px solid var(--ink); padding-to
   display: inline-block; font: 800 22px/1 var(--f-d); padding: 7px 10px 4px;
   background: var(--acc); color: var(--on); transition: background .22s, color .22s;
 }
-.card h4 { font: 700 19px/1.25 var(--f-d); margin: 0 0 8px; padding-right: 24px; }
+.card h3 { font: 700 19px/1.25 var(--f-d); margin: 0 0 8px; padding-right: 24px; }
 .card p { margin: 0 0 12px; font-size: 15.5px; line-height: 1.6; color: var(--ink-2); transition: color .22s; }
 .needs { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .needs-label { font: 700 13px/1 var(--f-d); color: var(--ink-3); margin-right: 2px; transition: color .22s; }
@@ -279,6 +279,8 @@ h2 { font: 800 30px/1.1 var(--f-d); border-top: 3px solid var(--ink); padding-to
    Chữ nhỏ và thoáng, mỗi bài là một dòng gọn chạm mới mở, nút chính nằm ở thanh đáy cho ngón cái,
    danh sách module, ô tìm và khung "dạy ở" trượt lên từ đáy. Thanh đáy và khung trượt do hanh-vi.js dựng. */
 .sheet, .sheet-backdrop { display: none; }
+.card-more { display: none; }
+
 @media (max-width: 699px) {
   body { font-size: 15px; line-height: 1.55; -webkit-tap-highlight-color: transparent; }
   .progress-bar { height: 3px; }
@@ -290,7 +292,7 @@ h2 { font: 800 30px/1.1 var(--f-d); border-top: 3px solid var(--ink); padding-to
   .search-btn { width: 60px; }
   .shape-tile { --sz: 22px; flex-basis: 58px; height: 56px; }
   .shape-tile .shp { margin-bottom: 11px; }
-  .shape-tile b { bottom: 6px; font-size: 10px; }
+  .shape-tile b { bottom: 5px; font-size: 11px; }
 
   .strip, .filter { display: none; }
   .main-grid { padding: 0; }
@@ -299,7 +301,7 @@ h2 { font: 800 30px/1.1 var(--f-d); border-top: 3px solid var(--ink); padding-to
   .mod { margin-top: 24px; border-top-width: 4px; }
   .mod-head { --sz: 28px; gap: 12px; align-items: flex-start; padding: 14px 16px 10px; }
   .mod-num { font-size: 11px; margin-bottom: 4px; }
-  .mod-head h3 { font-size: 21px; margin-bottom: 3px; }
+  .mod-head h2 { font-size: 21px; margin-bottom: 3px; }
   .mod-intro { font-size: 13.5px; line-height: 1.45; color: var(--ink-3); }
 
   .cards { display: block; background: var(--surface); }
@@ -311,14 +313,20 @@ h2 { font: 800 30px/1.1 var(--f-d); border-top: 3px solid var(--ink); padding-to
   .card:active { background: var(--sunk); }
   .card-tags { display: contents; }
   .card-num { grid-column: 1; grid-row: 1 / span 2; justify-self: start; font-size: 14px; padding: 6px 0 4px; width: 34px; text-align: center; }
-  .card h4 { grid-column: 2; grid-row: 1; font-size: 15.5px; line-height: 1.3; margin: 0; padding: 0; }
+  .card h3 { grid-column: 2; grid-row: 1; font-size: 15.5px; line-height: 1.3; margin: 0; padding: 0; }
   .lab-tag { grid-column: 2; grid-row: 2; justify-self: start; border: 0; padding: 0; margin-top: 3px; font-size: 11px; font-weight: 600; }
-  .card::after {
-    content: ""; position: static; grid-column: 3; grid-row: 1 / span 2; justify-self: end;
-    width: 8px; height: 8px; background: none; border: solid var(--ink-3); border-width: 0 2px 2px 0; border-radius: 0;
+  .card::after { content: none; }
+  /* Nút mở mô tả: chạm cả dòng cũng mở, nút này để dùng bàn phím và trình đọc màn hình */
+  .card-more {
+    display: grid; place-items: center; grid-column: 3; grid-row: 1 / span 2; justify-self: end;
+    width: 32px; height: 40px; margin-right: -9px; padding: 0; background: none; border: 0; cursor: pointer;
+  }
+  .card-more::before {
+    content: ""; width: 8px; height: 8px; border: solid var(--ink-3); border-width: 0 2px 2px 0;
     transform: translateY(-2px) rotate(45deg); transition: transform .25s;
   }
-  .card.open::after { transform: translateY(2px) rotate(-135deg); }
+  .card.open .card-more::before { transform: translateY(2px) rotate(-135deg); }
+  .card-more:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
   .card p, .card .needs { display: none; grid-column: 1 / -1; }
   .card.open p { display: block; margin: 10px 0 10px; font-size: 14.5px; line-height: 1.55; }
   .card.open .needs { display: flex; gap: 6px; margin-bottom: 4px; }
@@ -380,5 +388,5 @@ h2 { font: 800 30px/1.1 var(--f-d); border-top: 3px solid var(--ink); padding-to
 }
 
 /* Tên bài có trang thì là link */
-.card h4 a { text-decoration: none; }
-.card h4 a:hover, .card h4 a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+.card h3 a { text-decoration: none; }
+.card h3 a:hover, .card h3 a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }

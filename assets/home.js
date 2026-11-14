@@ -5,7 +5,7 @@
   const cards = [...document.querySelectorAll('.card')].map((el) => ({
     el,
     id: el.id.replace('lesson-', ''),
-    title: el.querySelector('h4').textContent,
+    title: el.querySelector('h3').textContent,
     desc: el.querySelector('p').textContent,
     needs: [...el.querySelectorAll('.chip')].map((c) => c.textContent).join(' '),
   }));
@@ -130,7 +130,11 @@
     }
     // Điện thoại: chạm vào dòng bài thì mở hoặc gập phần mô tả.
     const card = e.target.closest('.card');
-    if (narrow.matches && card && !e.target.closest('a')) { card.classList.toggle('open'); return; }
+    if (narrow.matches && card && !e.target.closest('a')) {
+      const open = card.classList.toggle('open');
+      card.querySelector('.card-more')?.setAttribute('aria-expanded', String(open));
+      return;
+    }
     if (popup && !popup.contains(e.target)) closePopup();
     if (e.target.closest('.taught-pop a')) closePopup();
   });

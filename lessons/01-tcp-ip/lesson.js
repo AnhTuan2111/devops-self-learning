@@ -148,16 +148,22 @@
     const fill = nav.querySelector('.line-fill');
     const dot = nav.querySelector('.line-dot');
     const ttl = dot.querySelector('em');
-    const center = (a) => a.offsetTop + a.offsetHeight / 2;
+    const first = stops[0], last = stops[stops.length - 1];
+    const cx = (a) => a.offsetLeft + a.offsetWidth / 2;
+    const cy = (a) => a.offsetTop + a.offsetHeight / 2;
+    // Màn rộng dàn các ga thành một hàng ngang, màn vừa có thể là một cột dọc; ray chạy theo chiều các ga đang xếp
     function layoutTrack() {
-      if (getComputedStyle(track).display === 'none') return false;
-      const top = center(stops[0]);
-      track.style.top = `${top}px`;
-      track.style.height = `${center(stops[stops.length - 1]) - top}px`;
-      track.style.bottom = 'auto';
-      return true;
+      if (getComputedStyle(track).display === 'none') return null;
+      if (last.offsetTop < first.offsetTop + 10) {
+        const i = first.querySelector('i');
+        const y = first.offsetTop + i.offsetTop + i.offsetHeight / 2;
+        Object.assign(track.style, { left: `${cx(first)}px`, width: `${cx(last) - cx(first)}px`, top: `${y - 2}px`, height: '4px', bottom: 'auto' });
+        return 'x';
+      }
+      Object.assign(track.style, { top: `${cy(first)}px`, height: `${cy(last) - cy(first)}px`, bottom: 'auto', left: '', width: '' });
+      return 'y';
     }
-    let vertical = layoutTrack();
+    let axis = layoutTrack();
     function update() {
       const line = innerHeight * 0.3;
       const tops = targets.map((t) => (t ? t.getBoundingClientRect().top - line : Infinity));
@@ -166,15 +172,16 @@
       stops.forEach((a, i) => { a.classList.toggle('active', i === cur); a.classList.toggle('passed', i < cur); });
       // TTL bắt đầu 64, qua mỗi ga trừ một, như qua mỗi router
       ttl.textContent = String(64 - cur);
-      if (vertical) {
+      if (axis) {
+        const pos = axis === 'x' ? cx : cy;
         const next = Math.min(cur + 1, stops.length - 1);
         const span = tops[next] - tops[cur];
         const p = next === cur || !isFinite(span) || span === 0 ? 0 : Math.min(1, Math.max(0, -tops[cur] / span));
-        const y0 = center(stops[cur]) - center(stops[0]);
-        const y1 = center(stops[next]) - center(stops[0]);
-        const y = tops[0] > 0 ? 0 : y0 + (y1 - y0) * p;
-        dot.style.top = `${y}px`;
-        fill.style.height = `${y}px`;
+        const a0 = pos(stops[cur]) - pos(first);
+        const a1 = pos(stops[next]) - pos(first);
+        const v = tops[0] > 0 ? 0 : a0 + (a1 - a0) * p;
+        if (axis === 'x') { dot.style.left = `${v}px`; fill.style.width = `${v}px`; }
+        else { dot.style.top = `${v}px`; fill.style.height = `${v}px`; }
       } else if (nav.scrollWidth > nav.clientWidth) {
         const a = stops[cur];
         nav.scrollTo({ left: a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2, behavior: reduced ? 'auto' : 'smooth' });
@@ -182,7 +189,7 @@
     }
     let frame = 0;
     addEventListener('scroll', () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); }, { passive: true });
-    addEventListener('resize', () => { vertical = layoutTrack(); update(); });
+    addEventListener('resize', () => { axis = layoutTrack(); update(); });
     update();
   }
 

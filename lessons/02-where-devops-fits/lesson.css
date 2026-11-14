@@ -173,7 +173,7 @@
   .wp-head { grid-template-columns: 320px minmax(0, 1fr); }
   .wp-head h2 { grid-row: 1 / span 4; }
   .wp-head p { max-width: 86ch; }
-  .wp-head p:first-of-type { margin-top: 24px; }
+  .wp-text { margin-top: 24px; }
 }
 .authors-after { display: grid; gap: 0 48px; align-items: start; }
 @media (min-width: 1100px) { .authors-after { grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); } }
@@ -189,7 +189,7 @@
   cursor: pointer; font: inherit; transition: background .2s, color .2s, border-color .2s;
 }
 .bk-stop b { font: 800 17px/1.1 var(--f-display); }
-.bk-stop span { font: 600 12.5px/1.25 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
+.bk-stop span { font: 600 12.5px/1.25 var(--f-display); text-transform: lowercase; color: var(--ink-3); transition: color .2s; }
 .bk-stop.mine { border-top-color: var(--yellow); }
 .bk-stop:hover { background: var(--sunk); }
 .bk-stop:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
@@ -233,7 +233,7 @@
 .clock-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
 .clock-day { font: 800 22px/1 var(--f-display); text-transform: lowercase; min-width: 9ch; }
 .clock-day output { font-family: var(--f-mono); }
-.clock-ctl input[type="range"] { flex: 1 1 260px; accent-color: var(--ink); }
+.clock-ctl input[type="range"] { flex: 1 1 260px; height: 32px; accent-color: var(--ink); touch-action: pan-y; }
 .clock-meters { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .meter { display: grid; gap: 6px; align-content: start; padding: 12px; background: var(--paper); border-top: 6px solid var(--ink); }
 .meter p { margin: 0; }
@@ -287,3 +287,18 @@ details.raw > p { margin-top: 8px; }
 /* Cột của lưới không được nở theo link dài */
 .check-grid > div, .owners-grid > div, .stop > *, .prose-row > * { min-width: 0; }
 .refs a { overflow-wrap: anywhere; }
+
+/* Chữ trải hết bề ngang thì dòng dài 115-200 ký tự, khó đọc. Màn rộng chia thành cột kiểu tạp chí để dòng còn khoảng
+   60-90 ký tự mà vẫn một mép phải: chú thích của hình rộng hết trang chia ba cột, đoạn mở mục và đáp án chia hai cột. */
+@media (min-width: 1100px) {
+  .lanes > figcaption, .knock > figcaption, .clock > figcaption, #authors > figure.fig > figcaption { columns: 24em 3; column-gap: 40px; }
+  .stops-intro, .wp-text, .answer > p { columns: 2; column-gap: 48px; }
+  .stops-intro { max-width: none; }
+  .stops-intro > p:first-child, .wp-text > p:first-child { margin-top: 0; }
+}
+
+/* Ô do hình động tự đổi trạng thái mà đảo màu (nền sáng chữ tối sang nền tối chữ sáng) thì đổi tức thì: chuyển dần thì ở
+   giữa chừng nền và chữ cùng xám, chữ biến mất trong chốc lát. */
+.st, .bk-stop span { transition: none; }
+.route-bar a { transition: border-color .2s; }
+.bk-stop { transition: border-color .2s; }

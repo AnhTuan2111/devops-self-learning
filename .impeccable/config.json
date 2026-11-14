@@ -1,0 +1,62 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "bounce-easing",
+        "value": "*",
+        "files": [
+          "assets/home.css"
+        ],
+        "createdAt": "2026-11-14T08:40:36.584Z",
+        "reason": "Hình module nảy khi rê chuột, trang chủ người học duyệt 29/10/2026"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "**"
+        ],
+        "createdAt": "2026-11-14T08:40:45.245Z",
+        "reason": "Bauhaus: nền giấy ngà #f3eee4 là màu nền đã chốt trong CLAUDE.md (28/09/2026)"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "**"
+        ],
+        "createdAt": "2026-11-14T08:40:45.372Z",
+        "reason": "Bauhaus: thanh kẻ dày ở lề trái đánh dấu khối chú thích và nhóm dòng, luật Moholy-Nagy trong CLAUDE.md"
+      },
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          "**"
+        ],
+        "createdAt": "2026-11-14T08:40:45.486Z",
+        "reason": "Sọc là một hình trong vốn hình Bauhaus (hình của module), nét đứt là đường đi còn nhiều chặng"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "**"
+        ],
+        "createdAt": "2026-11-14T08:40:45.593Z",
+        "reason": "Nền giấy kẻ ô của sơ đồ ASCII giúp đọc thẳng cột, là phần của hệ thiết kế"
+      },
+      {
+        "rule": "line-length",
+        "value": "*",
+        "files": [
+          "**"
+        ],
+        "createdAt": "2026-11-14T09:01:46.923Z",
+        "reason": "Thân bài chạy trọn cột đọc, khoảng 95-105 ký tự một dòng ở màn 1440px: người học chốt 30/09/2026 và giữ lại 14/11/2026. Chữ trải hết bề ngang (chú thích, đoạn mở mục Bài 02) đã chia cột."
+      }
+    ]
+  }
+}

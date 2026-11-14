@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 04: Phòng lab: Linux trên máy Windows</title>
 <meta name="description" content="Phần lớn server chạy Linux, còn máy của bạn chạy Windows. WSL2 cho bạn một máy Linux có kernel thật ngay trong Windows. Bài dựng máy đó, tập gõ lệnh trong shell, rồi chạy app Spring Boot mẫu trên Linux.">
-<link rel="stylesheet" href="../../assets/style.css?v=4e53e8bb">
-<link rel="stylesheet" href="../../assets/terms.css?v=4e53e8bb">
-<link rel="stylesheet" href="lesson.css?v=2f742749">
+<link rel="stylesheet" href="../../assets/style.css?v=8257e0ab">
+<link rel="stylesheet" href="../../assets/terms.css?v=8257e0ab">
+<link rel="stylesheet" href="lesson.css?v=808a822d">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="04">
@@ -20,8 +20,9 @@
 <div class="wrap">
 
 <header class="lab-head">
-  <div class="lh-text">
-    <p class="eyebrow">Module 1 · Bài 04</p>
+  <p class="eyebrow">Module 1 · Bài 04</p>
+  <p class="big-cmd" aria-hidden="true"><span class="big-prompt">PS&gt;</span> <span class="big-typed">wsl --install</span><span class="caret"></span></p>
+  <div class="lh-row">
     <h1>Phòng lab: <span class="hl">Linux trên máy Windows</span></h1>
     <p class="lede">Phần lớn server chạy Linux, còn laptop của bạn chạy Windows. Làm sao có một máy
     Linux thật để tập ngay trên laptop, và gõ lệnh vào nó thế nào?</p>
@@ -49,6 +50,8 @@ Linux</code></pre>
     14/11/2026.</figcaption>
   </figure>
 </header>
+
+<main id="content">
 
 <!-- Phần: vì sao Linux -->
 <section class="part" id="why-linux">
@@ -145,7 +148,7 @@ ra ở thư mục <code>/mnt/c</code>; trong Windows, tệp của Ubuntu hiện 
 
 <div class="prose">
 <h2 id="install-ubuntu">Cài Ubuntu trên WSL2</h2>
-<p>Giờ tới lượt bạn cài WSL2 và Ubuntu trên laptop. Đã cài Ubuntu để chạy lab ở Bài 03 thì bỏ qua bước 1, sang bước 2 kiểm tra nó chạy bằng WSL2. Các bước chạy trên Windows 11; Windows 10 từ bản 2004 (build 19041) trở lên cũng có lệnh <code>wsl --install</code>.</p>
+<p>Giờ tới lượt bạn cài WSL2 và Ubuntu trên laptop. Máy đã có Ubuntu chạy trên WSL2 thì bỏ qua bước 1, sang bước 2 kiểm tra nó chạy bằng WSL2. Các bước chạy trên Windows 11; Windows 10 từ bản 2004 (build 19041) trở lên cũng có lệnh <code>wsl --install</code>.</p>
 
 <h3 class="step-h" id="lab-1"><span>bước 1</span> Chạy lệnh cài</h3>
 <p>Mở PowerShell bằng quyền quản trị: chuột phải vào PowerShell trong menu Start, chọn Run as administrator. Rồi chạy lệnh cài; option
@@ -413,6 +416,8 @@ trong PATH rồi nhờ kernel tạo process để chạy tệp đó, kể cả <
 
 </section>
 
+</main>
+
 <nav class="prevnext">
   <a href="../03-what-is-a-server/">
     <span class="dir">Bài trước</span>
@@ -426,8 +431,8 @@ trong PATH rồi nhờ kernel tạo process để chạy tệp đó, kể cả <
 
 </div>
 
-<script src="../../assets/app.js?v=4e53e8bb"></script>
-<script src="../../assets/terms.js?v=4e53e8bb"></script>
-<script src="lesson.js?v=690707e1"></script>
+<script src="../../assets/app.js?v=8257e0ab"></script>
+<script src="../../assets/terms.js?v=8257e0ab"></script>
+<script src="lesson.js?v=8d4ed5f7"></script>
 </body>
 </html>

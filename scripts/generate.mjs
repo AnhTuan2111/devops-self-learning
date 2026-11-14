@@ -113,7 +113,8 @@ const lessonCard = (l) => {
     : '';
   return `<article class="card" id="lesson-${l.id}">
   <div class="card-tags"><span class="card-num">${l.id}</span><span class="lab-tag lab-${l.lab}">${tag}</span></div>
-  <h4>${title}</h4>
+  <button class="card-more" type="button" aria-expanded="false" aria-label="Mô tả bài ${l.id}"></button>
+  <h3>${title}</h3>
   <p>${withTerms(l.desc, l.title)}</p>
   ${needs}
 </article>`;
@@ -124,7 +125,7 @@ const moduleSections = modules.map((m, i) => `<section class="mod c-${colorOf(i)
   <span class="shp big ${shapeOf(i)}" aria-hidden="true"></span>
   <div>
     <p class="mod-num">${m.id} · bài ${rangeOf(m)}</p>
-    <h3>${esc(m.title)}</h3>
+    <h2>${esc(m.title)}</h2>
     <p class="mod-intro">${esc(m.intro)}</p>
   </div>
 </header>

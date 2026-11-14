@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 03: Server là cái gì: phần cứng, hệ điều hành, process</title>
 <meta name="description" content="Server là một máy tính có CPU, RAM, ổ đĩa, NIC và một hệ điều hành. App Spring Boot chạy trên đó thành một process; kernel chia CPU và RAM cho các process, và khi RAM hết thì kernel giết bớt process để lấy lại bộ nhớ.">
-<link rel="stylesheet" href="../../assets/style.css?v=4e53e8bb">
-<link rel="stylesheet" href="../../assets/terms.css?v=4e53e8bb">
-<link rel="stylesheet" href="lesson.css?v=c69416d1">
+<link rel="stylesheet" href="../../assets/style.css?v=8257e0ab">
+<link rel="stylesheet" href="../../assets/terms.css?v=8257e0ab">
+<link rel="stylesheet" href="lesson.css?v=7c2c66ee">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="03">
@@ -31,7 +31,7 @@
   </nav>
 </header>
 
-<!-- Cột trái: cái máy, dính trên màn hình, đổi cảnh theo đoạn đang đọc ở cột phải -->
+<!-- Cột phải hẹp: cái máy, dính trên màn hình, đổi cảnh theo đoạn đang đọc ở cột chữ bên trái -->
 <figure class="fig machine" id="machine-fig" data-scene="box" aria-label="Hình 1: một server gồm ba layer. Trên cùng là các process, giữa là kernel, dưới là phần cứng: CPU bốn core, RAM, ổ đĩa có tệp sample-app.jar, NIC. Bảng listening port nằm ở layer kernel. Hình đổi theo đoạn bạn đang đọc.">
   <div class="mc-layer mc-procs" aria-hidden="true">
     <p class="mc-name">process</p>
@@ -66,6 +66,7 @@
           <span class="seg" data-p="java"><b>java</b></span>
           <span class="seg" data-p="backup"><b>sao lưu</b></span>
         </div>
+        <p class="ram-legend"><span data-p="kernel">kernel</span><span data-p="nginx">nginx</span><span data-p="postgres">postgres</span><span data-p="java">java</span><span data-p="backup">sao lưu</span></p>
         <p class="ram-note"></p>
       </div>
       <div class="hw" data-hw="disk">
@@ -79,10 +80,10 @@
     </div>
   </div>
   <p class="mc-say" aria-hidden="true"></p>
-  <figcaption><b>Hình 1</b> Một server có ba layer: trên cùng là các chương trình đang chạy, dưới cùng là phần cứng, ở giữa là phần hệ điều hành chia phần cứng cho các chương trình. Trên màn rộng, hình đổi theo đoạn bạn đang đọc ở cột bên phải; trên màn hẹp, hình nằm ở đầu bài và tự chạy qua từng cảnh. Chữ kernel ở layer giữa, bốn việc ghi cạnh nó và mũi tên system call được giảng ở mục kernel. Các con số trong hình là ví dụ cho dễ nhìn, trừ những con số lấy từ lệnh và output chép trong bài, như PID 6088, tệp jar 23 MB, giới hạn 300 MB.</figcaption>
+  <figcaption><b>Hình 1</b> Một server có ba layer: trên cùng là các chương trình đang chạy, dưới cùng là phần cứng, ở giữa là phần hệ điều hành chia phần cứng cho các chương trình. Trên màn rộng, hình đổi theo đoạn bạn đang đọc ở cột chữ bên trái; trên màn hẹp, hình nằm ở đầu bài và tự chạy qua từng cảnh. Chữ kernel ở layer giữa, bốn việc ghi cạnh nó và mũi tên system call được giảng ở mục kernel. Các con số trong hình là ví dụ cho dễ nhìn, trừ những con số lấy từ lệnh và output chép trong bài, như PID 6088, tệp jar 23 MB, giới hạn 300 MB.</figcaption>
 </figure>
 
-<div class="reading">
+<main class="reading">
 
 
 <!-- Phần: cái máy -->
@@ -111,7 +112,7 @@ ngồi trước nó mà điều khiển nó từ xa.</p>
 
 <p>Còn bên trong thì vẫn là những món có trong laptop của bạn. Một server có bốn món chính, và mỗi món làm một việc cho app của
 bạn. CPU chạy từng bước của chương trình. RAM giữ dữ liệu chương trình đang dùng, như các object trong heap của JVM. Ổ đĩa giữ
-những thứ phải còn sau khi tắt máy: tệp <code>.jar</code>, log, dữ liệu của database. Card mạng nối máy với mạng, request của
+những thứ phải còn sau khi tắt máy: tệp <code>.jar</code>, log, dữ liệu của database. NIC nối máy với mạng, request của
 người dùng đi vào qua nó. Hàng dưới cùng của Hình 1 là bốn món ấy.</p>
 
 <div class="photo-row n4">
@@ -326,8 +327,9 @@ mà tự nhiên biến mất thì một lý do hay gặp là RAM của cả máy
 
 <h2 id="lab-steps">Lab: sinh một process, tìm nó, tắt nó</h2>
 
-<p>Bước 1 tới bước 8 chạy trên Windows, bằng Git Bash. Bước 9 cần Ubuntu trong WSL; chưa có thì đọc output ở phần hết RAM là đủ.
-Output trong các khối là của mình, chạy ngày 14/11/2026 trên Windows 11, riêng bước 9 trên Ubuntu trong WSL; PID và số KB trên máy bạn sẽ khác.</p>
+<p>Cả tám bước chạy trên Windows, bằng Git Bash. Output trong các khối là của mình, chạy ngày 14/11/2026 trên Windows 11;
+PID và số KB trên máy bạn sẽ khác. Phần kernel giết process khi hết RAM thì không có bước lab, vì Windows không có OOM killer;
+output ở phần hết RAM là mình chạy trên một máy Linux.</p>
 
 <ol class="steps">
 
@@ -395,30 +397,6 @@ curl: (7) Failed to connect to localhost port 8080 after 2220 ms: Could not conn
 $ netstat -ano | grep ":8080" | grep LISTENING
 </code></pre></li>
 
-<li id="lab-9"><h3>Trên Ubuntu: xem kernel giết một process</h3>
-<p>Mở Ubuntu từ menu Start. Trong Ubuntu, ổ C của Windows hiện thành thư mục <code>/mnt/c</code>, ổ D thành <code>/mnt/d</code>, cứ thế theo tên ổ. Mở Git Bash ra là đang ở thư mục <code>C:\Users\&lt;tên bạn&gt;</code>, nên nếu bạn chạy <code>git clone</code> ở bước 2 ngay lúc đó thì repo nằm ở <code>/mnt/c/Users/&lt;tên bạn&gt;/devops-self-learning</code>. Clone ở chỗ khác thì đổi path trong lệnh <code>cd</code> dưới đây theo chỗ ấy.</p>
-<p>Lệnh <code>systemd-run</code> chỉ chạy được khi máy có systemd, chương trình bật và quản lý các chương trình khác. Process đầu tiên kernel chạy sau khi nạp xong luôn mang PID 1 và gọi là init, như tệp <code>init</code> ở Ảnh 4. Trên Ubuntu ngày nay, init thường là systemd, nên muốn biết máy có systemd không thì xem tên process PID 1.</p>
-<p>Lệnh <code>ps</code> in danh sách process của Linux, giống <code>tasklist</code> của Windows. Lệnh đầu trong khối dưới, <code>ps -p 1 -o comm=</code>, in tên của process PID 1: option <code>-p 1</code> chọn process có PID 1, option <code>-o comm=</code> chỉ in tên chương trình và bỏ dòng tiêu đề.</p>
-<p>Nếu nó in ra chữ khác <code>systemd</code> thì WSL của bạn chưa bật systemd; trang <a href="https://learn.microsoft.com/en-us/windows/wsl/systemd">Use systemd to manage Linux services with WSL</a> của Microsoft chỉ cách bật. Không muốn bật thì dừng lab ở đây.</p>
-<p>Python thì kiểm tra bằng <code>python3 --version</code>; báo <code>command not found</code> thì cài bằng <code>sudo apt install python3</code>. Cuối cùng <code>cd</code> vào thư mục lab.</p>
-<pre><code>$ ps -p 1 -o comm=
-systemd
-$ python3 --version
-Python 3.14.4
-$ cd /mnt/c/Users/&lt;tên bạn&gt;/devops-self-learning/lessons/03-what-is-a-server/lab</code></pre>
-<p>Rồi chạy ba lệnh trong khối dưới, cũng là ba lệnh mình chạy ở phần hết RAM sau khi <code>cd lab</code>. Chữ <code>sudo</code> làm máy hỏi mật khẩu, tức mật khẩu bạn đặt lúc cài Ubuntu. Chương trình Python in tới khoảng
-250 MB rồi dừng, <code>echo $?</code> in 137, và <code>dmesg</code> có một dòng <code>Killed process</code> mang PID của nó.
-<code>systemd-run</code> chỉ giới hạn riêng chương trình Python, nên các process khác trên máy không bị ảnh hưởng, và không còn gì
-phải dọn sau lab.</p>
-<pre><code>$ sudo systemd-run --scope -p MemoryMax=300M -p MemorySwapMax=0 python3 eat-ram.py
-held 50 MB
-...
-held 250 MB
-$ echo $?
-137
-$ sudo dmesg | grep -i "killed process"
-Memory cgroup out of memory: Killed process 2628 (python3) total-vm:323280kB, anon-rss:306432kB, ...</code></pre></li>
-
 </ol>
 
 </section>
@@ -466,13 +444,13 @@ Memory cgroup out of memory: Killed process 2628 (python3) total-vm:323280kB, an
   <p>Bài 03 · M1 Một cái máy Linux · DevOps lang băm</p>
 </footer>
 
-</div>
-</div>
-
+</main>
 </div>
 
-<script src="../../assets/app.js?v=4e53e8bb"></script>
-<script src="../../assets/terms.js?v=4e53e8bb"></script>
-<script src="lesson.js?v=27685816"></script>
+</div>
+
+<script src="../../assets/app.js?v=8257e0ab"></script>
+<script src="../../assets/terms.js?v=8257e0ab"></script>
+<script src="lesson.js?v=8387e2e7"></script>
 </body>
 </html>
