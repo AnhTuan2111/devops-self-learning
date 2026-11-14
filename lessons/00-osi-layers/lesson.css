@@ -387,3 +387,19 @@ details.raw pre { margin-top: 10px; }
 }
 /* Tên nhóm (mở đầu, layer 1, 2, đường đi, lab) hạ xuống thành nhãn trên vạch, để số layer và tiêu đề layer dẫn mắt */
 .part-title { font-size: clamp(30px, 3.2vw, 44px); }
+/* Mục không có ảnh lề: hình, bảng, khối output và danh sách nguồn rộng sang cả cột phải, để cột ấy không bỏ trống; chữ
+   vẫn ở cột giữa cho dòng không quá dài */
+@media (min-width: 1100px) {
+  .part:not(:has(> figure.photo.side)) > figure.fig:not(.photo),
+  .part:not(:has(> figure.photo.side)) > .table-scroll,
+  .part:not(:has(> figure.photo.side)) > pre,
+  .part:not(:has(> figure.photo.side)) > details,
+  #sources > .refs { grid-column: 2 / 4; }
+  #sources > .refs { columns: 2; column-gap: 48px; }
+  #sources > .refs li { break-inside: avoid; }
+  /* Lab 4 nói hai layer: hai số đứng cạnh nhau trong cột lề, mỗi số rộng nửa cột */
+  .layer-h .layer-badge:has(+ .layer-badge), .layer-h .layer-badge + .layer-badge { width: calc((var(--margin-col) - 12px) / 2); font-size: 92px; }
+  .layer-h .layer-badge + .layer-badge { left: calc(-1 * (var(--margin-col) + 48px) + (var(--margin-col) + 12px) / 2); }
+}
+/* Màn hẹp: số layer đứng đầu tiêu đề lab, cách chữ một khoảng */
+.layer-h > .layer-badge { margin-right: .35em; }

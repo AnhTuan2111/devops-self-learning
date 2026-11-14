@@ -216,3 +216,27 @@ figure.photo.aside > a.img-src img { border-top: 0; }
 .step-h:has(span[data-shell="ps"]) { border-top-color: var(--ink); }
 /* Con trỏ ở lệnh đầu trang là một gạch dưới màu mực, để khối vàng duy nhất ở màn đầu là dải vàng của tiêu đề */
 .big-cmd .caret { height: .12em; vertical-align: baseline; background: var(--ink); }
+
+/* ---------------- Ghi chú ở dải phải ----------------
+   Dải phải (một phần ba) chỉ có ảnh ở vài hàng; hàng không có ảnh thì đặt ghi chú: output thật hay bảng tra cạnh đoạn văn,
+   và ở mỗi bước lab là dấu hiệu bước ấy xong cùng cách xử lý khi lệch. */
+.rail-note { margin: 24px 0; padding: 14px 16px; background: var(--surface); border-top: var(--rule-m) solid var(--ink); font-size: 15px; line-height: 1.6; }
+.rail-note p { margin: 8px 0 0; }
+.rail-note .rn-head { margin: 0 0 10px; font: 800 17px/1.25 var(--f-display); text-transform: lowercase; }
+.rail-note .rn-term { margin: 0; padding: 10px 12px; font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.rn-map { margin: 0; display: grid; gap: 4px; }
+.rn-map dt { font-size: 13.5px; color: var(--ink-3); margin-top: 6px; }
+.rn-map dd { margin: 0; }
+.rn-map code { overflow-wrap: anywhere; }
+.done-note { border-top-color: var(--red); }
+.done-note p:first-child { margin-top: 0; }
+.done-note b { font: 800 14px/1 var(--f-display); text-transform: lowercase; margin-right: 6px; }
+.done-note p:last-child b { color: var(--red); }
+@media (min-width: 1100px) {
+  .prose-row > .rail-note { margin-top: 76px; }
+  /* Ghi chú của bước nằm trong cột chữ (hai phần ba) nhưng trôi sang dải phải: rộng bằng nửa cột chữ, tức bằng dải phải,
+     và lùi ra ngoài cột đúng bằng bề rộng ấy cộng khe 56px */
+  .prose > .done-note { float: right; clear: right; width: 50%; margin: 6px calc(-50% - 56px) 12px 0; }
+  .prose-row .prose > .done-note { width: calc(50% - 28px); margin-right: calc(-50% - 28px); }
+  pre.band:not(.short), .prose-row, .part > h2 { clear: both; }
+}
