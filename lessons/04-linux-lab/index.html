@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 04: Phòng lab: Linux trên máy Windows</title>
 <meta name="description" content="Phần lớn server chạy Linux, còn máy của bạn chạy Windows. WSL2 cho bạn một máy Linux có kernel thật ngay trong Windows. Bài dựng máy đó, tập gõ lệnh trong shell, rồi chạy app Spring Boot mẫu trên Linux.">
-<link rel="stylesheet" href="../../assets/style.css?v=8257e0ab">
-<link rel="stylesheet" href="../../assets/terms.css?v=8257e0ab">
-<link rel="stylesheet" href="lesson.css?v=808a822d">
+<link rel="stylesheet" href="../../assets/style.css?v=04240645">
+<link rel="stylesheet" href="../../assets/terms.css?v=04240645">
+<link rel="stylesheet" href="lesson.css?v=7928a816">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="04">
@@ -26,21 +26,21 @@
     <h1>Phòng lab: <span class="hl">Linux trên máy Windows</span></h1>
     <p class="lede">Phần lớn server chạy Linux, còn laptop của bạn chạy Windows. Làm sao có một máy
     Linux thật để tập ngay trên laptop, và gõ lệnh vào nó thế nào?</p>
-    <nav class="jump" aria-label="Đi tới một phần của bài">
-      <a href="#why-linux">vì sao linux</a><a href="#wsl2">wsl2</a><a href="#install">cài</a><a href="#shell">shell</a><a href="#run-app">chạy app</a><a href="#self-check">tự kiểm tra</a>
-    </nav>
+    <nav class="jump" aria-label="Đi tới một phần của bài"><span class="jump-list">
+      <a href="#why-linux">vì sao linux</a><a href="#wsl2">wsl2</a><a href="#install">cài</a><a href="#shell">shell</a><a href="#run-app">chạy app</a><a href="#sources">nguồn đọc thêm</a>
+    </span></nav>
   </div>
   <figure class="fig twins" aria-label="Hình 1: hai cửa sổ, Git Bash và Ubuntu, cùng gõ which ls và cùng ra /usr/bin/ls; rồi cùng gõ uname -s, Git Bash ra MINGW64_NT-10.0-26300, Ubuntu ra Linux.">
     <div class="twin" data-twin="gitbash" aria-hidden="true">
       <p class="twin-name">Git Bash</p>
-<pre class="twin-screen"><code>$ which ls
+<pre class="twin-screen" data-nocopy><code>$ which ls
 /usr/bin/ls
 $ uname -s
 MINGW64_NT-10.0-26300</code></pre>
     </div>
     <div class="twin" data-twin="ubuntu" aria-hidden="true">
       <p class="twin-name">Ubuntu</p>
-<pre class="twin-screen"><code>$ which ls
+<pre class="twin-screen" data-nocopy><code>$ which ls
 /usr/bin/ls
 $ uname -s
 Linux</code></pre>
@@ -65,8 +65,8 @@ xin thêm RAM, và log của kernel Windows cũng không đọc bằng <code>dme
 
 <p>Thế Git Bash có lấy được dòng ấy không? Nhìn qua thì tưởng được, vì nó có <code>ls</code>, <code>grep</code>, <code>curl</code>, và các lệnh ấy gõ y như trên Linux. Lệnh <code>which ls</code> in ra tệp chương trình sẽ chạy khi bạn gõ <code>ls</code>, và ở Hình 1 nó ra cùng một path ở cả hai cửa sổ.</p>
 
-<p>Cùng là <code>/usr/bin/ls</code>, vậy hai tệp ấy có phải một không? Muốn biết thì phải hiểu path trên Linux bắt đầu từ đâu. Trên Linux, mọi path đi ra từ một thư mục gốc tên là <code>/</code>, giống ổ <code>C:\</code> bên Windows, chỉ khác là Linux chỉ có một gốc ấy, không có ổ C, ổ D. Git Bash lấy thư mục cài Git trên ổ C làm cái gốc <code>/</code> ấy, nên <code>/usr/bin/ls</code> bên Git Bash là một tệp chương trình Windows nằm trong thư mục cài Git. Còn <code>/usr/bin/ls</code> bên Ubuntu là một tệp chương trình Linux, nằm trong chỗ lưu tệp riêng của Ubuntu chứ không nằm trong thư mục cài Git. Vậy hai tệp ấy không phải một, chỉ trùng path. Hồi mới học về WSL, mình từng nói về Git Bash: "lệnh đó đã được biên dịch sang windows để chạy
-trên máy windows nhưng mà nó cũng chỉ là hàng đè tem thôi chứ không phải linux thật". Câu ấy đúng. Mỗi lệnh trong Git Bash là một
+<p>Cùng là <code>/usr/bin/ls</code>, vậy hai tệp ấy có phải một không? Muốn biết thì phải hiểu path trên Linux bắt đầu từ đâu. Trên Linux, mọi path đi ra từ một thư mục gốc tên là <code>/</code>, giống ổ <code>C:\</code> bên Windows, chỉ khác là Linux chỉ có một gốc ấy, không có ổ C, ổ D. Git Bash lấy thư mục cài Git trên ổ C làm cái gốc <code>/</code> ấy, nên <code>/usr/bin/ls</code> bên Git Bash là một tệp chương trình Windows nằm trong thư mục cài Git. Còn <code>/usr/bin/ls</code> bên Ubuntu là một tệp chương trình Linux, nằm trong chỗ lưu tệp riêng của Ubuntu chứ không nằm trong thư mục cài Git. Vậy hai tệp ấy không phải một, chỉ trùng path. Hồi mới học về WSL, mình từng nói về Git Bash: “lệnh đó đã được biên dịch sang windows để chạy
+trên máy windows nhưng mà nó cũng chỉ là hàng đè tem thôi chứ không phải linux thật”. Câu ấy đúng. Mỗi lệnh trong Git Bash là một
 chương trình Windows mang tên lệnh Linux, gõ thì giống nhưng chạy trên kernel Windows. Vậy Git Bash không lấy được dòng <code>Killed process</code>. Muốn tập làm việc với server Linux
 thì phải có kernel Linux.</p>
 
@@ -113,7 +113,7 @@ và tự tắt khi không ai dùng.</p>
   </div>
   <div class="dual-cols">
     <div class="side" data-side="win">
-      <pre class="side-screen" aria-live="polite"><code><span class="sd-cmd">$ </span><span class="sd-out">chọn một lệnh ở trên</span></code></pre>
+      <pre class="side-screen" aria-live="polite" data-nocopy><code><span class="sd-cmd">$ </span><span class="sd-out">chọn một lệnh ở trên</span></code></pre>
       <ol class="side-stack" aria-hidden="true">
         <li data-ly="shell"><b>Git Bash</b><span>các chương trình Windows, trong đó có chương trình đọc lệnh bạn gõ</span></li>
         <li data-ly="kernel"><b>kernel Windows</b><span>chạy lệnh thành process Windows</span></li>
@@ -122,21 +122,21 @@ và tự tắt khi không ai dùng.</p>
       </ol>
     </div>
     <div class="side" data-side="linux">
-      <pre class="side-screen" aria-live="polite"><code><span class="sd-cmd">$ </span><span class="sd-out">chọn một lệnh ở trên</span></code></pre>
+      <pre class="side-screen" aria-live="polite" data-nocopy><code><span class="sd-cmd">$ </span><span class="sd-out">chọn một lệnh ở trên</span></code></pre>
       <ol class="side-stack" aria-hidden="true">
         <li data-ly="shell"><b>Ubuntu</b><span>các chương trình Linux, trong đó có chương trình đọc lệnh bạn gõ</span></li>
         <li data-ly="kernel"><b>kernel Linux 6.18</b><span>chạy lệnh thành process Linux</span></li>
-        <li data-ly="hyper"><b>VM của WSL2</b><span>hypervisor cho Linux dùng tối đa 10 GB RAM</span></li>
+        <li data-ly="hyper"><b>VM của WSL2</b><span>hypervisor cho Linux dùng tối đa khoảng 7,6 GB RAM, một nửa RAM của laptop</span></li>
         <li data-ly="hw"><b>phần cứng của laptop</b><span>cùng cái máy với bên trái</span></li>
       </ol>
     </div>
   </div>
   <p class="dual-note" aria-live="polite"></p>
-  <figcaption><b>Hình 2</b> Cùng một lệnh, hai kernel. Bấm một lệnh, hai cửa sổ cùng gõ nó; các ô sáng lên trong chồng layer dưới mỗi cửa sổ cho biết lệnh đi xuống tới layer nào. Output là của máy mình ngày 14/11/2026: laptop 15,2 GB RAM, mức trần RAM của VM WSL2 là 10 GB.</figcaption>
+  <figcaption><b>Hình 2</b> Cùng một lệnh, hai kernel. Bấm một lệnh, hai cửa sổ cùng gõ nó; các ô trong chồng layer dưới mỗi cửa sổ tô dần theo đường lệnh đi xuống, ô tô đen là layer cuối cùng lệnh tới. Output là của máy mình ngày 14/11/2026: laptop 15,2 GB RAM, mức trần RAM của VM WSL2 để mặc định.</figcaption>
 </figure>
 
 <div class="prose">
-<p>Lệnh <code>free</code> in tổng RAM, RAM đã dùng và RAM còn trống; thêm option <code>-h</code> thì số được đổi ra đơn vị dễ đọc. <code>Gi</code> và <code>Mi</code> trong output gần bằng GB và MB. Bấm <code>free -h</code> ở Hình 2 thì Git Bash báo không có lệnh ấy, vì bộ cài Git Bash không mang theo chương trình <code>free</code>. Bên Ubuntu, dòng <code>Mem</code> ghi tổng 10 GB, tức mức trần RAM của VM. Mức trần này mặc định bằng một nửa RAM của laptop, tức khoảng 7,6 GB trên máy mình. Ubuntu thấy 10 GB là vì mình đã chỉnh mức trần lên trong tệp cấu hình của WSL. Máy bạn chưa chỉnh gì thì ra khoảng một nửa RAM.</p>
+<p>Lệnh <code>free</code> in tổng RAM, RAM đã dùng và RAM còn trống; thêm option <code>-h</code> thì số được đổi ra đơn vị dễ đọc. <code>Gi</code> và <code>Mi</code> trong output gần bằng GB và MB. Bấm <code>free -h</code> ở Hình 2 thì Git Bash báo không có lệnh ấy, vì bộ cài Git Bash không mang theo chương trình <code>free</code>. Bên Ubuntu, dòng <code>Mem</code> ghi tổng 7,4 GB, tức mức trần RAM của VM. Mức trần này mặc định bằng một nửa RAM của laptop, tức khoảng 7,6 GB trên máy mình; <code>free</code> in ra thấp hơn một chút vì kernel giữ riêng một phần cho chính nó lúc khởi động. Máy bạn có bao nhiêu RAM thì Ubuntu thấy khoảng một nửa số đó.</p>
 <p>RAM thì mỗi kernel quản lý phần của mình, nhưng Ubuntu và Windows vẫn mở được tệp của nhau. Trong Ubuntu, ổ C của Windows hiện
 ra ở thư mục <code>/mnt/c</code>; trong Windows, tệp của Ubuntu hiện ra ở mục Linux của File Explorer.</p>
 </div>
@@ -149,8 +149,11 @@ ra ở thư mục <code>/mnt/c</code>; trong Windows, tệp của Ubuntu hiện 
 <div class="prose">
 <h2 id="install-ubuntu">Cài Ubuntu trên WSL2</h2>
 <p>Giờ tới lượt bạn cài WSL2 và Ubuntu trên laptop. Máy đã có Ubuntu chạy trên WSL2 thì bỏ qua bước 1, sang bước 2 kiểm tra nó chạy bằng WSL2. Các bước chạy trên Windows 11; Windows 10 từ bản 2004 (build 19041) trở lên cũng có lệnh <code>wsl --install</code>.</p>
+<p>Nhãn của mỗi bước cho biết gõ vào cửa sổ nào: <code>PS&gt;</code> là PowerShell của Windows, <code>$</code> là cửa sổ Ubuntu.
+Trong khối lệnh cũng vậy, dòng mở đầu bằng <code>PS&gt;</code> hay <code>$</code> là lệnh bạn gõ. Bạn gõ phần đứng sau dấu ấy,
+không gõ chính dấu ấy, rồi bấm Enter; các dòng còn lại là output máy in ra.</p>
 
-<h3 class="step-h" id="lab-1"><span>bước 1</span> Chạy lệnh cài</h3>
+<h3 class="step-h" id="lab-1"><span data-shell="ps">bước 1</span> Chạy lệnh cài</h3>
 <p>Mở PowerShell bằng quyền quản trị: chuột phải vào PowerShell trong menu Start, chọn Run as administrator. Rồi chạy lệnh cài; option
 <code>-d Ubuntu</code> chọn distro Ubuntu. Theo trang hướng dẫn của Microsoft, lệnh này tự bật tính năng Virtual Machine Platform, nên bạn không phải bật bằng tay; nó còn tải kernel Linux, tải Ubuntu, và có thể đòi khởi động lại Windows. Máy của mình đã cài từ trước nên mình không có output
 của lần cài.</p>
@@ -160,7 +163,7 @@ của lần cài.</p>
 <p>Cài xong, cửa sổ Ubuntu tự mở và hỏi tên user, mật khẩu cho máy Linux này. Hai thứ ấy không cần giống tài khoản Windows, nhưng nhớ mật
 khẩu, vì bước 5 cần nó.</p>
 
-<h3 class="step-h" id="lab-2"><span>bước 2</span> Kiểm tra Ubuntu chạy bằng WSL2</h3>
+<h3 class="step-h" id="lab-2"><span data-shell="ps">bước 2</span> Kiểm tra Ubuntu chạy bằng WSL2</h3>
 <p>Trong PowerShell (bỏ qua bước 1 thì mở PowerShell bình thường, không cần quyền quản trị), chạy hai lệnh dưới. Option <code>-l</code> liệt kê các distro đã cài. Option <code>-v</code> in thêm trạng thái của mỗi distro, và cho biết nó chạy bằng WSL1 hay WSL2; WSL1 là version cũ, không có VM. Lệnh <code>wsl --version</code> in version của phần mềm WSL và của kernel Linux đang cài.</p>
 </div>
 <pre class="band"><code>PS&gt; wsl -l -v
@@ -180,22 +183,20 @@ Docker Desktop, nên máy bạn không có dòng này cũng không sao. Còn d�
 <div class="prose-row">
 <div class="prose">
 <h3 class="step-h" id="lab-3"><span>bước 3</span> Mở Ubuntu, xem kernel đang chạy</h3>
-<p>Mở Ubuntu từ menu Start. Cửa sổ Ubuntu là một cửa sổ bình thường của Windows, nhưng mọi lệnh gõ
+<p>Mở Ubuntu bằng cách bấm phím Windows, gõ <code>ubuntu</code> rồi bấm Enter. Cửa sổ Ubuntu là một cửa sổ bình thường của Windows, nhưng mọi lệnh gõ
 trong đó chạy trên kernel Linux của VM. Gõ <code>uname -r</code> để xem version kernel. Kernel này do WSL cài, và nếu bạn cài sau ngày mình chạy thì có thể ra số mới hơn. Ubuntu cũng có version riêng, như 26.04, và số ấy không liên quan tới số của kernel, nên đừng lẫn hai số với nhau.</p>
 
+<pre class="band"><code>$ uname -r
+6.18.33.2-microsoft-standard-WSL2</code></pre>
+<p>Chữ <code>microsoft-standard-WSL2</code> cho biết đây là kernel Linux do Microsoft biên dịch cho WSL2, trùng số 6.18.33.2 với dòng
+<code>Kernel version</code> của <code>wsl --version</code> ở bước 2. Gõ cùng lệnh ấy trong Git Bash thì ra
+<code>3.4.10-bc1f6498.x86_64</code>, như Hình 2. Con số đó là version của library mà các chương trình Git Bash gọi tới để chạy
+được trên Windows, còn kernel chạy các lệnh của Git Bash là kernel Windows.</p>
 </div>
 <figure class="fig photo shot aside">
   <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Ubuntu_on_Windows.png" data-credit="Ảnh: François-Dominique · Wikimedia Commons · CC BY-SA 4.0, giữ màu" aria-label="Nguồn ảnh: François-Dominique · Wikimedia Commons · CC BY-SA 4.0"><img src="img/ubuntu-on-windows.webp" width="952" height="652" loading="lazy" alt="Màn hình Windows 11 có cửa sổ Ubuntu nền tối đang hiện dòng lệnh, phía sau là màn hình nền Windows."></a>
   <figcaption><b>Ảnh 2</b> Ubuntu trong WSL2 trên Windows 11, ảnh chụp ngày 06/05/2023, lấy từ Wikimedia Commons. Thanh tiêu đề và viền cửa sổ là của Windows, còn chữ bên trong do chương trình chạy trong Ubuntu in ra.</figcaption>
 </figure>
-</div>
-<pre class="band"><code>$ uname -r
-6.18.33.2-microsoft-standard-WSL2</code></pre>
-<div class="prose">
-<p>Chữ <code>microsoft-standard-WSL2</code> cho biết đây là kernel Linux do Microsoft biên dịch cho WSL2, trùng số 6.18.33.2 với dòng
-<code>Kernel version</code> của <code>wsl --version</code> ở bước 2. Gõ cùng lệnh ấy trong Git Bash thì ra
-<code>3.4.10-bc1f6498.x86_64</code>, như Hình 2. Con số đó là version của library mà các chương trình Git Bash gọi tới để chạy
-được trên Windows, còn kernel chạy các lệnh của Git Bash là kernel Windows.</p>
 </div>
 
 </section>
@@ -232,7 +233,7 @@ trong đó chạy trên kernel Linux của VM. Gõ <code>uname -r</code> để x
 /home/user</code></pre>
 
 <div class="prose">
-<h2 id="what-happens-when-you-type">Gõ một lệnh thì chuyện gì xảy ra</h2>
+<h3 class="sub-h" id="what-happens-when-you-type">Gõ một lệnh thì chuyện gì xảy ra</h3>
 
 <p>Gõ <code>ps -o pid,ppid,comm</code> rồi Enter. Lệnh <code>ps</code> in danh sách những process chạy từ cửa sổ này; option
 <code>-o</code> chỉ chọn cột để in, không đổi danh sách ấy. <code>pid</code> là PID, <code>comm</code> là tên chương trình.</p>
@@ -259,7 +260,7 @@ kernel tạo ra process <code>ps</code>. Hình 3 kể lại từng bước, từ
   </ol>
 </div>
 <figcaption><b>Hình 3</b> Vòng lặp của shell khi bạn gõ <code>ps</code>. Bash đọc dòng, tìm chương trình, nhờ kernel tạo process, chờ
-process chạy xong, rồi quay về chờ dòng tiếp theo.</figcaption>
+process chạy xong, rồi quay về chờ dòng tiếp theo. Hai ô có vạch đen ở trên là hai việc do kernel làm.</figcaption>
 </figure>
 
 <div class="prose">
@@ -278,7 +279,7 @@ cd is a shell builtin</code></pre>
 
 <div class="prose">
 <h3 class="step-h" id="lab-4"><span>bước 4</span> Xem cây thư mục</h3>
-<p>Thư mục <code>/</code> là gốc của cây thư mục, và <code>ls /</code> in những gì nằm ở gốc ấy. Trong đó có <code>home</code>, nơi chứa home directory <code>/home/user</code> mà <code>pwd</code> in ra lúc nãy. Các thư mục còn lại trong khối dưới thì bạn cứ đọc lướt. Còn <code>ls /mnt</code> in các ổ Windows mà WSL2 gắn vào thư mục <code>/mnt</code>.
+<p>Gõ hai lệnh dưới vào cửa sổ Ubuntu. Thư mục <code>/</code> là gốc của cây thư mục, và <code>ls /</code> in những gì nằm ở gốc ấy. Trong đó có <code>home</code>, nơi chứa home directory <code>/home/user</code> mà <code>pwd</code> in ra lúc nãy. Các thư mục còn lại trong khối dưới thì bạn cứ đọc lướt. Còn <code>ls /mnt</code> in các ổ Windows mà WSL2 gắn vào thư mục <code>/mnt</code>.
 Ở dòng cuối của khối dưới, <code>c</code> là ổ C, <code>x</code> là ổ X trên máy mình; máy bạn có ổ nào thì thấy chữ cái của ổ ấy. Hai mục <code>wsl</code>, <code>wslg</code> là thư mục WSL2 tự tạo, không phải ổ đĩa, nên bạn cứ bỏ qua. Không thấy <code>c</code> thì WSL2 chưa gắn ổ C vào. Chạy <code>wsl --shutdown</code> trong PowerShell để tắt hẳn VM của WSL2, rồi mở lại Ubuntu cho nó khởi động lại và gắn ổ.</p>
 </div>
 <pre class="band"><code>$ ls /
@@ -306,10 +307,13 @@ c  wsl  wslg  x</code></pre>
 về từ lần cập nhật trước, nên trước khi cài thì chạy <code>apt update</code> để tải danh sách mới về. Gói cần cài là
 <code>openjdk-25-jre-headless</code>, bản Java chỉ để chạy chương trình, không có <code>javac</code> và không có phần vẽ cửa sổ, nên
 hợp với server không có màn hình. Dòng cần đọc là dòng <code>Setting up</code>, nơi apt báo đã cài bản nào.</p>
+<p>Gõ lần lượt hai lệnh dưới vào cửa sổ Ubuntu. Lệnh đầu có <code>sudo</code> nên Ubuntu hỏi mật khẩu bạn đặt ở bước 1. Tuỳ bản
+Ubuntu, lúc gõ mật khẩu màn hình có thể không hiện gì hoặc chỉ hiện dấu sao; bạn cứ gõ hết rồi bấm Enter. Lệnh thứ hai hỏi
+<code>Do you want to continue? [Y/n]</code> thì gõ <code>y</code> rồi bấm Enter.</p>
 </div>
 <figure class="fig photo aside small-photo">
   <a class="img-src" href="https://xkcd.com/149/" data-credit="Truyện: Randall Munroe · xkcd 149 · CC BY-NC 2.5, đã chuyển đen trắng" aria-label="Nguồn truyện: Randall Munroe, xkcd 149"><img src="img/xkcd-sandwich.webp" width="1080" height="897" loading="lazy" alt="Truyện tranh: một người bảo người kia làm cho mình cái bánh sandwich và bị từ chối; khi nói sudo make me a sandwich thì người kia đồng ý."></a>
-  <figcaption><b>Ảnh 4</b> xkcd 149, <em>Sandwich</em>. "Làm cho tôi cái bánh" thì bị từ chối, "sudo làm cho tôi cái bánh" thì được
+  <figcaption><b>Ảnh 4</b> xkcd 149, <em>Sandwich</em>. “Làm cho tôi cái bánh” thì bị từ chối, “sudo làm cho tôi cái bánh” thì được
   làm ngay. Truyện bỏ qua một chỗ: trên Linux, sudo chỉ chạy được khi user của bạn được phép dùng nó, và nó hỏi mật khẩu trước khi cho lệnh chạy bằng quyền của root.</figcaption>
 </figure>
 </div>
@@ -329,7 +333,7 @@ E: Unable to fetch some archives, maybe run apt update or try with --fix-missing
 
 <div class="prose">
 <h3 class="step-h" id="lab-6"><span>bước 6</span> Kiểm tra Java</h3>
-<p>Gõ <code>java -version</code>; dòng đầu output phải có số 25. Nếu bash báo <code>command not found</code> thì bước 5 chưa cài xong; đọc lại output của lệnh <code>apt install</code>, tìm dòng báo lỗi, tức dòng bắt đầu bằng <code>E:</code>.</p>
+<p>Gõ <code>java -version</code> vào cửa sổ Ubuntu; dòng đầu output phải có số 25. Nếu bash báo <code>command not found</code> thì bước 5 chưa cài xong; đọc lại output của lệnh <code>apt install</code>, tìm dòng báo lỗi, tức dòng bắt đầu bằng <code>E:</code>.</p>
 </div>
 <pre class="band"><code>$ java -version
 openjdk version "25.0.5.0.3" 2026-10-24
@@ -338,11 +342,11 @@ OpenJDK 64-Bit Server VM (build 25.0.5.0.3+1-1-26.04.1-Ubuntu, mixed mode, shari
 
 <div class="prose">
 <h3 class="step-h" id="lab-7"><span>bước 7</span> Chép tệp jar sang Ubuntu</h3>
-<p>Tệp jar của app mẫu đã build trên Windows ở Bài 03, nằm trong thư mục <code>lab/sample-app/target</code> của repo. Java trên Ubuntu chạy thẳng được tệp jar nằm trong <code>/mnt</code>, nhưng đọc tệp của Windows qua <code>/mnt</code> chậm hơn đọc tệp của chính Ubuntu. Vì vậy bạn chép tệp jar vào thư mục <code>~/lab</code>, tức thư mục <code>lab</code> trong home directory <code>/home/user</code>. Repo của mình nằm ở ổ X, trong Ubuntu là <code>/mnt/x/IdeaProjects/devops_selfLearning</code>. Nếu ở Bài 03 bạn clone ngay lúc mở Git Bash thì repo nằm ở <code>/mnt/c/Users/&lt;tên bạn&gt;/devops-self-learning</code>, nên thay đoạn <code>/mnt/x/IdeaProjects/devops_selfLearning</code> trong lệnh <code>cp</code> dưới bằng path ấy.</p>
-<p>Lệnh <code>mkdir -p</code> tạo thư mục <code>~/lab</code>, và nếu thư mục đã có thì nó cũng không báo lỗi. Rồi <code>cp</code> chép tệp jar từ path thứ nhất sang thư mục ấy, và <code>ls -l</code> in tên tệp trong thư mục ấy kèm cỡ tính bằng byte để bạn so với lúc build. Dòng <code>total</code> và cột quyền ở đầu thì bạn cứ đọc lướt; cột cỡ tệp và cột ngày giờ thì đoạn dưới nói.</p>
+<p>Tệp jar của app mẫu đã build trên Windows ở Bài 03, nằm trong thư mục <code>lab/sample-app/target</code> của repo. Java trên Ubuntu chạy thẳng được tệp jar nằm trong <code>/mnt</code>, nhưng đọc tệp của Windows qua <code>/mnt</code> chậm hơn đọc tệp của chính Ubuntu. Vì vậy bạn chép tệp jar vào thư mục <code>~/lab</code>, tức thư mục <code>lab</code> trong home directory <code>/home/user</code>. Nếu ở Bài 03 bạn clone repo ngay lúc mở Git Bash thì repo nằm ở <code>C:\Users\&lt;tên bạn&gt;\devops-self-learning</code>, trong Ubuntu là <code>/mnt/c/Users/&lt;tên bạn&gt;/devops-self-learning</code>. Lệnh <code>cp</code> dưới viết theo path ấy: bạn thay <code>&lt;tên bạn&gt;</code> bằng tên thư mục user Windows của bạn, cả dấu <code>&lt;</code> và <code>&gt;</code>. Không nhớ tên ấy thì gõ <code>ls /mnt/c/Users</code> để xem. Repo để chỗ khác thì thay cả đoạn trước <code>/lab/sample-app</code> bằng chỗ ấy; repo của mình nằm ở ổ X, trong Ubuntu là <code>/mnt/x/IdeaProjects/devops_selfLearning</code>.</p>
+<p>Gõ lần lượt ba lệnh dưới vào cửa sổ Ubuntu. Lệnh <code>mkdir -p</code> tạo thư mục <code>~/lab</code>, và nếu thư mục đã có thì nó cũng không báo lỗi. Rồi <code>cp</code> chép tệp jar từ path thứ nhất sang thư mục ấy, và <code>ls -l</code> in tên tệp trong thư mục ấy kèm cỡ tính bằng byte để bạn so với lúc build. Dòng <code>total</code> và cột quyền ở đầu thì bạn cứ đọc lướt; cột cỡ tệp và cột ngày giờ thì đoạn dưới nói.</p>
 </div>
 <pre class="band"><code>$ mkdir -p ~/lab
-$ cp /mnt/x/IdeaProjects/devops_selfLearning/lab/sample-app/target/sample-app.jar ~/lab/
+$ cp /mnt/c/Users/&lt;tên bạn&gt;/devops-self-learning/lab/sample-app/target/sample-app.jar ~/lab/
 $ ls -l ~/lab
 total 23932
 -rwxr-xr-x 1 user user 24505709 Nov 13 19:33 sample-app.jar</code></pre>
@@ -353,7 +357,7 @@ giờ quốc tế chậm hơn giờ Việt Nam 7 tiếng. Nếu <code>cp</code> 
 
 <h3 class="step-h" id="lab-8"><span>bước 8</span> Chạy app</h3>
 <p>Tệp jar chạy được trên Linux mà không cần build lại, vì jar chứa bytecode của JVM, máy nào có Java cũng chạy được. Chạy nó y như
-trên Windows. Dòng cần đọc là dòng cuối, nơi app mẫu in PID. Mình bỏ cột ngày giờ ở đầu hai dòng log cho gọn.</p>
+trên Windows: gõ lần lượt hai lệnh dưới vào cửa sổ Ubuntu. Dòng cần đọc là dòng cuối, nơi app mẫu in PID. Mình bỏ cột ngày giờ ở đầu hai dòng log cho gọn.</p>
 </div>
 <pre class="band"><code>$ cd ~/lab
 $ java -jar sample-app.jar
@@ -382,22 +386,10 @@ trong PATH rồi nhờ kernel tạo process để chạy tệp đó, kể cả <
 
 </section>
 
-<!-- Phần: tự kiểm tra -->
-<section class="part" id="self-check">
+<!-- Phần: nguồn đọc thêm -->
+<section class="part" id="further-reading">
 
 <div class="check-grid">
-<div>
-<h2 id="checklist">Tự kiểm tra</h2>
-<ul class="check">
-  <li>Bạn mở một cửa sổ, gõ <code>uname -s</code> và thấy <code>Linux</code>. Cửa sổ ấy có thể là Git Bash không? Nếu cửa sổ ấy là Ubuntu và vừa có một process bị OOM killer giết, <code>sudo dmesg</code> có cho thấy dòng <code>Killed process</code> không?</li>
-  <li>Bạn tìm được một bản <code>dmesg</code> biên dịch cho Git Bash rồi cài vào. Chạy nó trên Windows, bạn có đọc được dòng
-  <code>Killed process</code> của OOM killer không? Vì sao?</li>
-  <li>Ubuntu đang chạy app mẫu, <code>free -h</code> ghi tổng 10 GB. Bạn tắt app rồi chạy <code>wsl --shutdown</code> trong PowerShell. Lúc này VM của WSL2 còn giữ phần nào trong 15,2 GB RAM của laptop không, và vì sao?</li>
-  <li>Bạn gõ <code>java -version</code> trong Git Bash và trong Ubuntu, hai cửa sổ in hai bản Java khác nhau. Vì sao cùng một laptop
-  mà có hai bản Java, và mỗi bản chạy trên kernel nào?</li>
-  <li>Chạy <code>ps -o pid,ppid,comm</code> hai lần liền. PPID của dòng <code>ps</code> có đổi không? PID của nó thì sao?</li>
-</ul>
-</div>
 <div>
 <h2 id="sources">Nguồn đọc thêm</h2>
 <ol class="refs">
@@ -431,8 +423,8 @@ trong PATH rồi nhờ kernel tạo process để chạy tệp đó, kể cả <
 
 </div>
 
-<script src="../../assets/app.js?v=8257e0ab"></script>
-<script src="../../assets/terms.js?v=8257e0ab"></script>
-<script src="lesson.js?v=8d4ed5f7"></script>
+<script src="../../assets/app.js?v=04240645"></script>
+<script src="../../assets/terms.js?v=04240645"></script>
+<script src="lesson.js?v=e7267d62"></script>
 </body>
 </html>

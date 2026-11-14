@@ -43,13 +43,13 @@
       async run() {
         packet.className = 'packet';
         // Request like nằm giữa chiều cao của dải đang sáng
-        const mid = (f) => `${f.offsetTop + (f.offsetHeight - packet.offsetHeight) / 2}px`;
-        packet.style.top = mid(floors[0]);
+        const mid = (f) => `translateY(${f.offsetTop + (f.offsetHeight - packet.offsetHeight) / 2}px)`;
+        packet.style.transform = mid(floors[0]);
         await wait(300);
         for (const floor of floors) {
           floors.forEach((f) => f.classList.remove('active'));
           floor.classList.add('active');
-          packet.style.top = mid(floor);
+          packet.style.transform = mid(floor);
           const layer = Number(floor.dataset.layer);
           if (layer <= 4) packet.classList.add(`has${layer}`);
           await wait(430);
@@ -88,6 +88,8 @@
   updateElevator();
 
   // ---------- Hiện dần khi cuộn tới (chỉ một lần, đây là lúc vào trang chứ không phải chuyển động của sơ đồ) ----------
+  // Lớp js trên <html>: chỉ khi script chạy thì hình mới ẩn chờ hiện dần; tắt JS thì mọi hình hiện sẵn
+  document.documentElement.classList.add('js');
   const revealIo = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (e.isIntersecting) { e.target.classList.add('shown'); revealIo.unobserve(e.target); }
   }), { rootMargin: '0px 0px -8% 0px' });

@@ -113,7 +113,9 @@ mark { background: var(--yellow); color: var(--ink); padding: 0 .12em; }
 hr { border: none; border-top: var(--rule-l) solid var(--ink); margin: 40px 0; }
 img, svg { max-width: 100%; }
 
-h1, h2, h3, h4 { font-family: var(--f-display); color: var(--ink); }
+h1, h2, h3, h4 { font-family: var(--f-display); color: var(--ink); text-wrap: balance; }
+/* Đoạn văn tránh để một chữ lẻ ở dòng cuối */
+p, li, figcaption { text-wrap: pretty; }
 h1 {
   font-weight: 800;
   font-size: clamp(34px, 6.6vw, 70px);
@@ -125,8 +127,8 @@ h1 {
 h1 .hl { background: var(--yellow); padding: 0 .12em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 h2 {
   font-weight: 700;
-  font-size: clamp(23px, 3.4vw, 30px);
-  line-height: 1.2;
+  font-size: clamp(25px, 2.8vw, 38px);   /* tiêu đề mục đủ lớn để thứ bậc rõ dưới tiêu đề trang */
+  line-height: 1.15;
   text-transform: lowercase;
   margin: 52px 0 16px;
   padding-top: 14px;
@@ -917,6 +919,7 @@ div.lesson:hover { background: none; }   /* bài chưa có trang: không phải 
   .prow { grid-template-columns: 200px auto; align-items: center; gap: 16px; margin: 0; }
   .corner-nav .cn-t { display: inline-block; }
 }
+@media (min-width: 1100px) { .corner-nav .cn-t { max-width: 360px; } }
 
 @media (pointer: coarse) {
   .tabbtn { min-height: 48px; }
@@ -945,8 +948,22 @@ div.lesson:hover { background: none; }   /* bài chưa có trang: không phải 
   opacity: 0; translate: 0 4px; transition: opacity .18s, translate .18s; pointer-events: none;
 }
 .img-src:hover::after, .img-src:focus-visible::after { opacity: 1; translate: 0 0; }
-.img-src:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.img-src:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }   /* vàng trên ngà chỉ đạt 1,55:1 */
 @media (hover: none) { .img-src::after { opacity: .85; translate: 0 0; font-size: 11px; } }
 
 /* Hình nào không phải ảnh phụ đứng lệch (.side) thì xuống dưới ảnh lệch phía trên, không chui vào khoảng trống cạnh nó */
 figure.fig:not(.side) { clear: both; }
+
+/* Chuyển động khi một ô đổi trạng thái (dùng ở các trang bài). Màu nền đổi tức thì để chữ lúc nào cũng đủ tương phản, còn
+   chuyển động do transform gánh: ô nhích vào (lit-in), ô nảy lên (pop-in). Bật giảm chuyển động thì các bài tắt animation. */
+@keyframes lit-in { from { transform: translateX(-10px); } to { transform: none; } }
+@keyframes pop-in { from { transform: scale(.86); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { * { animation-name: none !important; } }
+/* Đoạn code ngắn trong câu không bị bẻ dòng ở dấu gạch (app.js gắn lớp nb cho code từ 28 ký tự trở xuống) */
+code.nb { white-space: nowrap; }
+/* Chú thích của một hàng nhiều ảnh chạy hết bề ngang hàng */
+figure.photo-row > figcaption { grid-column: 1 / -1; }
+/* Cụm chữ không được bẻ giữa chừng khi xuống dòng (tiêu đề) */
+.nw { white-space: nowrap; }
+/* Điện thoại hẹp: bỏ chữ lesson-NN cạnh tên khoá để thanh đầu trang nằm trên một hàng */
+@media (max-width: 480px) { .topbar .crumb { display: none; } }

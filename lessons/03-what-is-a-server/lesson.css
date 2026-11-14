@@ -118,7 +118,7 @@
 .ram-bar.big { height: 46px; }
 .seg {
   flex: 0 0 0%; display: flex; align-items: center; justify-content: center; overflow: hidden; white-space: nowrap;
-  background: var(--p); color: var(--p-on); font: 700 11.5px/1 var(--f-display); text-transform: lowercase; transition: flex-basis .45s ease-out, background .3s;
+  background: var(--p); color: var(--p-on); font: 700 11.5px/1 var(--f-display); text-transform: lowercase; transition: background .3s;   /* độ dài đoạn đổi theo từng nhịp JS, không chuyển dần flex-basis */
 }
 .seg b { overflow: hidden; padding: 0 3px; }
 /* Đoạn hẹp hơn tên của nó thì ẩn tên đi, khỏi hiện chữ bị cắt dở; hàng chú giải bên dưới vẫn cho biết màu nào là ai */
@@ -144,13 +144,14 @@
 
 /* Màn rộng: lời ghi cảnh đứng đầu cái máy để lúc nào cũng thấy, phần dưới cuộn được bên trong */
 @media (min-width: 1100px) { .machine > .mc-say { order: -1; flex: none; } .machine > * { flex: none; } }
-.mc-say { margin: 0; min-height: 3.2em; padding: 10px 12px; background: var(--ink); color: var(--yellow); font: 600 14px/1.5 var(--f-display); }
+/* Lời của máy: một dòng chú thích mảnh trên nền giấy, vạch vàng ở lề trái, để hình không nặng ngang tiêu đề bài */
+.mc-say { margin: 0; min-height: 3.2em; padding: 8px 12px; background: var(--paper); color: var(--ink); border-left: 8px solid var(--yellow); font: 600 14px/1.5 var(--f-display); }
 .mc-say:empty { display: none; }
 .machine.fig { margin: 0 0 26px; }
 .machine figcaption { margin-top: 2px; }
 
 /* Cảnh nào chỉ nói về một lớp thì làm mờ lớp khác */
-.machine[data-scene="box"] .mc-procs, .machine[data-scene="box"] .mc-kernel { opacity: .25; }
+.machine[data-scene="box"] .mc-procs, .machine[data-scene="box"] .mc-kernel { opacity: .55; }   /* mờ vừa đủ để thấy phần cứng đang được nói tới, không trông như hình hỏng */
 .machine[data-scene="oom"] .mc-hw .hw:not([data-hw="ram"]) { opacity: .35; }
 
 /* Không có JS: cái máy hiện RAM chia cho bốn process */
@@ -232,3 +233,18 @@
 @media (min-width: 1280px) and (max-height: 819px) {
   .machine { max-height: calc(100vh - var(--topbar-h, 0px) - 20px); overflow-y: auto; }
 }
+
+/* Ô sáng lên thì chuyển động: việc của kernel nảy lên, tệp và dòng port đang dùng nhích vào */
+.kernel-jobs span.on { animation: pop-in .34s cubic-bezier(.2, .8, .2, 1); }
+.file.on, .ports tr.on td { animation: lit-in .34s cubic-bezier(.2, .8, .2, 1); }
+/* Output dài trong cột chữ xuống dòng thay vì bị cắt ở mép cột */
+.reading pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+/* Nút bài trước và chân trang chạy hết bề ngang, không bị kẹp trong cột chữ của lưới chia đôi */
+.split > .prevnext, .split > footer.page, .wrap > footer.page { grid-column: 1 / -1; max-width: none; }
+/* Hai cấp tiêu đề nhìn là phân biệt: tiêu đề mở mục to, vạch dày; tiêu đề trong mục nhỏ hẳn, vạch mảnh */
+.part > h2:first-child { font-size: clamp(27px, 2.6vw, 36px); }
+.part > h2:not(:first-child) { font-size: clamp(21px, 1.8vw, 26px); border-top-width: var(--rule-s); }
+/* Process chưa chạy: chỉ còn khung nét đứt, không phải màu bị pha nhạt */
+.proc:not(.on):not(.dead) { opacity: 1; background: transparent; color: var(--ink-3); border-style: dashed; border-color: var(--line); }
+/* Process vừa được nạp thì bật ra một nhịp, thay cho kiểu hiện mờ dần trước đây */
+.proc.on { animation: pop-in .35s cubic-bezier(.2, .8, .2, 1) both; }

@@ -4,6 +4,20 @@
 // thanh RAM lúc script sao lưu vừa chạy, kèm năm bước bằng chữ.
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Đoạn RAM giãn ra mượt theo từng khung hình thay vì nhảy một bước; bật giảm chuyển động thì đặt thẳng độ dài mới
+  const tweens = new WeakMap();
+  const setBasis = (el, pct) => {
+    cancelAnimationFrame(tweens.get(el));
+    if (reduced) { el.style.flexBasis = `${pct}%`; return; }
+    const from = parseFloat(el.style.flexBasis) || 0;
+    const t0 = performance.now();
+    const tick = (now) => {
+      const k = Math.min(1, (now - t0) / 450);
+      el.style.flexBasis = `${from + (pct - from) * (1 - (1 - k) ** 3)}%`;
+      if (k < 1) tweens.set(el, requestAnimationFrame(tick));
+    };
+    tweens.set(el, requestAnimationFrame(tick));
+  };
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const seenState = (el) => {
     const s = { visible: false };
@@ -23,7 +37,7 @@
     const hw = (...names) => $$('.hw').forEach((h) => h.classList.toggle('on', names.includes(h.dataset.hw)));
     const port = (num, state) => { const r = $(`.ports tr[data-port="${num}"]`); r.classList.toggle('off', state === 'off'); r.classList.toggle('on', state === 'on'); };
     const file = (f, on) => $(`.file[data-f="${f}"]`).classList.toggle('on', on);
-    const ram = (map) => Object.entries(map).forEach(([p, pct]) => { seg(p).style.flexBasis = `${pct}%`; });
+    const ram = (map) => Object.entries(map).forEach(([p, pct]) => setBasis(seg(p), pct));
     const backupLabel = (name, pid) => { const b = proc('backup'); b.querySelector('b').textContent = name; b.querySelector('span').textContent = pid; seg('backup').querySelector('b').textContent = name; };
     const ramName = (t) => { $('.ram-total').textContent = t; };
     const note = (t) => { $('.ram-note').textContent = t; };
@@ -220,7 +234,7 @@
     // Chờ khi hình ra khỏi màn hình, để câu chuyện không trôi mất lúc không ai xem
     const hold = async (ms) => { await sleep(ms); while (!seen.visible) await sleep(250); };
     const step = (i) => steps.forEach((li, k) => li.classList.toggle('now', k === i));
-    const width = (p, pct) => { seg(p).style.flexBasis = `${pct}%`; };
+    const width = (p, pct) => setBasis(seg(p), pct);
     (async () => {
       for (;;) {
         bar.classList.remove('full'); seg('java').classList.remove('marked');

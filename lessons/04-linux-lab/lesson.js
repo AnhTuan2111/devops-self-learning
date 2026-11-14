@@ -78,6 +78,34 @@
   }
 
   // ---------- Hình 2: cùng một lệnh, hai kernel ----------
+  // Dòng "cd tên mục" đặt trên tiêu đề của mục mà mục lục đầu trang trỏ tới
+  document.querySelectorAll('.jump a[href^="#"]').forEach((a) => {
+    const target = document.getElementById(a.getAttribute('href').slice(1));
+    const h2 = target && (target.matches('h2') ? target : target.querySelector('h2'));
+    if (!h2 || h2.previousElementSibling?.classList.contains('cd-kicker')) return;
+    // tiêu đề trùng chữ với mục lục thì dòng cd chỉ lặp lại, bỏ qua
+    if (h2.textContent.trim().toLowerCase() === a.textContent.trim().toLowerCase()) return;
+    const k = document.createElement('p');
+    k.className = 'cd-kicker';
+    k.setAttribute('aria-hidden', 'true');
+    k.textContent = `cd ${a.textContent.trim()}`;
+    h2.before(k);
+  });
+  // Link trong mục nguồn: chỉ xuống dòng sau dấu gạch chéo, không cắt giữa chữ
+  document.querySelectorAll('.refs a').forEach((a) => {
+    if (a.children.length || !a.textContent.includes('/')) return;
+    const parts = a.textContent.split('/');
+    a.textContent = '';
+    parts.forEach((p, i) => {
+      a.append(p + (i < parts.length - 1 ? '/' : ''));
+      if (i < parts.length - 1) a.append(document.createElement('wbr'));
+    });
+  });
+  // Dải terminal hẹp: không dòng nào dài quá 100 ký tự (vừa cột chữ hai phần ba ở cỡ 14,5px) thì nằm trong cột chữ
+  document.querySelectorAll('pre.band').forEach((p) => {
+    const lines = p.textContent.trimEnd().split(String.fromCharCode(10));
+    if (lines.every((l) => l.length <= 100)) p.classList.add('short');
+  });
   const dual = document.querySelector('.dual');
   if (dual) {
     const CMDS = {
@@ -96,8 +124,8 @@
       free: {
         cmd: 'free -h',
         win: { out: 'bash: free: command not found', down: ['shell'] },
-        linux: { out: '               total        used        free      shared  buff/cache   available\nMem:            10Gi       1.3Gi       5.8Gi       4.7Mi       3.8Gi       9.4Gi', down: ['shell', 'kernel'] },
-        note: 'Git Bash không có lệnh free. Kernel Linux trả lời tổng 10 GB, mức trần RAM của VM, không phải 15,2 GB của laptop.',
+        linux: { out: '               total        used        free      shared  buff/cache   available\nMem:           7.4Gi       738Mi       5.6Gi       3.5Mi       1.2Gi       6.7Gi\nSwap:          2.0Gi          0B       2.0Gi', down: ['shell', 'kernel'] },
+        note: 'Git Bash không có lệnh free. Kernel Linux trả lời tổng 7,4 GB, gần bằng mức trần RAM của VM, không phải 15,2 GB của laptop.',
       },
       which: {
         cmd: 'which ls',
@@ -138,6 +166,11 @@
     }
     btns.forEach((b) => b.addEventListener('click', () => go(b.dataset.cmd)));
     btns.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    // Hình cuộn tới thì tự chạy lệnh đầu, để hai cửa sổ không đứng trống
+    const io = new IntersectionObserver((es) => {
+      if (es.some((e) => e.isIntersecting)) { io.disconnect(); go('uname-r'); }
+    }, { threshold: 0.4 });
+    io.observe(dual);
   }
 
   // ---------- Hình 3: vòng lặp của shell, lặp vì shell cứ đọc rồi chạy mãi ----------

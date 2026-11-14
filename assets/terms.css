@@ -4,10 +4,11 @@
   text-decoration: underline dotted var(--blue, #1d4f9f); text-decoration-thickness: 2px; text-underline-offset: 3px;
 }
 .term:hover { text-decoration-color: var(--red, #d42a1f); }
-.term:focus-visible { outline: 2px solid var(--yellow, #f5b800); outline-offset: 2px; }
+/* Viền focus màu mực: vàng trên nền ngà chỉ đạt 1,55:1, người dùng bàn phím không thấy */
+.term:focus-visible { outline: 3px solid var(--ink, #151515); outline-offset: 2px; }
 .term[aria-expanded="true"] { background: var(--yellow, #f5b800); color: var(--ink, #151515); text-decoration: none; }
 .term-pop {
-  position: absolute; z-index: 60; width: min(330px, calc(100vw - 32px));
+  position: absolute; z-index: 60; width: min(330px, calc(100% - 32px));   /* 100vw tính cả thanh cuộn nên tràn */
   background: var(--ink, #151515); color: var(--paper, #f3eee4); padding: 11px 14px 12px;
   border-top: 4px solid var(--yellow, #f5b800); font: 400 14px/1.5 system-ui, "Segoe UI", sans-serif;
   animation: term-in .15s ease-out both;

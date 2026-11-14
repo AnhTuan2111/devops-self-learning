@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 01: TCP/IP, Internet chạy thế nào</title>
 <meta name="description" content="Internet chạy bằng bộ protocol TCP/IP: dữ liệu được cắt thành packet, router tra routing table để chuyển từng packet, các nhà mạng announce đường cho nhau bằng BGP, còn DNS là một hệ thống tên chia theo cấp. Cuối bài bắt packet thật bằng tshark.">
-<link rel="stylesheet" href="../../assets/style.css?v=8257e0ab">
-<link rel="stylesheet" href="../../assets/terms.css?v=8257e0ab">
-<link rel="stylesheet" href="lesson.css?v=6b45618c">
+<link rel="stylesheet" href="../../assets/style.css?v=04240645">
+<link rel="stylesheet" href="../../assets/terms.css?v=04240645">
+<link rel="stylesheet" href="lesson.css?v=3d138799">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01">
@@ -48,14 +48,14 @@
   <a href="#bgp"><i aria-hidden="true"></i>BGP</a>
   <a href="#dns"><i aria-hidden="true"></i>DNS</a>
   <a href="#lab"><i aria-hidden="true"></i>lab</a>
-  <a href="#self-check"><i aria-hidden="true"></i>tự kiểm tra</a>
+  <a href="#sources"><i aria-hidden="true"></i>nguồn đọc thêm</a>
 </nav>
 
 <main class="lesson-body">
 
 <!-- Phần: OSI và TCP/IP -->
 <section class="part" id="two-models">
-<header class="part-head"><p class="part-title">hai mô hình</p><p class="part-note">mô hình chia việc và bộ protocol đang chạy</p></header>
+<header class="part-head"><span class="part-ttl" aria-hidden="true"><b>TTL</b><em>64</em></span><p class="part-title">hai mô hình</p><p class="part-note">mô hình chia việc và bộ protocol đang chạy</p></header>
 
 <h2 id="no-osi-on-the-wire">Không có protocol nào tên OSI</h2>
 
@@ -80,7 +80,7 @@ Application trong OSI.</figcaption>
 
 <p>Layer Transport và layer Internet của TCP/IP khớp với layer 4 và layer 3 của OSI. Layer Link gộp layer 1 và layer 2, còn layer
 Application trùm các layer 5, 6 và 7 (Hình 2). Hai mô hình tả cùng những việc, chỉ khác chỗ gộp hay tách, và khi người làm
-nghề nói "layer 4", "layer 7" thì đó là số theo OSI.</p>
+nghề nói “layer 4”, “layer 7” thì đó là số theo OSI.</p>
 
 <figure class="fig">
 <div class="merge">
@@ -121,7 +121,7 @@ chuyển hẳn sang TCP/IP ngày 1/1/1983, còn ISO tới năm 1984 mới công 
 
 <!-- Phần: packet -->
 <section class="part" id="packets">
-<header class="part-head"><p class="part-title">Packet</p><p class="part-note">mỗi packet tự đi, không ai giữ đường</p></header>
+<header class="part-head"><span class="part-ttl" aria-hidden="true"><b>TTL</b><em>63</em></span><p class="part-title">Packet</p><p class="part-note">mỗi packet tự đi, không ai giữ đường</p></header>
 
 <h2 id="packet-switching">Cắt thành packet, mỗi packet tự đi</h2>
 
@@ -137,8 +137,8 @@ switching), và hình động ở đầu trang vẽ lại chuyện ấy.</p>
 </figure>
 
 <p>Không ai giữ đường thì hai packet của cùng một request có thể đi hai đường khác nhau, tới nơi lộn thứ tự, hoặc mất khi hàng
-chờ của router bị đầy. IP không lo những chuyện ấy; RFC 791 ghi thẳng rằng IP "does not provide a reliable communication
-facility". Gửi lại và ráp lại là việc của TCP ở hai đầu, nên router được làm đơn giản, và một router hỏng thì các packet sau
+chờ của router bị đầy. IP không lo những chuyện ấy; RFC 791 ghi thẳng rằng IP “does not provide a reliable communication
+facility”. Gửi lại và ráp lại là việc của TCP ở hai đầu, nên router được làm đơn giản, và một router hỏng thì các packet sau
 đi vòng qua router khác.</p>
 
 <h2 id="one-request-many-packets">Một lần gọi là bao nhiêu packet</h2>
@@ -176,11 +176,11 @@ nhận.</p>
 
 <!-- Phần: router tra routing table -->
 <section class="part" id="routing-table">
-<header class="part-head"><p class="part-title">router chọn đường</p><p class="part-note">tra bảng, longest prefix match thắng</p></header>
+<header class="part-head"><span class="part-ttl" aria-hidden="true"><b>TTL</b><em>62</em></span><p class="part-title">router chọn đường</p><p class="part-note">tra bảng, longest prefix match thắng</p></header>
 
 <h2 id="table">routing table</h2>
 
-<p>Router chọn hướng cho packet dựa vào một bảng, mỗi dòng ghi "Packet tới dải địa chỉ này thì đẩy ra hướng kia", gọi là
+<p>Router chọn hướng cho packet dựa vào một bảng, mỗi dòng ghi “Packet tới dải địa chỉ này thì đẩy ra hướng kia”, gọi là
 <strong>routing table</strong>. Laptop của bạn cũng có routing table, vì trước khi packet rời máy, Windows cũng phải
 chọn giao packet cho thiết bị nào.</p>
 
@@ -210,8 +210,7 @@ Network Destination        Netmask          Gateway       Interface  Metric
 
 <p>Dòng <code>172.21.16.0/20</code> là mạng ảo nối Windows với <button type="button" class="term" data-term="wsl">WSL</button>,
 hai dòng <code>127...</code> là <code>localhost</code>, còn dòng <code>10.88.88.0/24</code> là mạng WiFi. Dòng
-<code>0.0.0.0/0</code> khớp mọi địa chỉ và giao packet cho cục phát WiFi; dòng ấy gọi là <strong>default route</strong>, hay
-default route.</p>
+<code>0.0.0.0/0</code> khớp mọi địa chỉ và giao packet cho cục phát WiFi; dòng ấy gọi là <strong>default route</strong>.</p>
 
 <h2 id="longest-prefix">Longest prefix match thắng</h2>
 
@@ -252,7 +251,7 @@ Internet.</p>
 
 <!-- Phần: TTL -->
 <section class="part" id="ttl">
-<header class="part-head"><p class="part-title">TTL</p><p class="part-note">mỗi router trừ một, về không thì bỏ</p></header>
+<header class="part-head"><span class="part-ttl" aria-hidden="true"><b>TTL</b><em>61</em></span><p class="part-title">TTL</p><p class="part-note">mỗi router trừ một, về không thì bỏ</p></header>
 
 <h2 id="loops">Khi hai router đẩy qua đẩy lại</h2>
 
@@ -299,7 +298,7 @@ gửi ba lần, nên mỗi dòng của tracert có ba con số thời gian.</p>
 
 <!-- Phần: BGP -->
 <section class="part" id="bgp">
-<header class="part-head"><p class="part-title">giữa các nhà mạng</p><p class="part-note">AS, BGP và ngày Facebook biến mất</p></header>
+<header class="part-head"><span class="part-ttl" aria-hidden="true"><b>TTL</b><em>60</em></span><p class="part-title">giữa các nhà mạng</p><p class="part-note">AS, BGP và ngày Facebook biến mất</p></header>
 
 <h2 id="as">Mỗi nhà mạng là một AS</h2>
 
@@ -313,10 +312,10 @@ AS nối với nhau bằng dây riêng, hoặc qua một điểm trao đổi Int
   <figcaption><b>Ảnh 3</b> Tủ đấu cáp quang của AMS-IX, một IXP ở Amsterdam, nơi hàng trăm AS nối với nhau.</figcaption>
 </figure>
 
-<h2 id="bgp-announce">BGP: báo cho nhau "tôi giữ dải này"</h2>
+<h2 id="bgp-announce">BGP: báo cho nhau “tôi giữ dải này”</h2>
 
 <p>Các AS báo đường cho nhau bằng <strong>BGP</strong> (Border Gateway Protocol). Router BGP của Facebook báo cho các AS kế
-bên rằng "dải <code>57.144.64.0/23</code> ở chỗ tôi", và việc báo như thế gọi là <strong>announce</strong>. AS nhận
+bên rằng “dải <code>57.144.64.0/23</code> ở chỗ tôi”, và việc báo như thế gọi là <strong>announce</strong>. AS nhận
 được lời announce thì ghi đường tới dải ấy vào routing table, rồi announce tiếp cho các AS khác, kèm AS number của nó ghi thêm
 vào đầu. Dãy AS number ấy gọi là AS path, ví dụ <code>3491 32934</code> nghĩa là đi qua AS3491 rồi tới AS32934 của
 Facebook.</p>
@@ -331,7 +330,7 @@ Facebook.</p>
   </div>
 </div>
 <figcaption><b>Hình 6</b> Lời announce BGP lan ra từ AS32934, dựng từ các AS path thật tra trên RIPEstat ngày 30/10/2026. Ô
-bên cạnh mỗi AS là AS path mà AS ấy gửi tiếp. Bấm "rút announce" để xem các AS lần lượt xoá đường tới dải này.</figcaption>
+bên cạnh mỗi AS là AS path mà AS ấy gửi tiếp. Bấm “rút announce” để xem các AS lần lượt xoá đường tới dải này.</figcaption>
 </figure>
 
 <h2 id="facebook-2021">Ngày Facebook tự rút announce</h2>
@@ -345,7 +344,7 @@ ra địa chỉ. Vì sao không server nào khác trả lời thay được? Mu�
 
 <!-- Phần: DNS -->
 <section class="part" id="dns">
-<header class="part-head"><p class="part-title">DNS</p><p class="part-note">một cái tên, ba cấp và một cache</p></header>
+<header class="part-head"><span class="part-ttl" aria-hidden="true"><b>TTL</b><em>59</em></span><p class="part-title">DNS</p><p class="part-note">một cái tên, ba cấp và một cache</p></header>
 
 <h2 id="dns-levels">Không ai giữ hết mọi tên</h2>
 
@@ -379,7 +378,7 @@ facebook.com.		172800	IN	NS	d.ns.facebook.com.
 facebook.com.		60	IN	A	57.144.64.1
 ;; Received 57 bytes from 185.89.218.12#53(c.ns.facebook.com) in 223 ms</code></pre>
 <figcaption><b>Hình 7</b> <code>dig +trace</code> đi từ root xuống, ngày 30/10/2026. Mỗi khối là một câu trả lời, dòng
-<code>Received ... from</code> cho biết ai trả lời. <code>NS</code> nghĩa là "hỏi tiếp server này", <code>A</code> là địa chỉ
+<code>Received ... from</code> cho biết ai trả lời. <code>NS</code> nghĩa là “hỏi tiếp server này”, <code>A</code> là địa chỉ
 IPv4.</figcaption>
 </figure>
 
@@ -401,10 +400,10 @@ trả lời rằng muốn biết về facebook.com thì hỏi <code>a</code> t�
     </div>
     <span class="dw-msg" aria-hidden="true"></span>
   </div>
-  <p class="dw-log" aria-live="polite">bấm "hỏi" để resolver đi hỏi từng cấp</p>
+  <p class="dw-log" aria-live="polite">bấm “hỏi” để resolver đi hỏi từng cấp</p>
   <div class="dw-btns"><button class="diagram-btn dw-ask" type="button">hỏi</button><button class="diagram-btn dw-ask2" type="button">hỏi lại ngay</button></div>
 </div>
-<figcaption><b>Hình 8</b> Resolver đi hỏi từng cấp rồi cất câu trả lời vào cache . Bấm "hỏi lại ngay" thì
+<figcaption><b>Hình 8</b> Resolver đi hỏi từng cấp rồi cất câu trả lời vào cache . Bấm “hỏi lại ngay” thì
 resolver trả lời từ cache mà không đi hỏi ai.</figcaption>
 </figure>
 
@@ -424,19 +423,26 @@ bằng BGP.</p>
 
 <!-- Phần: lab -->
 <section class="part" id="lab">
-<header class="part-head"><p class="part-title">lab</p><p class="part-note">Routing table, TTL, DNS, BGP và bắt packet</p></header>
+<header class="part-head"><span class="part-ttl" aria-hidden="true"><b>TTL</b><em>58</em></span><p class="part-title">lab</p><p class="part-note">Routing table, TTL, DNS, BGP và bắt packet</p></header>
 
-<p>Lab chỉ dùng những thứ có sẵn hoặc cài được bằng bộ cài trên Windows: Git Bash cho <code>route</code>, <code>ping</code>,
-<code>nslookup</code> và <code>curl</code>, PowerShell cho một lệnh hỏi DNS, và
-<button type="button" class="term" data-term="wireshark">Wireshark</button> bản có giao diện cho bước bắt packet. Output là
-của máy mình, Windows 11, chạy ngày 14/11/2026 trừ khi khối output ghi ngày khác; chỗ có <code>...</code> là mình lược bớt.</p>
+<p>Lab dùng ba chương trình trên Windows. Git Bash, cửa sổ dòng lệnh đi kèm khi cài Git for Windows, chạy <code>route</code>,
+<code>ping</code>, <code>nslookup</code> và <code>curl</code>; bạn mở nó bằng cách bấm phím Windows, gõ <code>git bash</code> rồi
+bấm Enter. PowerShell, cửa sổ dòng lệnh có sẵn của Windows, chạy một lệnh hỏi DNS ở Lab 3; bạn mở nó cũng bằng phím Windows, gõ
+<code>powershell</code> rồi bấm Enter. Còn <button type="button" class="term" data-term="wireshark">Wireshark</button> bản có giao
+diện dùng ở Lab 5, cách cài nằm ngay trong lab ấy.</p>
+
+<p>Mỗi cửa sổ dòng lệnh in một dấu nhắc ở đầu dòng để báo nó đang chờ bạn gõ, gọi là <strong>prompt</strong>. Git Bash in dấu
+<code>$</code>, còn PowerShell in <code>PS C:\Users\&lt;tên bạn&gt;&gt;</code>, trang này viết gọn thành <code>PS&gt;</code>. Nên
+trong các khối dưới, dòng mở đầu bằng <code>$</code> là lệnh gõ vào Git Bash, dòng mở đầu bằng <code>PS&gt;</code> là lệnh gõ vào
+PowerShell. Bạn gõ phần đứng sau prompt rồi bấm Enter; các dòng còn lại là output máy in ra. Output là của máy mình, Windows 11,
+chạy ngày 14/11/2026 trừ khi khối output ghi ngày khác; chỗ có <code>...</code> là mình lược bớt.</p>
 
 <h2 id="lab-1">Lab 1: đọc routing table của máy bạn</h2>
 
-<p>Lệnh <code>route print</code> in routing table của Windows, còn <code>-4</code> bảo nó chỉ in phần IPv4 cho đỡ dài.</p>
+<p>Trong Git Bash, gõ <code>route print -4</code> rồi bấm Enter. Lệnh <code>route print</code> in routing table của Windows, còn
+<code>-4</code> bảo nó chỉ in phần IPv4 cho đỡ dài.</p>
 
-<pre><code># Git Bash
-route print -4</code></pre>
+<pre><code>$ route print -4</code></pre>
 
 <p>Tìm khối <code>IPv4 Route Table</code>, rồi tìm dòng có Network Destination là <code>0.0.0.0</code> và Netmask là
 <code>0.0.0.0</code>. Đó là default route, và cột Gateway của dòng ấy là địa chỉ cục phát WiFi của bạn, giống dòng đầu của
@@ -446,7 +452,8 @@ Hình 3. Máy bạn có thể nhiều dòng hơn hay ít dòng hơn Hình 3, tu�
 
 <p>Lệnh <code>ping</code> của Windows có option <code>-i</code> để đặt TTL, còn <code>-n 1</code> bảo ping chỉ gửi một packet. Đặt TTL
 nhỏ hơn số chặng thì packet chết giữa đường, và bạn nhận về lời báo Time Exceeded, Windows in thành
-<code>TTL expired in transit</code>.</p>
+<code>TTL expired in transit</code>. Gõ lần lượt ba lệnh trong khối dưới vào Git Bash, mỗi lệnh bấm Enter một lần rồi chờ output in
+xong mới gõ lệnh sau.</p>
 
 <pre><code>$ ping -n 1 -i 1 facebook.com
 Pinging facebook.com [57.144.64.1] with 32 bytes of data:
@@ -459,7 +466,7 @@ $ ping -n 1 -i 3 facebook.com
 Reply from (router nhà mạng, đã ẩn): TTL expired in transit.</code></pre>
 
 <p>Ba dòng này là ba dòng đầu của tracert, làm bằng tay. Bỏ option <code>-i</code> thì packet đi với TTL mặc định và tới được
-facebook.com:</p>
+facebook.com. Lệnh ấy cũng gõ vào Git Bash:</p>
 
 <pre><code>$ ping -n 1 facebook.com
 Pinging facebook.com [57.144.64.1] with 32 bytes of data:
@@ -472,7 +479,7 @@ Reply from 57.144.64.1: bytes=32 time=24ms TTL=51</code></pre>
 <p>Hình 7 là resolver đi hỏi từng cấp. Bạn tự làm lại các bước ấy bằng <code>nslookup</code>, lệnh hỏi DNS có sẵn trong
 Windows. Viết địa chỉ một server DNS ở cuối lệnh thì <code>nslookup</code> hỏi thẳng server ấy chứ không hỏi resolver, còn
 option <code>-norecurse</code> dặn server đừng đi hỏi hộ, biết tới đâu thì trả lời tới đó. Hỏi root trước;
-<code>198.41.0.4</code> là địa chỉ của <code>a.root-servers.net</code>.</p>
+<code>198.41.0.4</code> là địa chỉ của <code>a.root-servers.net</code>. Gõ lệnh dưới vào Git Bash.</p>
 
 <pre><code>$ nslookup -norecurse facebook.com 198.41.0.4
 in-addr.arpa	nameserver = f.in-addr-servers.arpa
@@ -494,7 +501,7 @@ Served by:
 <p>Mấy dòng trước <code>Server:</code> là <code>nslookup</code> đi hỏi tên của chính server ấy, bỏ qua được. Câu trả lời
 nằm dưới dòng <code>Name:</code>: root không biết facebook.com ở đâu, nên chỉ sang các server giữ <code>com</code>, như
 <code>l.gtld-servers.net</code>. Hỏi tiếp một server của <code>com</code>; <code>192.5.6.30</code> là
-<code>a.gtld-servers.net</code>.</p>
+<code>a.gtld-servers.net</code>. Lệnh này cũng gõ vào Git Bash.</p>
 
 <pre><code>$ nslookup -norecurse facebook.com 192.5.6.30
 ...
@@ -512,7 +519,8 @@ Served by:
 
 <p>Lần này <code>com</code> chỉ sang <code>a.ns.facebook.com</code>, authoritative server của facebook.com. Còn một bước
 nữa là hỏi chính server ấy, và để thấy TTL của câu trả lời thì dùng <code>Resolve-DnsName</code>, lệnh hỏi DNS của
-PowerShell, vì nó in TTL thành một cột riêng. Mở PowerShell bằng cách gõ PowerShell ở menu Start. Option
+PowerShell, vì nó in TTL thành một cột riêng. Bạn mở PowerShell như ở đầu lab rồi gõ lần lượt ba lệnh <code>Resolve-DnsName</code>
+trong khối dưới; dòng mở đầu bằng <code>#</code> là lời nhắc của mình, không gõ dòng ấy. Option
 <code>-Type A</code> chỉ xin địa chỉ IPv4, <code>-Server</code> chọn server để hỏi, <code>-NoRecursion</code> giống
 <code>-norecurse</code> của <code>nslookup</code>; bỏ <code>-Server</code> thì lệnh hỏi resolver như mọi chương trình trên
 máy.</p>
@@ -543,10 +551,9 @@ thì lần sau nó nhảy lên 60, nghĩa là resolver đã bỏ câu trả lờ
 <h2 id="lab-4">Lab 4: tra AS của một địa chỉ</h2>
 
 <p>RIPEstat, dịch vụ tra cứu của RIPE NCC, trả lời bằng JSON qua một URL, nên gọi bằng <code>curl</code> là đủ; option
-<code>-s</code> bảo curl không in thanh tiến độ.</p>
+<code>-s</code> bảo curl không in thanh tiến độ. Gõ lệnh dưới vào Git Bash; máy cần có mạng.</p>
 
-<pre><code># Git Bash, cần mạng
-curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=57.144.64.1"</code></pre>
+<pre><code>$ curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=57.144.64.1"</code></pre>
 
 <p>Khối JSON trả về khá dài, mình rút ra ba trường cần đọc.</p>
 
@@ -556,7 +563,7 @@ curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=57.144.64
 
 <p><code>announced</code> cho biết dải đang được announce trên BGP, còn <code>asns</code> là AS announce dải ấy. Thử với địa
 chỉ các chặng trong tracert ở Bài 00 thì bạn sẽ thấy từ chặng 10, packet đã vào mạng của Facebook. Địa chỉ nào ra
-<code>"announced": false</code> thì tra xem ai đăng ký dải chứa nó, cũng qua RIPEstat:</p>
+<code>"announced": false</code> thì tra xem ai đăng ký dải chứa nó, cũng qua RIPEstat, bằng lệnh dưới gõ vào Git Bash:</p>
 
 <pre><code>$ curl -s "https://stat.ripe.net/data/whois/data.json?resource=147.75.211.10"
 ...{"key":"inetnum","value":"147.75.208.0/20",...}
@@ -570,7 +577,7 @@ chỉ các chặng trong tracert ở Bài 00 thì bạn sẽ thấy từ chặng
 
 <p>Wireshark bắt các packet đi qua NIC rồi bóc từng layer cho bạn đọc. Ảnh 4 là một packet hỏi DNS mở trong Wireshark.</p>
 
-<figure class="fig photo shot">
+<figure class="fig photo shot wide">
   <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Wireshark_Network_Analyzer_Screen.png" data-credit="Ảnh: Laurachappell · Wikimedia Commons · CC BY-SA 4.0, đã cắt và vẽ thêm khung màu" aria-label="Nguồn ảnh: Laurachappell · Wikimedia Commons · CC BY-SA 4.0"><img src="img/wireshark-dns.webp" width="1149" height="200" loading="lazy" alt="Giao diện Wireshark: một dòng DNS packet hỏi www.google.com, bên dưới là các dòng Frame, Ethernet II, Internet Protocol Version 4, User Datagram Protocol, Domain Name System xếp chồng."></a>
   <figcaption><b>Ảnh 4</b> Một packet hỏi DNS mở bằng Wireshark, các layer xếp từ ngoài vào trong:
   <span class="kw"><i class="key k-red" aria-hidden="true"></i>MAC header</span> (Wireshark gọi là Ethernet II),
@@ -630,28 +637,9 @@ port 80 của server, còn 75 byte cuối là request HTTP, đọc thẳng đư�
 
 </section>
 
-<!-- Phần: tự kiểm tra, nguồn -->
-<section class="part" id="self-check">
-<header class="part-head"><p class="part-title">tự kiểm tra</p><p class="part-note">tự kiểm tra và nguồn đọc thêm</p></header>
-
-<h2 id="checklist">Tự kiểm tra</h2>
-
-<p>Đánh dấu từng dòng khi bạn tự trả lời được mà không nhìn lại bài, bằng lời của bạn và kèm một ví dụ.</p>
-
-<ul class="check">
-  <li>Kể được bốn layer của TCP/IP và mỗi layer ứng với layer nào của OSI</li>
-  <li>Nói được packet switching khác circuit switching ở đâu, và những chuyện có thể xảy ra với packet vì không ai giữ đường</li>
-  <li>Chỉ ra được trong 12 packet của một lần curl, packet nào là handshake, packet nào chở dữ liệu và packet nào đóng kết nối</li>
-  <li>Tính được <code>10.0.0.0/16</code> có bao nhiêu địa chỉ, và đổi được netmask <code>255.255.252.0</code> ra độ dài prefix</li>
-  <li>Cho một địa chỉ và routing table ở Hình 3, chỉ ra được dòng nào thắng và vì sao</li>
-  <li>Giải thích được TTL dùng để làm gì, và tracert dựa vào TTL để tìm từng router thế nào</li>
-  <li>Nói được AS là gì, BGP báo cho nhau điều gì, và đọc được AS path <code>6939 1299 32934</code></li>
-  <li>Kể lại được vì sao ngày 4/10/2021 server DNS của Facebook vẫn chạy mà không ai tới được</li>
-  <li>Kể được resolver đi qua những cấp nào để đổi facebook.com ra địa chỉ, và TTL trong câu trả lời DNS cho biết điều gì</li>
-  <li>Bắt được packet của một request bằng Wireshark và chỉ ra byte nào là TTL, byte nào là port</li>
-</ul>
-
-<h2 id="sources">Nguồn đọc thêm</h2>
+<!-- Phần: nguồn đọc thêm -->
+<section class="part" id="sources">
+<header class="part-head"><span class="part-ttl" aria-hidden="true"><b>TTL</b><em>57</em></span><p class="part-title">nguồn đọc thêm</p></header>
 
 <ol class="refs">
   <li>RFC 1122, <em>Requirements for Internet Hosts: Communication Layers</em> (1989). Bốn layer ở mục 1.1.3.
@@ -678,7 +666,7 @@ port 80 của server, còn 75 byte cuối là request HTTP, đọc thẳng đư�
   <a href="https://stat.ripe.net/docs/data_api">stat.ripe.net/docs/data_api</a></li>
   <li>Microsoft, trang hướng dẫn lệnh <code>tracert</code>.
   <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/tracert">learn.microsoft.com/…/windows-commands/tracert</a></li>
-  <li>Wireshark User's Guide, chương Capturing Live Network Data: màn đầu, capture filter, nút dừng.
+  <li>Wireshark User’s Guide, chương Capturing Live Network Data: màn đầu, capture filter, nút dừng.
   <a href="https://www.wireshark.org/docs/wsug_html_chunked/ChapterCapture.html">wireshark.org/docs/wsug_html_chunked/ChapterCapture.html</a></li>
   <li>Microsoft, trang hướng dẫn lệnh <code>nslookup</code>.
   <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup">learn.microsoft.com/…/windows-commands/nslookup</a></li>
@@ -705,8 +693,8 @@ port 80 của server, còn 75 byte cuối là request HTTP, đọc thẳng đư�
 
 </div>
 
-<script src="../../assets/app.js?v=8257e0ab"></script>
-<script src="../../assets/terms.js?v=8257e0ab"></script>
-<script src="lesson.js?v=7c22af15"></script>
+<script src="../../assets/app.js?v=04240645"></script>
+<script src="../../assets/terms.js?v=04240645"></script>
+<script src="lesson.js?v=fa7c08fd"></script>
 </body>
 </html>

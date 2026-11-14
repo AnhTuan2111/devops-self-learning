@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 00: Bấm like trên facebook.com, bảy layer OSI</title>
 <meta name="description" content="Bấm like trên facebook.com thì phía sau browser xảy ra những gì: dựng bảy layer của mô hình OSI từ dưới lên, rồi đi theo cú like qua cả bảy layer.">
-<link rel="stylesheet" href="../../assets/style.css?v=8257e0ab">
-<link rel="stylesheet" href="../../assets/terms.css?v=8257e0ab">
-<link rel="stylesheet" href="lesson.css?v=e634ca0b">
+<link rel="stylesheet" href="../../assets/style.css?v=04240645">
+<link rel="stylesheet" href="../../assets/terms.css?v=04240645">
+<link rel="stylesheet" href="lesson.css?v=e53858e7">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00">
@@ -44,24 +44,24 @@
 <nav class="elevator" aria-label="Đi tới một layer hay một phần của bài">
   <a class="el-extra" href="#intro">mở đầu</a>
   <div class="el-stack">
-    <a class="el-floor c1" href="#physical" data-layer="1"><b>1</b><span>physical</span></a>
-    <a class="el-floor c2" href="#data-link" data-layer="2"><b>2</b><span>data link</span></a>
-    <a class="el-floor c3" href="#network" data-layer="3"><b>3</b><span>network</span></a>
-    <a class="el-floor c4" href="#transport" data-layer="4"><b>4</b><span>transport</span></a>
-    <a class="el-floor c5" href="#session" data-layer="5"><b>5</b><span>session</span></a>
-    <a class="el-floor c6" href="#presentation" data-layer="6"><b>6</b><span>presentation</span></a>
-    <a class="el-floor c7" href="#application" data-layer="7"><b>7</b><span>application</span></a>
+    <a class="el-floor c1" href="#physical" data-layer="1" title="layer 1, physical" aria-label="layer 1, physical"><b>1</b><span>physical</span></a>
+    <a class="el-floor c2" href="#data-link" data-layer="2" title="layer 2, data link" aria-label="layer 2, data link"><b>2</b><span>data link</span></a>
+    <a class="el-floor c3" href="#network" data-layer="3" title="layer 3, network" aria-label="layer 3, network"><b>3</b><span>network</span></a>
+    <a class="el-floor c4" href="#transport" data-layer="4" title="layer 4, transport" aria-label="layer 4, transport"><b>4</b><span>transport</span></a>
+    <a class="el-floor c5" href="#session" data-layer="5" title="layer 5, session" aria-label="layer 5, session"><b>5</b><span>session</span></a>
+    <a class="el-floor c6" href="#presentation" data-layer="6" title="layer 6, presentation" aria-label="layer 6, presentation"><b>6</b><span>presentation</span></a>
+    <a class="el-floor c7" href="#application" data-layer="7" title="layer 7, application" aria-label="layer 7, application"><b>7</b><span>application</span></a>
   </div>
   <a class="el-extra" href="#journey">đường đi</a>
   <a class="el-extra" href="#lab">lab</a>
-  <a class="el-extra" href="#self-check">tự kiểm tra</a>
+  <a class="el-extra" href="#sources">nguồn đọc thêm</a>
 </nav>
 
 <main class="lesson-body">
 
 <!-- Phần: cú like, chia việc thành layer, mô hình OSI -->
 <section class="part" id="intro">
-<header class="part-head"><p class="part-title">một cú like</p><p class="part-note">phía sau browser có gì</p></header>
+<header class="part-head"><p class="part-title">mở đầu</p></header>
 
 <h2 id="behind-the-click">Phía sau một cú like</h2>
 
@@ -101,15 +101,15 @@ g) the Physical Layer (layer 1).</p>
 layer 7 sát chương trình bạn dùng.</figcaption>
 </figure>
 
-<p>Người làm mạng, làm server hay gọi layer theo số, kiểu "lỗi layer 7" hay
-"<button type="button" class="term" data-term="load-balancer">load balancer</button> layer 4". Bài này đi từ layer 1 lên, vì
+<p>Người làm mạng, làm server hay gọi layer theo số, kiểu “lỗi layer 7” hay
+“<button type="button" class="term" data-term="load-balancer">load balancer</button> layer 4”. Bài này đi từ layer 1 lên, vì
 layer nào cũng giải quyết một chuyện mà layer ngay dưới nó không lo tới.</p>
 
 </section>
 
 <!-- Phần: layer 1 và 2 -->
 <section class="part" id="lower-layers">
-<header class="part-head"><p class="part-title">Layer</p><span class="part-num"><i class="c1">1</i><i class="c2">2</i></span><p class="part-note">chở bit, tới thiết bị kế bên</p></header>
+<header class="part-head"><p class="part-title">layer 1, 2</p><p class="part-note">chở bit, tới thiết bị kế bên</p></header>
 
 <h2 id="physical" class="layer-h c1" data-layer="1">Layer <span class="layer-badge c1">1</span> Physical: chở số 0 và 1</h2>
 
@@ -161,7 +161,7 @@ mạng khác, nên muốn đi xa thì cần thêm layer 3.</p>
 
 <!-- Phần: layer 3 và 4 -->
 <section class="part" id="middle-layers">
-<header class="part-head"><p class="part-title">Layer</p><span class="part-num"><i class="c3">3</i><i class="c4">4</i></span><p class="part-note">đi xa, tới đúng chương trình</p></header>
+<header class="part-head"><p class="part-title">layer 3, 4</p><p class="part-note">đi xa, tới đúng chương trình</p></header>
 
 <h2 id="network" class="layer-h c3" data-layer="3">Layer <span class="layer-badge c3">3</span> Network: đi qua nhiều mạng tới đúng máy</h2>
 
@@ -213,7 +213,7 @@ câu hỏi DNS mà bạn sẽ gặp ở layer 7.</p>
 
 <!-- Phần: layer 5, 6, 7 -->
 <section class="part" id="upper-layers">
-<header class="part-head"><p class="part-title">Layer</p><span class="part-num"><i class="c5">5</i><i class="c6">6</i><i class="c7">7</i></span><p class="part-note">phần của chương trình</p></header>
+<header class="part-head"><p class="part-title">layer 5, 6, 7</p><p class="part-note">phần của chương trình</p></header>
 
 <p>Ba layer trên nằm trong chương trình ở hai đầu, tức browser của bạn và chương trình của Facebook trên server. Router ở
 giữa không đụng tới ba layer này.</p>
@@ -254,7 +254,7 @@ theo là header, sau dòng trống là phần thân.</figcaption>
 
 <!-- Phần: cú like đi qua cả bảy layer -->
 <section class="part" id="journey">
-<header class="part-head"><p class="part-title">đường đi</p><span class="part-num"><i class="c7">7</i><i class="c6">6</i><i class="c5">5</i><i class="c4">4</i><i class="c3">3</i><i class="c2">2</i><i class="c1">1</i></span><p class="part-note">đi xuống, đi qua, đi lên</p></header>
+<header class="part-head"><p class="part-title">đường đi</p><p class="part-note">đi xuống, đi qua, đi lên</p></header>
 
 <h2 id="encapsulation">Đi xuống: bọc thêm từng header</h2>
 
@@ -385,22 +385,18 @@ các lệnh ở cột cuối bạn sẽ chạy ở phần Lab.</p>
 <section class="part" id="lab">
 <header class="part-head"><p class="part-title">lab</p><p class="part-note">xem từng layer trên máy bạn</p></header>
 
-<p>Các lệnh dưới chạy trong Git Bash, cửa sổ dòng lệnh đi kèm khi cài Git for Windows. Output là của máy mình ngày
-30/10/2026; máy bạn sẽ ra địa chỉ khác nhưng cách đọc vẫn vậy.</p>
+<p>Cả bốn lab gõ lệnh trong Git Bash, cửa sổ dòng lệnh đi kèm khi cài Git for Windows. Máy chưa có Git Bash thì tải bộ cài ở
+<a href="https://git-scm.com/downloads/win">git-scm.com/downloads/win</a> rồi cài, giữ các lựa chọn mặc định. Để mở Git Bash, bạn
+bấm phím Windows, gõ <code>git bash</code> rồi bấm Enter. Một cửa sổ nền đen hiện ra, dòng cuối kết thúc bằng dấu <code>$</code>.
+Dấu <code>$</code> ấy gọi là <strong>prompt</strong>, Git Bash in nó ra để báo đang chờ bạn gõ lệnh.</p>
 
-<pre><code># Lab 1: layer 2, địa chỉ MAC của các NIC
-getmac
-
-# Lab 2: layer 3, dò chuỗi router tới facebook.com
-tracert -d facebook.com
-
-# Lab 3: layer 7, hỏi DNS
-nslookup facebook.com
-
-# Lab 4: layer 4 và layer 7 trong một lần gọi
-curl -v -o /dev/null https://www.facebook.com/</code></pre>
+<p>Trong các khối dưới, dòng mở đầu bằng <code>$</code> là lệnh bạn gõ. Bạn gõ phần đứng sau dấu <code>$</code>, không gõ chính
+dấu ấy, rồi bấm Enter; các dòng còn lại là output máy in ra. Lệnh chạy xong thì dấu <code>$</code> hiện lại và bạn gõ được lệnh
+tiếp. Output là của máy mình ngày 30/10/2026; máy bạn sẽ ra địa chỉ khác nhưng cách đọc vẫn vậy.</p>
 
 <h2 id="lab-1">Lab 1: layer 2, địa chỉ MAC</h2>
+
+<p>Gõ <code>getmac</code> rồi bấm Enter. Lệnh này in địa chỉ MAC của mọi NIC trên máy.</p>
 
 <pre><code>$ getmac
 Physical Address    Transport Name
@@ -415,8 +411,9 @@ là card ảo do phần mềm <button type="button" class="term" data-term="vpn"
 
 <h2 id="lab-2">Lab 2: layer 3, dò chuỗi router</h2>
 
-<p><code>tracert</code> liệt kê các router mà packet đi qua, còn option <code>-d</code> bảo lệnh đừng đổi địa chỉ IP thành tên.
-Mình đã ẩn địa chỉ các router của nhà mạng.</p>
+<p>Gõ <code>tracert -d facebook.com</code> rồi bấm Enter. <code>tracert</code> liệt kê các router mà packet đi qua, còn option
+<code>-d</code> bảo lệnh đừng đổi địa chỉ IP thành tên. Lệnh in mỗi chặng một dòng và chạy lâu hơn các lab khác; bạn chờ tới khi
+hiện dòng <code>Trace complete.</code> và dấu <code>$</code> quay lại. Mình đã ẩn địa chỉ các router của nhà mạng.</p>
 
 <figure class="fig">
 <ol class="route" aria-label="14 chặng từ laptop tới facebook.com">
@@ -471,6 +468,8 @@ không trả lời lệnh dò, chứ packet không mất ở đó, vì các dòn
 
 <h2 id="lab-3">Lab 3: layer 7, hỏi DNS</h2>
 
+<p>Gõ <code>nslookup facebook.com</code> rồi bấm Enter. Lệnh này hỏi DNS địa chỉ của facebook.com.</p>
+
 <pre><code>$ nslookup facebook.com
 Server:  (tên router, đã ẩn)
 Address:  fe80::10
@@ -486,8 +485,8 @@ kiểu mới, IPv6.</p>
 
 <h2 id="lab-4">Lab 4: layer 4 và layer 7 trong một lần gọi</h2>
 
-<p><code>curl</code> gửi request HTTP từ dòng lệnh. Option <code>-v</code> bảo curl kể lại từng bước, còn <code>-o /dev/null</code>
-bỏ nội dung trang đi.</p>
+<p>Gõ <code>curl -v -o /dev/null https://www.facebook.com/</code> rồi bấm Enter. <code>curl</code> gửi request HTTP từ dòng
+lệnh. Option <code>-v</code> bảo curl kể lại từng bước, còn <code>-o /dev/null</code> bỏ nội dung trang đi.</p>
 
 <figure class="fig">
 <pre><code>* Host www.facebook.com:443 was resolved.
@@ -514,26 +513,9 @@ của Windows để encrypt, mà schannel gần như không báo lại gì; mấ
 
 </section>
 
-<!-- Phần: tự kiểm tra, nguồn -->
-<section class="part" id="self-check">
-<header class="part-head"><p class="part-title">tự kiểm tra</p><p class="part-note">tự kiểm tra và nguồn đọc thêm</p></header>
-
-<h2 id="checklist">Tự kiểm tra</h2>
-
-<p>Đánh dấu từng dòng khi bạn tự trả lời được mà không nhìn lại bài, bằng lời của bạn và kèm một ví dụ.</p>
-
-<ul class="check">
-  <li>Kể được bảy layer từ dưới lên, và layer 1 tới 4 mỗi layer lo việc gì</li>
-  <li>Nói được vì sao chia việc thành layer, và so sánh được với việc tách controller, service, repository</li>
-  <li>Chỉ ra được địa chỉ MAC, địa chỉ IP và port lần lượt thuộc layer nào</li>
-  <li>Giải thích được vì sao trên đường tới server, IP nhận giữ nguyên còn MAC header đổi ở mỗi chặng</li>
-  <li>Kể được thứ tự các layer được gắn vào request like lúc đi xuống, và thứ tự các layer được bóc ra ở server</li>
-  <li>Nói được router đọc tới layer mấy, và vì sao router không biết bạn vừa bấm like</li>
-  <li>Đọc được output của <code>curl -v</code> và chỉ ra dòng nào thuộc layer nào</li>
-  <li>Giải thích được vì sao mất WiFi mà curl lại báo <code>Could not resolve host</code></li>
-</ul>
-
-<h2 id="sources">Nguồn đọc thêm</h2>
+<!-- Phần: nguồn đọc thêm -->
+<section class="part" id="sources">
+<header class="part-head"><p class="part-title">nguồn đọc thêm</p></header>
 
 <ol class="refs">
   <li>ITU-T X.200 (07/1994), <em>Information technology, Open Systems Interconnection, Basic Reference Model: The basic
@@ -568,10 +550,6 @@ của Windows để encrypt, mà schannel gần như không báo lại gì; mấ
     <span class="dir">Quay lại</span>
     <span class="t">Lộ trình</span>
   </a>
-  <a class="next" href="../01-tcp-ip/">
-    <span class="dir">Bài sau</span>
-    <span class="t">Bài 01: TCP/IP, Internet chạy thế nào</span>
-  </a>
 </nav>
 
 <footer class="page">
@@ -580,8 +558,8 @@ của Windows để encrypt, mà schannel gần như không báo lại gì; mấ
 
 </div>
 
-<script src="../../assets/app.js?v=8257e0ab"></script>
-<script src="../../assets/terms.js?v=8257e0ab"></script>
-<script src="lesson.js?v=27a9e29e"></script>
+<script src="../../assets/app.js?v=04240645"></script>
+<script src="../../assets/terms.js?v=04240645"></script>
+<script src="lesson.js?v=4ab41aa6"></script>
 </body>
 </html>

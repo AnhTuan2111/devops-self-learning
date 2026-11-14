@@ -194,6 +194,13 @@
   }
 
   // ---------- Hiện dần khi cuộn tới ----------
+  // Lớp js trên <html>: chỉ khi script chạy thì hình mới ẩn chờ hiện dần; tắt JS thì mọi hình hiện sẵn
+  document.documentElement.classList.add('js');
+  // Chấm ga: vị trí trên vạch theo thứ tự ga
+  (() => {
+    const heads = document.querySelectorAll('.part > .part-head');
+    heads.forEach((h, i) => h.style.setProperty('--k', heads.length > 1 ? i / (heads.length - 1) : 0));
+  })();
   const revealIo = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (e.isIntersecting) { e.target.classList.add('shown'); revealIo.unobserve(e.target); }
   }), { rootMargin: '0px 0px -8% 0px' });
@@ -244,7 +251,7 @@
       const v = toInt(ip);
       bitsIp.textContent = ip;
       bitEls.forEach((b, i) => { b.textContent = (v >>> (31 - i)) & 1; b.classList.remove('on'); });
-      rows.forEach((r) => { r.className = ''; r.querySelector('.lr-bar i').style.width = '0'; r.querySelector('.lr-res').textContent = ''; });
+      rows.forEach((r) => { r.className = ''; r.querySelector('.lr-bar i').style.transform = 'scaleX(0)'; r.querySelector('.lr-res').textContent = ''; });
       out.textContent = 'đang so từng dòng';
       let best = null;
       for (const r of rows) {
@@ -252,7 +259,7 @@
         const net = toInt(r.dataset.net);
         const hit = len === 0 || (v >>> (32 - len)) === (net >>> (32 - len));
         bitEls.forEach((b, i) => b.classList.toggle('on', i < len));
-        r.querySelector('.lr-bar i').style.width = `${(len / 32) * 100}%`;
+        r.querySelector('.lr-bar i').style.transform = `scaleX(${len / 32})`;
         if (!reduced) await wait(520);
         if (me !== run) return;
         r.classList.add(hit ? 'match' : 'miss');
@@ -296,7 +303,12 @@
     const ttlEl = pkt.querySelector('em');
     const tag = pkt.querySelector('b');
     const logs = [...probe.querySelectorAll('.probe-log li')];
-    const xOf = (n) => `${n.offsetLeft + n.offsetWidth / 2}px`;
+    // Tâm packet đặt trên tâm nút, nhưng kẹp lại để nửa packet không thò ra ngoài hình ở hai đầu (màn hẹp)
+    const xOf = (n) => {
+      const half = pkt.offsetWidth / 2;
+      const x = n.offsetLeft + n.offsetWidth / 2;
+      return `${Math.min(Math.max(x, half), path.clientWidth - half)}px`;
+    };
     const reset = () => {
       nodes.forEach((n) => n.classList.remove('hit', 'seen'));
       logs.forEach((l) => l.classList.remove('on', 'last'));
@@ -307,12 +319,12 @@
       for (let start = 1; start <= 5; start++) {
         let t = start;
         pkt.classList.remove('back'); tag.textContent = 'TTL'; ttlEl.textContent = t;
-        pkt.style.transition = 'none'; pkt.style.left = xOf(nodes[0]); void pkt.offsetWidth; pkt.style.transition = '';
+        pkt.style.transition = 'none'; pkt.style.transform = `translateX(${xOf(nodes[0])})`; void pkt.offsetWidth; pkt.style.transition = '';
         pkt.classList.add('show');
         await wait(350);
         let stop = 0;
         for (let i = 1; i < nodes.length; i++) {
-          pkt.style.left = xOf(nodes[i]);
+          pkt.style.transform = `translateX(${xOf(nodes[i])})`;
           await wait(430);
           if (nodes[i].classList.contains('dst')) { stop = i; break; }
           t -= 1; ttlEl.textContent = t;
@@ -323,7 +335,7 @@
         // Lời báo đi ngược về máy bạn: Time Exceeded từ router, hay Echo Reply từ đích
         const atDst = nodes[stop].classList.contains('dst');
         pkt.classList.add('back'); tag.textContent = atDst ? 'đáp' : 'hết hạn'; ttlEl.textContent = atDst ? 'ok' : 'hết';
-        pkt.style.left = xOf(nodes[0]);
+        pkt.style.transform = `translateX(${xOf(nodes[0])})`;
         await wait(420 + stop * 60);
         nodes[stop].classList.replace('hit', 'seen');
         logs[stop - 1].classList.add('on');
@@ -343,16 +355,18 @@
     const svg = bgp.querySelector('.bgp-svg');
     // Tám AS và đường nối lấy từ AS path thật trên RIPEstat ngày 30/10/2026
     const AS = {
-      32934: { x: 572, y: 150, name: 'Facebook', from: null },
-      3491: { x: 430, y: 40, name: 'PCCW Global', from: 32934 },
-      18106: { x: 430, y: 112, name: 'Viewqwest', from: 32934 },
-      2914: { x: 430, y: 184, name: 'NTT', from: 32934 },
-      1299: { x: 430, y: 256, name: 'Arelion', from: 32934 },
-      174: { x: 285, y: 256, name: 'Cogent', from: 1299 },
-      50673: { x: 150, y: 256, name: 'Serverius', from: 174 },
-      202365: { x: 70, y: 150, name: 'mạng nhỏ ở Hà Lan', from: 50673 },
+      // Facebook bên phải, bốn nhà mạng nối thẳng xếp một cột, chuỗi qua Arelion chạy ngang ở giữa sang trái
+      32934: { x: 572, y: 125, name: 'Facebook', from: null },
+      3491: { x: 430, y: 35, name: 'PCCW Global', from: 32934 },
+      18106: { x: 430, y: 95, name: 'Viewqwest', from: 32934 },
+      1299: { x: 430, y: 155, name: 'Arelion', from: 32934 },
+      2914: { x: 430, y: 228, name: 'NTT', from: 32934 },
+      174: { x: 300, y: 155, name: 'Cogent', from: 1299 },
+      50673: { x: 185, y: 155, name: 'Serverius', from: 174 },
+      202365: { x: 70, y: 155, name: 'mạng nhỏ ở Hà Lan', from: 50673 },
     };
     const W = 96, H = 38;
+    const placed = [];
     const pathOf = (asn) => { const out = []; for (let a = Number(asn); a; a = AS[a].from) out.push(a); return out.join(' '); };
     const edges = {};
     const edgeLayer = svgEl('g', {}, svg);
@@ -369,13 +383,19 @@
       svgEl('text', { class: 'asname', x: a.x, y: a.y + 12 }, g).textContent = a.name;
       a.g = g;
       if (!a.from) continue;
-      // Ô AS path: cột phải đặt bên trái nút, hàng dưới đặt dưới nút, nút ngoài cùng bên trái đặt trên nút
+      // Ô AS path: ba nút của cột đặt nhãn bên trái nút; nút trên chuỗi ngang đặt nhãn dưới nút, nhãn nào đè lên nhãn
+      // đã đặt thì xuống hàng kế tiếp
       const text = pathOf(asn);
       const tw = text.length * 6.6 + 12;
       let tx, ty;
-      if (a.x === 430 && a.y < 250) { tx = a.x - W / 2 - tw - 10; ty = a.y - 9; }
-      else if (a.y > 250) { tx = a.x - tw / 2; ty = a.y + H / 2 + 6; }
-      else { tx = Math.max(4, a.x - tw / 2); ty = a.y - H / 2 - 24; }
+      if (a.x === 430 && a.y !== 155) { tx = a.x - W / 2 - tw - 10; ty = a.y - 9; }
+      else {
+        tx = Math.max(4, Math.min(636 - tw, a.x - tw / 2));
+        let row = 0;
+        while (placed.some((p) => p.row === row && tx < p.x2 + 8 && tx + tw > p.x1 - 8)) row++;
+        placed.push({ row, x1: tx, x2: tx + tw });
+        ty = a.y + H / 2 + 6 + row * 24;
+      }
       const tg = svgEl('g', { class: 'path-tag' }, svg);
       svgEl('rect', { x: tx, y: ty, width: tw, height: 18 }, tg);
       svgEl('text', { x: tx + 6, y: ty + 9.5 }, tg).textContent = text;
@@ -465,10 +485,10 @@
       a.classList.add('talk');
       msg.textContent = text; msg.classList.toggle('ans', answer);
       msg.style.transition = 'none';
-      const [x1, y1] = pos(a); msg.style.left = `${x1}px`; msg.style.top = `${y1}px`;
+      const [x1, y1] = pos(a); msg.style.transform = `translate(${x1}px, ${y1}px)`;
       void msg.offsetWidth; msg.style.transition = ''; msg.classList.add('show');
       await wait(60);
-      const [x2, y2] = pos(b); msg.style.left = `${x2}px`; msg.style.top = `${y2}px`;
+      const [x2, y2] = pos(b); msg.style.transform = `translate(${x2}px, ${y2}px)`;
       await wait(650);
       a.classList.remove('talk'); b.classList.add('talk');
       await wait(450);

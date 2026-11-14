@@ -38,7 +38,7 @@
   border-top: var(--rule-xl) solid var(--ink);
 }
 .tower .floor {
-  display: grid; grid-template-columns: 76px minmax(0, 1fr) minmax(0, 1.5fr); align-items: center; height: 54px;
+  display: grid; grid-template-columns: 76px 320px minmax(0, 1fr); align-items: center; height: 54px;
   background: var(--paper); border-bottom: 2px solid var(--ink);
   font: 800 25px/1 var(--f-display); text-transform: lowercase; letter-spacing: -.01em; color: var(--ink);
   animation: rise .5s cubic-bezier(.2, .8, .2, 1) both;
@@ -62,13 +62,19 @@
   .tower .floor span { padding-left: 14px; }
 }
 /* Request like: rơi qua từng dải, qua layer 4, 3, 2 thì bọc thêm một header màu ở bên trái */
+/* Chạy bằng transform chứ không bằng top, width: JS đặt translateY, ba header màu mở ra bằng scaleX */
 .packet {
-  position: absolute; right: 16px; top: 15px; height: 26px; display: flex;
-  transition: top .32s cubic-bezier(.6, 0, .3, 1), opacity .3s; pointer-events: none;
+  position: absolute; right: 16px; top: 0; height: 26px; display: flex;
+  transition: transform .32s cubic-bezier(.6, 0, .3, 1), opacity .3s; pointer-events: none;
 }
-.packet i { width: 0; transition: width .25s; }
-.packet .w2 { background: var(--yellow); } .packet .w3 { background: var(--red); } .packet .w4 { background: var(--ink); }
-.packet.has4 .w4, .packet.has3 .w3, .packet.has2 .w2 { width: 14px; }
+.packet i {
+  position: absolute; top: 0; bottom: 0; width: 14px; transform: scaleX(0); transform-origin: right;
+  transition: transform .25s;
+}
+.packet .w4 { right: 100%; background: var(--ink); }
+.packet .w3 { right: calc(100% + 14px); background: var(--red); }
+.packet .w2 { right: calc(100% + 28px); background: var(--yellow); }
+.packet.has4 .w4, .packet.has3 .w3, .packet.has2 .w2 { transform: scaleX(1); }
 .packet b {
   display: grid; place-items: center; padding: 0 10px; background: var(--ink); color: var(--yellow);
   font: 800 13px/1 var(--f-display); text-transform: lowercase; outline: 2px solid var(--surface);
@@ -113,7 +119,8 @@
   padding: 0 0 40px; margin: 34px 0 0; scroll-margin-top: calc(var(--topbar-h, 0px) + 70px);
 }
 .part-head { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 22px 0 18px; }
-.part-num { display: flex; gap: 4px; }
+.part-num { display: flex; flex-wrap: wrap; gap: 4px; }
+@media (max-width: 560px) { .part-num i { width: 36px; height: 36px; font-size: 19px; } }
 .part-num i {
   display: grid; place-items: center; width: 52px; height: 52px; font: 800 26px/1 var(--f-display); font-style: normal;
   background: var(--t); color: var(--t-on);
@@ -133,7 +140,8 @@
   .part { display: grid; grid-template-columns: var(--margin-col) minmax(0, 74ch) minmax(0, 1fr); column-gap: 48px; align-content: start; }
   .part > * { grid-column: 2; min-width: 0; }
   .part > .part-head { grid-column: 1 / -1; }
-  .part > figure.fig, .part > .table-scroll, .part > pre, .part > .callout { grid-column: 2 / -1; }
+  /* Hình, bảng, code, khối chú thích cùng mép phải với chữ; cột phải chỉ để ảnh phụ */
+  .part > figure.fig, .part > .table-scroll, .part > pre, .part > .callout { grid-column: 2; }
   .part > figure.photo.side { grid-column: 3; grid-row: span 4; float: none; width: auto; margin: 6px 0 22px; align-self: start; }
   .part > figure.photo.side img { width: 100%; height: auto; }
   /* Số layer bật ra lề trái, in to, câu tiêu đề vẫn đọc liền "Layer Physical: ..." */
@@ -145,8 +153,8 @@
 }
 
 /* Hiện dần khi cuộn tới (lesson.js gắn .reveal rồi .shown) */
-.reveal { opacity: 0; translate: 0 22px; transition: opacity .5s ease-out, translate .5s cubic-bezier(.2, .8, .2, 1); }
-.reveal.shown { opacity: 1; translate: 0 0; }
+.js .reveal { opacity: 0; translate: 0 22px; transition: opacity .5s ease-out, translate .5s cubic-bezier(.2, .8, .2, 1); }
+.js .reveal.shown { opacity: 1; translate: 0 0; }
 
 /* Nút nhỏ trong sơ đồ: dừng và chạy tiếp */
 .diagram-btn {
@@ -172,15 +180,15 @@
 .tower-col .cell.active, .tower-col .cell.match { background: var(--t); color: var(--t-on); }
 .tower-col .cell.active small, .tower-col .cell.match small { color: inherit; opacity: .8; }
 .bridge {
-  grid-column: 1 / -1; position: relative; display: flex; justify-content: center; align-items: center;
+  grid-column: 1 / -1; position: relative; container-type: inline-size; display: flex; justify-content: center; align-items: center;
   height: 34px; border: var(--rule-s) solid var(--ink); border-top: 0;
   font: 600 13px/1 var(--f-display); text-transform: lowercase; color: var(--ink-2);
 }
 .bridge .dot {
   position: absolute; left: 6px; top: 50%; width: 14px; height: 14px; margin-top: -7px; background: var(--yellow);
-  border: 2px solid var(--ink); opacity: 0; transition: left .9s cubic-bezier(.5, 0, .3, 1), opacity .2s;
+  border: 2px solid var(--ink); opacity: 0; transition: translate .9s cubic-bezier(.5, 0, .3, 1), opacity .2s;
 }
-.bridge.running .dot { opacity: 1; left: calc(100% - 20px); }
+.bridge.running .dot { opacity: 1; translate: calc(100cqw - 26px) 0; }
 .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; grid-column: 1 / -1; }
 @media (max-width: 560px) {
   .tower-col .cell { min-height: 64px; }
@@ -198,7 +206,7 @@
 .hop-leg { position: relative; display: grid; place-items: center; padding: 26px 0; }
 .hop-leg::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 3px; background: var(--ink); }
 .hop-leg.more::before { background: repeating-linear-gradient(90deg, var(--ink) 0 8px, transparent 8px 14px); }
-.hop-packet { position: relative; display: grid; gap: 3px; font: 600 12px/1.2 var(--f-display); text-align: center; }
+.hop-packet { position: relative; display: grid; gap: 3px; font: 600 13px/1.2 var(--f-display); text-align: center; }
 .hop-packet i { font-style: normal; padding: 5px 8px; }
 .hp-ip { background: var(--yellow); color: var(--ink); }
 .hp-mac { background: var(--surface); border: 2px solid var(--mac); }
@@ -271,7 +279,7 @@ details.raw pre { margin-top: 10px; }
   opacity: 0; translate: -18px 0; transition: opacity .35s, translate .35s cubic-bezier(.2, .8, .2, 1), background .3s;
 }
 .encap-block b { font: 800 14px/1.2 var(--f-display); text-transform: lowercase; }
-.encap-block code { font-size: 12.5px; background: none; padding: 0; }
+.encap-block code { font-size: 12.5px; background: none; padding: 0; overflow-wrap: anywhere; }
 .encap-block i { margin-top: auto; padding-top: 8px; font: 700 11px/1.2 var(--f-display); font-style: normal; text-transform: lowercase; color: var(--ink-3); }
 .encap-block.on { opacity: 1; translate: 0 0; }
 .encap-block.on.c2, .encap-block.on.c3, .encap-block.on.c4, .encap-block.on.c7 { border-top: 6px solid var(--t); }
@@ -330,13 +338,13 @@ details.raw pre { margin-top: 10px; }
 /* ---------------- Bảng 1: rê lên một dòng thì thang máy sáng tầng tương ứng ---------------- */
 .layer-table tbody tr { transition: background .15s; }
 .layer-table tbody tr:hover { background: var(--sunk); }
-.layer-table td:nth-child(2) { white-space: nowrap; font-weight: 700; }
+.layer-table td:nth-child(2) { font-weight: 700; }
 
 /* ---------------- Chuyển động ---------------- */
 @keyframes rise { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .reveal { opacity: 1; translate: none; }
+  .js .reveal { opacity: 1; translate: none; }
   .tcp-header .th-field, .route li.hop, .encap-block { opacity: 1; translate: none; }
 }
 
@@ -344,3 +352,38 @@ details.raw pre { margin-top: 10px; }
    giữa chừng nền và chữ cùng xám, chữ biến mất trong chốc lát. */
 .tower .floor, .host-cell { transition: none; }
 .encap-phase { transition: border-color .2s; }
+
+/* Ô sáng lên thì chuyển động: dải layer nhích vào và ô số nảy lên, ô của hai tòa nhà, ô đóng gói nhích vào */
+.tower .floor.active span, .tower .floor.active em { animation: lit-in .34s cubic-bezier(.2, .8, .2, 1); }
+.tower .floor.active b, .encap-phase.active { animation: pop-in .34s cubic-bezier(.2, .8, .2, 1); }
+.tower-col .cell.active, .tower-col .cell.match, .host-cell.active { animation: lit-in .34s cubic-bezier(.2, .8, .2, 1); }
+/* Hàng nhiều ảnh: các ô cùng tỉ lệ khung, ảnh nằm gọn trong khung, khỏi một ô cao một ô thấp để lại khoảng trống */
+.photo-row > figure img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: var(--surface); }
+/* Nhãn layer ở Hình 6 viết thường như Hình 5 và tòa đầu trang */
+.host-cell span { text-transform: lowercase; }
+/* Bảng 1: cột triệu chứng rộng nhất, cột layer hẹp, để cột bên viết ra thông báo khỏi xuống bốn dòng */
+.layer-table { table-layout: fixed; }
+.layer-table th:nth-child(1) { width: 36%; } .layer-table th:nth-child(2) { width: 7rem; }
+.layer-table th:nth-child(3), .layer-table th:nth-child(4) { width: calc(32% - 3.5rem); }
+/* Đầu trang: lời dẫn canh trên cùng hàng với tiêu đề */
+@media (min-width: 1100px) {
+  .hero > h1 { grid-row: 2 / span 2; }
+  .hero > .lede { align-self: start; margin-top: 22px; }
+  .hero > .meta { align-self: start; }
+}
+/* Tên phần và dòng mô tả đi liền nhau: mô tả nằm ngay dưới tên, không bị đẩy ra mép phải */
+.part-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+.part-head .part-note { width: auto; margin: 0; font-size: 17px; }
+/* Thang máy ở màn rộng chỉ hiện số tầng: tên tầng đã có trên poster đầu trang, rê chuột vào nút thì hiện tên */
+@media (min-width: 1200px) {
+  .el-stack { flex: none; }
+  .el-floor { flex: none; width: 46px; grid-template-columns: 1fr; place-items: center; }
+  .el-floor span { display: none; }
+  .el-floor b { width: 46px; }
+}
+/* Số layer ở lề trái: chữ số màu mực, chỉ một vạch màu của layer bên dưới; màu đã có ở tòa đầu trang và thang máy */
+@media (min-width: 1100px) {
+  .layer-h .layer-badge { background: none; color: var(--ink); height: auto; padding-bottom: 10px; border-bottom: 12px solid var(--t); place-items: end start; }
+}
+/* Tên nhóm (mở đầu, layer 1, 2, đường đi, lab) hạ xuống thành nhãn trên vạch, để số layer và tiêu đề layer dẫn mắt */
+.part-title { font-size: clamp(30px, 3.2vw, 44px); }

@@ -133,6 +133,9 @@
       var dir = d ? d.textContent.replace(/[\u2190\u2192]/g, '').trim() : '';   // phòng trang cũ còn mũi tên ký tự
       var num = (/^(\d+)/.exec(title) || [])[1];
       var name = title.replace(/^\d+\s*·\s*/, '');
+      // Tiêu đề kiểu "Bài 01: TCP/IP, ...": tách "Bài 01" ra ô số, phần sau làm tên
+      var bm = /^(Bài\s+\d+)\s*:\s*(.+)$/i.exec(title);
+      if (bm) { num = bm[1].toLowerCase(); name = bm[2]; }
       var next = a.classList.contains('next');
       var c = document.createElement('a');
       c.href = a.getAttribute('href');
@@ -334,7 +337,8 @@
 
   // ---- 4. Nút chép lệnh ----
   function initCopy() {
-    document.querySelectorAll('pre:not(.diagram)').forEach(function (pre) {
+    // pre có data-nocopy là terminal minh hoạ trong hình, không cần nút chép
+    document.querySelectorAll('pre:not(.diagram):not([data-nocopy])').forEach(function (pre) {
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'copy-btn';
@@ -365,6 +369,12 @@
   document.addEventListener('DOMContentLoaded', function () {
     initHeroMark();
     initCornerNav();
+    // Code ngắn trong câu: gắn lớp nb để không bị bẻ dòng ở dấu gạch
+    Array.prototype.forEach.call(document.querySelectorAll('code'), function (c) {
+      // chỉ code trong câu văn; code trong hình, bảng, sơ đồ vẫn xuống dòng theo ô chứa nó
+      var inFigureBody = c.closest('figure') && !c.closest('figcaption');
+      if (c.closest('p, li, figcaption') && !c.closest('pre, table') && !inFigureBody && c.textContent.length <= 28) c.classList.add('nb');
+    });
     initCopy();
     initChecklists();
     document.querySelectorAll('[data-tabs]').forEach(initTabs);

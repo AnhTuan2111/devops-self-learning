@@ -114,30 +114,42 @@
 }
 
 /* ---------------- Các phần của bài ----------------
-   Mỗi phần mở bằng một biển ga đen chạy hết bề ngang. Chữ đi một cột ở giữa trang; hình, bảng, khối code tràn ra hết bề
-   ngang để sơ đồ có chỗ chạy. */
+   Mỗi phần mở bằng một biển ga đen chạy hết bề ngang. Mọi khối khác (chữ, hình, bảng, code, danh sách) đi chung một cột ở
+   giữa trang, cùng mép trái và mép phải. */
 .part { padding: 0 0 30px; margin: 30px 0 0; scroll-margin-top: calc(var(--topbar-h, 0px) + 90px); }
+/* Biển ga: vạch đen dày chạy hết bề ngang, chấm ga vàng đè lên vạch, tên ga in to trên nền giấy. Nhẹ hơn khối đen đặc vì
+   đầu trang đã là một dải đen lớn. */
 .part-head {
-  display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 0 0 26px; padding: 16px 22px;
-  background: var(--ink); color: var(--paper);
+  position: relative; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 0 0 26px; padding: 26px 0 0;
+  border-top: 10px solid var(--ink); color: var(--ink);
 }
 .part-head::before {
-  content: ""; width: 22px; height: 22px; flex: none; background: var(--yellow); border: 5px solid var(--paper);
-  border-radius: 50%;
+  content: ""; position: absolute; left: 0; top: -21px; width: 32px; height: 32px; background: var(--yellow);
+  border: 6px solid var(--ink); border-radius: 50%;
 }
-.part-title { font: 800 clamp(26px, 3.6vw, 44px)/1.05 var(--f-display); text-transform: lowercase; letter-spacing: -.02em; margin: 0; color: var(--paper); }
-.part-note { width: 100%; margin: 4px 0 0; font: 600 15px/1.3 var(--f-display); text-transform: lowercase; color: var(--night-text); }
+.part-title { font: 800 clamp(30px, 4.2vw, 58px)/1 var(--f-display); text-transform: lowercase; letter-spacing: -.03em; margin: 0; color: var(--ink); }
+.part-note { width: 100%; margin: 4px 0 0; font: 600 15px/1.3 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
 @media (min-width: 700px) { .part-note { width: auto; margin: 0 0 0 auto; } }
 .part h2 { scroll-margin-top: calc(var(--topbar-h, 0px) + 90px); }
 @media (min-width: 1100px) {
-  /* Độ rộng cột chữ tính bằng px chứ không bằng ch, vì ch đổi theo cỡ chữ của từng phần tử (h2 to thì cột rộng ra) */
-  .part > * { max-width: 880px; margin-left: auto; margin-right: auto; }
-  .part > .part-head, .part > figure.fig, .part > .table-scroll { max-width: none; }
-  .part > figure.fig, .part > .table-scroll { margin-left: 0; margin-right: 0; }
+  /* Một cột 960px ở giữa cho mọi khối của thân bài (chữ, hình, bảng, code, danh sách), nên cả bài chỉ có một mép trái và
+     một mép phải; riêng biển ga chạy hết bề ngang. Độ rộng tính bằng px chứ không bằng ch, vì ch đổi theo cỡ chữ của từng
+     phần tử. Thêm .lesson-body cho mạnh hơn các luật margin riêng của danh sách nguồn, danh sách tự kiểm tra. */
+  .lesson-body .part > * { max-width: 960px; margin-left: auto; margin-right: auto; }
+  .lesson-body .part > .part-head { max-width: none; }
+  /* Tên ga và chấm ga thẳng mép trái cột chữ, chỉ vạch đen chạy hết bề ngang */
+  .lesson-body .part > .part-head { padding-left: max(0px, (100% - 960px) / 2); padding-right: max(0px, (100% - 960px) / 2); }
+  .lesson-body .part > .part-head::before { left: max(0px, (100% - 960px) / 2); }
+  /* Ảnh lệch phải thôi trôi ra mép trang, đứng trong cột như mọi ảnh khác: ảnh hai phần ba, chú thích một phần ba */
+  .lesson-body .part > figure.photo.side {
+    float: none; width: auto; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: 26px;
+    margin: 26px auto;
+  }
+  .lesson-body .part > figure.photo.side > figcaption { margin-top: 0; padding-top: 9px; border-top: var(--rule-m) solid var(--ink); }
 }
 
-.reveal { opacity: 0; translate: 0 22px; transition: opacity .5s ease-out, translate .5s cubic-bezier(.2, .8, .2, 1); }
-.reveal.shown { opacity: 1; translate: 0 0; }
+.js .reveal { opacity: 0; translate: 0 22px; transition: opacity .5s ease-out, translate .5s cubic-bezier(.2, .8, .2, 1); }
+.js .reveal.shown { opacity: 1; translate: 0 0; }
 
 .diagram-btn {
   appearance: none; border: var(--rule-s) solid var(--ink); background: var(--surface); color: var(--ink);
@@ -146,7 +158,8 @@
 }
 .diagram-btn:hover { background: var(--yellow); }
 .diagram-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-.diagram-btn:disabled { opacity: .45; cursor: default; background: var(--surface); }
+/* Nút bị khoá đổi cả nền, màu chữ, viền và con trỏ, không chỉ mờ đi */
+.diagram-btn:disabled { cursor: not-allowed; background: var(--paper); color: var(--ink-2); border-style: dashed; border-color: var(--ink-3); }
 details.raw { margin-top: 14px; }
 details.raw summary { cursor: pointer; font: 700 13px/1.4 var(--f-display); text-transform: lowercase; }
 details.raw pre { margin-top: 10px; }
@@ -164,7 +177,7 @@ details.raw pre { margin-top: 10px; }
   transition: clip-path .6s cubic-bezier(.6, 0, .3, 1), background .3s;
 }
 .t-block small { font: 500 12px/1.2 var(--f-sans); text-transform: none; color: var(--yellow); }
-.t-block.app { grid-row: 2 / span 3; background: var(--red); }
+.t-block.app { grid-row: 2 / span 3; background: var(--red); color: var(--surface); }   /* chữ màu giấy trên đỏ chỉ 4,38:1 */
 .t-block.tra { grid-row: 5; background: var(--ink); }
 .t-block.int { grid-row: 6; background: var(--blue); }
 .t-block.lnk { grid-row: 7 / span 2; background: var(--ink-2); }
@@ -175,10 +188,11 @@ details.raw pre { margin-top: 10px; }
   background: repeating-linear-gradient(180deg, transparent 0 36px, var(--surface) 36px 39px);
 }
 .merge.split .t-block.app::after, .merge.split .t-block.lnk::after { opacity: 1; }
-.merge .t-block { clip-path: inset(0 100% 0 0); }
-.merge.shown .t-block { clip-path: inset(0 0 0 0); }
+/* Chỉ che khối TCP/IP khi JS đã chạy; tắt JS thì hai cột hiện đủ */
+.js .merge .t-block { clip-path: inset(0 100% 0 0); }
+.js .merge.shown .t-block { clip-path: inset(0 0 0 0); }
 .merge.shown .t-block.tra { transition-delay: .15s; } .merge.shown .t-block.int { transition-delay: .3s; } .merge.shown .t-block.lnk { transition-delay: .45s; }
-.m-cell { transition: outline-color .2s; outline: 3px solid transparent; outline-offset: -3px; }
+.m-cell { outline: 3px solid transparent; outline-offset: -3px; }   /* viền hiện ngay, không chuyển dần */
 .merge-col.osi .m-cell.lit { outline-color: var(--ink); }
 @media (max-width: 560px) {
   .merge { gap: 0 10px; }
@@ -207,7 +221,7 @@ details.raw pre { margin-top: 10px; }
 .ip-chip:hover small { color: var(--ink); }
 .ip-chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .ip-chip[aria-pressed="true"] small { color: var(--yellow); }
-.lookup-bits { display: grid; gap: 4px; padding: 10px 12px; background: var(--paper); }
+.lookup-bits { display: grid; gap: 4px; padding: 10px 0; background: var(--paper); }
 .bits-ip { font: 700 15px/1 var(--f-mono); }
 .bits-row { display: grid; grid-template-columns: repeat(32, minmax(0, 1fr)); gap: 1px; font: 600 11px/1 var(--f-mono); }
 .bits-row b { display: grid; place-items: center; height: 20px; background: var(--surface); font-weight: 600; }
@@ -220,11 +234,12 @@ details.raw pre { margin-top: 10px; }
 }
 .lookup-rows code { background: none; padding: 0; font-size: 13.5px; }
 .lr-bar { position: relative; height: 12px; background: var(--surface); border: 1px solid var(--line); }
-.lr-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--ink-3); transition: width .45s cubic-bezier(.2, .8, .2, 1); }
+.lr-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; transform: scaleX(0); transform-origin: left; background: var(--ink-3); transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
 .lr-via { font: 500 13px/1.2 var(--f-mono); color: var(--ink-2); }
 .lr-res { font: 700 12px/1.2 var(--f-display); text-transform: lowercase; text-align: right; }
 .lookup-rows li.match .lr-bar i { background: var(--blue); }
-.lookup-rows li.miss { opacity: .45; }
+.lookup-rows li.miss { color: var(--ink-3); }
+.lookup-rows li.miss code, .lookup-rows li.miss .lr-via { color: var(--ink-3); }
 .lookup-rows li.miss .lr-bar i { background: var(--red); }
 .lookup-rows li.win { background: var(--ink); color: var(--paper); opacity: 1; }
 .lookup-rows li.win code, .lookup-rows li.win .lr-via { color: var(--paper); }
@@ -261,7 +276,7 @@ details.raw pre { margin-top: 10px; }
 .probe-pkt {
   position: absolute; z-index: 2; top: 4px; left: 0; display: grid; grid-template-columns: auto auto; translate: -50% 0;
   border: 2px solid var(--ink); background: var(--yellow); font: 800 11px/1 var(--f-display); opacity: 0;
-  transition: left .42s cubic-bezier(.5, 0, .3, 1), opacity .2s, background .2s;
+  transition: transform .42s cubic-bezier(.5, 0, .3, 1), opacity .2s, background .2s;
 }
 .probe-pkt b { padding: 4px 3px 3px 5px; } .probe-pkt em { font-style: normal; padding: 4px 5px 3px; background: var(--ink); color: var(--yellow); }
 .probe-pkt.show { opacity: 1; }
@@ -277,6 +292,7 @@ details.raw pre { margin-top: 10px; }
 .probe-log li small { font: 600 12px/1.2 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
 .probe-log li.on { background: var(--paper); color: var(--ink); box-shadow: none; }
 .probe-log li.on.last { background: var(--yellow); }
+.probe-log li.on.last small { color: var(--ink); }   /* chữ xám trên nền vàng chỉ đạt 3,87:1 */
 @media (max-width: 560px) {
   .p-node { font-size: 11px; min-height: 46px; padding: 2px; }
   .probe-path { gap: 4px; }
@@ -332,7 +348,7 @@ details.raw pre { margin-top: 10px; }
 .dw-msg {
   position: absolute; z-index: 3; left: 0; top: 0; padding: 4px 7px; max-width: 200px; translate: -50% -50%;
   background: var(--ink); color: var(--paper); font: 600 11px/1.25 var(--f-mono); opacity: 0; pointer-events: none;
-  transition: left .55s cubic-bezier(.5, 0, .3, 1), top .55s cubic-bezier(.5, 0, .3, 1), opacity .2s;
+  transition: transform .55s cubic-bezier(.5, 0, .3, 1), opacity .2s;
 }
 .dw-msg.show { opacity: 1; }
 .dw-msg.ans { background: var(--blue); color: #fff; }
@@ -377,8 +393,8 @@ details.raw pre { margin-top: 10px; }
 /* ---------------- Chuyển động ---------------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .reveal { opacity: 1; translate: none; }
-  .merge .t-block { clip-path: none; }
+  .js .reveal { opacity: 1; translate: none; }
+  .js .merge .t-block { clip-path: none; }
   .dx-hex.pour span { opacity: 1; translate: none; }
 }
 
@@ -388,3 +404,30 @@ details.raw pre { margin-top: 10px; }
 .tray-slots i { transition: border-color .25s, transform .4s; }
 .lookup-rows li { transition: opacity .25s; }
 .dx-hex span { transition: opacity .3s, translate .3s; }
+
+/* Ô sáng lên thì chuyển động: router và nút DNS nảy lên, dòng log và dòng routing table thắng nhích vào */
+.p-node.hit, .dw-node.talk, .tray-slots i.in, .dx-hex span.pick { animation: pop-in .34s cubic-bezier(.2, .8, .2, 1); }
+.probe-log li.on, .lookup-rows li.win, .dx-layers li.on { animation: lit-in .34s cubic-bezier(.2, .8, .2, 1); }
+/* Khay "tới nơi": ô chỉ hiện khi packet đã tới, khỏi bốn khung trống trông như lỗi */
+.tray-slots i { opacity: 0; }
+.tray-slots i.in { opacity: 1; }
+/* h2 đầu tiên ngay sau biển ga không kẻ vạch nữa, vì biển ga đã có vạch đen ngay trên */
+.part-head + h2 { border-top: 0; padding-top: 0; margin-top: 4px; }
+/* Ô TTL trên biển ga: cùng kiểu ô TTL trên tuyến tàu, cho biết packet tới ga này còn TTL bao nhiêu */
+.part-ttl { display: inline-grid; grid-template-columns: auto auto; align-self: center; border: 2px solid var(--ink); background: var(--yellow); font: 800 13px/1 var(--f-display); order: 2; }
+.part-ttl b { padding: 5px 4px 4px 6px; } .part-ttl em { font-style: normal; padding: 5px 6px 4px; background: var(--ink); color: var(--yellow); }
+.part-head .part-title { order: 1; } .part-head .part-note { order: 3; }
+/* Đầu trang: bỏ chữ "tới nơi" đứng riêng, khay ô và dòng trạng thái đi sát nhau ngay dưới lưới router */
+.tray-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.mesh { gap: 6px; }
+/* Chấm ga chạy dọc vạch theo thứ tự ga (lesson.js gắn --k từ 0 ở ga đầu tới 1 ở ga cuối), nên nhìn chấm là biết đang ở đâu trên tuyến */
+.lesson-body .part > .part-head::before, .part-head::before {
+  left: calc(max(0px, (100% - 960px) / 2) + var(--k, 0) * (min(100%, 960px) - 32px));
+}
+/* Dòng mô tả của ga nằm ngay dưới tên ga, canh trái */
+.part-head .part-note, .part-note { width: 100%; margin: 2px 0 0; font-size: 17px; }
+/* Biển ga gọn trên một hàng: tên ga, ô TTL, dòng mô tả; tiêu đề h2 ngay dưới là tiêu đề chính của đoạn */
+.part-head { align-items: baseline; gap: 10px 16px; }
+.part-title { font-size: clamp(22px, 2vw, 28px); }
+.part-ttl { align-self: center; }
+.part-head .part-note, .part-note { width: auto; margin: 0; font-size: 16px; }

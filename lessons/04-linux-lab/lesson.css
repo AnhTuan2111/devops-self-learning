@@ -30,54 +30,60 @@
 .big-prompt { color: var(--red); }
 .big-cmd .caret { display: inline-block; width: .55em; height: .9em; margin-left: .06em; vertical-align: -.08em; background: var(--yellow); }
 .lh-row { display: grid; gap: 14px 48px; margin: 22px 0 26px; align-items: start; }
-.lh-row h1 { font-size: clamp(30px, 3.2vw, 46px); margin: 0; }
+.lh-row h1 { font-size: clamp(34px, 4vw, 62px); margin: 0; }
 @media (min-width: 1100px) {
   .lh-row { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, .9fr); }
   .lh-row .jump { margin-top: 0; }
 }
-.jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+/* Mục lục kiểu dòng gợi ý của shell: chữ "cd" rồi tên các phần, chữ mono không đóng hộp */
+.jump { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 4px; margin-top: 4px; font: 600 15px/1.2 var(--f-mono); }
+/* "cd" đỏ ở cỡ 19px đậm: chữ lớn theo WCAG nên đỏ trên giấy đủ tương phản */
+.jump::before { content: "cd"; color: var(--red); font-size: 19px; font-weight: 700; margin-right: 6px; }
 .jump a {
-  font: 700 13.5px/1 var(--f-mono); text-transform: lowercase; text-decoration: none; color: var(--term-fg);
-  padding: 9px 12px 8px; background: var(--term-bg);
+  text-transform: lowercase; text-decoration: underline 2px var(--line); text-underline-offset: 5px; color: var(--ink);
+  padding: 6px 6px 7px;
 }
-.jump a::before { content: "$ "; color: var(--yellow); }
-.jump a:hover { background: var(--yellow); color: var(--ink); }
-.jump a:hover::before { color: var(--ink); }
+.jump a:hover { background: var(--yellow); text-decoration-color: var(--ink); }
 .jump a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 
 .twins { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .twins figcaption { grid-column: 1 / -1; }
-@media (min-width: 1100px) { .twins figcaption { columns: 2; column-gap: 56px; } }
+@media (min-width: 1100px) { .twins figcaption { max-width: 880px; } }
 .twin { display: grid; }
 .twin-name { margin: 0; padding: 8px 14px 7px; font: 700 14px/1 var(--f-display); text-transform: none; background: var(--sunk); border-top: 6px solid var(--ink); }
 .twin[data-twin="ubuntu"] .twin-name { border-top-color: var(--red); }
-.twin-screen { margin: 0; min-height: 150px; font-size: 16px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.twin-screen .hit { background: var(--yellow); color: var(--ink); }
+.twin-screen { margin: 0; min-height: 6.6em; font-size: 16px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.twin-screen .hit { color: var(--yellow); text-decoration: underline 2px; text-underline-offset: 4px; }
 @media (max-width: 560px) { .twins { grid-template-columns: 1fr; } }
 
 /* ---------------- Chữ: hai cột báo trải hết bề ngang ----------------
-   Khối chữ có từ hai đoạn trở lên thì chảy thành hai cột như trang báo khổ lớn, khối một đoạn đứng một cột rộng 880px
-   cho khỏi bị cắt vụn; tiêu đề, khối code và hình chạy ngang qua
-   cả hai cột. Đoạn có ảnh đi kèm thì ảnh đứng cột thứ ba bên phải. */
-.part { padding: 6px 0 20px; scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); }
+   Khối chữ từ ba đoạn trở lên, không phải một bước lab, thì chảy thành hai cột như trang báo khổ lớn; khối ngắn hơn đứng
+   một cột rộng 880px cho khỏi bị cắt vụn. Tiêu đề, khối code và hình chạy ngang qua cả hai cột. Đoạn có ảnh đi kèm thì
+   ảnh đứng cột thứ ba bên phải. */
+/* Mỗi mục giữ ảnh của nó, không cho ảnh tràn sang mục sau */
+.part { padding: 6px 0 20px; scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); display: flow-root; }
 .part h2, .part h3 { scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); }
 .part h2 { font-size: clamp(28px, 3vw, 42px); padding-top: 16px; border-top-width: 10px; }
 .prose { max-width: 76ch; }
 .prose-row { display: grid; gap: 0 56px; align-items: start; }
 @media (min-width: 1100px) {
   .prose { max-width: none; }
-  .prose { max-width: 880px; }
-  .prose:has(> p + p) { max-width: none; columns: 2; column-gap: 56px; column-rule: var(--rule-s) solid var(--line); }
+  /* Mọi khối chữ rộng bằng cột chữ của hàng có ảnh (hai phần ba), nên vạch kẻ của tiêu đề mục, tiêu đề bước cùng một mép phải */
+  .prose { max-width: calc((100% - 56px) * 2 / 3); }
+  /* Chỉ khối chữ từ ba đoạn trở lên, không phải một bước lab, mới chia hai cột */
+  .prose:has(> p + p + p):not(:has(.step-h)) { columns: 2; column-gap: 56px; column-rule: var(--rule-s) solid var(--line); }
   .prose-row > .prose { max-width: none; }
   .prose > h2, .prose > h3, .prose > pre, .prose > figure, .prose > .callout, .prose > ul, .prose > ol { column-span: all; }
-  .prose > p { margin-top: 0; break-inside: avoid; }   /* mỗi đoạn trọn trong một cột */
+  .prose > p { margin-top: 0; orphans: 3; widows: 3; }   /* đoạn được tách qua cột, nhưng không để lại một hai dòng lẻ */
   .prose-row { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
-  .prose-row > figure.aside { margin-top: 64px; }
+  /* Vạch đầu ảnh lề thẳng hàng vạch của tiêu đề mục hay tiêu đề bước bên cạnh (đo trên trang 14/11/2026) */
+  .prose-row > figure.photo.aside { margin-top: 52px; }
+  .prose-row:has(> .prose > .step-h:first-child) > figure.photo.aside { margin-top: 44px; }
 }
 .prose code { overflow-wrap: anywhere; }
 figure.photo.aside { display: block; margin: 24px 0; }
 figure.photo.aside > figcaption { border-top: 0; padding-top: 0; margin-top: 10px; }
-figure.photo.aside.small-photo img { max-width: min(100%, 380px); }
+figure.photo.aside.small-photo img { width: 100%; }
 .answer { padding: 16px 20px; background: var(--ink); color: var(--paper); }
 .answer code { background: #2b2925; color: var(--paper); }
 
@@ -86,12 +92,17 @@ figure.photo.aside.small-photo img { max-width: min(100%, 380px); }
   display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 44px; padding-top: 16px;
   border-top: var(--rule-m) solid var(--ink); font-size: clamp(20px, 2vw, 26px);
 }
-.step-h span { font: 800 clamp(20px, 2vw, 26px)/1 var(--f-display); text-transform: lowercase; background: var(--yellow); padding: 10px 14px 8px; }
+/* Nhãn bước kiểu dấu nhắc terminal, khớp với lệnh in to ở đầu trang */
+/* Nhãn bước ghi prompt của cửa sổ phải gõ: PS> là PowerShell, $ là Ubuntu; chữ mực trên giấy, gạch chân, để không thành ô đen
+   nằm ngay trên terminal đen */
+.step-h span { font: 700 clamp(17px, 1.6vw, 21px)/1 var(--f-mono); text-transform: lowercase; color: var(--ink); padding: 0 0 6px; border-bottom: 3px solid var(--ink); white-space: nowrap; }
+.step-h span::before { content: "$ "; color: var(--red); text-transform: none; }
+.step-h span[data-shell="ps"]::before { content: "PS> "; }
 
 /* ---------------- Dải terminal rộng hết trang ---------------- */
 pre.band {
   margin: 18px 0 26px; padding: 18px 24px; font-size: 14.5px; line-height: 1.65;
-  white-space: pre-wrap; overflow-wrap: anywhere; border-left: 10px solid var(--yellow);
+  white-space: pre-wrap; overflow-wrap: anywhere;
 }
 pre.band .cmd { color: var(--term-fg); }
 pre.band .out { color: #cfc8bb; }
@@ -111,7 +122,7 @@ pre.band .caret { display: inline-block; width: .6em; height: 1.1em; vertical-al
 .dual-pick button:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 .dual-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .side { display: grid; gap: 8px; align-content: start; }
-.side-screen { margin: 0; min-height: 108px; white-space: pre; overflow-x: auto; font-size: 12.5px; }
+.side-screen { margin: 0; min-height: 108px; white-space: pre; overflow-x: auto; font-size: 14px; }
 .side-stack { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .side-stack li {
   margin: 0; padding: 9px 12px; display: grid; gap: 2px; background: var(--paper); border-left: 6px solid var(--line);
@@ -124,7 +135,7 @@ pre.band .caret { display: inline-block; width: .6em; height: 1.1em; vertical-al
 .side-stack li.pass { background: var(--sunk); }
 .side-stack li.hit { background: var(--ink); color: var(--paper); }
 .side-stack li.hit span { color: #cfc8bb; }
-.dual-note { margin: 0; min-height: 1.6em; font: 600 15px/1.5 var(--f-display); }
+.dual-note { margin: 0; min-height: 1.6em; font: 400 15px/1.6 var(--f-sans); color: var(--ink-2); }
 @media (max-width: 760px) { .dual-cols { grid-template-columns: 1fr; } }
 
 /* ---------------- Hình 3: vòng lặp của shell ---------------- */
@@ -151,7 +162,12 @@ pre.band .caret { display: inline-block; width: .6em; height: 1.1em; vertical-al
 @media (max-width: 700px) { .loop-steps { grid-template-columns: 1fr; } }
 
 .check-grid { display: grid; gap: 0 56px; }
-@media (min-width: 1100px) { .check-grid { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); } }
+/* Cuối bài kiểu trang báo: nguồn đọc thêm là một dải chữ nhỏ ba cột, cách nhau bằng vạch mảnh */
+@media (min-width: 1100px) {
+  .check-grid .refs { columns: 3; column-gap: 40px; column-rule: var(--rule-s) solid var(--line); font-size: 14px; }
+  .check-grid .refs li { break-inside: avoid; margin: 0 0 14px; }
+  .check-grid .refs { margin-top: 0; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -165,3 +181,38 @@ pre.band .caret { display: inline-block; width: .6em; height: 1.1em; vertical-al
    giữa chừng nền và chữ cùng xám, chữ biến mất trong chốc lát. */
 .dual-pick button { transition: none; }
 .side-stack li { transition: border-color .25s; }
+
+/* Ô sáng lên thì chuyển động: layer lệnh đi qua nhích vào, bước đang chạy của shell và nút lệnh vừa bấm nảy lên */
+.side-stack li.pass, .side-stack li.hit { animation: lit-in .34s cubic-bezier(.2, .8, .2, 1); }
+.loop-steps li.now, .dual-pick button[aria-pressed="true"] { animation: pop-in .34s cubic-bezier(.2, .8, .2, 1); }
+/* Khối chữ đi liền sau một khối khác có khoảng thở */
+.prose + .prose, .prose-row + .prose, .prose + .prose-row { margin-top: 32px; }
+/* Dải terminal chỉ một hai dòng (lesson.js gắn lớp short) nằm trong cột chữ; dải có output rộng mới chạy hết trang */
+@media (min-width: 1100px) { pre.band.short { max-width: calc((100% - 56px) * 2 / 3); } }
+.prose-row pre.band.short { max-width: none; }
+@media (min-width: 1100px) {
+  .check-grid .refs a { overflow-wrap: break-word; }
+}
+/* Dòng "cd tên mục" trên vạch mỗi mục, cùng chữ với mục lục đầu trang (lesson.js chèn) */
+.part .cd-kicker { margin: 52px 0 6px; font: 700 19px/18px var(--f-mono); text-transform: lowercase; color: var(--red); }
+.part .cd-kicker + h2 { margin-top: 0; }
+@media (min-width: 1100px) {
+  .prose-row:has(> .prose > .cd-kicker:first-child) > figure.photo.aside { margin-top: calc(52px + 18px + 6px); }
+}
+/* Ảnh lề đứng trên một tấm nền có vạch mực ở trên, cùng kiểu với khung truyện xkcd */
+figure.photo.aside > a.img-src { display: block; background: var(--surface); padding: 12px; border-top: var(--rule-m) solid var(--ink); }
+/* Ảnh trên tấm nền: tấm nền đã có vạch mực, bỏ vạch riêng của ảnh để không thành hai vạch */
+figure.photo.aside > a.img-src img { border-top: 0; }
+/* Mục lục: chữ "cd" một cột, các tên mục xuống dòng thẳng hàng với tên đầu tiên như dòng gợi ý của shell */
+.jump { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; }
+.jump-list { display: flex; flex-wrap: wrap; gap: 2px 4px; }
+/* Ghi chú dưới hai cửa sổ ở Hình 2 là một dòng chú thích của shell, khác kiểu với chú thích hình */
+.dual-note { font: 500 14px/1.6 var(--f-mono); color: var(--ink); }
+.dual-note:not(:empty)::before { content: "# "; color: var(--red); }
+/* Tiêu đề con trong mục shell: vạch vừa, nhỏ hơn tiêu đề mục */
+.sub-h { margin-top: 44px; padding-top: 14px; border-top: var(--rule-m) solid var(--ink); font-size: clamp(21px, 2vw, 27px); }
+/* Vạch đầu bước mang màu cửa sổ phải gõ: mực cho PowerShell trên Windows, đỏ cho Ubuntu như thanh tên cửa sổ ở Hình 1 */
+.step-h { border-top-color: var(--red); }
+.step-h:has(span[data-shell="ps"]) { border-top-color: var(--ink); }
+/* Con trỏ ở lệnh đầu trang là một gạch dưới màu mực, để khối vàng duy nhất ở màn đầu là dải vàng của tiêu đề */
+.big-cmd .caret { height: .12em; vertical-align: baseline; background: var(--ink); }
