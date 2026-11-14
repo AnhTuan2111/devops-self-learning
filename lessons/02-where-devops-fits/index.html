@@ -63,11 +63,21 @@
   <h2 id="local-vs-server">Trên máy bạn chạy, lên server thì không</h2>
   <p>Trên máy bạn, browser gọi <code>localhost:8080</code> là vào thẳng app Spring Boot. Đưa app lên server rồi thì người
   dùng gõ <code>https://shop.example.com</code>, và trước khi vào tới controller của bạn, có bốn chỗ mà trên máy bạn không có. Trước hết, browser phải hỏi DNS để đổi domain ra địa chỉ. Có địa chỉ rồi, packet tới cửa server, nơi một bộ lọc xem từng packet rồi cho qua hay chặn.</p>
-  <p>Qua cửa, request gặp một chương trình đứng trước app, nhận request thay cho app. Trước khi đọc request, chương trình ấy làm TLS handshake với browser. Trong bước này nó gửi cho browser certificate, một thứ giấy tờ chứng minh server là chủ của domain. Bước này có thể hỏng ngay cả khi chương trình ấy vẫn chạy bình thường, nên nó là một chỗ riêng trên đường đi. </p>
-  <p>Vì có bốn chỗ ấy nên lời báo “không vào được” của người dùng chưa cho biết request dừng ở đâu. Mà log của app không có dòng nào, tức request chưa vào tới app. Nó có thể dừng ở một trong bốn chỗ ấy, ở các router của nhà mạng giữa đường, hoặc đã tới chương trình đứng trước app nhưng app phía sau không chạy, nên chương trình ấy không chuyển request vào được. Hình 1 chạy hai request cùng lúc, một trên máy bạn, một đi lên server, để bạn so sánh.</p>
+  <p>Qua cửa, request gặp <strong>Nginx</strong>, một chương trình đứng trước app và nhận request thay cho app. Trước khi đọc request,
+Nginx làm TLS handshake với browser. Trong bước này nó gửi cho browser certificate, một thứ giấy tờ chứng minh server là chủ của
+domain. Bước này có thể hỏng ngay cả khi Nginx vẫn chạy bình thường, nên nó là một chỗ riêng trên đường đi.</p>
+  <p>Vì có bốn chỗ ấy nên lời báo “không vào được” của người dùng chưa cho biết request dừng ở đâu. Mà log của app không có dòng nào, tức
+request chưa vào tới app. Nó có thể dừng ở một trong bốn chỗ ấy, ở các router của nhà mạng giữa đường, hoặc đã tới Nginx nhưng
+app phía sau không chạy, nên Nginx không chuyển request vào được. Hình 1 chạy hai request cùng lúc, một trên máy bạn, một đi lên
+server, để bạn so sánh.</p>
   <p>Trong bốn chỗ ấy, DNS thì bạn đã gặp ở Bài 01, lúc resolver đi hỏi từng cấp. Bộ lọc ở cửa server gọi là <button type="button" class="term" data-term="firewall">firewall</button>.</p>
-  <p>Chương trình đứng trước app trong Hình 1 là Nginx, một chương trình người ta hay đặt ở chỗ đó. Sau Nginx và TLS handshake là app, rồi tới database phía sau app; không tính các router của nhà mạng, vì không ai ở phía bạn đụng tới được chúng, thì trên đường đi có sáu chỗ: DNS, firewall, Nginx, TLS handshake, app và database.</p>
-  <p>Request HTTP đi qua firewall, Nginx rồi tới app, và mỗi chỗ đọc nó tới một mức khác nhau, nên chỗ nào hỏng thì lời báo người dùng nhận được cũng khác. DNS thì không thấy request, nó chỉ trả lời câu hỏi về domain. Nginx và app đọc hết request HTTP ở layer 7, nên chỉ hai chỗ này viết được status code như 502, 500. Firewall đặt ở cửa server thường chỉ đọc tới địa chỉ và port, tức layer 3 và layer 4 trong bảy layer ở Bài 00, nên nó không viết được status code nào.</p>
+  <p>Phía sau Nginx là app, rồi tới database. Cộng với DNS, firewall và TLS handshake, trên đường đi có sáu chỗ: DNS, firewall, Nginx,
+TLS handshake, app và database. Router của nhà mạng nằm ngoài sáu chỗ ấy, vì không ai ở phía bạn đụng tới được chúng.</p>
+  <p>Request HTTP đi qua firewall, Nginx rồi tới app, và mỗi chỗ đọc nó tới một mức khác nhau, nên chỗ nào hỏng thì lời báo người dùng
+nhận được cũng khác. DNS thì không thấy request, nó chỉ trả lời câu hỏi về domain. Nginx và app đọc hết request HTTP ở layer 7, nên
+chỉ hai chỗ này viết được status code, con số HTTP dùng để báo kết quả, như 200 là thành công, 404 là không có trang, 502 và 500 là
+lỗi. Firewall đặt ở cửa server thường chỉ đọc tới địa chỉ và port, tức layer 3 và layer 4 trong bảy layer ở Bài 00, nên nó không
+viết được status code nào.</p>
 </div>
 
 </section>
@@ -89,7 +99,12 @@
 <!-- Phần: từng chỗ -->
 <div class="stops-intro">
   <p>Sáu chỗ dưới đây, từ DNS tới database, đều là việc của người làm DevOps, trừ code bên trong app.</p>
-  <p>Biết đường đi rồi, nhưng người dùng không nhìn thấy đường đi, họ chỉ thấy một lời báo lỗi. Mỗi chỗ hỏng thì lời báo ấy trông thế nào? Browser và curl cùng dừng ở một chỗ và báo cùng một lỗi, mà curl in lỗi thành một dòng chữ dễ chép, nên ngày 14/11/2026 mình chạy <code>curl</code> trên Git Bash (Windows 11, curl 8.10.1) để xem lời báo ở bốn chỗ trước app. Dòng lỗi ở cả bốn chỗ đều có một con số trong ngoặc như (6) hay (28). Con số ấy là exit code của curl, còn chữ đi sau nó kể curl dừng ở bước nào.</p>
+  <p>Biết đường đi rồi, nhưng người dùng không nhìn thấy đường đi, họ chỉ thấy một lời báo lỗi. Mỗi chỗ hỏng thì lời báo ấy trông thế nào?
+Browser và curl cùng dừng ở một chỗ và báo cùng một lỗi, mà curl in lỗi thành một dòng chữ dễ chép, nên ngày 14/11/2026 mình chạy
+<code>curl</code> trên Git Bash (Windows 11, curl 8.10.1) để xem lời báo ở bốn chỗ trước app.</p>
+
+<p>Dòng lỗi ở cả bốn chỗ đều có một con số trong ngoặc như (6) hay (28). Con số ấy là exit code của curl, còn chữ đi sau nó kể curl
+dừng ở bước nào.</p>
   <p>Các lệnh curl ở bốn chỗ trước app đều có option <code>-sS</code>. Option <code>-s</code> tắt những chữ phụ curl tự in thêm, như thanh tiến độ, nhưng tắt luôn cả dòng lỗi, nên phải thêm <code>-S</code> để curl vẫn in dòng lỗi.</p>
 </div>
 
@@ -139,8 +154,12 @@ curl: (28) Failed to connect to 10.255.255.1 port 80 after 5014 ms: Timeout was 
     máy bạn, chỉ khác là bên gọi nó giờ là Nginx chứ không phải browser. Chương trình đứng trước app theo cách
     đó gọi là <strong>reverse proxy</strong>.</p>
     <p>Vì sao phải thêm một chỗ nữa trên đường đi? Lý do hay gặp là một server chạy nhiều app, mỗi app một domain. Người dùng chỉ gõ domain, nên dù vào app nào thì browser cũng gọi port 443, mà ở một port chỉ một chương trình nhận được kết nối. Vì vậy Nginx đứng nhận ở 443, nhìn domain trong request rồi chuyển vào app được gắn với domain ấy. Thêm nữa, TLS certificate chỉ cần gắn ở Nginx, nên các app phía sau không phải lo phần TLS. Cái giá là đường đi dài thêm một chỗ, và chỗ ấy cũng có thể hỏng.</p>
-    <p>Nếu Nginx đang tắt thì ở port 443 không có chương trình nào listen, và hệ điều hành của server từ chối ngay. Lời từ chối ấy khác hẳn timeout khi gặp firewall, vì lần này hệ điều hành của server có trả lời.</p>
-    <p>Mình thử bằng port 9999 trên chính máy mình, vì ở port ấy không có chương trình nào listen. Lệnh <code>curl -sS http://127.0.0.1:9999/</code> ở bên cạnh bị từ chối ngay, vậy mà curl báo lỗi sau <code>2010 ms</code>. Hai giây ấy là do Windows ở phía curl: bị từ chối thì nó tự đợi một lúc rồi xin mở kết nối lại, làm thế thêm hai lần, lần sau đợi lâu hơn lần trước.</p>
+    <p>Nếu Nginx đang tắt thì ở port 443 không có chương trình nào listen, tức đứng chờ nhận kết nối, và hệ điều hành của server từ chối
+ngay. Lời từ chối ấy khác hẳn timeout khi gặp firewall, vì lần này hệ điều hành của server có trả lời.</p>
+    <p>Mình thử bằng port 9999 trên chính máy mình, vì ở port ấy không có chương trình nào listen. Lệnh
+<code>curl -sS http://127.0.0.1:9999/</code> bị từ chối ngay, vậy mà curl báo lỗi sau <code>2010 ms</code>, tức hơn hai giây. Hai
+giây ấy là do Windows ở phía curl: bị từ chối thì nó tự đợi một lúc rồi xin mở kết nối lại, làm thế thêm hai lần, lần sau đợi lâu
+hơn lần trước.</p>
     <p>Hình 2 đặt firewall chặn và Nginx tắt cạnh nhau, cùng với trường hợp mọi thứ chạy, để bạn chọn rồi xem curl chờ bao lâu.</p>
   </div>
   <div class="stop-side">
@@ -231,7 +250,9 @@ curl: (35) schannel: next InitializeSecurityContext failed: SEC_E_CERT_EXPIRED (
   <div class="stop-text">
     <h2 id="db-app-alive">App sống mà vẫn lỗi</h2>
     <p>Chỗ cuối cùng trên đường đi là database. App Spring Boot thường đọc, ghi dữ liệu ở một database như PostgreSQL. Database là một chương trình riêng, và trong bài này nó chạy trên cùng server với app. Nếu database tắt trong lúc app đang chạy, app vẫn nhận request, nhưng mỗi lần cần dữ liệu thì không kết nối được và trả 500.</p>
-    <p>App mẫu của khoá là một app Spring Boot nhỏ lưu ghi chú vào PostgreSQL, và mình đã chỉnh nó để vẫn khởi động khi chưa có database. Mình chạy nó ngày 14/11/2026 trong <button type="button" class="term" data-term="wsl">WSL</button> mà không bật PostgreSQL, rồi gọi <code>/notes</code>, path cần đọc database.</p>
+    <p>Mình viết một app Spring Boot nhỏ lưu ghi chú vào PostgreSQL, và chỉnh nó để vẫn khởi động khi chưa có database. Mình chạy nó
+ngày 14/11/2026 trong <button type="button" class="term" data-term="wsl">WSL</button> mà không bật PostgreSQL, rồi gọi
+<code>/notes</code>, path cần đọc database.</p>
     <p>Lệnh gọi <code>/notes</code> có option <code>-i</code>. Option này bảo curl in thêm dòng đầu và các header của câu trả lời. Dòng đầu có mã như <code>HTTP/1.1 500</code>, gọi là status line.</p>
     <p>Lệnh curl chỉ nhận được status code 500, và người dùng cũng chỉ thấy có thế, giống hệt khi code ném exception. Lý do thật nằm trong log của app, ở dòng app báo không kết
     nối được tới database. Dòng ấy cùng chữ “refused” với trang lỗi ở Ảnh 3, chỉ khác là bên bị từ chối giờ là app. App gọi port 5432, port mặc định của PostgreSQL, mà lúc ấy ở port đó không có ai nhận.</p>

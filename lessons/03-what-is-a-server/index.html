@@ -96,8 +96,9 @@
 một tủ máy ở một toà nhà nào đó.</p>
 
 
-<p>Server thường khác laptop ở chỗ nó không có màn hình, không có bàn phím, và chạy suốt ngày đêm. Nó hay nằm cùng hàng trăm cái máy khác trong một data center, có điện dự phòng và điều hoà. Người quản trị không
-ngồi trước nó mà điều khiển nó từ xa.</p>
+<p>Server thường khác laptop ở chỗ nó không có màn hình, không có bàn phím, và chạy suốt ngày đêm. Nó hay nằm cùng hàng trăm cái máy
+khác trong một data center, toà nhà chuyên đặt server, có điện dự phòng và điều hoà. Người quản trị không ngồi trước nó mà điều
+khiển nó từ xa.</p>
 
 <figure class="fig photo wide">
   <a class="img-src" href="https://xkcd.com/908/" data-credit="Truyện: Randall Munroe · xkcd 908 · CC BY-NC 2.5, đã chuyển đen trắng" aria-label="Nguồn truyện: Randall Munroe, xkcd 908"><img src="img/xkcd-the-cloud.webp" width="1480" height="472" loading="lazy" alt="Truyện tranh năm khung: một người thấy cái hộp đặt dưới sàn và hỏi đó là gì, người đội mũ ngồi ở bàn trả lời đó là The Cloud; dây của cái hộp chạy ngang phòng tới bàn người đội mũ."></a>
@@ -125,9 +126,11 @@ người dùng đi vào qua nó. Hàng dưới cùng của Hình 1 là bốn mó
   thường có CPU mạnh hơn, nhiều RAM hơn và NIC nhanh hơn, nhưng mỗi món vẫn làm việc của nó như trong laptop.</figcaption>
 </figure>
 
-<p>Server cũng không phải lúc nào cũng mạnh hơn laptop. Laptop mình dùng để viết bài này có CPU AMD Ryzen 5 7535HS và 15,2 GB RAM, còn gói server rẻ nhất cho thuê trên Internet thì ít RAM hơn thế nhiều. Mạnh hay yếu thì trên bốn món ấy vẫn chạy một hệ điều hành, như Windows trên laptop của bạn. Nên những gì bạn sắp
-thấy trên laptop cũng có trên server: chương trình đang chạy, port, chuyện chia CPU và RAM. Chỉ khác là server thường chạy
-<button type="button" class="term" data-term="linux">Linux</button>, nên lệnh để xem những thứ ấy cũng khác.</p>
+<p>Server cũng không phải lúc nào cũng mạnh hơn laptop. Laptop mình dùng để viết bài này có CPU AMD Ryzen 5 7535HS và 15,2 GB RAM, còn
+nhiều gói server cho thuê trên Internet chỉ có vài GB RAM. Mạnh hay yếu thì trên bốn món ấy vẫn chạy một hệ điều hành, như Windows
+trên laptop của bạn. Nên những gì bạn sắp thấy trên laptop cũng có trên server: chương trình đang chạy, port, chuyện chia CPU và
+RAM. Chỉ khác là server thường chạy <button type="button" class="term" data-term="linux">Linux</button>, nên lệnh để xem những thứ
+ấy cũng khác.</p>
 
 </section>
 
@@ -158,7 +161,7 @@ mọi object app tạo ra lúc chạy.</p>
 
 <h2 id="process-holds-port" data-scene="port">Process giữ port</h2>
 
-<p data-scene="port">Ngoài RAM, process còn giữ cả port. App mẫu xin hệ điều hành cho listen ở port 8080, và từ lúc đó hệ
+<p data-scene="port">Ngoài RAM, process còn giữ cả port. App mẫu xin hệ điều hành cho listen, tức đứng chờ nhận kết nối, ở port 8080, và từ lúc đó hệ
 điều hành ghi port 8080 kèm PID 6088 vào một bảng, mình gọi là bảng listening port.</p>
 
 <p data-scene="port">Muốn xem bảng listening port thì dùng lệnh <code>netstat -ano</code> của Windows.
@@ -212,9 +215,10 @@ chối.</p>
 
 <h2 id="sharing-cpu" data-scene="cpu">Chia CPU: mỗi process một lượt</h2>
 
-<p data-scene="cpu">Một CPU ngày nay có nhiều core, và mỗi lúc một core chỉ chạy được một chương trình. CPU của laptop mình có 6 core, mà lúc
-đếm thì Windows đang chạy 264 process. Không thể chia mỗi process một core được, nên kernel cho một process chạy trên một core
-trong một khoảng rất ngắn, rồi cất nó sang một bên, cho process khác chạy, và cứ xoay vòng như vậy rất nhiều lần mỗi giây. Ô CPU ở Hình 1 vẽ bốn core và năm process, process nào chưa tới lượt thì đứng ở hàng chờ.</p>
+<p data-scene="cpu">Một CPU ngày nay có nhiều core, mỗi core là một bộ phận chạy lệnh độc lập, và mỗi lúc một core chỉ chạy được một chương trình. CPU
+của laptop mình có 6 core, mà lúc đếm thì Windows đang chạy 264 process. Không thể chia mỗi process một core được, nên kernel cho
+một process chạy trên một core trong một khoảng rất ngắn, rồi cất nó sang một bên, cho process khác chạy, và cứ xoay vòng như vậy
+rất nhiều lần mỗi giây. Ô CPU ở Hình 1 vẽ bốn core và năm process, process nào chưa tới lượt thì đứng ở hàng chờ.</p>
 
 <p data-scene="cpu">Vì kernel đổi lượt rất nhanh, bạn thấy mọi process như cùng chạy một lúc. Còn khi có quá nhiều process cùng cần CPU, mỗi process
 phải chờ lượt lâu hơn, nên app trả lời chậm đi mà vẫn chạy.</p>
@@ -244,8 +248,9 @@ là <strong>OOM killer</strong>, OOM là viết tắt của out of memory, tức
 đem ra thử là một chương trình Python nhỏ, cứ 0,2 giây lại giữ thêm 50 MB; code nằm ở tệp <code>eat-ram.py</code> trong thư mục
 <code>lab</code> của bài.</p>
 
-<p data-scene="full">Trong 15,2 GB RAM của laptop, WSL cho Ubuntu ấy dùng tối đa 10 GB. Con số này đọc từ lệnh <code>free -h</code>,
-lệnh in lượng RAM mà Ubuntu thấy; option <code>-h</code> ghi số bằng GB, MB cho dễ đọc:</p>
+<p data-scene="full">Trong 15,2 GB RAM của laptop, lúc mình chạy thử, WSL cho Ubuntu ấy dùng tối đa 10 GB; mức này chỉnh được, còn mặc định là một nửa RAM
+của laptop. Con số 10 GB đọc từ lệnh <code>free -h</code>, lệnh in lượng RAM mà Ubuntu thấy; option <code>-h</code> ghi số bằng
+GB, MB cho dễ đọc:</p>
 
 <pre data-scene="oom"><code>$ free -h
                total        used        free      shared  buff/cache   available

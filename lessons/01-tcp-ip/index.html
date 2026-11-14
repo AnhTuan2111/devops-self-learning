@@ -59,9 +59,10 @@
 
 <h2 id="no-osi-on-the-wire">Không có protocol nào tên OSI</h2>
 
-<p>Bắt các packet đi qua NIC rồi đọc từng layer bên trong, việc mà phần Lab cuối bài sẽ làm, thì bạn không gặp protocol nào tên OSI. Bạn gặp <button type="button" class="term" data-term="ethernet">Ethernet</button>, IP, TCP, UDP, HTTP và
-DNS. Trừ Ethernet là chuẩn của mạng có dây, các protocol ấy thuộc bộ <strong>TCP/IP</strong>, bộ protocol mà Internet
-đang chạy.</p>
+<p>Bài trước chia mạng thành bảy layer của OSI. Nhưng dùng một chương trình để bắt packet, tức chép lại các packet đi qua
+NIC, rồi đọc từng layer bên trong, việc mà phần Lab cuối bài sẽ làm, thì bạn không gặp protocol nào tên OSI. Bạn gặp
+<button type="button" class="term" data-term="ethernet">Ethernet</button>, IP, TCP, UDP, HTTP và DNS. Trừ Ethernet là chuẩn
+của mạng có dây, các protocol ấy thuộc bộ <strong>TCP/IP</strong>, bộ protocol mà Internet đang chạy.</p>
 
 <p>TCP/IP chia làm bốn layer, ghi trong RFC 1122 năm 1989. RFC (Request for Comments) là loạt văn bản chuẩn của Internet, ai
 cũng đọc miễn phí.</p>
@@ -112,8 +113,10 @@ rồi khép lại.</figcaption>
 không gặp protocol nào tên OSI? Câu trả lời nằm ở thứ tự hai bên ra đời và ở hướng đi của mỗi bên. TCP/IP lớn lên từ một mạng
 đang chạy: ARPANET đã nối máy của các trường đại học và viện nghiên cứu ở Mỹ từ năm 1969, Vint Cerf và Bob Kahn công bố bài
 báo đặt nền cho TCP/IP năm 1974 để mạng ấy nối được với những mạng khác, và protocol được sửa dần theo chỗ nào chạy không
-được. ISO, tổ chức đặt ra các tiêu chuẩn quốc tế, đi ngược lại. Từ năm 1977 họ vẽ mô hình trước, tức mô hình bảy layer của
-OSI, rồi mới tính protocol cho từng layer.</p>
+được.</p>
+
+<p>ISO, tổ chức đặt ra các tiêu chuẩn quốc tế, đi ngược lại. Từ năm 1977 họ vẽ mô hình trước, tức mô hình bảy layer của OSI, rồi mới
+tính protocol cho từng layer.</p>
 
 <p>Đặc tả của IP và TCP được công bố thành RFC 791 và RFC 793 năm 1981, và ngày 1/1/1983 cả ARPANET chuyển hẳn sang TCP/IP.
 ISO tới năm 1984 mới công bố mô hình OSI, lúc ấy Internet đã chạy bằng TCP/IP rồi. Đổi một mạng đang có người dùng sang
@@ -135,8 +138,8 @@ protocol khác tốn hơn nhiều so với giữ nguyên, nên TCP/IP ở lại.
 
 <p>Điện thoại bàn ngày xưa giữ riêng một đường dây cho mỗi cuộc gọi tới khi gác máy, cách làm ấy gọi là circuit switching.
 Internet thì không giữ đường cho ai. Dữ liệu được cắt thành packet, packet nào cũng mang đủ địa chỉ nơi gửi và nơi nhận, nên
-router chỉ đọc địa chỉ của packet đang cầm, đẩy packet đi rồi quên luôn. Cách này gọi là <strong>packet switching</strong> (packet
-switching), và hình động ở đầu trang vẽ lại chuyện ấy.</p>
+router chỉ đọc địa chỉ của packet đang cầm, đẩy packet đi rồi quên luôn. Cách này gọi là <strong>packet switching</strong>, và
+hình động ở đầu trang vẽ lại chuyện ấy.</p>
 
 <figure class="fig photo side">
   <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Interface_Message_Processor_-_BBN_Arpanet_Router_-_Computer_History_Museum_(2007-11-10_23.06.56_by_Carlo_Nardone).jpg" data-credit="Ảnh: Carlo Nardone · Wikimedia Commons · CC BY-SA 2.0, đã chuyển đen trắng" aria-label="Nguồn ảnh: Carlo Nardone · Wikimedia Commons · CC BY-SA 2.0"><img src="img/imp-arpanet.webp" width="1000" height="700" loading="lazy" alt="Mặt trước một tủ máy màu sáng, có hai hàng đèn tròn, các công tắc gạt và tấm biển ghi Interface Message Processor, developed for the Advanced Research Projects Agency by Bolt Beranek and Newman Inc."></a>
@@ -175,10 +178,10 @@ ngày 30/10/2026. Bảng 1 liệt kê 12 packet ấy, còn cách bắt packet th
 </table>
 </div>
 
-<p>Ba packet đầu là three-way handshake để mở kết nối, ba packet cuối là đóng kết nối. <code>SYN</code>,
-<code>ACK</code> và <code>FIN</code> là tên các flag trong TCP header: <code>SYN</code> xin mở, <code>ACK</code> báo đã nhận,
-<code>FIN</code> xin đóng. Request chỉ nằm trong packet 4, câu trả lời nằm trong packet 6 và 7, còn các packet khác là packet báo đã
-nhận.</p>
+<p>Ba packet đầu là three-way handshake, tức hai máy chào nhau ba lượt để mở kết nối, và ba packet cuối là đóng kết nối.
+<code>SYN</code>, <code>ACK</code> và <code>FIN</code> là tên các flag trong TCP header: <code>SYN</code> xin mở, <code>ACK</code>
+báo đã nhận, <code>FIN</code> xin đóng. Request chỉ nằm trong packet 4, câu trả lời nằm trong packet 6 và 7; packet 5, 8 và 9 chỉ
+báo đã nhận.</p>
 
 </section>
 
@@ -193,8 +196,10 @@ nhận.</p>
 chọn giao packet cho thiết bị nào.</p>
 
 <p>Routing table ghi dải địa chỉ, viết theo kiểu <code>10.88.88.0/24</code>, trong đó số sau dấu gạch chéo là số bit đầu cố
-định, gọi là <strong>prefix</strong>. Địa chỉ IPv4 dài 32 bit, nên <code>/24</code> cố định ba số đầu <code>10.88.88</code>
-và dải có 256 địa chỉ. Windows ghi prefix theo kiểu netmask, ví dụ <code>255.255.255.0</code> là <code>/24</code>,
+định, gọi là <strong>prefix</strong>. Địa chỉ IPv4 có bốn số, mỗi số 8 bit, tổng cộng 32 bit, nên <code>/24</code> cố định ba số
+đầu <code>10.88.88</code> và dải có 256 địa chỉ.</p>
+
+<p>Windows ghi prefix theo một kiểu khác gọi là netmask: <code>255.255.255.0</code> là <code>/24</code>,
 <code>255.255.240.0</code> là <code>/20</code>, còn <code>0.0.0.0</code> là <code>/0</code>.</p>
 
 <p>Hình 3 là routing table trên laptop của mình, lúc nối một mạng WiFi khác với lúc chạy tracert ở Bài 00, nên cục phát WiFi
@@ -217,8 +222,9 @@ Network Destination        Netmask          Gateway       Interface  Metric
 </figure>
 
 <p>Dòng <code>172.21.16.0/20</code> là mạng ảo nối Windows với <button type="button" class="term" data-term="wsl">WSL</button>,
-hai dòng <code>127...</code> là <code>localhost</code>, còn dòng <code>10.88.88.0/24</code> là mạng WiFi. Dòng
-<code>0.0.0.0/0</code> khớp mọi địa chỉ và giao packet cho cục phát WiFi; dòng ấy gọi là <strong>default route</strong>.</p>
+máy Linux chạy bên trong laptop; hai dòng bắt đầu bằng <code>127</code> là <code>localhost</code>, còn dòng
+<code>10.88.88.0/24</code> là mạng WiFi. Dòng <code>0.0.0.0/0</code> khớp mọi địa chỉ và giao packet cho cục phát WiFi; dòng ấy gọi
+là <strong>default route</strong>.</p>
 
 <h2 id="longest-prefix">Longest prefix match thắng</h2>
 
@@ -299,7 +305,7 @@ gửi ba lần, nên mỗi dòng của tracert có ba con số thời gian.</p>
 đi ngược), và danh sách bên dưới ghi thêm một dòng. Ba dòng đầu là kết quả thật ở Lab 2.</figcaption>
 </figure>
 
-<p>Dòng toàn dấu sao ở chặng 6 trong Bài 00 là router không gửi Time Exceeded về, hoặc có gửi nhưng lời báo bị chặn trên
+<p>Dòng toàn dấu sao, dòng 6 của tracert ở Bài 00, là router không gửi Time Exceeded về, hoặc có gửi nhưng lời báo bị chặn trên
 đường về.</p>
 
 </section>
@@ -324,9 +330,10 @@ AS nối với nhau bằng dây riêng, hoặc qua một điểm trao đổi Int
 
 <p>Các AS báo đường cho nhau bằng <strong>BGP</strong> (Border Gateway Protocol). Router BGP của Facebook báo cho các AS kế
 bên rằng “dải <code>57.144.64.0/23</code> ở chỗ tôi”, và việc báo như thế gọi là <strong>announce</strong>. AS nhận
-được lời announce thì ghi đường tới dải ấy vào routing table, rồi announce tiếp cho các AS khác, kèm AS number của nó ghi thêm
-vào đầu. Dãy AS number ấy gọi là AS path, ví dụ <code>3491 32934</code> nghĩa là đi qua AS3491 rồi tới AS32934 của
-Facebook.</p>
+được lời announce thì ghi đường tới dải ấy vào routing table, rồi announce tiếp cho các AS khác.</p>
+
+<p>Mỗi AS announce tiếp thì ghi thêm AS number của mình vào đầu. Dãy AS number ấy gọi là <strong>AS path</strong>, ví dụ
+<code>3491 32934</code> nghĩa là đi qua AS3491 rồi tới AS32934 của Facebook.</p>
 
 <figure class="fig">
 <div class="bgp">
@@ -356,10 +363,9 @@ ra địa chỉ. Vì sao không server nào khác trả lời thay được? Mu�
 
 <h2 id="dns-levels">Không ai giữ hết mọi tên</h2>
 
-<p>DNS chia tên ra theo cấp, mỗi cấp do một bên giữ. Cấp trên cùng gọi là root, và root biết ai giữ <code>com</code>;
-<code>com</code> biết ai giữ <code>facebook.com</code>; còn server của Facebook mới biết địa chỉ thật của
-<code>facebook.com</code>. Server giữ câu trả lời thật cho một tên gọi là authoritative server cho tên
-ấy.</p>
+<p>DNS chia tên ra theo cấp, mỗi cấp do một bên giữ. Cấp trên cùng gọi là root, và root biết ai giữ phần đuôi <code>com</code>;
+server của <code>com</code> biết ai giữ <code>facebook.com</code>; còn server của Facebook mới biết địa chỉ thật của
+<code>facebook.com</code>. Server giữ câu trả lời thật cho một tên gọi là authoritative server cho tên ấy.</p>
 
 <h2 id="resolver">Ai đi hỏi từng cấp</h2>
 
@@ -390,10 +396,10 @@ facebook.com.		60	IN	A	57.144.64.1
 IPv4.</figcaption>
 </figure>
 
-<p>Gốc trả lời rằng muốn biết về <code>com</code> thì hỏi các server <code>gtld-servers.net</code>, server của <code>com</code>
-trả lời rằng muốn biết về facebook.com thì hỏi <code>a</code> tới <code>d.ns.facebook.com</code>, và ở khối cuối,
-<code>c.ns.facebook.com</code> trả lời <code>57.144.64.1</code>. Năm 2021, bốn server <code>ns.facebook.com</code> ấy mất
-đường, nên không resolver nào đi được bước cuối.</p>
+<p>Root trả lời rằng muốn biết về <code>com</code> thì hỏi các server của <code>gtld-servers.net</code>; server của
+<code>com</code> trả lời rằng muốn biết về facebook.com thì hỏi bốn server từ <code>a.ns.facebook.com</code> tới
+<code>d.ns.facebook.com</code>; và ở khối cuối, <code>c.ns.facebook.com</code> trả lời <code>57.144.64.1</code>. Năm 2021, bốn
+server <code>ns.facebook.com</code> ấy mất đường, nên không resolver nào đi được bước cuối.</p>
 
 <figure class="fig">
 <div class="dns-walk">
@@ -417,12 +423,13 @@ resolver trả lời từ cache mà không đi hỏi ai.</figcaption>
 
 <h2 id="dns-cache">Con số 60 và cache</h2>
 
-<p>Câu trả lời cuối ở Hình 7 có số <code>60</code>, và số ấy là TTL của câu trả lời, tính bằng giây. Trong 60 giây ấy,
-resolver giữ câu trả lời trong cache, ai hỏi lại thì resolver trả lời luôn mà khỏi đi hỏi ba cấp. Vì có cache nên đổi địa chỉ
-một domain thì phải chờ hết TTL mọi người mới thấy địa chỉ mới. Cũng vì TTL chỉ có 60 giây, nên hôm 4/10/2021 cache của các
-resolver hết hạn rất nhanh, và không ai còn giữ địa chỉ của facebook.com để đưa thay.</p>
+<p>Câu trả lời cuối ở Hình 7 có số <code>60</code>, và số ấy cũng gọi là TTL, nhưng khác TTL trong IP header: ở đây nó là số giây
+câu trả lời còn được giữ, còn TTL trong IP header là số router packet còn được đi qua. Trong 60 giây ấy, resolver giữ câu trả
+lời trong cache, tức chỗ cất tạm, ai hỏi lại thì resolver trả lời luôn mà khỏi đi hỏi ba cấp. Vì có cache nên đổi địa chỉ một domain
+thì phải chờ hết TTL mọi người mới thấy địa chỉ mới. Cũng vì TTL chỉ có 60 giây, nên hôm 4/10/2021 cache của các resolver hết hạn
+rất nhanh, và không ai còn giữ địa chỉ của facebook.com để đưa thay.</p>
 
-<p>Giờ ghép lại cho cú like. Resolver hỏi gốc, <code>com</code>, rồi <code>ns.facebook.com</code> để có
+<p>Giờ ghép lại cho cú like. Resolver hỏi root, <code>com</code>, rồi <code>ns.facebook.com</code> để có
 <code>57.144.64.1</code>. Laptop tra routing table, chỉ dòng <code>0.0.0.0/0</code> khớp, nên đẩy packet cho cục phát WiFi. Router
 của nhà mạng cũng tra bảng như thế, và dòng cho <code>57.144.64.0/23</code> có trong bảng của họ là nhờ AS32934 announce
 bằng BGP.</p>
@@ -458,10 +465,10 @@ Hình 3. Máy bạn có thể nhiều dòng hơn hay ít dòng hơn Hình 3, tu�
 
 <h2 id="lab-2">Lab 2: tự dò từng chặng bằng TTL</h2>
 
-<p>Lệnh <code>ping</code> của Windows có option <code>-i</code> để đặt TTL, còn <code>-n 1</code> bảo ping chỉ gửi một packet. Đặt TTL
-nhỏ hơn số chặng thì packet chết giữa đường, và bạn nhận về lời báo Time Exceeded, Windows in thành
-<code>TTL expired in transit</code>. Gõ lần lượt ba lệnh trong khối dưới vào Git Bash, mỗi lệnh bấm Enter một lần rồi chờ output in
-xong mới gõ lệnh sau.</p>
+<p>Lệnh <code>ping</code> gửi packet tới một máy rồi chờ máy ấy trả lời. Trên Windows, option <code>-i</code> đặt TTL cho packet, còn
+<code>-n 1</code> bảo ping chỉ gửi một packet. Đặt TTL nhỏ hơn số chặng thì packet chết giữa đường, và bạn nhận về lời báo Time
+Exceeded, Windows in thành <code>TTL expired in transit</code>. Gõ lần lượt ba lệnh trong khối dưới vào Git Bash, mỗi lệnh bấm
+Enter một lần rồi chờ output in xong mới gõ lệnh sau.</p>
 
 <pre><code>$ ping -n 1 -i 1 facebook.com
 Pinging facebook.com [57.144.64.1] with 32 bytes of data:
@@ -528,8 +535,9 @@ Served by:
 <p>Lần này <code>com</code> chỉ sang <code>a.ns.facebook.com</code>, authoritative server của facebook.com. Còn một bước
 nữa là hỏi chính server ấy, và để thấy TTL của câu trả lời thì dùng <code>Resolve-DnsName</code>, lệnh hỏi DNS của
 PowerShell, vì nó in TTL thành một cột riêng. Bạn mở PowerShell như ở đầu lab rồi gõ lần lượt ba lệnh <code>Resolve-DnsName</code>
-trong khối dưới; dòng mở đầu bằng <code>#</code> là lời nhắc của mình, không gõ dòng ấy. Option
-<code>-Type A</code> chỉ xin địa chỉ IPv4, <code>-Server</code> chọn server để hỏi, <code>-NoRecursion</code> giống
+trong khối dưới; dòng mở đầu bằng <code>#</code> là lời nhắc của mình, không gõ dòng ấy.</p>
+
+<p>Option <code>-Type A</code> chỉ xin địa chỉ IPv4, <code>-Server</code> chọn server để hỏi, <code>-NoRecursion</code> giống
 <code>-norecurse</code> của <code>nslookup</code>; bỏ <code>-Server</code> thì lệnh hỏi resolver như mọi chương trình trên
 máy.</p>
 
@@ -570,7 +578,7 @@ thì lần sau nó nhảy lên 60, nghĩa là resolver đã bỏ câu trả lờ
 "asns": [ { "asn": 32934, "holder": "FACEBOOK - Facebook, Inc." } ]</code></pre>
 
 <p><code>announced</code> cho biết dải đang được announce trên BGP, còn <code>asns</code> là AS announce dải ấy. Thử với địa
-chỉ các chặng trong tracert ở Bài 00 thì bạn sẽ thấy từ chặng 10, packet đã vào mạng của Facebook. Địa chỉ nào ra
+chỉ các router trong tracert ở Bài 00 thì bạn sẽ thấy từ dòng 10, packet đã vào mạng của Facebook. Địa chỉ nào ra
 <code>"announced": false</code> thì tra xem ai đăng ký dải chứa nó, cũng qua RIPEstat, bằng lệnh dưới gõ vào Git Bash:</p>
 
 <pre><code>$ curl -s "https://stat.ripe.net/data/whois/data.json?resource=147.75.211.10"
@@ -639,9 +647,10 @@ các layer và vị trí từng ô trong header thì giống.</p>
 layer nào; rê chuột lên một byte để biết byte ấy nằm trong ô nào của header.</figcaption>
 </figure>
 
-<p>14 byte đầu là MAC header, 20 byte tiếp theo là IP header, trong đó byte <code>40</code> là TTL 64 và tám byte
-<code>ac 15 15 88 68 14 17 9a</code> là hai địa chỉ IP. 32 byte sau đó là TCP header, mở đầu bằng port 47430 của curl và
-port 80 của server, còn 75 byte cuối là request HTTP, đọc thẳng được bằng mắt ở cột chữ bên phải.</p>
+<p>14 byte đầu là MAC header, 20 byte tiếp theo là IP header. Trong IP header, byte ghi <code>40</code> là TTL: <code>40</code> ở
+đây là số hex, đổi sang số thường là 64. Tám byte <code>ac 15 15 88 68 14 17 9a</code> là hai địa chỉ IP. 32 byte sau đó là TCP
+header, mở đầu bằng port 47430 của curl và port 80 của server, còn 75 byte cuối là request HTTP, đọc thẳng được bằng mắt ở cột
+chữ bên phải.</p>
 
 </section>
 

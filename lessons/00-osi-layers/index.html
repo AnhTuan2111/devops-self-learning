@@ -84,10 +84,9 @@ trên cùng tới dưới cùng của laptop, qua mạng, rồi đi ngược lê
 
 <h2 id="osi">Bảy layer của mô hình OSI</h2>
 
-<p>Chồng layer ấy gồm những layer nào? Người ta chia theo nhiều cách, và cách được dạy nhiều nhất là chia thành bảy layer,
-gọi là mô hình <strong>OSI</strong> (Open Systems Interconnection). ISO, tổ chức đặt ra các tiêu chuẩn quốc tế, công bố mô hình
-này năm 1984. Hình 1 trích bảy layer ấy từ X.200, văn bản chuẩn tải miễn phí của
-<button type="button" class="term" data-term="itu-t">ITU-T</button>.</p>
+<p>Chồng layer ấy gồm những layer nào? Cách được dạy nhiều nhất chia thành bảy layer, gọi là mô hình <strong>OSI</strong>
+(Open Systems Interconnection), do ISO, tổ chức đặt ra các tiêu chuẩn quốc tế, công bố năm 1984. Hình 1 là đoạn liệt kê bảy layer
+ấy trong văn bản chuẩn X.200 của <button type="button" class="term" data-term="itu-t">ITU-T</button>, bản tiếng Anh, tải miễn phí.</p>
 
 <figure class="fig">
 <blockquote class="src" lang="en">
@@ -142,12 +141,12 @@ thì máy nào nhận?</p>
 
 <p>NIC nào cũng có một địa chỉ riêng gắn từ lúc sản xuất, gọi là <strong>địa chỉ MAC</strong>, viết thành sáu cặp ký
 tự <button type="button" class="term" data-term="hex">hex</button>, như <code>20-0B-74-xx-xx-xx</code> trên máy mình. Layer 2
-ghi MAC gửi và MAC nhận vào một header gắn trước dữ liệu, mình gọi là MAC header, và máy nào thấy MAC nhận không phải của nó
-thì bỏ qua. Dữ liệu đã có MAC header gọi là <strong>frame</strong>.</p>
+viết MAC gửi và MAC nhận thành một đoạn thông tin ngắn gắn ngay trước dữ liệu, gọi là <strong>header</strong>, và ở layer này
+nó là MAC header. Máy nào thấy MAC nhận không phải của nó thì bỏ qua. Dữ liệu đã có MAC header gọi là <strong>frame</strong>.</p>
 
-<p>Trong nhà, frame được chuyển tới máy mang MAC nhận nhờ <strong>switch</strong>, cái hộp có nhiều cổng cắm dây mạng và nhớ
-máy nào cắm ở cổng nào, hoặc nhờ <strong>access point</strong>, điểm phát sóng cho máy dùng WiFi. Cục phát WiFi trong nhà
-thường gộp cả hai vào một hộp.</p>
+<p>Trong nhà bạn, việc đưa frame tới đúng máy do cục phát WiFi lo. Thật ra nó gộp hai thiết bị vào một hộp: <strong>switch</strong>,
+phần có nhiều cổng cắm dây mạng và nhớ máy nào cắm ở cổng nào, và <strong>access point</strong>, phần phát sóng cho máy dùng WiFi.
+Frame tới máy mang MAC nhận nhờ một trong hai phần ấy.</p>
 
 <figure class="fig photo">
   <div class="photo-row">
@@ -169,9 +168,10 @@ mạng khác, nên muốn đi xa thì cần thêm layer 3.</p>
 
 <h2 id="network" class="layer-h c3" data-layer="3">Layer <span class="layer-badge c3">3</span> Network: đi qua nhiều mạng tới đúng máy</h2>
 
-<p>Layer 3 cho mỗi máy một địa chỉ cấp theo mạng mà máy đang nối vào, gọi là <strong>địa chỉ IP</strong>, nên nhìn địa chỉ là
-biết phải gửi về hướng nào; facebook.com có địa chỉ <code>57.144.64.1</code>. Layer 3 ghi IP gửi và IP nhận vào một header,
-và dữ liệu đã có header này gọi là <strong>packet</strong>.</p>
+<p>Layer 3 cho mỗi máy một địa chỉ cấp theo mạng mà máy đang nối vào, gọi là <strong>địa chỉ IP</strong>. Mang laptop sang
+quán cà phê thì IP đổi, còn MAC vẫn là MAC cũ. Vì IP đổi theo mạng nên nhìn địa chỉ là biết phải gửi về hướng nào; facebook.com
+có địa chỉ <code>57.144.64.1</code>. Layer 3 ghi IP gửi và IP nhận vào một header, và dữ liệu đã có header này gọi là
+<strong>packet</strong>.</p>
 
 <p>Thiết bị nối các mạng với nhau gọi là <strong>router</strong>. Router đọc IP nhận rồi chuyển packet sang mạng gần đích hơn.
 Cục phát WiFi là router đầu tiên trên đường đi, và từ laptop của mình tới facebook.com có 13 router như thế.</p>
@@ -181,8 +181,9 @@ Cục phát WiFi là router đầu tiên trên đường đi, và từ laptop c�
   <figcaption><b>Ảnh 4</b> Một cục phát WiFi trong nhà, router đầu tiên mà packet đi qua khi rời máy bạn.</figcaption>
 </figure>
 
-<p>Vì vậy trên đường đi, IP nhận giữ nguyên, còn MAC header thay ở mỗi chặng. Tới mỗi router, MAC header cũ bị bóc ra, router đọc IP
-để chọn hướng, rồi bọc một MAC header mới ghi địa chỉ của thiết bị kế tiếp.</p>
+<p>MAC chỉ có nghĩa trong một mạng, còn IP nhận là đích của cả chuyến đi. Nên trên đường đi, IP nhận giữ nguyên, còn MAC header
+thay ở mỗi chặng. Tới mỗi router, MAC header cũ bị bóc ra, router đọc IP để chọn hướng, rồi bọc một MAC header mới ghi địa chỉ
+của thiết bị kế tiếp.</p>
 
 <figure class="fig">
 <div class="hops">
@@ -205,10 +206,14 @@ mới. Giữa router nhà mạng và server còn nhiều router khác mà hình 
 <p>Layer 4 cho mỗi chương trình đang chờ nhận dữ liệu một con số riêng, gọi là <strong>port</strong>. App Spring Boot của
 bạn chạy ở <code>localhost:8080</code> thì có port 8080, còn trang <code>https://</code> như facebook.com dùng port 443.</p>
 
-<p>Mạng chở từng packet nhỏ, thường tối đa 1.500 byte một packet, và packet có thể mất hay tới nơi lộn thứ tự.
-<strong>TCP</strong> (Transmission Control Protocol) lo chuyện ấy: TCP cắt dữ liệu thành từng segment, đánh số các segment, gửi lại
-segment bị mất và ráp các segment lại theo thứ tự ở đầu kia. Sequence number và port được ghi vào TCP header. Trước khi gửi, TCP ở hai
-máy trao đổi vài packet để mở một kết nối, và kết nối còn giữ cho tới khi một bên đóng lại.</p>
+<p>Mạng chở dữ liệu thành từng packet nhỏ, mỗi packet thường tối đa 1.500 byte, nên một trang web phải cắt ra nhiều packet.
+Giữa đường, packet có thể mất, hoặc tới nơi lộn thứ tự.</p>
+
+<p><strong>TCP</strong> (Transmission Control Protocol) lo chuyện ấy ở layer 4. Protocol là bộ quy ước mà hai bên cùng theo để nói chuyện
+với nhau, và TCP là protocol của layer 4. TCP cắt dữ liệu thành từng phần gọi là segment, đánh số từng segment, gửi lại segment bị mất
+và ráp các segment lại đúng thứ tự ở đầu kia. Số thứ tự và port được ghi vào TCP header.</p>
+
+<p>Trước khi gửi dữ liệu, TCP ở hai máy trao đổi vài packet để mở một kết nối, và kết nối được giữ cho tới khi một bên đóng lại.</p>
 
 <p>UDP cũng dùng port nhưng không mở kết nối và không gửi lại packet mất, nên hợp với những câu hỏi đáp gọn trong một packet, như
 câu hỏi DNS mà bạn sẽ gặp ở layer 7.</p>
@@ -224,15 +229,17 @@ giữa không đụng tới ba layer này.</p>
 
 <h2 id="session" class="layer-h c5" data-layer="5">Layer <span class="layer-badge c5">5</span> Session: giữ cuộc trao đổi</h2>
 
-<p>Layer 5 lo mở, giữ và đóng một cuộc trao đổi kéo dài qua nhiều lần hỏi đáp giữa hai chương trình. Ngoài đời, việc này nằm
-rải trong browser và app. Chuyện mở lại tab mà vẫn đăng nhập thì do cookie lo, và cookie là việc của layer 7.</p>
+<p>Layer 5 lo mở, giữ và đóng một cuộc trao đổi kéo dài qua nhiều lần hỏi đáp giữa hai chương trình. Ngoài đời, việc này không có
+phần mềm riêng mà nằm rải trong browser và app. Mở lại tab mà vẫn đăng nhập trông giống việc của layer 5, nhưng đó là cookie, và
+cookie là việc của layer 7.</p>
 
 <h2 id="presentation" class="layer-h c6" data-layer="6">Layer <span class="layer-badge c6">6</span> Presentation: hai đầu hiểu dữ liệu như nhau</h2>
 
-<p>Layer 6 lo cho hai đầu biểu diễn dữ liệu theo cùng một kiểu, ví dụ dùng chung một bảng mã cho chữ tiếng Việt có dấu. Việc
-encrypt cũng hay được xếp vào layer này. Chữ <code>s</code> trong <code>https</code> nghĩa là request được encrypt bằng
-<strong>TLS</strong> (Transport Layer Security) trước khi rời máy bạn. TLS chỉ encrypt request, còn IP header và TCP
-header để nguyên, nên router vẫn đọc được địa chỉ để chuyển packet mà không đọc được request.</p>
+<p>Layer 6 lo cho hai đầu biểu diễn dữ liệu theo cùng một kiểu, ví dụ dùng chung một bảng mã cho chữ tiếng Việt có dấu.</p>
+
+<p>Việc encrypt, tức trộn dữ liệu để người ngoài không đọc được, cũng hay được xếp vào layer này. Chữ <code>s</code> trong
+<code>https</code> nghĩa là request được encrypt bằng <strong>TLS</strong> (Transport Layer Security) trước khi rời máy bạn. TLS chỉ
+encrypt request, còn IP header và TCP header để nguyên, nên router vẫn đọc được địa chỉ để chuyển packet mà không đọc được request.</p>
 
 <h2 id="application" class="layer-h c7" data-layer="7">Layer <span class="layer-badge c7">7</span> Application: viết ra request like</h2>
 
@@ -262,9 +269,9 @@ theo là header, sau dòng trống là phần thân.</figcaption>
 
 <h2 id="encapsulation">Đi xuống: bọc thêm từng header</h2>
 
-<p>Lúc bạn bấm like, request đi từ layer 7 xuống layer 1. Mỗi layer nhận khối byte từ phía trên, không đọc bên trong mà gắn thêm
-header của mình rồi giao xuống; TLS còn encrypt khối byte, TCP còn cắt khối byte thành segment. Việc gắn chồng từng header như vậy
-gọi là <strong>encapsulation</strong>.</p>
+<p>Lúc bạn bấm like, request đi từ layer 7 xuống layer 1. Mỗi layer nhận khối byte từ layer ngay trên, không đọc bên trong, chỉ gắn
+thêm header của mình rồi giao cho layer ngay dưới. Riêng TLS còn encrypt khối byte, và TCP còn cắt nó thành segment. Việc gắn chồng
+từng header như vậy gọi là <strong>encapsulation</strong>.</p>
 
 <figure class="fig">
 <div class="encap">
@@ -511,9 +518,9 @@ tự kể, <code>&gt;</code> là dữ liệu gửi đi, <code>&lt;</code> là d�
 </figure>
 
 <p>Ba dòng đầu là DNS ở layer 7 trả về địa chỉ của <code>www.facebook.com</code>, khác địa chỉ ở Lab 3 vì đây là một tên khác.
-Dòng <code>Connected ... port 443</code> là TCP ở layer 4 mở xong kết nối. Sau đó <code>GET</code> đi ra và
-<code>200 OK</code> trở về ở layer 7. TLS handshake không hiện ra, vì bản curl của Git for Windows dùng library schannel
-của Windows để encrypt, mà schannel gần như không báo lại gì; mấy dòng <code>schannel</code> bạn bỏ qua được.</p>
+Dòng <code>Connected ... port 443</code> là TCP ở layer 4 mở xong kết nối. Sau đó request <code>GET</code>, lệnh xin một trang, đi ra
+và <code>200 OK</code> trở về ở layer 7. Chuyện TLS encrypt request không hiện ra, vì bản curl của Git for Windows dùng schannel, phần
+encrypt có sẵn của Windows, mà schannel gần như không báo lại gì; mấy dòng <code>schannel</code> bạn bỏ qua được.</p>
 
 </section>
 
