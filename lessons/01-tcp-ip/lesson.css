@@ -10,8 +10,8 @@
 .c5, .c1 { --t: var(--blue);   --t-on: #fff; }
 .c4      { --t: var(--ink);    --t-on: var(--paper); }
 
-::selection { background: var(--blue); color: #fff; }
-.hl::selection { background: var(--red); color: #fff; }
+::selection { background: var(--yellow); color: var(--ink); }
+.hl::selection { background: var(--red); color: #fff; }   /* chữ trên dải vàng của tiêu đề bôi đỏ, vì vàng trên vàng không thấy */
 
 /* ---------------- Khung trang: rộng hết màn laptop ---------------- */
 :root { --page-max: 1480px; --night-line: #4a4740; --night-text: #d9d2c5; }
