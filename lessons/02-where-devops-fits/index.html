@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bài 02: Người làm DevOps nắm chỗ nào trong các tầng</title>
-<meta name="description" content="Từ lúc người dùng gõ tên miền, request đi qua DNS, firewall, Nginx, bước bắt tay TLS, tới app rồi database. Mỗi chỗ hỏng cho ra một lời báo khác nhau, nên biết chương trình nào viết ra lời báo là biết request dừng ở đâu, và hầu hết các chỗ ấy là việc của người làm DevOps.">
-<link rel="stylesheet" href="../../assets/style.css?v=fca8b97f">
-<link rel="stylesheet" href="../../assets/terms.css?v=fca8b97f">
+<title>Bài 02: Người làm DevOps nắm chỗ nào trong các layer</title>
+<meta name="description" content="Từ lúc người dùng gõ domain, request đi qua DNS, firewall, Nginx, TLS handshake, tới app rồi database. Mỗi chỗ hỏng cho ra một lời báo khác nhau, nên biết chương trình nào viết ra lời báo là biết request dừng ở đâu, và hầu hết các chỗ ấy là việc của người làm DevOps.">
+<link rel="stylesheet" href="../../assets/style.css?v=4e53e8bb">
+<link rel="stylesheet" href="../../assets/terms.css?v=4e53e8bb">
 <link rel="stylesheet" href="lesson.css?v=82ceb2a5">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
@@ -21,7 +21,7 @@
 
 <header class="route-head">
   <p class="eyebrow">Module 0 · Bài 02</p>
-  <h1>Người làm DevOps nắm <span class="hl">chỗ nào trong các tầng</span></h1>
+  <h1>Người làm DevOps nắm <span class="hl">chỗ nào trong các layer</span></h1>
   <p class="lede">App chạy ngon ở <code>localhost:8080</code>, đưa lên server thì người dùng báo không vào được. App của bạn ghi một dòng log mỗi khi nhận một request, vậy mà log không có dòng nào về request của họ. Request đã dừng ở đâu, và chỗ đó là việc của ai?</p>
 </header>
 
@@ -30,17 +30,17 @@
 
 <div class="path-intro">
   <h2 id="local-vs-server">Trên máy bạn chạy, lên server thì không</h2>
-  <p>Trên máy bạn, trình duyệt gọi <code>localhost:8080</code> là vào thẳng app Spring Boot. Đưa app lên server rồi thì người
-  dùng gõ <code>https://shop.example.com</code>, và trước khi vào tới controller của bạn, có bốn chỗ mà trên máy bạn không có. Trước hết, trình duyệt phải hỏi DNS để đổi tên miền ra địa chỉ. Có địa chỉ rồi, gói tin tới cửa server, nơi một bộ lọc xem từng gói tin rồi cho qua hay chặn.</p>
-  <p>Qua cửa, request gặp một chương trình đứng trước app, nhận request thay cho app. Trước khi đọc request, chương trình ấy bắt tay TLS với trình duyệt. Trong bước này nó gửi cho trình duyệt chứng chỉ, một thứ giấy tờ chứng minh server là chủ của tên miền. Bước này có thể hỏng ngay cả khi chương trình ấy vẫn chạy bình thường, nên nó là một chỗ riêng trên đường đi. </p>
+  <p>Trên máy bạn, browser gọi <code>localhost:8080</code> là vào thẳng app Spring Boot. Đưa app lên server rồi thì người
+  dùng gõ <code>https://shop.example.com</code>, và trước khi vào tới controller của bạn, có bốn chỗ mà trên máy bạn không có. Trước hết, browser phải hỏi DNS để đổi domain ra địa chỉ. Có địa chỉ rồi, packet tới cửa server, nơi một bộ lọc xem từng packet rồi cho qua hay chặn.</p>
+  <p>Qua cửa, request gặp một chương trình đứng trước app, nhận request thay cho app. Trước khi đọc request, chương trình ấy làm TLS handshake với browser. Trong bước này nó gửi cho browser certificate, một thứ giấy tờ chứng minh server là chủ của domain. Bước này có thể hỏng ngay cả khi chương trình ấy vẫn chạy bình thường, nên nó là một chỗ riêng trên đường đi. </p>
   <p>Vì có bốn chỗ ấy nên lời báo "không vào được" của người dùng chưa cho biết request dừng ở đâu. Mà log của app không có dòng nào, tức request chưa vào tới app. Nó có thể dừng ở một trong bốn chỗ ấy, ở các router của nhà mạng giữa đường, hoặc đã tới chương trình đứng trước app nhưng app phía sau không chạy, nên chương trình ấy không chuyển request vào được. Hình 1 chạy hai request cùng lúc, một trên máy bạn, một đi lên server, để bạn so sánh.</p>
 </div>
 
-<figure class="fig lanes" aria-label="Hình 1: hai request chạy cùng lúc. Trên máy bạn, trình duyệt gọi thẳng app ở localhost:8080. Lên server, request đi qua DNS, router của nhà mạng, firewall, Nginx, bước bắt tay TLS, rồi mới tới app và database.">
+<figure class="fig lanes" aria-label="Hình 1: hai request chạy cùng lúc. Trên máy bạn, browser gọi thẳng app ở localhost:8080. Lên server, request đi qua DNS, router của nhà mạng, firewall, Nginx, TLS handshake, rồi mới tới app và database.">
   <div class="lane lane-local" aria-hidden="true">
     <p class="lane-name">trên máy bạn</p>
     <ol class="lane-track">
-      <li class="st" data-st="browser"><b>trình duyệt</b><em>localhost:8080</em></li>
+      <li class="st" data-st="browser"><b>browser</b><em>localhost:8080</em></li>
       <li class="st mine" data-st="app"><b>app</b><em>code của bạn</em></li>
       <li class="st" data-st="db"><b>database</b><em>PostgreSQL</em></li>
     </ol>
@@ -49,12 +49,12 @@
   <div class="lane lane-server" aria-hidden="true">
     <p class="lane-name">lên server</p>
     <ol class="lane-track">
-      <li class="st" data-st="browser"><b>trình duyệt</b><em>shop.example.com</em></li>
+      <li class="st" data-st="browser"><b>browser</b><em>shop.example.com</em></li>
       <li class="st new" data-st="dns"><b>DNS</b><em>đổi tên ra địa chỉ</em></li>
       <li class="st wire" data-st="isp"><b>nhà mạng</b><em>các router ở giữa</em></li>
       <li class="st new" data-st="firewall"><b>firewall</b><em>cửa server</em></li>
       <li class="st new" data-st="nginx"><b>Nginx</b><em>đứng trước app</em></li>
-      <li class="st new" data-st="tls"><b>TLS</b><em>bắt tay</em></li>
+      <li class="st new" data-st="tls"><b>TLS</b><em>handshake</em></li>
       <li class="st mine" data-st="app"><b>app</b><em>code của bạn</em></li>
       <li class="st" data-st="db"><b>database</b><em>PostgreSQL</em></li>
     </ol>
@@ -67,8 +67,8 @@
 
 <div class="path-more">
   <p>Trong bốn chỗ ấy, DNS thì bạn đã gặp ở Bài 01, lúc resolver đi hỏi từng cấp. Bộ lọc ở cửa server gọi là <button type="button" class="term" data-term="firewall">firewall</button>.</p>
-  <p>Chương trình đứng trước app trong Hình 1 là Nginx, một chương trình người ta hay đặt ở chỗ đó. Sau Nginx và bước bắt tay TLS là app, rồi tới database phía sau app; không tính các router của nhà mạng, vì không ai ở phía bạn đụng tới được chúng, thì trên đường đi có sáu chỗ: DNS, firewall, Nginx, bước bắt tay TLS, app và database.</p>
-  <p>Request HTTP đi qua firewall, Nginx rồi tới app, và mỗi chỗ đọc nó tới một mức khác nhau, nên chỗ nào hỏng thì lời báo người dùng nhận được cũng khác. DNS thì không thấy request, nó chỉ trả lời câu hỏi về tên miền. Nginx và app đọc hết request HTTP ở tầng 7, nên chỉ hai chỗ này viết được mã HTTP như 502, 500. Firewall đặt ở cửa server thường chỉ đọc tới địa chỉ và port, tức tầng 3 và tầng 4 trong bảy tầng ở Bài 00, nên nó không viết được mã HTTP nào.</p>
+  <p>Chương trình đứng trước app trong Hình 1 là Nginx, một chương trình người ta hay đặt ở chỗ đó. Sau Nginx và TLS handshake là app, rồi tới database phía sau app; không tính các router của nhà mạng, vì không ai ở phía bạn đụng tới được chúng, thì trên đường đi có sáu chỗ: DNS, firewall, Nginx, TLS handshake, app và database.</p>
+  <p>Request HTTP đi qua firewall, Nginx rồi tới app, và mỗi chỗ đọc nó tới một mức khác nhau, nên chỗ nào hỏng thì lời báo người dùng nhận được cũng khác. DNS thì không thấy request, nó chỉ trả lời câu hỏi về domain. Nginx và app đọc hết request HTTP ở layer 7, nên chỉ hai chỗ này viết được status code như 502, 500. Firewall đặt ở cửa server thường chỉ đọc tới địa chỉ và port, tức layer 3 và layer 4 trong bảy layer ở Bài 00, nên nó không viết được status code nào.</p>
 </div>
 
 </section>
@@ -89,24 +89,24 @@
 
 <!-- Phần: từng chỗ -->
 <div class="stops-intro">
-  <p>Biết đường đi rồi, nhưng người dùng không nhìn thấy đường đi, họ chỉ thấy một lời báo lỗi. Mỗi chỗ hỏng thì lời báo ấy trông thế nào? Trình duyệt và curl cùng dừng ở một chỗ và báo cùng một lỗi, mà curl in lỗi thành một dòng chữ dễ chép, nên ngày 14/11/2026 mình chạy <code>curl</code> trên Git Bash (Windows 11, curl 8.10.1) để xem lời báo ở bốn chỗ trước app. Dòng lỗi ở cả bốn chỗ đều có một con số trong ngoặc như (6) hay (28). Con số ấy là mã lỗi của curl, còn chữ đi sau nó kể curl dừng ở bước nào.</p>
-  <p>Các lệnh curl ở bốn chỗ trước app đều có cờ <code>-sS</code>. Cờ <code>-s</code> tắt những chữ phụ curl tự in thêm, như thanh tiến độ, nhưng tắt luôn cả dòng lỗi, nên phải thêm <code>-S</code> để curl vẫn in dòng lỗi.</p>
+  <p>Biết đường đi rồi, nhưng người dùng không nhìn thấy đường đi, họ chỉ thấy một lời báo lỗi. Mỗi chỗ hỏng thì lời báo ấy trông thế nào? Browser và curl cùng dừng ở một chỗ và báo cùng một lỗi, mà curl in lỗi thành một dòng chữ dễ chép, nên ngày 14/11/2026 mình chạy <code>curl</code> trên Git Bash (Windows 11, curl 8.10.1) để xem lời báo ở bốn chỗ trước app. Dòng lỗi ở cả bốn chỗ đều có một con số trong ngoặc như (6) hay (28). Con số ấy là exit code của curl, còn chữ đi sau nó kể curl dừng ở bước nào.</p>
+  <p>Các lệnh curl ở bốn chỗ trước app đều có option <code>-sS</code>. Option <code>-s</code> tắt những chữ phụ curl tự in thêm, như thanh tiến độ, nhưng tắt luôn cả dòng lỗi, nên phải thêm <code>-S</code> để curl vẫn in dòng lỗi.</p>
 </div>
 
 <section class="stop" id="stop-dns" data-st="dns">
   <header class="stop-tag"><b>DNS</b><span>việc của người làm DevOps</span></header>
   <div class="stop-text">
     <h2 id="dns-no-such-name">DNS: không có tên này</h2>
-    <p>Bước đầu tiên là đổi tên miền ra địa chỉ. Nếu tên miền gõ sai hay chưa ai đăng ký, DNS trả lời "không có tên này"; nếu
+    <p>Bước đầu tiên là đổi domain ra địa chỉ. Nếu domain gõ sai hay chưa ai đăng ký, DNS trả lời "không có tên này"; nếu
     tên có mà chưa trỏ tới địa chỉ nào, DNS trả lời tên ấy không có địa chỉ. Trong cả hai trường hợp, máy người dùng mới chỉ hỏi DNS, chưa mở kết nối nào tới server, nên server không biết gì.</p>
-    <p>Ở trường hợp đầu, trang lỗi của trình duyệt có mã <code>DNS_PROBE_FINISHED_NXDOMAIN</code> ở cuối. NXDOMAIN là chữ server DNS dùng để nói tên này không tồn tại. Với curl thì cả hai trường hợp cho ra cùng một dòng, <code>Could not resolve host</code>.</p>
+    <p>Ở trường hợp đầu, trang lỗi của browser có error code <code>DNS_PROBE_FINISHED_NXDOMAIN</code> ở cuối. NXDOMAIN là chữ server DNS dùng để nói tên này không tồn tại. Với curl thì cả hai trường hợp cho ra cùng một dòng, <code>Could not resolve host</code>.</p>
   </div>
   <div class="stop-side">
 <pre><code>$ curl -sS https://this-name-does-not-exist-12345.com/
 curl: (6) Could not resolve host: this-name-does-not-exist-12345.com</code></pre>
     <figure class="fig photo shot">
-      <a class="img-src" href="img/browser-nxdomain.webp" data-credit="Ảnh: mình tự chụp, Microsoft Edge, 03/10/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/browser-nxdomain.webp" width="1512" height="820" loading="lazy" alt="Trang lỗi của trình duyệt Edge: biểu tượng tờ giấy buồn, dòng Hmmm… can't reach this page, và mã DNS_PROBE_FINISHED_NXDOMAIN."></a>
-      <figcaption><b>Ảnh 1</b> Cùng lỗi ấy trong Edge, kèm mã <code>DNS_PROBE_FINISHED_NXDOMAIN</code>.</figcaption>
+      <a class="img-src" href="img/browser-nxdomain.webp" data-credit="Ảnh: mình tự chụp, Microsoft Edge, 03/10/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/browser-nxdomain.webp" width="1512" height="820" loading="lazy" alt="Trang lỗi của browser Edge: biểu tượng tờ giấy buồn, dòng Hmmm… can't reach this page, và error code DNS_PROBE_FINISHED_NXDOMAIN."></a>
+      <figcaption><b>Ảnh 1</b> Cùng lỗi ấy trong Edge, kèm error code <code>DNS_PROBE_FINISHED_NXDOMAIN</code>.</figcaption>
     </figure>
   </div>
 </section>
@@ -116,11 +116,11 @@ curl: (6) Could not resolve host: this-name-does-not-exist-12345.com</code></pre
   <div class="stop-text">
     <h2 id="firewall-no-answer">Firewall: không ai trả lời</h2>
     <p>Có địa chỉ rồi, máy người dùng mở kết nối TCP tới port 443 của server. Trên server, firewall đứng trước mọi chương
-    trình, xem từng gói tin đi vào rồi cho qua hay chặn theo luật người làm DevOps đặt, kiểu "chỉ mở port 443 cho người dùng và port 22 cho người làm DevOps đăng nhập vào server". Gói tin bị chặn thì firewall thường bỏ đi mà không báo lại, nên phía người dùng cứ
+    trình, xem từng packet đi vào rồi cho qua hay chặn theo luật người làm DevOps đặt, kiểu "chỉ mở port 443 cho người dùng và port 22 cho người làm DevOps đăng nhập vào server". Packet bị chặn thì firewall thường bỏ đi mà không báo lại, nên phía người dùng cứ
     chờ tới khi hết giờ, gọi là timeout.</p>
     <p>Mình không có server bật firewall để thử, nên gọi <code>10.255.255.1</code>. Mạng nhà mình không có máy nào mang địa chỉ
-    này, nên gói tin đi mà không ai trả lời, giống lúc firewall bỏ gói tin. Lệnh gọi <code>http://</code> nên curl kết nối tới
-    port 80, nhưng gói tin bị bỏ ở port nào thì curl cũng chờ như nhau. Cờ <code>--connect-timeout 5</code> bảo curl chỉ chờ 5 giây,
+    này, nên packet đi mà không ai trả lời, giống lúc firewall bỏ packet. Lệnh gọi <code>http://</code> nên curl kết nối tới
+    port 80, nhưng packet bị bỏ ở port nào thì curl cũng chờ như nhau. Option <code>--connect-timeout 5</code> bảo curl chỉ chờ 5 giây,
     rồi chính curl viết dòng (28), vì không ai nói gì với nó cả.</p>
   </div>
   <div class="stop-side">
@@ -136,11 +136,11 @@ curl: (28) Failed to connect to 10.255.255.1 port 80 after 5014 ms: Timeout was 
     <p>Firewall cho qua thì kết nối tới được port 443. Ở máy bạn, app tự nhận request ở port 8080, còn trên server, người ta
     thường không để người dùng gọi thẳng vào port 8080 mà đặt Nginx đứng trước, như ở Hình 1. Nginx nhận request ở
     port 443, port mặc định của https, lo phần TLS, rồi chuyển request vào app ở port 8080 trên cùng máy. App vẫn chạy như trên
-    máy bạn, chỉ khác là bên gọi nó giờ là Nginx chứ không phải trình duyệt. Chương trình đứng trước app theo cách
+    máy bạn, chỉ khác là bên gọi nó giờ là Nginx chứ không phải browser. Chương trình đứng trước app theo cách
     đó gọi là <strong>reverse proxy</strong>.</p>
-    <p>Vì sao phải thêm một chỗ nữa trên đường đi? Lý do hay gặp là một server chạy nhiều app, mỗi app một tên miền. Người dùng chỉ gõ tên miền, nên dù vào app nào thì trình duyệt cũng gọi port 443, mà ở một port chỉ một chương trình nhận được kết nối. Vì vậy Nginx đứng nhận ở 443, nhìn tên miền trong request rồi chuyển vào app được gắn với tên miền ấy. Thêm nữa, chứng chỉ TLS chỉ cần gắn ở Nginx, nên các app phía sau không phải lo phần TLS. Cái giá là đường đi dài thêm một chỗ, và chỗ ấy cũng có thể hỏng.</p>
-    <p>Nếu Nginx đang tắt thì ở port 443 không có chương trình nào nhận kết nối, và hệ điều hành của server từ chối ngay. Lời từ chối ấy khác hẳn timeout khi gặp firewall, vì lần này hệ điều hành của server có trả lời.</p>
-    <p>Mình thử bằng port 9999 trên chính máy mình, vì ở port ấy không có chương trình nào nhận kết nối. Lệnh <code>curl -sS http://127.0.0.1:9999/</code> ở bên cạnh bị từ chối ngay, vậy mà curl báo lỗi sau <code>2010 ms</code>. Hai giây ấy là do Windows ở phía curl: bị từ chối thì nó tự đợi một lúc rồi xin mở kết nối lại, làm thế thêm hai lần, lần sau đợi lâu hơn lần trước.</p>
+    <p>Vì sao phải thêm một chỗ nữa trên đường đi? Lý do hay gặp là một server chạy nhiều app, mỗi app một domain. Người dùng chỉ gõ domain, nên dù vào app nào thì browser cũng gọi port 443, mà ở một port chỉ một chương trình nhận được kết nối. Vì vậy Nginx đứng nhận ở 443, nhìn domain trong request rồi chuyển vào app được gắn với domain ấy. Thêm nữa, TLS certificate chỉ cần gắn ở Nginx, nên các app phía sau không phải lo phần TLS. Cái giá là đường đi dài thêm một chỗ, và chỗ ấy cũng có thể hỏng.</p>
+    <p>Nếu Nginx đang tắt thì ở port 443 không có chương trình nào listen, và hệ điều hành của server từ chối ngay. Lời từ chối ấy khác hẳn timeout khi gặp firewall, vì lần này hệ điều hành của server có trả lời.</p>
+    <p>Mình thử bằng port 9999 trên chính máy mình, vì ở port ấy không có chương trình nào listen. Lệnh <code>curl -sS http://127.0.0.1:9999/</code> ở bên cạnh bị từ chối ngay, vậy mà curl báo lỗi sau <code>2010 ms</code>. Hai giây ấy là do Windows ở phía curl: bị từ chối thì nó tự đợi một lúc rồi xin mở kết nối lại, làm thế thêm hai lần, lần sau đợi lâu hơn lần trước.</p>
     <p>Hình 2 đặt firewall chặn và Nginx tắt cạnh nhau, cùng với trường hợp mọi thứ chạy, để bạn chọn rồi xem curl chờ bao lâu.</p>
   </div>
   <div class="stop-side">
@@ -153,7 +153,7 @@ curl: (28) Failed to connect to 10.255.255.1 port 80 after 5014 ms: Timeout was 
 <pre><code>$ curl -sS http://127.0.0.1:9999/
 curl: (7) Failed to connect to 127.0.0.1 port 9999 after 2010 ms: Could not connect to server</code></pre>
     <figure class="fig photo shot">
-      <a class="img-src" href="img/browser-refused.webp" data-credit="Ảnh: mình tự chụp, Microsoft Edge, 03/10/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/browser-refused.webp" width="1512" height="820" loading="lazy" alt="Trang lỗi của Edge: Hmmm… can't reach this page, 127.0.0.1 refused to connect, mã ERR_CONNECTION_REFUSED."></a>
+      <a class="img-src" href="img/browser-refused.webp" data-credit="Ảnh: mình tự chụp, Microsoft Edge, 03/10/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/browser-refused.webp" width="1512" height="820" loading="lazy" alt="Trang lỗi của Edge: Hmmm… can't reach this page, 127.0.0.1 refused to connect, error code ERR_CONNECTION_REFUSED."></a>
       <figcaption><b>Ảnh 3</b> Edge gọi <code>127.0.0.1:9999</code>. Dòng "refused to connect" nghĩa là máy ở đầu kia có trả lời, và
       câu trả lời là từ chối.</figcaption>
     </figure>
@@ -175,26 +175,26 @@ curl: (7) Failed to connect to 127.0.0.1 port 9999 after 2010 ms: Could not conn
   </div>
   <pre class="kn-out" aria-live="polite"><code>$ curl -sS --connect-timeout 5 https://shop.example.com/
 <span class="kn-line">chọn một trạng thái của server ở trên</span></code></pre>
-  <figcaption><b>Hình 2</b> Chọn một trạng thái của server rồi xem gói tin đi. Firewall chặn thì gói tin biến mất ở cửa, curl đếm
-  tới 5 giây rồi tự viết dòng (28). Nginx tắt thì gói tin bị đẩy về ngay, Windows trên máy chạy curl thử lại thêm hai lần, rồi curl viết dòng (7)
-  sau khoảng 2 giây. Hai dòng lỗi lấy từ output thật ở trên, chỉ đổi địa chỉ thành tên miền <code>shop.example.com</code> và port thành 443.</figcaption>
+  <figcaption><b>Hình 2</b> Chọn một trạng thái của server rồi xem packet đi. Firewall chặn thì packet biến mất ở cửa, curl đếm
+  tới 5 giây rồi tự viết dòng (28). Nginx tắt thì packet bị đẩy về ngay, Windows trên máy chạy curl thử lại thêm hai lần, rồi curl viết dòng (7)
+  sau khoảng 2 giây. Hai dòng lỗi lấy từ output thật ở trên, chỉ đổi địa chỉ thành domain <code>shop.example.com</code> và port thành 443.</figcaption>
 </figure>
 
 <section class="stop" id="stop-tls" data-st="tls">
   <header class="stop-tag"><b>TLS</b><span>việc của người làm DevOps</span></header>
   <div class="stop-text">
-    <h2 id="tls-expired">TLS: chứng chỉ hết hạn</h2>
-    <p>Kết nối mở xong, trình duyệt và Nginx bắt tay TLS. Trong bước bắt tay, Nginx gửi chứng chỉ của <code>shop.example.com</code> cho trình duyệt. Chứng chỉ ấy có ngày hết hạn, và nếu tới ngày đó mà chưa ai gia hạn thì trình duyệt từ chối đi tiếp, dù server, Nginx và app vẫn chạy bình thường.</p>
+    <h2 id="tls-expired">TLS: certificate hết hạn</h2>
+    <p>Kết nối mở xong, browser và Nginx làm TLS handshake. Trong TLS handshake, Nginx gửi certificate của <code>shop.example.com</code> cho browser. Certificate ấy có ngày hết hạn, và nếu tới ngày đó mà chưa ai gia hạn thì browser từ chối đi tiếp, dù server, Nginx và app vẫn chạy bình thường.</p>
     <p>Trang cảnh báo ở Ảnh 4 dễ làm người ta đoán sai. Trang ấy hiện thay cho cả trang web, nên nhìn vào thì tưởng server đã sập.
-    Nhưng trình duyệt chỉ hiện được cảnh báo này khi đã có địa chỉ và đã mở được kết nối, tức DNS, firewall và Nginx đều đã chạy
-    tốt. Trang ấy do trình duyệt tự viết sau khi kiểm tra ngày trên chứng chỉ; server không gửi trang nào cả.</p>
+    Nhưng browser chỉ hiện được cảnh báo này khi đã có địa chỉ và đã mở được kết nối, tức DNS, firewall và Nginx đều đã chạy
+    tốt. Trang ấy do browser tự viết sau khi kiểm tra ngày trên certificate; server không gửi trang nào cả.</p>
   </div>
   <div class="stop-side">
 <pre><code>$ curl -sS https://expired.badssl.com/
 curl: (35) schannel: next InitializeSecurityContext failed: SEC_E_CERT_EXPIRED (0x80090328) - The received certificate has expired.</code></pre>
     <figure class="fig photo shot">
       <a class="img-src" href="img/expired-cert.webp" data-credit="Ảnh: mình tự chụp, Microsoft Edge, 04/10/2026" aria-label="Nguồn ảnh: mình tự chụp"><img src="img/expired-cert.webp" width="1512" height="820" loading="lazy" alt="Trang cảnh báo của Edge với dòng Your connection isn't private và mã NET::ERR_CERT_DATE_INVALID."></a>
-      <figcaption><b>Ảnh 4</b> Edge mở <code>expired.badssl.com</code>, một trang dựng sẵn với chứng chỉ đã hết hạn từ 12/04/2015.</figcaption>
+      <figcaption><b>Ảnh 4</b> Edge mở <code>expired.badssl.com</code>, một trang dựng sẵn với certificate đã hết hạn từ 12/04/2015.</figcaption>
     </figure>
   </div>
 </section>
@@ -204,12 +204,12 @@ curl: (35) schannel: next InitializeSecurityContext failed: SEC_E_CERT_EXPIRED (
   <div class="stop-text">
     <h2 id="app-502-504-500">Nginx và app: 502, 504, 500</h2>
     <p>Qua TLS rồi, Nginx đọc request và chuyển vào app ở port 8080. Từ chỗ này trở đi, mọi lời báo lỗi đều là một câu trả lời
-    HTTP có mã số, vì chương trình viết ra nó đã đọc được request. Có điều chương trình viết ra mã số ấy không phải lúc nào cũng
+    HTTP có status code, vì chương trình viết ra nó đã đọc được request. Có điều chương trình viết ra status code ấy không phải lúc nào cũng
     là app.</p>
     <p>Nếu app không chạy, Nginx gọi vào port 8080 thì bị từ chối, và chính Nginx viết trang lỗi 502 Bad Gateway gửi về người
     dùng. Nếu app chạy mà chậm quá, Nginx chờ hết giờ rồi viết trang 504 Gateway Time-out. Cả hai trang đều có chữ
     <code>nginx</code> ở cuối, chữ ký của chương trình đã viết ra hai trang ấy.</p>
-    <p>Còn khi app chạy, nhận request, mà code ném exception, thì app tự trả mã 500. Trang lỗi lúc ấy là trang của Spring Boot,
+    <p>Còn khi app chạy, nhận request, mà code ném exception, thì app tự trả status code 500. Trang lỗi lúc ấy là trang của Spring Boot,
     không có chữ <code>nginx</code> nào, và request đã vào tới code của bạn.</p>
   </div>
   <div class="stop-side">
@@ -231,9 +231,9 @@ curl: (35) schannel: next InitializeSecurityContext failed: SEC_E_CERT_EXPIRED (
   <div class="stop-text">
     <h2 id="db-app-alive">Database: app sống mà vẫn lỗi</h2>
     <p>Chỗ cuối cùng trên đường đi là database. App Spring Boot thường đọc, ghi dữ liệu ở một database như PostgreSQL. Database là một chương trình riêng, và trong bài này nó chạy trên cùng server với app. Nếu database tắt trong lúc app đang chạy, app vẫn nhận request, nhưng mỗi lần cần dữ liệu thì không kết nối được và trả 500.</p>
-    <p>App mẫu của khoá là một app Spring Boot nhỏ lưu ghi chú vào PostgreSQL, và mình đã chỉnh nó để vẫn khởi động khi chưa có database. Mình chạy nó ngày 14/11/2026 trong <button type="button" class="term" data-term="wsl">WSL</button> mà không bật PostgreSQL, rồi gọi <code>/notes</code>, đường dẫn cần đọc database.</p>
-    <p>Lệnh gọi <code>/notes</code> có cờ <code>-i</code>. Cờ này bảo curl in thêm dòng đầu và các header của câu trả lời. Dòng đầu có mã như <code>HTTP/1.1 500</code>, gọi là dòng trạng thái.</p>
-    <p>Lệnh curl chỉ nhận được mã 500, và người dùng cũng chỉ thấy có thế, giống hệt khi code ném exception. Lý do thật nằm trong log của app, ở dòng app báo không kết
+    <p>App mẫu của khoá là một app Spring Boot nhỏ lưu ghi chú vào PostgreSQL, và mình đã chỉnh nó để vẫn khởi động khi chưa có database. Mình chạy nó ngày 14/11/2026 trong <button type="button" class="term" data-term="wsl">WSL</button> mà không bật PostgreSQL, rồi gọi <code>/notes</code>, path cần đọc database.</p>
+    <p>Lệnh gọi <code>/notes</code> có option <code>-i</code>. Option này bảo curl in thêm dòng đầu và các header của câu trả lời. Dòng đầu có mã như <code>HTTP/1.1 500</code>, gọi là status line.</p>
+    <p>Lệnh curl chỉ nhận được status code 500, và người dùng cũng chỉ thấy có thế, giống hệt khi code ném exception. Lý do thật nằm trong log của app, ở dòng app báo không kết
     nối được tới database. Dòng ấy cùng chữ "refused" với trang lỗi ở Ảnh 3, chỉ khác là bên bị từ chối giờ là app. App gọi port 5432, port mặc định của PostgreSQL, mà lúc ấy ở port đó không có ai nhận.</p>
   </div>
   <div class="stop-side">
@@ -251,9 +251,9 @@ java.net.ConnectException: Connection refused (connect failed)</code></pre>
 
 <div class="wp-head">
   <h2 id="every-error-has-an-author">Mỗi lời báo lỗi có một chương trình viết ra</h2>
-  <p>Ở cả sáu chỗ trên đường đi, từ DNS tới database, lời báo lỗi nào người dùng thấy cũng do một chương trình viết ra: curl hay trình duyệt, Nginx, hoặc app.
-  Biết ai viết thì biết request đã đi tới đâu. Có mã HTTP như 502, 500 là request đã qua DNS, firewall, Nginx và bước bắt tay TLS, vì phải có chương
-  trình đọc được request mới viết ra mã số. Không có mã HTTP mà chỉ có dòng lỗi của curl hay trang lỗi của trình duyệt thì chưa có chương trình nào đọc được request.</p>
+  <p>Ở cả sáu chỗ trên đường đi, từ DNS tới database, lời báo lỗi nào người dùng thấy cũng do một chương trình viết ra: curl hay browser, Nginx, hoặc app.
+  Biết ai viết thì biết request đã đi tới đâu. Có status code như 502, 500 là request đã qua DNS, firewall, Nginx và TLS handshake, vì phải có chương
+  trình đọc được request mới viết ra status code. Không có status code mà chỉ có dòng lỗi của curl hay trang lỗi của browser thì chưa có chương trình nào đọc được request.</p>
   <p>Trong Hình 3, bấm vào một chỗ để làm hỏng nó: request đi lại từ đầu, dừng ở chỗ hỏng đầu tiên, và ô "lời báo nhận được" hiện thứ người dùng thấy ở chỗ hỏng, kèm tên chương trình đã viết ra nó.</p>
 </div>
 
@@ -262,8 +262,8 @@ java.net.ConnectException: Connection refused (connect failed)</code></pre>
   <ol class="breaker-path">
     <li><button type="button" class="bk-stop" data-stop="dns" aria-pressed="false"><b>DNS</b><span>đổi tên ra địa chỉ</span></button></li>
     <li><button type="button" class="bk-stop" data-stop="firewall" aria-pressed="false"><b>firewall</b><span>cho port 443 vào</span></button></li>
-    <li><button type="button" class="bk-stop" data-stop="nginx" aria-pressed="false"><b>Nginx</b><span>nhận kết nối</span></button></li>
-    <li><button type="button" class="bk-stop" data-stop="tls" aria-pressed="false"><b>TLS</b><span>chứng chỉ còn hạn</span></button></li>
+    <li><button type="button" class="bk-stop" data-stop="nginx" aria-pressed="false"><b>Nginx</b><span>listen</span></button></li>
+    <li><button type="button" class="bk-stop" data-stop="tls" aria-pressed="false"><b>TLS</b><span>certificate còn hạn</span></button></li>
     <li><button type="button" class="bk-stop mine" data-stop="app" aria-pressed="false"><b>app</b><span>chạy ở port 8080</span></button></li>
     <li><button type="button" class="bk-stop" data-stop="db" aria-pressed="false"><b>database</b><span>PostgreSQL</span></button></li>
   </ol>
@@ -274,8 +274,8 @@ java.net.ConnectException: Connection refused (connect failed)</code></pre>
   </div>
   <p class="breaker-hint">bấm vào một chỗ để làm hỏng nó, bấm lần nữa để sửa</p>
 </div>
-<figcaption><b>Hình 3</b> Làm hỏng từng chỗ trên đường đi. Lời báo trong ô dựng lại từ output thật ở trên: đổi tên miền hay địa chỉ thành <code>shop.example.com</code>, port thành 443, và lược bớt chữ ở vài dòng dài. Request trong hình gọi <code>/notes</code>,
-đường dẫn cần đọc database. Ở ô database, curl chỉ nhận được mã 500, còn lý do thì app ghi vào log của chính nó.</figcaption>
+<figcaption><b>Hình 3</b> Làm hỏng từng chỗ trên đường đi. Lời báo trong ô dựng lại từ output thật ở trên: đổi domain hay địa chỉ thành <code>shop.example.com</code>, port thành 443, và lược bớt chữ ở vài dòng dài. Request trong hình gọi <code>/notes</code>,
+path cần đọc database. Ở ô database, curl chỉ nhận được status code 500, còn lý do thì app ghi vào log của chính nó.</figcaption>
 </figure>
 
 <div class="authors-after">
@@ -286,15 +286,15 @@ java.net.ConnectException: Connection refused (connect failed)</code></pre>
   <caption><b>Bảng 1</b> Từ lời báo người dùng thấy tới chỗ hỏng</caption>
   <thead><tr><th>Người dùng thấy</th><th>Ai viết ra</th><th>Request dừng ở</th><th>Lý do hay gặp</th></tr></thead>
   <tbody>
-  <tr><td><code>Could not resolve host</code>; NXDOMAIN khi tên không tồn tại</td><td>curl, trình duyệt, theo câu trả lời của DNS</td><td>DNS</td><td>tên miền gõ sai, chưa trỏ, đã bị xoá vì hết hạn</td></tr>
+  <tr><td><code>Could not resolve host</code>; NXDOMAIN khi tên không tồn tại</td><td>curl, browser, theo câu trả lời của DNS</td><td>DNS</td><td>Domain gõ sai, chưa trỏ, đã bị xoá vì hết hạn</td></tr>
   <tr><td><code>Timeout was reached</code></td><td>curl tự viết khi chờ hết giờ, không ai trả lời</td><td>firewall, hoặc không có máy nào ở địa chỉ ấy</td><td>firewall chặn port, server tắt</td></tr>
   <tr><td><code>Could not connect</code>, refused</td><td>curl, theo lời từ chối của hệ điều hành bên server</td><td>Nginx: port 443 không có chương trình nào nhận</td><td>Nginx không chạy, Nginx nhận ở port khác 443</td></tr>
-  <tr><td><code>CERT_EXPIRED</code>, trang cảnh báo của trình duyệt</td><td>curl, trình duyệt tự kiểm tra</td><td>bắt tay TLS</td><td>chứng chỉ hết hạn</td></tr>
-  <tr><td><code>WRONG_PRINCIPAL</code></td><td>curl tự kiểm tra</td><td>bắt tay TLS</td><td>chứng chỉ mang tên miền khác</td></tr>
+  <tr><td><code>CERT_EXPIRED</code>, trang cảnh báo của browser</td><td>curl, browser tự kiểm tra</td><td>TLS handshake</td><td>Certificate hết hạn</td></tr>
+  <tr><td><code>WRONG_PRINCIPAL</code></td><td>curl tự kiểm tra</td><td>TLS handshake</td><td>Certificate mang domain khác</td></tr>
   <tr><td>502 Bad Gateway, chữ <code>nginx</code></td><td>Nginx</td><td>Nginx, khi gọi vào app</td><td>app không chạy</td></tr>
   <tr><td>504 Gateway Time-out, chữ <code>nginx</code></td><td>Nginx</td><td>Nginx, khi chờ app</td><td>app quá chậm</td></tr>
   <tr><td>500, trang của Spring Boot</td><td>app</td><td>app</td><td>code ném exception, database không kết nối được</td></tr>
-  <tr><td>404</td><td>app; trang có chữ <code>nginx</code> thì Nginx viết</td><td>app, hoặc Nginx nếu không chuyển request vào app</td><td>đường dẫn không có</td></tr>
+  <tr><td>404</td><td>app; trang có chữ <code>nginx</code> thì Nginx viết</td><td>app, hoặc Nginx nếu không chuyển request vào app</td><td>Path không có</td></tr>
   </tbody>
   </table>
   </div>
@@ -321,10 +321,10 @@ java.net.ConnectException: Connection refused (connect failed)</code></pre>
     <caption><b>Bảng 2</b> Mỗi chỗ trên đường đi, người làm DevOps làm gì ở đó</caption>
     <thead><tr><th>Chỗ</th><th>Người làm DevOps làm gì</th></tr></thead>
     <tbody>
-    <tr><td>DNS</td><td>khai báo trên DNS tên miền trỏ về địa chỉ server nào, sửa khi đổi server; gia hạn tên miền</td></tr>
+    <tr><td>DNS</td><td>khai báo trên DNS domain trỏ về địa chỉ server nào, sửa khi đổi server; gia hạn domain</td></tr>
     <tr><td>firewall</td><td>chỉ mở những port cần mở, như 443 cho người dùng, 22 cho người làm DevOps đăng nhập</td></tr>
     <tr><td>Nginx</td><td>cài, cấu hình làm reverse proxy chuyển request vào app</td></tr>
-    <tr><td>TLS</td><td>xin chứng chỉ từ một nơi cấp chứng chỉ mà trình duyệt tin, gắn vào Nginx, gia hạn trước khi hết hạn</td></tr>
+    <tr><td>TLS</td><td>xin certificate từ một nơi cấp certificate mà browser tin, gắn vào Nginx, gia hạn trước khi hết hạn</td></tr>
     <tr><td>app</td><td>build, đưa lên server, chạy app, đặt cho app tự chạy lại khi nó chết; code bên trong vẫn là của developer</td></tr>
     <tr><td>database</td><td>chạy database, sao lưu dữ liệu, khôi phục khi hỏng</td></tr>
     </tbody>
@@ -339,8 +339,8 @@ java.net.ConnectException: Connection refused (connect failed)</code></pre>
 
 <div class="wp-head">
   <h2 id="breaks-by-itself">Chỗ tự hỏng khi không ai đụng vào</h2>
-  <p>Code chỉ đổi khi có người sửa, còn nhiều chỗ quanh app thì tự hỏng theo thời gian, nên người làm DevOps phải canh cả những ngày chẳng ai đụng vào server. Chứng chỉ TLS có hạn dùng, thường vài
-  tháng, nên app không đổi gì mà tới ngày chứng chỉ hết hạn thì người dùng thấy trang cảnh báo như Ảnh 4. Tên miền cũng có hạn dùng,
+  <p>Code chỉ đổi khi có người sửa, còn nhiều chỗ quanh app thì tự hỏng theo thời gian, nên người làm DevOps phải canh cả những ngày chẳng ai đụng vào server. Certificate TLS có hạn dùng, thường vài
+  tháng, nên app không đổi gì mà tới ngày certificate hết hạn thì người dùng thấy trang cảnh báo như Ảnh 4. Domain cũng có hạn dùng,
   quên gia hạn lâu thì tên bị xoá, và DNS trả NXDOMAIN như Ảnh 1. App ghi log mỗi ngày một ít, để lâu thì đầy ổ đĩa của server,
   database không ghi được nữa, và những request cần ghi dữ liệu bắt đầu nhận 500 dù không ai đưa bản mới nào lên.</p>
   <p>Kéo thanh ngày ở Hình 4 hay bấm chạy để thời gian trôi trên một server không ai đụng vào, rồi bấm gia hạn, dọn log để xem
@@ -355,8 +355,8 @@ java.net.ConnectException: Connection refused (connect failed)</code></pre>
     <button type="button" class="clock-play">chạy</button>
   </div>
   <div class="clock-meters">
-    <div class="meter" data-m="domain"><p class="m-name">tên miền</p><div class="m-bar"><i></i></div><p class="m-val">còn 365 ngày</p><button type="button" data-fix="domain">gia hạn tên miền</button></div>
-    <div class="meter" data-m="cert"><p class="m-name">chứng chỉ TLS</p><div class="m-bar"><i></i></div><p class="m-val">còn 90 ngày</p><button type="button" data-fix="cert">gia hạn chứng chỉ</button></div>
+    <div class="meter" data-m="domain"><p class="m-name">Domain</p><div class="m-bar"><i></i></div><p class="m-val">còn 365 ngày</p><button type="button" data-fix="domain">gia hạn domain</button></div>
+    <div class="meter" data-m="cert"><p class="m-name">TLS certificate</p><div class="m-bar"><i></i></div><p class="m-val">còn 90 ngày</p><button type="button" data-fix="cert">gia hạn certificate</button></div>
     <div class="meter" data-m="disk"><p class="m-name">ổ đĩa 40 GB</p><div class="m-bar"><i></i></div><p class="m-val">đã dùng 12 GB</p><button type="button" data-fix="disk">dọn log</button></div>
   </div>
   <div class="breaker-screen clock-screen" aria-live="polite">
@@ -365,13 +365,13 @@ java.net.ConnectException: Connection refused (connect failed)</code></pre>
     <p class="bk-author">mọi chỗ còn hạn, ổ đĩa còn chỗ</p>
   </div>
 </div>
-<figcaption><b>Hình 4</b> Một server không ai đụng vào. Các con số là ví dụ: chứng chỉ hạn 90 ngày, tên miền hạn một năm, ổ đĩa
-40 GB, ban đầu đã dùng 12 GB, mỗi ngày app ghi thêm 0,2 GB log. Ngoài đời, tên miền hết hạn thường còn một khoảng chờ rồi mới bị xoá; hình bỏ qua khoảng ấy. Lời
-báo khi tên miền hết hạn và khi chứng chỉ hết hạn lấy từ trang lỗi thật ở Ảnh 1 và Ảnh 4. Còn chữ <code>No space left on device</code> ở dòng dưới lời báo là lời hệ điều hành trả về khi PostgreSQL ghi vào ổ đầy. Mình chưa chạy tới lúc ổ đầy thật, nên chữ này là kỳ vọng, chưa phải output thật.</figcaption>
+<figcaption><b>Hình 4</b> Một server không ai đụng vào. Các con số là ví dụ: certificate hạn 90 ngày, domain hạn một năm, ổ đĩa
+40 GB, ban đầu đã dùng 12 GB, mỗi ngày app ghi thêm 0,2 GB log. Ngoài đời, domain hết hạn thường còn một khoảng chờ rồi mới bị xoá; hình bỏ qua khoảng ấy. Lời
+báo khi domain hết hạn và khi certificate hết hạn lấy từ trang lỗi thật ở Ảnh 1 và Ảnh 4. Còn chữ <code>No space left on device</code> ở dòng dưới lời báo là lời hệ điều hành trả về khi PostgreSQL ghi vào ổ đầy. Mình chưa chạy tới lúc ổ đầy thật, nên chữ này là kỳ vọng, chưa phải output thật.</figcaption>
 </figure>
 
 <div class="answer">
-  <p>Với app ở đầu bài, muốn biết request dừng ở đâu thì tự dùng curl gọi tên miền và đường dẫn người dùng đã gõ, hay xin người dùng ảnh trang lỗi, rồi theo Bảng 1 tìm chương trình đã viết ra lời báo. Còn chỗ đó là việc của ai? Sáu chỗ trong Bảng 2, từ DNS tới database, là việc của người làm DevOps, trừ code bên trong app. Router của nhà mạng thì nằm ngoài sáu chỗ ấy, hỏng thì chỉ báo được cho nhà mạng rồi chờ.</p>
+  <p>Với app ở đầu bài, muốn biết request dừng ở đâu thì tự dùng curl gọi domain và path người dùng đã gõ, hay xin người dùng ảnh trang lỗi, rồi theo Bảng 1 tìm chương trình đã viết ra lời báo. Còn chỗ đó là việc của ai? Sáu chỗ trong Bảng 2, từ DNS tới database, là việc của người làm DevOps, trừ code bên trong app. Router của nhà mạng thì nằm ngoài sáu chỗ ấy, hỏng thì chỉ báo được cho nhà mạng rồi chờ.</p>
 </div>
 
 </section>
@@ -390,10 +390,10 @@ báo khi tên miền hết hạn và khi chứng chỉ hết hạn lấy từ tr
 <li class="step" id="lab-1">
   <div class="step-text">
     <h3>Mở Git Bash và xem bản curl</h3>
-    <p>Git Bash là cửa sổ dòng lệnh đi kèm khi cài Git for Windows; mở nó từ menu Start. Lệnh <code>curl --version</code> in số phiên bản
-    của curl và các thư viện nó dùng. Dòng đầu là dòng cần đọc.</p>
-    <p>Nhìn chữ <code>Schannel</code> trên dòng ấy. Bản curl của mình bắt tay TLS bằng Schannel, thư viện mã hoá có sẵn của Windows, nên lời báo TLS ở bước 5 và bước 6 có chữ <code>schannel</code> ngay sau mã lỗi.</p>
-    <p>Nếu dòng đầu của bạn ghi <code>OpenSSL</code> thay cho Schannel thì curl của bạn bắt tay TLS bằng OpenSSL, một thư viện mã hoá khác. Khi đó chữ và cả mã lỗi ở hai bước ấy có thể khác, cứ đọc chữ đi sau mã lỗi. Còn nếu Git Bash báo <code>command not found</code> thì máy chưa
+    <p>Git Bash là cửa sổ dòng lệnh đi kèm khi cài Git for Windows; mở nó từ menu Start. Lệnh <code>curl --version</code> in version
+    của curl và các library nó dùng. Dòng đầu là dòng cần đọc.</p>
+    <p>Nhìn chữ <code>Schannel</code> trên dòng ấy. Bản curl của mình TLS handshake bằng Schannel, library encrypt có sẵn của Windows, nên lời báo TLS ở bước 5 và bước 6 có chữ <code>schannel</code> ngay sau exit code.</p>
+    <p>Nếu dòng đầu của bạn ghi <code>OpenSSL</code> thay cho Schannel thì curl của bạn TLS handshake bằng OpenSSL, một library encrypt khác. Khi đó chữ và cả exit code ở hai bước ấy có thể khác, cứ đọc chữ đi sau exit code. Còn nếu Git Bash báo <code>command not found</code> thì máy chưa
     có curl, cài lại Git for Windows là có.</p>
   </div>
 <pre><code>$ curl --version
@@ -404,8 +404,8 @@ Release-Date: 2024-09-18
 
 <li class="step" id="lab-2">
   <div class="step-text">
-    <h3>Gọi một tên miền chưa ai đăng ký</h3>
-    <p>Cờ <code>-s</code> bảo curl im lặng, kể cả dòng lỗi, còn cờ <code>-S</code> bật lại dòng lỗi; hai cờ viết liền thành <code>-sS</code>. Lệnh in một dòng rồi xong ngay, dấu <code>$</code> hiện lại để chờ lệnh mới.</p>
+    <h3>Gọi một domain chưa ai đăng ký</h3>
+    <p>Option <code>-s</code> bảo curl im lặng, kể cả dòng lỗi, còn option <code>-S</code> bật lại dòng lỗi; hai option viết liền thành <code>-sS</code>. Lệnh in một dòng rồi xong ngay, dấu <code>$</code> hiện lại để chờ lệnh mới.</p>
     <details class="raw"><summary>đáp án</summary>
     <p>Request dừng ở bước hỏi DNS, curl chưa mở kết nối tới đâu cả. Mã (6) và chữ <code>Could not resolve host</code> nghĩa là curl không đổi được tên ra
     địa chỉ, vì server DNS trả lời không có tên này.</p></details>
@@ -417,10 +417,10 @@ curl: (6) Could not resolve host: this-name-does-not-exist-12345.com</code></pre
 <li class="step" id="lab-3">
   <div class="step-text">
     <h3>Gọi một địa chỉ không ai trả lời</h3>
-    <p>Cờ <code>--connect-timeout 5</code> bảo curl chỉ chờ 5 giây để mở kết nối. Lệnh này đứng im khoảng 5 giây rồi mới in, nên đừng bấm Ctrl+C giữa chừng, vì trong Git Bash phím ấy dừng lệnh đang chạy. Mạng nhà mình không có máy nào ở <code>10.255.255.1</code>; nếu mạng của bạn có máy ở địa chỉ ấy
+    <p>Option <code>--connect-timeout 5</code> bảo curl chỉ chờ 5 giây để mở kết nối. Lệnh này đứng im khoảng 5 giây rồi mới in, nên đừng bấm Ctrl+C giữa chừng, vì trong Git Bash phím ấy dừng lệnh đang chạy. Mạng nhà mình không có máy nào ở <code>10.255.255.1</code>; nếu mạng của bạn có máy ở địa chỉ ấy
     thì lời báo sẽ khác, lúc đó đọc output của mình là đủ.</p>
     <details class="raw"><summary>đáp án</summary>
-    <p>Không ai trả lời, curl tự viết dòng (28) khi chờ đủ 5 giây. Đây là kiểu lời báo người dùng thấy khi firewall bỏ gói tin,
+    <p>Không ai trả lời, curl tự viết dòng (28) khi chờ đủ 5 giây. Đây là kiểu lời báo người dùng thấy khi firewall bỏ packet,
     tức ô firewall trong Hình 3.</p></details>
   </div>
 <pre><code>$ curl -sS --connect-timeout 5 http://10.255.255.1/
@@ -434,7 +434,7 @@ curl: (28) Failed to connect to 10.255.255.1 port 80 after 5014 ms: Timeout was 
     hơn bước trước. Nếu máy bạn có chương trình đang nhận ở port 9999 thì curl in ra câu trả lời của chương trình ấy; đổi sang một
     port khác, như 9998, rồi chạy lại.</p>
     <details class="raw"><summary>đáp án</summary>
-    <p>Máy bạn có trả lời, và câu trả lời là từ chối, vì không có chương trình nào nhận kết nối ở port ấy. Trên server, đây là ô
+    <p>Máy bạn có trả lời, và câu trả lời là từ chối, vì không có chương trình nào listen ở port ấy. Trên server, đây là ô
     Nginx của Hình 3 lúc Nginx tắt.</p></details>
   </div>
 <pre><code>$ curl -sS http://127.0.0.1:9999/
@@ -443,11 +443,11 @@ curl: (7) Failed to connect to 127.0.0.1 port 9999 after 2010 ms: Could not conn
 
 <li class="step" id="lab-5">
   <div class="step-text">
-    <h3>Gọi một trang có chứng chỉ hết hạn</h3>
-    <p><code>expired.badssl.com</code> là trang dựng sẵn để thử, chứng chỉ của nó hết hạn từ năm 2015. Đọc chữ
+    <h3>Gọi một trang có certificate hết hạn</h3>
+    <p><code>expired.badssl.com</code> là trang dựng sẵn để thử, certificate của nó hết hạn từ năm 2015. Đọc chữ
     <code>SEC_E_CERT_EXPIRED</code> và câu tiếng Anh cuối dòng.</p>
     <details class="raw"><summary>đáp án</summary>
-    <p>Request dừng ở bước bắt tay TLS. DNS đã trả địa chỉ, kết nối đã mở, curl nhận được chứng chỉ rồi tự kiểm tra ngày trên đó và
+    <p>Request dừng ở TLS handshake. DNS đã trả địa chỉ, kết nối đã mở, curl nhận được certificate rồi tự kiểm tra ngày trên đó và
     dừng.</p></details>
   </div>
 <pre><code>$ curl -sS https://expired.badssl.com/
@@ -456,12 +456,12 @@ curl: (35) schannel: next InitializeSecurityContext failed: SEC_E_CERT_EXPIRED (
 
 <li class="step" id="lab-6">
   <div class="step-text">
-    <h3>Gọi một trang có chứng chỉ mang tên khác</h3>
-    <p><code>wrong.host.badssl.com</code> gửi về một chứng chỉ ghi tên miền khác với tên bạn gọi. Lần này mã lỗi là (60), và
+    <h3>Gọi một trang có certificate mang tên khác</h3>
+    <p><code>wrong.host.badssl.com</code> gửi về một certificate ghi domain khác với tên bạn gọi. Lần này exit code là (60), và
     chữ cần đọc là <code>WRONG_PRINCIPAL</code>.</p>
     <details class="raw"><summary>đáp án</summary>
-    <p>Vẫn dừng ở bước bắt tay TLS, nhưng lý do khác bước 5: chứng chỉ còn hạn mà mang tên khác, nên curl không tin server này là
-    chủ của tên miền.</p></details>
+    <p>Vẫn dừng ở TLS handshake, nhưng lý do khác bước 5: certificate còn hạn mà mang tên khác, nên curl không tin server này là
+    chủ của domain.</p></details>
   </div>
 <pre><code>$ curl -sS https://wrong.host.badssl.com/
 curl: (60) schannel: SNI or certificate check failed: SEC_E_WRONG_PRINCIPAL (0x80090322) - The target principal name is incorrect.
@@ -470,11 +470,11 @@ curl: (60) schannel: SNI or certificate check failed: SEC_E_WRONG_PRINCIPAL (0x8
 
 <li class="step" id="lab-7">
   <div class="step-text">
-    <h3>Nhận một mã 502 có thật</h3>
-    <p><code>httpbin.org</code> là trang công khai để thử HTTP; đường dẫn <code>/status/502</code> bảo nó trả về mã 502. Cờ
-    <code>-i</code> in dòng trạng thái và header của câu trả lời. Dòng đầu tiên, dòng bắt đầu bằng <code>HTTP/1.1</code>, là dòng cần đọc.</p>
+    <h3>Nhận một status code 502 có thật</h3>
+    <p><code>httpbin.org</code> là trang công khai để thử HTTP; path <code>/status/502</code> bảo nó trả về status code 502. Option
+    <code>-i</code> in status line và header của câu trả lời. Dòng đầu tiên, dòng bắt đầu bằng <code>HTTP/1.1</code>, là dòng cần đọc.</p>
     <details class="raw"><summary>đáp án</summary>
-    <p>Có mã HTTP, nên request đã qua DNS, kết nối và bước bắt tay TLS, tới được một chương trình đọc request. Dòng 502 này lại không do Nginx
+    <p>Có status code, nên request đã qua DNS, kết nối và TLS handshake, tới được một chương trình đọc request. Dòng 502 này lại không do Nginx
     viết mà do app của httpbin viết, vì bạn bảo nó trả 502. Chỉ nhìn con số thì không biết ai viết; phải tìm chữ ký, như chữ
     <code>nginx</code> ở cuối trang trong Ảnh 5, mà cả bảy dòng header ở đây không có dòng nào nêu tên chương trình.</p></details>
   </div>
@@ -491,11 +491,11 @@ date: Sat, 14 Nov 2026 02:44:46 GMT</code></pre>
 
 <li class="step" id="lab-8">
   <div class="step-text">
-    <h3>Chỉ in mã HTTP</h3>
-    <p>Cờ <code>-o /dev/null</code> bỏ phần thân của câu trả lời đi, còn cờ <code>-w "%{http_code}\n"</code> bảo curl in mã HTTP
-    rồi xuống dòng, nên lệnh chỉ in một con số. Chạy hai lần, một lần với đường dẫn không có, một lần với trang chủ.</p>
+    <h3>Chỉ in status code</h3>
+    <p>Option <code>-o /dev/null</code> bỏ phần thân của câu trả lời đi, còn option <code>-w "%{http_code}\n"</code> bảo curl in status code
+    rồi xuống dòng, nên lệnh chỉ in một con số. Chạy hai lần, một lần với path không có, một lần với trang chủ.</p>
     <details class="raw"><summary>đáp án</summary>
-    <p>404 nghĩa là server của <code>example.com</code> trả lời không có trang ấy, tức mọi chỗ trên đường đi đều chạy, chỉ đường dẫn là
+    <p>404 nghĩa là server của <code>example.com</code> trả lời không có trang ấy, tức mọi chỗ trên đường đi đều chạy, chỉ path là
     không tồn tại. 200 là cả đường đi chạy và trang có thật.</p></details>
   </div>
 <pre><code>$ curl -sS -o /dev/null -w "%{http_code}\n" https://example.com/no-such-page
@@ -515,14 +515,14 @@ $ curl -sS -o /dev/null -w "%{http_code}\n" https://example.com/
   <div>
     <h2 id="checklist">Tự kiểm tra</h2>
     <ul class="check">
-      <li>Người dùng thấy trang "Your connection isn't private". Bạn gia hạn chứng chỉ xong thì họ thấy 502 kèm chữ
+      <li>Người dùng thấy trang "Your connection isn't private". Bạn gia hạn certificate xong thì họ thấy 502 kèm chữ
       <code>nginx</code>. Lúc này request đã qua những chỗ nào, và chỗ nào cần kiểm tra tiếp?</li>
       <li>Người dùng thấy 504 kèm chữ <code>nginx</code>, còn log của app có dòng nhận request đó. Request đã tới app chưa, và chỗ nào đang chậm?</li>
       <li>Bạn mở port 443 trên firewall xong, lời báo của curl đổi từ <code>Timeout was reached</code> sang <code>Could not
       connect</code>. Như vậy firewall đã sửa được chưa, và chỗ hỏng tiếp theo nằm ở đâu?</li>
       <li>Người dùng thấy 500, log của app có dòng <code>Connection refused</code>. Đây là việc của developer hay của người làm
       DevOps?</li>
-      <li>Ổ đĩa của server đầy cùng ngày chứng chỉ hết hạn. Người dùng thấy lời báo nào trước, và sửa xong chỗ ấy thì họ thấy lời báo gì?</li>
+      <li>Ổ đĩa của server đầy cùng ngày certificate hết hạn. Người dùng thấy lời báo nào trước, và sửa xong chỗ ấy thì họ thấy lời báo gì?</li>
     </ul>
   </div>
   <div>
@@ -530,11 +530,11 @@ $ curl -sS -o /dev/null -w "%{http_code}\n" https://example.com/
     <ol class="refs">
       <li>Nginx, trang hướng dẫn dùng Nginx làm reverse proxy.
       <a href="https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/">docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy</a></li>
-      <li>RFC 9110, <em>HTTP Semantics</em>, mục 15.6 về các mã 5xx, gồm 500, 502, 504.
+      <li>RFC 9110, <em>HTTP Semantics</em>, mục 15.6 về các status code 5xx, gồm 500, 502, 504.
       <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.6">rfc-editor.org/rfc/rfc9110#section-15.6</a></li>
-      <li>curl, danh sách mã lỗi của curl (6, 7, 28, 35, 60 trong bài).
+      <li>curl, danh sách exit code của curl (6, 7, 28, 35, 60 trong bài).
       <a href="https://curl.se/libcurl/c/libcurl-errors.html">curl.se/libcurl/c/libcurl-errors.html</a></li>
-      <li>badssl.com, các trang dựng sẵn với chứng chỉ hỏng để thử trình duyệt.
+      <li>badssl.com, các trang dựng sẵn với certificate hỏng để thử browser.
       <a href="https://badssl.com/">badssl.com</a></li>
     </ol>
   </div>
@@ -555,8 +555,8 @@ $ curl -sS -o /dev/null -w "%{http_code}\n" https://example.com/
 
 </div>
 
-<script src="../../assets/app.js?v=fca8b97f"></script>
-<script src="../../assets/terms.js?v=fca8b97f"></script>
-<script src="lesson.js?v=6aa56165"></script>
+<script src="../../assets/app.js?v=4e53e8bb"></script>
+<script src="../../assets/terms.js?v=4e53e8bb"></script>
+<script src="lesson.js?v=416b5a21"></script>
 </body>
 </html>

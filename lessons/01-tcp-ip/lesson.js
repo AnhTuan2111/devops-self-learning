@@ -1,5 +1,5 @@
-// Riêng Bài 01: lưới router ở đầu trang, tuyến đường điều hướng có gói tin đếm TTL lùi, và các sơ đồ của bài.
-// Lưới router, gộp tầng và tracert chạy lặp liên tục khi đang nằm trên màn hình; tra bảng route, BGP, DNS, bóc byte
+// Riêng Bài 01: lưới router ở đầu trang, tuyến đường điều hướng có packet đếm TTL lùi, và các sơ đồ của bài.
+// Lưới router, gộp layer và tracert chạy lặp liên tục khi đang nằm trên màn hình; tra routing table, BGP, DNS, bóc byte
 // chạy theo lần bấm hoặc chạy một lần khi cuộn tới.
 // Bật giảm chuyển động thì mọi thứ đứng yên ở trạng thái cuối. Không có JS thì chữ và số liệu vẫn đủ trong HTML.
 (() => {
@@ -30,7 +30,7 @@
     (async () => { for (;;) { if (seen.visible) { await cycle(); await wait(rest); } else await wait(300); } })();
   }
 
-  // ---------- Đầu trang: bốn gói của một lời nhắn đi bốn đường qua lưới router ----------
+  // ---------- Đầu trang: bốn packet của một lời nhắn đi bốn đường qua lưới router ----------
   // Lặp liên tục, chỉ chạy khi đang thấy.
   const mesh = document.querySelector('.mesh');
   if (mesh) {
@@ -95,21 +95,21 @@
       arrived = [];
       slots.forEach((s) => { s.textContent = ''; s.className = ''; });
       tray.classList.remove('done');
-      status.textContent = 'một request, cắt thành bốn gói';
+      status.textContent = 'một request, cắt thành bốn packet';
       await hold(700);
-      status.textContent = 'mỗi gói tự đi, router chỉ đọc địa chỉ nhận';
+      status.textContent = 'mỗi packet tự đi, router chỉ đọc địa chỉ nhận';
       const go = (n, route, speed, delay) => hold(delay).then(() => {
         const g = makePacket(n);
         return travel(g, route, speed, (k) => {
           if (n === 3 && k === 'E') {
             rt.E.classList.add('drop'); boom.classList.remove('on'); void boom.getBBox(); boom.classList.add('on');
             g.classList.add('lost');
-            status.textContent = 'hàng chờ của router đầy, gói 3 bị bỏ';
+            status.textContent = 'hàng chờ của router đầy, packet 3 bị bỏ';
             setTimeout(() => rt.E.classList.remove('drop'), 700);
             return false;
           }
           return k === 'D' ? true : flash(k, 'busy');
-        }).then((ok) => { g.remove(); if (ok) land(n); });   // gói tới nơi rời lưới, rơi vào khay
+        }).then((ok) => { g.remove(); if (ok) land(n); });   // packet tới nơi rời lưới, rơi vào khay
       });
       await Promise.all([
         go(1, 'SACGD', 0.075, 0),
@@ -117,9 +117,9 @@
         go(3, 'SBEHD', 0.09, 450),
         go(4, 'SBFHD', 0.085, 650),
       ]);
-      status.textContent = `tới nơi lộn thứ tự: ${arrived.join(' ')}, thiếu gói 3`;
+      status.textContent = `tới nơi lộn thứ tự: ${arrived.join(' ')}, thiếu packet 3`;
       await hold(1300);
-      status.textContent = 'máy nhận báo thiếu gói 3, TCP ở máy gửi gửi lại gói ấy';
+      status.textContent = 'máy nhận báo thiếu packet 3, TCP ở máy gửi gửi lại packet ấy';
       const again = makePacket(3);
       await travel(again, 'SBFHD', 0.12, (k) => (k === 'D' ? true : flash(k, 'busy')));
       again.remove();
@@ -139,7 +139,7 @@
     }
   }
 
-  // ---------- Tuyến đường điều hướng: sáng ga đang đọc, gói tin trượt theo vị trí cuộn và đếm TTL lùi ----------
+  // ---------- Tuyến đường điều hướng: sáng ga đang đọc, packet trượt theo vị trí cuộn và đếm TTL lùi ----------
   const nav = document.querySelector('.line-nav');
   if (nav) {
     const stops = [...nav.querySelectorAll('a')];
@@ -193,7 +193,7 @@
   document.querySelectorAll('.part figure, .part .callout, .part .table-scroll')
     .forEach((el) => { el.classList.add('reveal'); revealIo.observe(el); });
 
-  // ---------- Hình 2: bảy tầng gộp thành bốn ----------
+  // ---------- Hình 2: bảy layer gộp thành bốn ----------
   const merge = document.querySelector('.merge');
   if (merge) {
     // Hiện các khối rồi lặp: tách ra theo OSI, gộp lại như TCP/IP
@@ -205,7 +205,7 @@
       await wait(2200);
       merge.classList.remove('split');
     }, 400);
-    // Rê lên một khối TCP/IP thì viền các tầng OSI mà nó gộp
+    // Rê lên một khối TCP/IP thì viền các layer OSI mà nó gộp
     const cover = { app: [7, 6, 5], tra: [4], int: [3], lnk: [2, 1] };
     const cells = [...merge.querySelectorAll('.osi .m-cell')];
     merge.querySelectorAll('.t-block').forEach((b) => {
@@ -215,7 +215,7 @@
     });
   }
 
-  // ---------- Hình 4: tra bảng route, khớp dài nhất thắng ----------
+  // ---------- Hình 4: tra routing table, longest prefix match thắng ----------
   const lookup = document.querySelector('.lookup');
   if (lookup) {
     const toInt = (ip) => {
@@ -396,7 +396,7 @@
     async function spread(withdraw) {
       if (busy) return;
       busy = true; btnW.disabled = true; btnA.disabled = true;
-      state.textContent = withdraw ? 'AS32934 rút quảng bá, các AS lần lượt xoá đường' : 'AS32934 quảng bá: dải 57.144.64.0/23 ở chỗ tôi';
+      state.textContent = withdraw ? 'AS32934 rút announce, các AS lần lượt xoá đường' : 'AS32934 announce: dải 57.144.64.0/23 ở chỗ tôi';
       state.classList.toggle('down', withdraw);
       let depth = 0;
       for (const asn of order) {
@@ -416,8 +416,8 @@
       }
       if (!reduced) await wait(700);
       state.textContent = withdraw
-        ? 'mọi AS đã xoá đường, gói tới 57.144.64.0/23 không còn đường để đi'
-        : 'dải 57.144.64.0/23 đang được quảng bá; ô vàng là AS path mỗi AS gửi tiếp cho AS kế bên';
+        ? 'mọi AS đã xoá đường, packet tới 57.144.64.0/23 không còn đường để đi'
+        : 'dải 57.144.64.0/23 đang được announce; ô vàng là AS path mỗi AS gửi tiếp cho AS kế bên';
       busy = false;
       btnW.disabled = withdraw; btnA.disabled = !withdraw;
     }
@@ -475,7 +475,7 @@
       clearInterval(timer); setCache(0);
       log.innerHTML = 'laptop hỏi resolver: <code>facebook.com</code> ở đâu?';
       await hop('laptop', 'resolver', 'A facebook.com?');
-      log.innerHTML = 'cache trống, resolver hỏi gốc';
+      log.innerHTML = 'Cache trống, resolver hỏi root';
       await hop('resolver', 'root', 'facebook.com?');
       log.innerHTML = '<code>f.root-servers.net</code>, 4 ms: com thì hỏi <code>gtld-servers.net</code>';
       await hop('root', 'resolver', 'đi hỏi com.', true);
@@ -507,7 +507,7 @@
     else onceVisible(walk, full);
   }
 
-  // ---------- Hình 9: bóc 141 byte thật của gói số 4 ----------
+  // ---------- Hình 9: bóc 141 byte thật của packet số 4 ----------
   const dissect = document.querySelector('.dissect');
   if (dissect) {
     // Chép nguyên văn phần hex của tshark -x (cũng in trong khối "output nguyên văn" ngay dưới hình)
@@ -522,31 +522,31 @@
       '20 63 75 72 6c 2f 38 2e 31 38 2e 30 0d 0a 41 63',
       '63 65 70 74 3a 20 2a 2f 2a 0d 0a 0d 0a',
     ].join(' ').split(' ');
-    // Ranh giới các lớp và các trường, theo output -O eth,ip,tcp,http của tshark
+    // Ranh giới các layer và các trường, theo output -O eth,ip,tcp,http của tshark
     const LAYERS = { eth: [0, 13, 'c2'], ip: [14, 33, 'c3'], tcp: [34, 65, 'c4'], http: [66, 140, 'c7'] };
     const FIELDS = [
       [0, 5, 'MAC nhận <code>00:15:5d:8a:9e:59</code>, card ảo phía Windows'],
-      [6, 11, 'MAC gửi <code>00:15:5d:bb:07:66</code>, card mạng của WSL'],
+      [6, 11, 'MAC gửi <code>00:15:5d:bb:07:66</code>, NIC của WSL'],
       [12, 13, 'loại <code>08 00</code>: phần sau là IPv4'],
-      [14, 14, '<code>45</code>: số 4 là IPv4, số 5 là độ dài phần đầu tính theo khối 4 byte, 5 khối là 20 byte'],
-      [15, 15, 'ô đánh dấu độ ưu tiên của gói, để trống'],
-      [16, 17, 'tổng độ dài của gói IP: <code>00 7f</code>, tức 127 byte'],
-      [18, 19, 'số định danh của gói'],
-      [20, 21, 'cờ <code>40 00</code>: router không được cắt gói này thành gói nhỏ hơn'],
+      [14, 14, '<code>45</code>: số 4 là IPv4, số 5 là độ dài header tính theo khối 4 byte, 5 khối là 20 byte'],
+      [15, 15, 'ô đánh dấu độ ưu tiên của packet, để trống'],
+      [16, 17, 'tổng độ dài của IP packet: <code>00 7f</code>, tức 127 byte'],
+      [18, 19, 'số định danh của packet'],
+      [20, 21, 'Flag <code>40 00</code>: router không được cắt packet này thành packet nhỏ hơn'],
       [22, 22, 'TTL <code>40</code>, tức 64, mỗi router trừ 1'],
-      [23, 23, 'giao thức bên trong: <code>06</code>, tức TCP'],
-      [24, 25, 'mã kiểm tra lỗi của phần đầu IP'],
+      [23, 23, 'Protocol bên trong: <code>06</code>, tức TCP'],
+      [24, 25, 'mã kiểm tra lỗi của IP header'],
       [26, 29, 'IP gửi <code>ac 15 15 88</code>, tức 172.21.21.136'],
       [30, 33, 'IP nhận <code>68 14 17 9a</code>, tức 104.20.23.154 của example.com'],
       [34, 35, 'port gửi <code>b9 46</code>, tức 47430 của curl'],
       [36, 37, 'port nhận <code>00 50</code>, tức 80 của http'],
-      [38, 41, 'số thứ tự TCP đánh cho mẩu này (sequence number)'],
+      [38, 41, 'TCP sequence number đánh cho segment này (sequence number)'],
       [42, 45, 'số báo đã nhận (acknowledgment number)'],
-      [46, 46, '<code>80</code>: phần đầu TCP dài 8 khối 4 byte, tức 32 byte'],
-      [47, 47, 'cờ <code>18</code>: ACK báo đã nhận, kèm cờ PSH bảo bên nhận đưa dữ liệu lên chương trình ngay'],
-      [48, 49, 'máy gửi gói này báo nó còn nhận thêm được bao nhiêu byte'],
+      [46, 46, '<code>80</code>: TCP header dài 8 khối 4 byte, tức 32 byte'],
+      [47, 47, 'Flag <code>18</code>: ACK báo đã nhận, kèm flag PSH bảo bên nhận đưa dữ liệu lên chương trình ngay'],
+      [48, 49, 'máy gửi packet này báo nó còn nhận thêm được bao nhiêu byte'],
       [50, 51, 'mã kiểm tra lỗi của phần TCP'],
-      [52, 53, 'ô dành cho dữ liệu khẩn, gói này không dùng nên để 0'],
+      [52, 53, 'ô dành cho dữ liệu khẩn, packet này không dùng nên để 0'],
       [54, 65, 'tuỳ chọn TCP, ở đây là thời điểm gửi'],
     ];
     const hexBox = dissect.querySelector('.dx-hex');
@@ -599,16 +599,16 @@
     });
     hexBox.addEventListener('mouseover', (e) => { const c = e.target.closest('span'); if (c) showByte(Number(c.dataset.i)); });
     hexBox.addEventListener('click', (e) => { const c = e.target.closest('span'); if (c) showByte(Number(c.dataset.i)); });
-    dissect.addEventListener('mouseleave', () => { clear(); field.textContent = 'rê chuột hoặc chạm vào một lớp, hoặc một byte'; });
+    dissect.addEventListener('mouseleave', () => { clear(); field.textContent = 'rê chuột hoặc chạm vào một layer, hoặc một byte'; });
     if (!reduced) {
       hexBox.classList.add('pour');
       onceVisible(dissect, async () => {
         hexBox.classList.add('go');
         await wait(141 * 6 + 500);
         hexBox.classList.remove('pour', 'go');
-        // Bóc từ lớp ngoài vào lớp trong, như bên nhận làm
+        // Bóc từ header ngoài vào header trong, như bên nhận làm
         for (const k of ['eth', 'ip', 'tcp', 'http']) { showLayer(k); await wait(900); }
-        clear(); field.textContent = 'rê chuột hoặc chạm vào một lớp, hoặc một byte';
+        clear(); field.textContent = 'rê chuột hoặc chạm vào một layer, hoặc một byte';
       });
     }
   }

@@ -17,14 +17,14 @@
   const lanes = document.querySelector('.lanes');
   if (lanes) {
     const STEPS = [
-      ['dns', 'trình duyệt hỏi DNS: shop.example.com ở địa chỉ nào? DNS trả lời 203.0.113.10'],
+      ['dns', 'Browser hỏi DNS: shop.example.com ở địa chỉ nào? DNS trả lời 203.0.113.10'],
       ['isp', 'mở kết nối TCP tới 203.0.113.10, port 443, qua các router của nhà mạng'],
-      ['firewall', 'firewall: port 443 được phép, cho gói tin qua'],
-      ['nginx', 'Nginx nhận kết nối ở port 443'],
-      ['tls', 'bắt tay TLS: Nginx gửi chứng chỉ của shop.example.com, chứng chỉ còn hạn'],
+      ['firewall', 'firewall: port 443 được phép, cho packet qua'],
+      ['nginx', 'Nginx listen ở port 443'],
+      ['tls', 'TLS handshake: Nginx gửi certificate của shop.example.com, certificate còn hạn'],
       ['app', 'Nginx chuyển request vào app ở port 8080, controller của bạn chạy'],
       ['db', 'app đọc dữ liệu trong PostgreSQL'],
-      ['browser', 'câu trả lời 200 đi ngược về trình duyệt'],
+      ['browser', 'câu trả lời 200 đi ngược về browser'],
     ];
     const log = lanes.querySelector('.lane-log');
     const local = lanes.querySelector('.lane-local');
@@ -41,7 +41,7 @@
       log.appendChild(li);
     };
     if (reduced) {
-      say('trên máy bạn: trình duyệt gọi thẳng localhost:8080, app đọc PostgreSQL rồi trả lời 200');
+      say('trên máy bạn: browser gọi thẳng localhost:8080, app đọc PostgreSQL rồi trả lời 200');
       STEPS.forEach(([, t]) => say(t));
     } else {
       const seen = watch(lanes);
@@ -58,7 +58,7 @@
           // Hai làn chạy cùng lúc: làn máy bạn xong sau vài bước, làn server còn đi tiếp
           (async () => {
             put(local, st(local, 'app'));
-            say('trên máy bạn: trình duyệt gọi thẳng localhost:8080, app đọc PostgreSQL rồi trả lời 200');
+            say('trên máy bạn: browser gọi thẳng localhost:8080, app đọc PostgreSQL rồi trả lời 200');
             setTimeout(() => st(local, 'app').classList.add('lit'), 500);
             await wait(700);
             put(local, st(local, 'db'));
@@ -165,7 +165,7 @@
         door.classList.add('open');
         stopClock(clockMs());
         line.className = 'kn-line';
-        line.textContent = 'kết nối đã mở, curl sang bước bắt tay TLS';
+        line.textContent = 'kết nối đã mở, curl sang TLS handshake';
       }
     }
     const clockMs = () => parseInt(timer.textContent, 10) || 0;
@@ -177,10 +177,10 @@
   const FAIL = {
     dns: { msg: 'curl: (6) Could not resolve host: shop.example.com', who: 'curl viết, theo câu trả lời "không có tên này" của DNS; server không biết gì' },
     firewall: { msg: 'curl: (28) Failed to connect to shop.example.com port 443 after 5014 ms: Timeout was reached', who: 'không ai trả lời; curl tự viết khi chờ hết giờ' },
-    nginx: { msg: 'curl: (7) Failed to connect to shop.example.com port 443 after 2010 ms: Could not connect to server', who: 'hệ điều hành của server từ chối vì không ai nhận kết nối ở port 443; curl viết dòng (7) theo lời từ chối ấy' },
-    tls: { msg: 'curl: (35) schannel: ... SEC_E_CERT_EXPIRED (0x80090328) - The received certificate has expired.', who: 'curl tự kiểm tra ngày trên chứng chỉ rồi dừng; server vẫn chạy bình thường' },
+    nginx: { msg: 'curl: (7) Failed to connect to shop.example.com port 443 after 2010 ms: Could not connect to server', who: 'hệ điều hành của server từ chối vì không ai listen ở port 443; curl viết dòng (7) theo lời từ chối ấy' },
+    tls: { msg: 'curl: (35) schannel: ... SEC_E_CERT_EXPIRED (0x80090328) - The received certificate has expired.', who: 'curl tự kiểm tra ngày trên certificate rồi dừng; server vẫn chạy bình thường' },
     app: { msg: '502 Bad Gateway  nginx/1.30.5', who: 'Nginx viết, vì gọi vào app ở port 8080 thì bị từ chối' },
-    db: { msg: 'HTTP/1.1 500', who: 'app viết mã 500; log của app mới ghi lý do: PostgreSQL tắt, nên ở port 5432 không có chương trình nào nhận kết nối' },
+    db: { msg: 'HTTP/1.1 500', who: 'app viết status code 500; log của app mới ghi lý do: PostgreSQL tắt, nên ở port 5432 không có chương trình nào listen' },
   };
   const OK = { msg: 'HTTP/1.1 200', who: 'mọi chỗ chạy bình thường, app trả lời 200' };
   const breaker = document.querySelector('.breaker');
@@ -218,7 +218,7 @@
   }
 
   // ---------- Hình 4: thời gian trôi trên một server không ai đụng vào ----------
-  // Số là ví dụ (ghi ở chú thích): chứng chỉ 90 ngày, tên miền 365 ngày, ổ 40 GB, đã dùng 12 GB, mỗi ngày thêm 0,2 GB log.
+  // Số là ví dụ (ghi ở chú thích): certificate 90 ngày, domain 365 ngày, ổ 40 GB, đã dùng 12 GB, mỗi ngày thêm 0,2 GB log.
   const clockFig = document.querySelector('.clock');
   if (clockFig) {
     const range = clockFig.querySelector('#clock-range');
@@ -249,9 +249,9 @@
       d.classList.toggle('dead', dead.disk);
       // Màn hình người dùng hiện lỗi của chỗ hỏng đứng trước trên đường đi: DNS, rồi TLS, rồi app
       let r = { msg: 'HTTP/1.1 200', who: 'mọi chỗ còn hạn, ổ đĩa còn chỗ' };
-      if (dead.disk) r = { msg: 'HTTP/1.1 500', who: 'app viết mã 500; lý do là PostgreSQL ghi vào ổ đầy, hệ điều hành trả về lỗi No space left on device, và PostgreSQL báo lại lỗi ấy cho app' };
-      if (dead.cert) r = { msg: 'NET::ERR_CERT_DATE_INVALID', who: 'trình duyệt tự kiểm tra ngày trên chứng chỉ rồi dừng' };
-      if (dead.domain) r = { msg: 'DNS_PROBE_FINISHED_NXDOMAIN', who: 'trình duyệt viết, theo câu trả lời "không có tên này" của DNS' };
+      if (dead.disk) r = { msg: 'HTTP/1.1 500', who: 'app viết status code 500; lý do là PostgreSQL ghi vào ổ đầy, hệ điều hành trả về lỗi No space left on device, và PostgreSQL báo lại lỗi ấy cho app' };
+      if (dead.cert) r = { msg: 'NET::ERR_CERT_DATE_INVALID', who: 'Browser tự kiểm tra ngày trên certificate rồi dừng' };
+      if (dead.domain) r = { msg: 'DNS_PROBE_FINISHED_NXDOMAIN', who: 'Browser viết, theo câu trả lời "không có tên này" của DNS' };
       screenMsg.textContent = r.msg; screenWho.textContent = r.who;
       clockFig.classList.toggle('err', dead.domain || dead.cert || dead.disk);
     }

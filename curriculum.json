@@ -18,13 +18,13 @@
   {
    "id": "M0",
    "title": "Phía sau một cú bấm",
-   "intro": "Bạn bấm một nút trên trình duyệt thì dữ liệu đi qua những đâu để tới server rồi quay về? Đi theo cú bấm ấy qua từng tầng mạng thì thấy dữ liệu đi qua những gì, và chỗ nào trên đường đi là việc của người làm DevOps.",
+   "intro": "Bạn bấm một nút trên browser thì dữ liệu đi qua những đâu để tới server rồi quay về? Đi theo cú bấm ấy qua từng layer mạng thì thấy dữ liệu đi qua những gì, và chỗ nào trên đường đi là việc của người làm DevOps.",
    "lessons": [
     {
      "id": "00",
      "slug": "osi-layers",
-     "title": "Bấm like trên facebook.com: bảy tầng OSI",
-     "desc": "Từ lúc bạn bấm like tới lúc con số trên màn hình tăng lên, máy bạn và server của Facebook đã làm những việc gì với dữ liệu? Người ta chia những việc ấy thành bảy tầng, gọi là mô hình OSI. Cú like đi xuống qua bảy tầng ấy ở máy bạn, rồi đi ngược lên qua bảy tầng ở server.",
+     "title": "Bấm like trên facebook.com: bảy layer OSI",
+     "desc": "Từ lúc bạn bấm like tới lúc con số trên màn hình tăng lên, máy bạn và server của Facebook đã làm những việc gì với dữ liệu? Người ta chia những việc ấy thành bảy layer, gọi là mô hình OSI. Cú like đi xuống qua bảy layer ấy ở máy bạn, rồi đi ngược lên qua bảy layer ở server.",
      "lab": "local",
      "needs": []
     },
@@ -32,17 +32,17 @@
      "id": "01",
      "slug": "tcp-ip",
      "title": "TCP/IP: Internet chạy thế nào",
-     "desc": "Bảy tầng OSI là cách chia việc trên giấy, còn Internet thật chạy bằng một bộ giao thức tên là TCP/IP. Lần theo một request thì thấy DNS đổi tên facebook.com ra địa chỉ IP trước, rồi request được cắt thành các gói tin và router chọn đường cho từng gói. Cuối bài, bạn bắt các gói tin đi qua máy của bạn rồi xem từng lớp bên trong gói.",
+     "desc": "Bảy layer OSI là cách chia việc trên giấy, còn Internet thật chạy bằng một bộ protocol tên là TCP/IP. Lần theo một request thì thấy DNS đổi tên facebook.com ra địa chỉ IP trước, rồi request được cắt thành các packet và router chọn đường cho từng gói. Cuối bài, bạn bắt các packet đi qua máy của bạn rồi xem từng layer bên trong gói.",
      "lab": "local",
      "needs": [
-      "bảy tầng OSI"
+      "bảy layer OSI"
      ]
     },
     {
      "id": "02",
      "slug": "where-devops-fits",
-     "title": "Người làm DevOps nắm chỗ nào trong các tầng",
-     "desc": "Một request đi qua rất nhiều chỗ, nhưng người làm DevOps không cần nắm chỗ nào cũng sâu như nhau. Trước khi vào app, request đi qua DNS, được mã hoá bằng TLS, đi qua firewall, tức bộ lọc kết nối của server, rồi tới reverse proxy, chương trình đứng trước app. Trong cả đường đi ấy, chỉ có app là code bạn viết, còn những chỗ khác là việc người làm DevOps phải nắm.",
+     "title": "Người làm DevOps nắm chỗ nào trong các layer",
+     "desc": "Một request đi qua rất nhiều chỗ, nhưng người làm DevOps không cần nắm chỗ nào cũng sâu như nhau. Trước khi vào app, request đi qua DNS, được encrypt bằng TLS, đi qua firewall, tức bộ lọc kết nối của server, rồi tới reverse proxy, chương trình đứng trước app. Trong cả đường đi ấy, chỉ có app là code bạn viết, còn những chỗ khác là việc người làm DevOps phải nắm.",
      "lab": "reading",
      "needs": [
       "TCP/IP",
@@ -61,7 +61,7 @@
      "id": "03",
      "slug": "what-is-a-server",
      "title": "Server là cái gì: phần cứng, hệ điều hành, process",
-     "desc": "Server nghe thì to tát, nhưng nó cũng chỉ là một máy tính có CPU, RAM, ổ đĩa, card mạng và chạy một hệ điều hành. App Spring Boot của bạn chạy trên máy đó thành một process, tức một chương trình đang chạy. Phần lõi của hệ điều hành, gọi là kernel, chia CPU và RAM cho các process, và khi RAM hết hẳn thì kernel giết bớt process để lấy lại bộ nhớ.",
+     "desc": "Server nghe thì to tát, nhưng nó cũng chỉ là một máy tính có CPU, RAM, ổ đĩa, NIC và chạy một hệ điều hành. App Spring Boot của bạn chạy trên máy đó thành một process, tức một chương trình đang chạy. Phần lõi của hệ điều hành, gọi là kernel, chia CPU và RAM cho các process, và khi RAM hết hẳn thì kernel giết bớt process để lấy lại bộ nhớ.",
      "lab": "local",
      "needs": []
     },
@@ -102,7 +102,7 @@
      "id": "07",
      "slug": "shell-scripting",
      "title": "Shell script",
-     "desc": "Mấy lệnh ngày nào cũng phải gõ lại thì dễ gõ sai hoặc quên một bước. Bạn gom các lệnh ấy vào một file, gọi là script, rồi để bash, chương trình shell hay gặp nhất trên Linux, chạy file đó. Trong script viết được biến, điều kiện, vòng lặp như trong Java. Lệnh nào chạy xong cũng trả về một con số báo thành công hay lỗi, gọi là mã thoát, và script phải tự kiểm tra con số ấy, vì bash không tự dừng khi một lệnh bị lỗi.",
+     "desc": "Mấy lệnh ngày nào cũng phải gõ lại thì dễ gõ sai hoặc quên một bước. Bạn gom các lệnh ấy vào một file, gọi là script, rồi để bash, chương trình shell hay gặp nhất trên Linux, chạy file đó. Trong script viết được biến, điều kiện, vòng lặp như trong Java. Lệnh nào chạy xong cũng trả về một con số báo thành công hay lỗi, gọi là exit code, và script phải tự kiểm tra con số ấy, vì bash không tự dừng khi một lệnh bị lỗi.",
      "lab": "local",
      "needs": [
       "shell",
@@ -113,7 +113,7 @@
      "id": "08",
      "slug": "networking-on-one-host",
      "title": "Mạng trên một máy: listen, port, firewall",
-     "desc": "App đã chạy mà máy khác gọi không tới thì thường hỏng ở một trong ba chỗ trên máy chạy app. Có thể app chưa chờ kết nối (listen) ở port mà máy khác đang gọi, có thể app chỉ listen trên địa chỉ 127.0.0.1 nên chỉ nhận kết nối từ trong máy, hoặc firewall của máy chặn kết nối từ ngoài vào. Ba lệnh ss, ip và curl đủ để tìm ra chỗ hỏng. Ngoài ra, server chỉ có địa chỉ dạng 192.168.1.10 thì máy ngoài Internet cũng không gọi tới được, vì đó là địa chỉ chỉ dùng trong mạng riêng.",
+     "desc": "App đã chạy mà máy khác gọi không tới thì thường hỏng ở một trong ba chỗ trên máy chạy app. Có thể app chưa listen ở port mà máy khác đang gọi, có thể app chỉ listen trên địa chỉ 127.0.0.1 nên chỉ listen từ trong máy, hoặc firewall của máy chặn kết nối từ ngoài vào. Ba lệnh ss, ip và curl đủ để tìm ra chỗ hỏng. Ngoài ra, server chỉ có địa chỉ dạng 192.168.1.10 thì máy ngoài Internet cũng không gọi tới được, vì đó là địa chỉ chỉ dùng trong mạng riêng.",
      "lab": "local",
      "needs": [
       "IP",
@@ -137,7 +137,7 @@
     {
      "id": "10",
      "slug": "layered-troubleshooting",
-     "title": "Chẩn đoán theo tầng",
+     "title": "Chẩn đoán theo layer",
      "desc": "Mỗi thông báo lỗi do một chỗ cụ thể trên đường đi của request viết ra. Lỗi connection refused do kernel của máy đích trả về, lỗi 502 và 504 do reverse proxy đứng trước app trả về, còn lỗi 500 do app trả về. Đọc kỹ thông báo lỗi thì biết nên bắt đầu tìm từ chỗ nào.",
      "lab": "local",
      "needs": [
@@ -151,13 +151,13 @@
   {
    "id": "M2",
    "title": "Server thật, làm bằng tay",
-   "intro": "Bạn thuê một server thật, đăng nhập vào nó từ xa và tự tay đưa app lên, gắn tên miền, bật HTTPS. Làm bằng tay trước thì sau này mới biết các công cụ tự động đang làm thay bạn những việc gì.",
+   "intro": "Bạn thuê một server thật, đăng nhập vào nó từ xa và tự tay đưa app lên, gắn domain, bật HTTPS. Làm bằng tay trước thì sau này mới biết các công cụ tự động đang làm thay bạn những việc gì.",
    "lessons": [
     {
      "id": "11",
      "slug": "getting-a-server",
      "title": "Kiếm một server để thực hành",
-     "desc": "Có ba cách kiếm một server để thực hành. Cách thứ nhất là thuê theo tháng một máy ảo, tức máy tính giả do phần mềm tạo ra trên server của nhà cung cấp, và loại máy thuê này gọi là VPS. Cách thứ hai là dùng gói miễn phí của các hãng cho thuê máy theo giờ như Amazon, Google, Microsoft, những dịch vụ gọi chung là cloud. Cách thứ ba là dựng máy ảo ngay trên máy của bạn. Có máy rồi thì việc nên làm ngay là cập nhật phần mềm, tạo user riêng và thôi dùng root hằng ngày.",
+     "desc": "Có ba cách kiếm một server để thực hành. Cách thứ nhất là thuê theo tháng một VM, tức máy tính giả do phần mềm tạo ra trên server của nhà cung cấp, và loại máy thuê này gọi là VPS. Cách thứ hai là dùng gói miễn phí của các hãng cho thuê máy theo giờ như Amazon, Google, Microsoft, những dịch vụ gọi chung là cloud. Cách thứ ba là dựng VM ngay trên máy của bạn. Có máy rồi thì việc nên làm ngay là cập nhật phần mềm, tạo user riêng và thôi dùng root hằng ngày.",
      "lab": "server",
      "needs": [
       "Linux",
@@ -168,7 +168,7 @@
      "id": "12",
      "slug": "ssh",
      "title": "SSH: điều khiển một máy ở xa",
-     "desc": "Server nằm ở trung tâm dữ liệu nên bạn không ngồi trước nó được. SSH cho bạn gõ lệnh trên máy ở xa ấy qua một kết nối đã mã hoá. Thay cho mật khẩu, bạn đăng nhập bằng một cặp khoá, một khoá giữ trên máy bạn và một khoá đặt trên server, rồi tắt luôn việc đăng nhập bằng root. Kết nối SSH ấy còn dùng để chép file từ máy bạn lên server.",
+     "desc": "Server nằm ở data center nên bạn không ngồi trước nó được. SSH cho bạn gõ lệnh trên máy ở xa ấy qua một kết nối đã encrypt. Thay cho mật khẩu, bạn đăng nhập bằng một cặp khoá, một khoá giữ trên máy bạn và một khoá đặt trên server, rồi tắt luôn việc đăng nhập bằng root. Kết nối SSH ấy còn dùng để chép file từ máy bạn lên server.",
      "lab": "server",
      "needs": [
       "IP",
@@ -192,7 +192,7 @@
      "id": "14",
      "slug": "nginx",
      "title": "Nginx",
-     "desc": "App mở thẳng port ra Internet thì phải tự lo việc mã hoá, và request nào từ ngoài cũng đi thẳng vào app. Nginx là một reverse proxy, tức chương trình đứng trước app. Nginx nhận request từ ngoài rồi chuyển vào app, lo luôn việc mã hoá, và cho nhiều website dùng chung một máy.",
+     "desc": "App mở thẳng port ra Internet thì phải tự lo việc encrypt, và request nào từ ngoài cũng đi thẳng vào app. Nginx là một reverse proxy, tức chương trình đứng trước app. Nginx nhận request từ ngoài rồi chuyển vào app, lo luôn việc encrypt, và cho nhiều website dùng chung một máy.",
      "lab": "server",
      "needs": [
       "listen và port",
@@ -202,8 +202,8 @@
     {
      "id": "15",
      "slug": "domains-and-https",
-     "title": "Tên miền và HTTPS",
-     "desc": "Người dùng gõ tên chứ không gõ địa chỉ IP, nên app cần một tên miền. Bạn kiếm một tên miền để thực hành, tạo bản ghi DNS trỏ tên ấy về IP của server, rồi bật HTTPS. Muốn có HTTPS thì server cần một chứng chỉ, giấy tờ chứng minh server có quyền dùng tên đó, và chứng chỉ phải do một bên mà trình duyệt tin tưởng ký ra, gọi là CA. Let's Encrypt là một CA cấp chứng chỉ miễn phí, và một chương trình chạy trên server gia hạn được chứng chỉ ấy một cách tự động.",
+     "title": "Domain và HTTPS",
+     "desc": "Người dùng gõ tên chứ không gõ địa chỉ IP, nên app cần một domain. Bạn kiếm một domain để thực hành, tạo bản ghi DNS trỏ tên ấy về IP của server, rồi bật HTTPS. Muốn có HTTPS thì server cần một certificate, giấy tờ chứng minh server có quyền dùng tên đó, và certificate phải do một bên mà browser tin tưởng ký ra, gọi là CA. Let's Encrypt là một CA cấp certificate miễn phí, và một chương trình chạy trên server gia hạn được certificate ấy một cách tự động.",
      "lab": "server",
      "needs": [
       "DNS",
@@ -226,12 +226,12 @@
      "id": "17",
      "slug": "server-maintenance",
      "title": "Server để yên ba tháng",
-     "desc": "Không ai đụng vào thì server vẫn hỏng dần: log làm đầy ổ đĩa, chứng chỉ hết hạn, bản vá bảo mật không được cài, database hỏng mà không có backup để khôi phục. Dọn log, gia hạn chứng chỉ, cài bản vá và backup database là những việc phải làm định kỳ, và gần hết các việc ấy tự động hoá được.",
+     "desc": "Không ai đụng vào thì server vẫn hỏng dần: log làm đầy ổ đĩa, certificate hết hạn, bản vá bảo mật không được cài, database hỏng mà không có backup để khôi phục. Dọn log, gia hạn certificate, cài bản vá và backup database là những việc phải làm định kỳ, và gần hết các việc ấy tự động hoá được.",
      "lab": "server",
      "needs": [
       "service",
       "log",
-      "chứng chỉ",
+      "certificate",
       "shell script"
      ]
     }
@@ -240,13 +240,13 @@
   {
    "id": "M3",
    "title": "Container",
-   "intro": "Bạn đóng gói app cùng Java và các thư viện app cần thành một image, rồi chạy image ấy thành container. Nhờ vậy app chạy giống nhau trên máy bạn và trên server, miễn là máy đó có phần mềm chạy container.",
+   "intro": "Bạn đóng gói app cùng Java và các library app cần thành một image, rồi chạy image ấy thành container. Nhờ vậy app chạy giống nhau trên máy bạn và trên server, miễn là máy đó có phần mềm chạy container.",
    "lessons": [
     {
      "id": "18",
      "slug": "what-is-a-container",
      "title": "Container là gì",
-     "desc": "Cài app lên máy bằng tay thì mỗi máy lệch nhau một chút về phiên bản Java, thư viện và cấu hình. Container chạy app cùng mọi thứ app cần đã được đóng gói sẵn, dưới dạng một process mà kernel cô lập lại. Kernel giấu phần còn lại của máy khỏi process ấy, việc này gọi là namespace, và giới hạn CPU, RAM mà process được dùng, việc này gọi là cgroup. Container khác máy ảo ở chỗ máy ảo giả lập cả một máy tính có kernel riêng, còn container dùng chung kernel với máy đang chạy nó.",
+     "desc": "Cài app lên máy bằng tay thì mỗi máy lệch nhau một chút về version Java, library và cấu hình. Container chạy app cùng mọi thứ app cần đã được đóng gói sẵn, dưới dạng một process mà kernel cô lập lại. Kernel giấu phần còn lại của máy khỏi process ấy, việc này gọi là namespace, và giới hạn CPU, RAM mà process được dùng, việc này gọi là cgroup. Container khác VM ở chỗ VM giả lập cả một máy tính có kernel riêng, còn container dùng chung kernel với máy đang chạy nó.",
      "lab": "local",
      "needs": [
       "process",
@@ -304,7 +304,7 @@
      "id": "23",
      "slug": "cache-and-message-queues",
      "title": "Cache và message queue",
-     "desc": "Database có khi chậm chỉ vì bị hỏi đi hỏi lại cùng một câu. Đặt phía trước database một chỗ giữ sẵn câu trả lời, gọi là cache, thì database đỡ phải trả lời lại; Redis là cache hay được dùng. Còn những việc chạy lâu như gửi mail hay xử lý file thì không nên bắt người dùng chờ, mà đẩy vào một hàng đợi, gọi là message queue, như RabbitMQ hay Kafka, để một process khác làm dần. Chạy thử cả hai bằng Compose thì gặp hai chỗ hay hỏng là Redis đầy bộ nhớ và hàng đợi bị dồn.",
+     "desc": "Database có khi chậm chỉ vì bị hỏi đi hỏi lại cùng một câu. Đặt phía trước database một chỗ giữ sẵn câu trả lời, gọi là cache, thì database đỡ phải trả lời lại; Redis là cache hay được dùng. Còn những việc chạy lâu như gửi mail hay xử lý file thì không nên bắt người dùng chờ, mà đẩy vào một message queue, như RabbitMQ hay Kafka, để một process khác làm dần. Chạy thử cả hai bằng Compose thì gặp hai chỗ hay hỏng là Redis đầy bộ nhớ và queue bị dồn.",
      "lab": "local",
      "needs": [
       "Compose",
@@ -315,7 +315,7 @@
      "id": "24",
      "slug": "registry-and-production-images",
      "title": "Registry và image để chạy production",
-     "desc": "Image build trên máy bạn thì server lấy về bằng cách nào? Server kéo image từ một kho chứa image, gọi là registry. Image chạy ở production, nơi người dùng thật truy cập, thì nên nhỏ, nên chạy bằng một user thường thay cho root, và JVM bên trong nên được chỉnh để không dùng quá giới hạn RAM của container. Mỗi image cũng cần một nhãn phiên bản rõ ràng, gọi là tag.",
+     "desc": "Image build trên máy bạn thì server lấy về bằng cách nào? Server kéo image từ một kho chứa image, gọi là registry. Image chạy ở production, nơi người dùng thật truy cập, thì nên nhỏ, nên chạy bằng một user thường thay cho root, và JVM bên trong nên được chỉnh để không dùng quá giới hạn RAM của container. Mỗi image cũng cần một nhãn version rõ ràng, gọi là tag.",
      "lab": "server",
      "needs": [
       "Dockerfile",
@@ -366,7 +366,7 @@
      "id": "28",
      "slug": "build-test-image",
      "title": "Build, test và đóng gói image trong pipeline",
-     "desc": "Pipeline được chia thành các stage chạy nối tiếp nhau, ví dụ build, test rồi đóng gói image. Mỗi stage gồm một hay vài việc nhỏ như chạy test hay build file jar, mỗi việc gọi là một job, và job nào hỏng thì pipeline dừng ở đó, stage sau không chạy. Nhãn phiên bản của image lấy luôn mã commit, nên nhìn nhãn là biết image được build từ code nào.",
+     "desc": "Pipeline được chia thành các stage chạy nối tiếp nhau, ví dụ build, test rồi đóng gói image. Mỗi stage gồm một hay vài việc nhỏ như chạy test hay build file jar, mỗi việc gọi là một job, và job nào hỏng thì pipeline dừng ở đó, stage sau không chạy. Nhãn version của image lấy luôn mã commit, nên nhìn nhãn là biết image được build từ code nào.",
      "lab": "gitlab",
      "needs": [
       "pipeline",
@@ -377,7 +377,7 @@
      "id": "29",
      "slug": "deploy-environments-rollback",
      "title": "Deploy tự động, môi trường, rollback",
-     "desc": "Ngoài việc build, pipeline còn tự đưa image lên server được. Cùng một image đi lần lượt qua dev, staging, tức môi trường chạy thử giống production, rồi tới production, và mỗi nơi chỉ khác nhau ở cấu hình. Bản mới lỗi thì bạn chạy lại image của bản trước, và nhãn phiên bản gắn trên mỗi image, gọi là tag, cho biết image nào là bản trước. Việc quay về bản cũ này gọi là rollback.",
+     "desc": "Ngoài việc build, pipeline còn tự đưa image lên server được. Cùng một image đi lần lượt qua dev, staging, tức môi trường chạy thử giống production, rồi tới production, và mỗi nơi chỉ khác nhau ở cấu hình. Bản mới lỗi thì bạn chạy lại image của bản trước, và nhãn version gắn trên mỗi image, gọi là tag, cho biết image nào là bản trước. Việc quay về bản cũ này gọi là rollback.",
      "lab": "server",
      "needs": [
       "pipeline",
@@ -412,13 +412,13 @@
   },
   {
    "id": "M5",
-   "title": "Hạ tầng bằng code và cloud",
+   "title": "Hạ layer bằng code và cloud",
    "intro": "Việc cài phần mềm, mở port, tạo user cho một server mới đều viết được thành code và lưu trong Git như code của app. Máy hỏng thì chạy lại code ấy là có một máy giống hệt máy cũ. Làm được trên máy của bạn rồi thì làm tiếp trên cloud, nơi bạn thuê máy và mạng theo giờ.",
    "lessons": [
     {
      "id": "32",
      "slug": "infrastructure-as-code",
-     "title": "Hạ tầng là code",
+     "title": "Hạ layer là code",
      "desc": "Server cấu hình bằng tay xong thì chẳng ai nhớ hết đã gõ những gì, nên khi server chết, không ai dựng lại được một máy giống như cũ. Nếu mọi bước cấu hình được viết thành code thì code ấy nằm trong Git, ai cũng đọc lại được, và muốn dựng lại máy thì chạy lại code là xong.",
      "lab": "reading",
      "needs": [
@@ -430,7 +430,7 @@
      "id": "33",
      "slug": "ansible",
      "title": "Ansible",
-     "desc": "Shell script chạy lại lần thứ hai có thể làm một việc hai lần, ví dụ thêm cùng một dòng vào file cấu hình hai lần. Ansible làm khác. Bạn mô tả máy phải có những gì trong một file gọi là playbook, rồi Ansible đăng nhập qua SSH vào từng máy và chỉ sửa những chỗ còn thiếu, nên chạy lại bao nhiêu lần thì máy vẫn ở trạng thái ấy. Để thực hành, bạn dựng vài máy ảo ngay trên máy của bạn.",
+     "desc": "Shell script chạy lại lần thứ hai có thể làm một việc hai lần, ví dụ thêm cùng một dòng vào file cấu hình hai lần. Ansible làm khác. Bạn mô tả máy phải có những gì trong một file gọi là playbook, rồi Ansible đăng nhập qua SSH vào từng máy và chỉ sửa những chỗ còn thiếu, nên chạy lại bao nhiêu lần thì máy vẫn ở trạng thái ấy. Để thực hành, bạn dựng vài VM ngay trên máy của bạn.",
      "lab": "local",
      "needs": [
       "SSH",
@@ -442,7 +442,7 @@
      "id": "34",
      "slug": "cloud-basics-iam",
      "title": "Cloud tối thiểu và IAM",
-     "desc": "Thuê máy trên cloud thì trả tiền theo giờ, dùng xong tắt đi thì không phải trả tiếp. Ngoài máy ảo (máy tính giả do phần mềm tạo ra), các hãng cloud còn cho thuê ổ đĩa, load balancer và kho lưu file. Trên tài khoản cloud, ai và máy nào được làm gì là do IAM quyết định. Cloud tính tiền theo nhiều thứ khác nhau, nên đặt sẵn cảnh báo chi tiêu thì lỡ quên tắt máy bạn cũng biết sớm.",
+     "desc": "Thuê máy trên cloud thì trả tiền theo giờ, dùng xong tắt đi thì không phải trả tiếp. Ngoài VM (máy tính giả do phần mềm tạo ra), các hãng cloud còn cho thuê ổ đĩa, load balancer và kho lưu file. Trên tài khoản cloud, ai và máy nào được làm gì là do IAM quyết định. Cloud tính tiền theo nhiều thứ khác nhau, nên đặt sẵn cảnh báo chi tiêu thì lỡ quên tắt máy bạn cũng biết sớm.",
      "lab": "cloud",
      "needs": [
       "server",
@@ -454,7 +454,7 @@
      "id": "35",
      "slug": "cloud-networking",
      "title": "Mạng trên cloud: VPC, subnet, NAT, VPN",
-     "desc": "Máy bạn thuê trên cloud nằm trong một mạng chỉ dành cho tài khoản của bạn, gọi là VPC. Trong VPC, bạn chia ra các mạng con, gọi là subnet, và để database ở subnet không có đường vào từ Internet. Máy ở đó vẫn ra Internet được nhờ NAT, cách cho nhiều máy dùng chung một địa chỉ công khai. Muốn nối mạng trên cloud về mạng của công ty thì dùng VPN, một đường hầm mã hoá giữa hai mạng.",
+     "desc": "Máy bạn thuê trên cloud nằm trong một mạng chỉ dành cho tài khoản của bạn, gọi là VPC. Trong VPC, bạn chia ra các subnet, và để database ở subnet không có đường vào từ Internet. Máy ở đó vẫn ra Internet được nhờ NAT, cách cho nhiều máy dùng chung một địa chỉ công khai. Muốn nối mạng trên cloud về mạng của công ty thì dùng VPN, một đường hầm encrypt giữa hai mạng.",
      "lab": "cloud",
      "needs": [
       "IP",
@@ -530,7 +530,7 @@
      "id": "41",
      "slug": "ingress",
      "title": "Ingress",
-     "desc": "Service loại mặc định chỉ gọi được từ bên trong cụm, nên người dùng ngoài Internet chưa vào được app. Ingress là bộ luật nói request từ ngoài vào theo tên miền nào, đường dẫn nào thì chuyển tới Service nào. Chương trình làm theo bộ luật ấy gọi là Ingress controller, và nó làm việc của reverse proxy ngay bên trong cụm.",
+     "desc": "Service loại mặc định chỉ gọi được từ bên trong cụm, nên người dùng ngoài Internet chưa vào được app. Ingress là bộ luật nói request từ ngoài vào theo domain nào, path nào thì chuyển tới Service nào. Chương trình làm theo bộ luật ấy gọi là Ingress controller, và nó làm việc của reverse proxy ngay bên trong cụm.",
      "lab": "cluster",
      "needs": [
       "Service",
@@ -613,7 +613,7 @@
      "id": "48",
      "slug": "rebuild-on-kubernetes",
      "title": "Dựng lại cả hệ thống trên cụm",
-     "desc": "Lần này bạn đưa cả app, database và cache lên cụm bằng Helm, có Ingress và HTTPS như một hệ thống thật. Một lỗi hay gặp là Service không tìm thấy Pod chỉ vì nhãn gắn trên Pod gõ lệch một chữ. Ngoài ra còn image không kéo về được, probe gọi sai đường dẫn, Pod không khai báo CPU và RAM, hay Secret bị đặt sai tên.",
+     "desc": "Lần này bạn đưa cả app, database và cache lên cụm bằng Helm, có Ingress và HTTPS như một hệ thống thật. Một lỗi hay gặp là Service không tìm thấy Pod chỉ vì nhãn gắn trên Pod gõ lệch một chữ. Ngoài ra còn image không kéo về được, probe gọi sai path, Pod không khai báo CPU và RAM, hay Secret bị đặt sai tên.",
      "lab": "cluster",
      "needs": [
       "Helm",
@@ -696,7 +696,7 @@
      "id": "54",
      "slug": "service-mesh",
      "title": "Service mesh",
-     "desc": "Những việc như mã hoá kết nối giữa các app, thử lại khi gọi lỗi, chia một phần lưu lượng sang bản mới hay biết app nào gọi app nào, nếu viết trong code thì app nào cũng phải tự viết lại. Service mesh kéo những việc ấy ra khỏi code bằng cách đặt một proxy vào mỗi Pod, cạnh container của app, để proxy nhận mọi request ra vào app. Đổi lại, request nào cũng chậm thêm một chút, và bạn có thêm một hệ thống phải vận hành.",
+     "desc": "Những việc như encrypt kết nối giữa các app, thử lại khi gọi lỗi, chia một phần lưu lượng sang bản mới hay biết app nào gọi app nào, nếu viết trong code thì app nào cũng phải tự viết lại. Service mesh kéo những việc ấy ra khỏi code bằng cách đặt một proxy vào mỗi Pod, cạnh container của app, để proxy nhận mọi request ra vào app. Đổi lại, request nào cũng chậm thêm một chút, và bạn có thêm một hệ thống phải vận hành.",
      "lab": "cluster",
      "needs": [
       "Service",
@@ -729,7 +729,7 @@
      "id": "56",
      "slug": "metrics",
      "title": "Metric: Prometheus và Grafana",
-     "desc": "Muốn biết app có đang quá tải không, bạn phải theo dõi vài con số theo thời gian, như mức dùng CPU, RAM, số request mỗi giây và độ trễ; mỗi con số như vậy gọi là một metric. Prometheus định kỳ hỏi app và máy để lấy metric về, còn Grafana vẽ các metric ấy thành biểu đồ.",
+     "desc": "Muốn biết app có đang quá tải không, bạn phải theo dõi vài con số theo thời gian, như mức dùng CPU, RAM, số request mỗi giây và latency; mỗi con số như vậy gọi là một metric. Prometheus định kỳ hỏi app và máy để lấy metric về, còn Grafana vẽ các metric ấy thành biểu đồ.",
      "lab": "cluster",
      "needs": [
       "process",
@@ -764,7 +764,7 @@
      "id": "59",
      "slug": "ebpf",
      "title": "eBPF",
-     "desc": "Thường thì muốn đo app, bạn phải gắn thêm thư viện vào code, hoặc chạy app kèm một agent, tức chương trình đo được gắn vào JVM lúc app khởi động. eBPF đi theo hướng khác. Nó cho chạy những chương trình nhỏ ngay bên trong kernel, đã được kernel kiểm tra trước để không làm treo máy, nên thấy được mọi kết nối mạng và mọi syscall của app mà không phải gắn gì vào app. Nhiều công cụ giám sát và công cụ mạng cho Kubernetes dựa vào eBPF.",
+     "desc": "Thường thì muốn đo app, bạn phải gắn thêm library vào code, hoặc chạy app kèm một agent, tức chương trình đo được gắn vào JVM lúc app khởi động. eBPF đi theo hướng khác. Nó cho chạy những chương trình nhỏ ngay bên trong kernel, đã được kernel kiểm tra trước để không làm treo máy, nên thấy được mọi kết nối mạng và mọi syscall của app mà không phải gắn gì vào app. Nhiều công cụ giám sát và công cụ mạng cho Kubernetes dựa vào eBPF.",
      "lab": "reading",
      "needs": [
       "kernel",
@@ -790,7 +790,7 @@
      "desc": "Khi có sự cố, việc đầu tiên là khoanh vùng chỗ hỏng và khôi phục để người dùng dùng lại được, còn tìm lý do thì để sau. Xong sự cố, người ta viết một bản postmortem kể lại sự cố đã diễn ra thế nào và vì sao, để sửa hệ thống chứ không để đổ lỗi cho ai.",
      "lab": "cluster",
      "needs": [
-      "chẩn đoán theo tầng",
+      "chẩn đoán theo layer",
       "metric",
       "log",
       "cảnh báo"
@@ -823,7 +823,7 @@
      "id": "64",
      "slug": "capstone",
      "title": "Tổng kết: dựng lại từ repo trống",
-     "desc": "Bắt đầu từ một repo trống, bạn dựng lại cả hệ thống, gồm hạ tầng bằng Terraform, cụm Kubernetes, pipeline, GitOps, giám sát và cảnh báo. Mỗi phần dựng xong thì dừng lại xem phần đó hay hỏng ở đâu, để lần sau gặp lỗi thật thì không bị bất ngờ.",
+     "desc": "Bắt đầu từ một repo trống, bạn dựng lại cả hệ thống, gồm hạ layer bằng Terraform, cụm Kubernetes, pipeline, GitOps, giám sát và cảnh báo. Mỗi phần dựng xong thì dừng lại xem phần đó hay hỏng ở đâu, để lần sau gặp lỗi thật thì không bị bất ngờ.",
      "lab": "cluster",
      "needs": [
       "container",
