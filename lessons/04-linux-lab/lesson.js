@@ -88,8 +88,8 @@
       free: {
         cmd: 'free -h',
         win: { out: 'bash: free: command not found', down: ['shell'] },
-        linux: { out: '               total        used        free      shared  buff/cache   available\nMem:            10Gi       1.3Gi       5.8Gi       4.7Mi       3.8Gi       9.4Gi', down: ['shell', 'kernel'] },
-        note: 'Git Bash không có lệnh free. Kernel Linux trả lời tổng 10 GB, mức trần RAM của VM, không phải 15,2 GB của laptop.',
+        linux: { out: '               total        used        free      shared  buff/cache   available\nMem:           7.4Gi       738Mi       5.6Gi       3.5Mi       1.2Gi       6.7Gi\nSwap:          2.0Gi          0B       2.0Gi', down: ['shell', 'kernel'] },
+        note: 'Git Bash không có lệnh free. Kernel Linux trả lời tổng 7,4 GB, gần bằng mức trần RAM của VM, không phải 15,2 GB của laptop.',
       },
       which: {
         cmd: 'which ls',

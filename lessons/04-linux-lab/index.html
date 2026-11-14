@@ -123,17 +123,17 @@ và tự tắt khi không ai dùng.</p>
       <ol class="side-stack" aria-hidden="true">
         <li data-ly="shell"><b>Ubuntu</b><span>các chương trình Linux, trong đó có chương trình đọc lệnh bạn gõ</span></li>
         <li data-ly="kernel"><b>kernel Linux 6.18</b><span>chạy lệnh thành process Linux</span></li>
-        <li data-ly="hyper"><b>VM của WSL2</b><span>hypervisor cho Linux dùng tối đa 10 GB RAM</span></li>
+        <li data-ly="hyper"><b>VM của WSL2</b><span>hypervisor cho Linux dùng tối đa khoảng 7,6 GB RAM, một nửa RAM của laptop</span></li>
         <li data-ly="hw"><b>phần cứng của laptop</b><span>cùng cái máy với bên trái</span></li>
       </ol>
     </div>
   </div>
   <p class="dual-note" aria-live="polite"></p>
-  <figcaption><b>Hình 2</b> Cùng một lệnh, hai kernel. Bấm một lệnh, hai cửa sổ cùng gõ nó; các ô sáng lên trong chồng layer dưới mỗi cửa sổ cho biết lệnh đi xuống tới layer nào. Output là của máy mình ngày 14/11/2026: laptop 15,2 GB RAM, mức trần RAM của VM WSL2 là 10 GB.</figcaption>
+  <figcaption><b>Hình 2</b> Cùng một lệnh, hai kernel. Bấm một lệnh, hai cửa sổ cùng gõ nó; các ô sáng lên trong chồng layer dưới mỗi cửa sổ cho biết lệnh đi xuống tới layer nào. Output là của máy mình ngày 14/11/2026: laptop 15,2 GB RAM, mức trần RAM của VM WSL2 để mặc định.</figcaption>
 </figure>
 
 <div class="prose">
-<p>Lệnh <code>free</code> in tổng RAM, RAM đã dùng và RAM còn trống; thêm option <code>-h</code> thì số được đổi ra đơn vị dễ đọc. <code>Gi</code> và <code>Mi</code> trong output gần bằng GB và MB. Bấm <code>free -h</code> ở Hình 2 thì Git Bash báo không có lệnh ấy, vì bộ cài Git Bash không mang theo chương trình <code>free</code>. Bên Ubuntu, dòng <code>Mem</code> ghi tổng 10 GB, tức mức trần RAM của VM. Mức trần này mặc định bằng một nửa RAM của laptop, tức khoảng 7,6 GB trên máy mình. Ubuntu thấy 10 GB là vì mình đã chỉnh mức trần lên trong tệp cấu hình của WSL. Máy bạn chưa chỉnh gì thì ra khoảng một nửa RAM.</p>
+<p>Lệnh <code>free</code> in tổng RAM, RAM đã dùng và RAM còn trống; thêm option <code>-h</code> thì số được đổi ra đơn vị dễ đọc. <code>Gi</code> và <code>Mi</code> trong output gần bằng GB và MB. Bấm <code>free -h</code> ở Hình 2 thì Git Bash báo không có lệnh ấy, vì bộ cài Git Bash không mang theo chương trình <code>free</code>. Bên Ubuntu, dòng <code>Mem</code> ghi tổng 7,4 GB, tức mức trần RAM của VM. Mức trần này mặc định bằng một nửa RAM của laptop, tức khoảng 7,6 GB trên máy mình; <code>free</code> in ra thấp hơn một chút vì kernel giữ riêng một phần cho chính nó lúc khởi động. Máy bạn có bao nhiêu RAM thì Ubuntu thấy khoảng một nửa số đó.</p>
 <p>RAM thì mỗi kernel quản lý phần của mình, nhưng Ubuntu và Windows vẫn mở được tệp của nhau. Trong Ubuntu, ổ C của Windows hiện
 ra ở thư mục <code>/mnt/c</code>; trong Windows, tệp của Ubuntu hiện ra ở mục Linux của File Explorer.</p>
 </div>
@@ -389,7 +389,7 @@ trong PATH rồi nhờ kernel tạo process để chạy tệp đó, kể cả <
   <li>Bạn mở một cửa sổ, gõ <code>uname -s</code> và thấy <code>Linux</code>. Cửa sổ ấy có thể là Git Bash không? Nếu cửa sổ ấy là Ubuntu và vừa có một process bị OOM killer giết, <code>sudo dmesg</code> có cho thấy dòng <code>Killed process</code> không?</li>
   <li>Bạn tìm được một bản <code>dmesg</code> biên dịch cho Git Bash rồi cài vào. Chạy nó trên Windows, bạn có đọc được dòng
   <code>Killed process</code> của OOM killer không? Vì sao?</li>
-  <li>Ubuntu đang chạy app mẫu, <code>free -h</code> ghi tổng 10 GB. Bạn tắt app rồi chạy <code>wsl --shutdown</code> trong PowerShell. Lúc này VM của WSL2 còn giữ phần nào trong 15,2 GB RAM của laptop không, và vì sao?</li>
+  <li>Ubuntu đang chạy app mẫu, <code>free -h</code> ghi tổng 7,4 GB. Bạn tắt app rồi chạy <code>wsl --shutdown</code> trong PowerShell. Lúc này VM của WSL2 còn giữ phần nào trong 15,2 GB RAM của laptop không, và vì sao?</li>
   <li>Bạn gõ <code>java -version</code> trong Git Bash và trong Ubuntu, hai cửa sổ in hai bản Java khác nhau. Vì sao cùng một laptop
   mà có hai bản Java, và mỗi bản chạy trên kernel nào?</li>
   <li>Chạy <code>ps -o pid,ppid,comm</code> hai lần liền. PPID của dòng <code>ps</code> có đổi không? PID của nó thì sao?</li>
@@ -428,6 +428,6 @@ trong PATH rồi nhờ kernel tạo process để chạy tệp đó, kể cả <
 
 <script src="../../assets/app.js?v=4e53e8bb"></script>
 <script src="../../assets/terms.js?v=4e53e8bb"></script>
-<script src="lesson.js?v=690707e1"></script>
+<script src="lesson.js?v=20942659"></script>
 </body>
 </html>
