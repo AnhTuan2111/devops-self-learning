@@ -203,17 +203,15 @@ const artCount = makeArt(ROOT, Bauhaus).write({
   lessonIds: allLessons.map((l) => l.id),
 });
 
-const readmeModules = modules.map((m) => {
+// Mục lục là một bảng duy nhất, mỗi module mở bằng một dòng tên in đậm, để GitHub dàn mọi cột cùng một bề rộng.
+const readmeRows = modules.map((m) => {
   const rows = m.lessons.map((l) => {
     const name = hasPage(l) ? `[${l.title}](${SITE}${dirOf(l)}/)` : l.title;
     return `| \`${l.id}\` | ${name} | ${l.needs.join(', ') || 'không'} | ${meta.lab[l.lab]} |`;
   }).join('\n');
-  return `### ${m.id} · ${m.title}
-
-| Số | Bài | Cần biết | Lab |
-|---|---|---|---|
-${rows}`;
-}).join('\n\n');
+  return `| | **${m.id} · ${m.title}** | | |\n${rows}`;
+}).join('\n');
+const readmeModules = `| Số | Bài | Cần biết | Lab |\n|---|---|---|---|\n${readmeRows}`;
 
 const readme = `<a href="${SITE}"><img src="assets/readme/card.svg" width="100%" alt="${meta.title}: khoá tự học DevOps, ${allLessons.length} bài. Bấm để mở bản web."></a>
 
@@ -222,25 +220,9 @@ const readme = `<a href="${SITE}"><img src="assets/readme/card.svg" width="100%"
 Khoá tự học DevOps bằng tiếng Việt, viết cho người đã làm được app Java, Spring Boot nhưng chưa làm việc với server, mạng,
 container hay Kubernetes. Khoá đi từ đường đi của một request trên Internet tới lúc đưa app lên cụm Kubernetes và theo dõi app
 khi nó đã chạy. Mình viết khoá này trong lúc tự học, học tới đâu viết tới đó, nên phần lớn bài trong mục lục dưới đây mới có
-tên, chưa có nội dung. "Lang băm" là cách mình gọi đùa, vì khoá không cấp bằng hay chứng chỉ nào.
+tên, chưa có nội dung. Bài đã viết thì tên bài có link sang bản web.
 
 Bản web của khoá nằm ở ${SITE}.
-
-## Cách đọc mục lục
-
-Mục lục có ${allLessons.length} bài, chia thành ${modules.length} module. Người mới nên đọc từ Bài 00. Bài nào cũng đọc riêng được
-nếu bạn đã biết các khái niệm ghi ở cột "Cần biết" của bài đó; bài ghi "không" thì đọc được ngay.
-
-Bài đã viết thì tên bài có link sang bản web.
-
-Cột "Lab" cho biết phần thực hành của bài làm ở đâu:
-
-- "máy bạn": làm ngay trên máy của bạn.
-- "server": cần một server để thực hành; Bài 11 hướng dẫn cách kiếm một server.
-- "cloud": cần một tài khoản ở một hãng cloud, tức nơi cho thuê máy theo giờ.
-- "GitLab": cần một tài khoản GitLab để lưu code và chạy các bước build, deploy tự động.
-- "cụm Kubernetes": cần một cụm Kubernetes; cụm để thực hành dựng được ngay trên máy của bạn.
-- "chỉ đọc": bài không có phần thực hành.
 
 ## Mục lục
 
