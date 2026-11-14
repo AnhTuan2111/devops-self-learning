@@ -7,7 +7,7 @@
 <meta name="description" content="Bấm like trên facebook.com thì phía sau browser xảy ra những gì: dựng bảy layer của mô hình OSI từ dưới lên, rồi đi theo cú like qua cả bảy layer.">
 <link rel="stylesheet" href="../../assets/style.css?v=04240645">
 <link rel="stylesheet" href="../../assets/terms.css?v=04240645">
-<link rel="stylesheet" href="lesson.css?v=0282ce90">
+<link rel="stylesheet" href="lesson.css?v=35a70695">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="00">
@@ -394,7 +394,7 @@ Dấu <code>$</code> ấy gọi là <strong>prompt</strong>, Git Bash in nó ra 
 dấu ấy, rồi bấm Enter; các dòng còn lại là output máy in ra. Lệnh chạy xong thì dấu <code>$</code> hiện lại và bạn gõ được lệnh
 tiếp. Output là của máy mình ngày 30/10/2026; máy bạn sẽ ra địa chỉ khác nhưng cách đọc vẫn vậy.</p>
 
-<h2 id="lab-1" class="layer-h c2" data-layer="2"><span class="layer-badge c2" role="img" aria-label="layer 2">2</span>Lab 1: địa chỉ MAC</h2>
+<h2 id="lab-1" class="lab-h"><span class="lab-meter" role="img" aria-label="chạm layer 2"><i class="c7"><b>7</b></i><i class="c6"><b>6</b></i><i class="c5"><b>5</b></i><i class="c4"><b>4</b></i><i class="c3"><b>3</b></i><i class="c2 on"><b>2</b></i><i class="c1"><b>1</b></i><em>chạm layer 2</em></span>Lab 1: địa chỉ MAC</h2>
 
 <p>Gõ <code>getmac</code> rồi bấm Enter. Lệnh này in địa chỉ MAC của mọi NIC trên máy.</p>
 
@@ -409,7 +409,7 @@ E8-9C-25-xx-xx-xx   Media disconnected
 là card WiFi đang dùng, dòng giữa ghi <code>Media disconnected</code> là card đang không nối mạng, còn dòng đầu theo mình đoán
 là card ảo do phần mềm <button type="button" class="term" data-term="vpn">VPN</button> tạo ra.</p>
 
-<h2 id="lab-2" class="layer-h c3" data-layer="3"><span class="layer-badge c3" role="img" aria-label="layer 3">3</span>Lab 2: dò chuỗi router</h2>
+<h2 id="lab-2" class="lab-h"><span class="lab-meter" role="img" aria-label="chạm layer 3"><i class="c7"><b>7</b></i><i class="c6"><b>6</b></i><i class="c5"><b>5</b></i><i class="c4"><b>4</b></i><i class="c3 on"><b>3</b></i><i class="c2"><b>2</b></i><i class="c1"><b>1</b></i><em>chạm layer 3</em></span>Lab 2: dò chuỗi router</h2>
 
 <p>Gõ <code>tracert -d facebook.com</code> rồi bấm Enter. <code>tracert</code> liệt kê các router mà packet đi qua, còn option
 <code>-d</code> bảo lệnh đừng đổi địa chỉ IP thành tên. Lệnh in mỗi chặng một dòng và chạy lâu hơn các lab khác; bạn chờ tới khi
@@ -466,7 +466,7 @@ là ba lần thử tính cả đi lẫn về, còn dấu sao là lần thử kh�
 nhà mạng, và cả hai có địa chỉ <code>192.168...</code>, loại địa chỉ chỉ dùng trong mạng nhà. Dòng 6 toàn dấu sao là router
 không trả lời lệnh dò, chứ packet không mất ở đó, vì các dòng sau vẫn có kết quả. Dòng 14 là facebook.com.</p>
 
-<h2 id="lab-3" class="layer-h c7" data-layer="7"><span class="layer-badge c7" role="img" aria-label="layer 7">7</span>Lab 3: hỏi DNS</h2>
+<h2 id="lab-3" class="lab-h"><span class="lab-meter" role="img" aria-label="chạm layer 7"><i class="c7 on"><b>7</b></i><i class="c6"><b>6</b></i><i class="c5"><b>5</b></i><i class="c4"><b>4</b></i><i class="c3"><b>3</b></i><i class="c2"><b>2</b></i><i class="c1"><b>1</b></i><em>chạm layer 7</em></span>Lab 3: hỏi DNS</h2>
 
 <p>Gõ <code>nslookup facebook.com</code> rồi bấm Enter. Lệnh này hỏi DNS địa chỉ của facebook.com.</p>
 
@@ -483,7 +483,7 @@ Addresses:  2a03:2880:f31a:1:face:b00c:0:25de
 Khối dưới là hai địa chỉ của facebook.com: <code>57.144.64.1</code> là địa chỉ IPv4 như ở layer 3, còn dòng dài là địa chỉ
 kiểu mới, IPv6.</p>
 
-<h2 id="lab-4" class="layer-h c4" data-layer="4"><span class="layer-badge c4" role="img" aria-label="layer 4">4</span><span class="layer-badge c7" role="img" aria-label="layer 7">7</span>Lab 4: hai layer trong một lần gọi</h2>
+<h2 id="lab-4" class="lab-h"><span class="lab-meter" role="img" aria-label="chạm layer 4 và 7"><i class="c7 on"><b>7</b></i><i class="c6"><b>6</b></i><i class="c5"><b>5</b></i><i class="c4 on"><b>4</b></i><i class="c3"><b>3</b></i><i class="c2"><b>2</b></i><i class="c1"><b>1</b></i><em>chạm layer 4 và 7</em></span>Lab 4: hai layer trong một lần gọi</h2>
 
 <p>Gõ <code>curl -v -o /dev/null https://www.facebook.com/</code> rồi bấm Enter. <code>curl</code> gửi request HTTP từ dòng
 lệnh. Option <code>-v</code> bảo curl kể lại từng bước, còn <code>-o /dev/null</code> bỏ nội dung trang đi.</p>

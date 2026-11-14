@@ -397,9 +397,17 @@ details.raw pre { margin-top: 10px; }
   #sources > .refs { grid-column: 2 / 4; }
   #sources > .refs { columns: 2; column-gap: 48px; }
   #sources > .refs li { break-inside: avoid; }
-  /* Lab 4 nói hai layer: hai số đứng cạnh nhau trong cột lề, mỗi số rộng nửa cột */
-  .layer-h .layer-badge:has(+ .layer-badge), .layer-h .layer-badge + .layer-badge { width: calc((var(--margin-col) - 12px) / 2); font-size: 92px; }
-  .layer-h .layer-badge + .layer-badge { left: calc(-1 * (var(--margin-col) + 48px) + (var(--margin-col) + 12px) / 2); }
+}
 }
 /* Màn hẹp: số layer đứng đầu tiêu đề lab, cách chữ một khoảng */
 .layer-h > .layer-badge { margin-right: .35em; }
+/* Thước đo layer của mỗi lab: tòa bảy tầng thu nhỏ, layer lab chạm tới thì tô màu của layer ấy, còn lại chỉ có viền */
+.lab-meter { display: grid; gap: 3px; width: 100%; margin: 10px 0 14px; }
+.lab-meter i { display: grid; grid-template-columns: 22px 1fr; align-items: center; height: 20px; border: 2px solid var(--line); color: var(--ink-3); font-style: normal; }
+.lab-meter i b { font: 700 12px/1 var(--f-mono); text-align: center; }
+.lab-meter i.on { background: var(--t); color: var(--t-on); border-color: var(--t); }
+.lab-meter em { font: 700 14px/1.2 var(--f-display); font-style: normal; text-transform: lowercase; margin-top: 6px; }
+@media (min-width: 1100px) {
+  .lab-h { position: relative; }
+  .lab-meter { position: absolute; left: calc(-1 * (var(--margin-col) + 48px)); top: -8px; width: var(--margin-col); margin: 0; }
+}
