@@ -1,7 +1,8 @@
-/* Riêng Bài 04: trang đọc như một buổi ngồi trước terminal. Chữ đi một cột hẹp bên trái, ảnh đứng ở lề phải cạnh đoạn nói về
-   nó, còn mỗi khối lệnh là một dải terminal rộng hết trang, tự gõ lệnh rồi in output khi cuộn tới. Đầu trang là hai cửa sổ Git
-   Bash và Ubuntu gõ cùng lệnh (Hình 1); Hình 2 cho bấm lệnh để xem lệnh xuống tới kernel nào; Hình 3 là vòng lặp của shell.
-   Chữ, ảnh, khối code lấy từ assets/style.css; hành vi ở lesson.js. */
+/* Riêng Bài 04: trang đọc như một trang báo khổ lớn về phòng lab. Đầu trang là lệnh wsl --install in cỡ chữ khổng lồ, tự gõ
+   khi mở trang; chữ chảy thành hai cột báo trải hết bề ngang, ảnh đứng cột thứ ba; mỗi khối lệnh là một dải terminal rộng
+   hết trang, tự gõ lệnh rồi in output khi cuộn tới. Hình 1 là hai cửa sổ Git Bash và Ubuntu gõ cùng lệnh; Hình 2 cho bấm
+   lệnh để xem lệnh xuống tới kernel nào; Hình 3 là vòng lặp của shell. Chữ, ảnh, khối code lấy từ assets/style.css; hành
+   vi ở lesson.js. */
 
 :root {
   --on-color: var(--surface);
@@ -18,11 +19,23 @@
 ::selection { background: var(--yellow); color: var(--ink); }
 .hl::selection { background: var(--blue); color: var(--on-color); }
 
-/* ---------------- Đầu trang: chữ bên trái, hai cửa sổ bên phải ---------------- */
-.lab-head { display: grid; gap: 24px 56px; margin: 30px 0 0; padding: 0 0 30px; border-bottom: var(--rule-xl) solid var(--ink); }
-.lab-head h1 { font-size: clamp(38px, 4.4vw, 66px); margin: 12px 0 16px; }
-@media (min-width: 1100px) { .lab-head { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; } }
-.jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+/* ---------------- Đầu trang: lệnh cài in khổ lớn ----------------
+   Dòng đầu là lệnh wsl --install in cỡ chữ khổng lồ, tự gõ ra khi mở trang. Dưới nó là tiêu đề, lời dẫn và mục lục xếp
+   thành một hàng; Hình 1 (hai cửa sổ) chạy hết bề ngang ở cuối đầu trang. */
+.lab-head { margin: 26px 0 0; padding: 0 0 12px; }
+.big-cmd {
+  margin: 10px 0 0; padding: 0 0 12px; border-bottom: var(--rule-m) solid var(--ink);
+  font: 700 min(8.4vw, 128px)/1.05 var(--f-mono); letter-spacing: -.04em; white-space: nowrap; overflow: hidden; color: var(--ink);
+}
+.big-prompt { color: var(--red); }
+.big-cmd .caret { display: inline-block; width: .55em; height: .9em; margin-left: .06em; vertical-align: -.08em; background: var(--yellow); }
+.lh-row { display: grid; gap: 14px 48px; margin: 22px 0 26px; align-items: start; }
+.lh-row h1 { font-size: clamp(30px, 3.2vw, 46px); margin: 0; }
+@media (min-width: 1100px) {
+  .lh-row { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, .9fr); }
+  .lh-row .jump { margin-top: 0; }
+}
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
 .jump a {
   font: 700 13.5px/1 var(--f-mono); text-transform: lowercase; text-decoration: none; color: var(--term-fg);
   padding: 9px 12px 8px; background: var(--term-bg);
@@ -32,33 +45,48 @@
 .jump a:hover::before { color: var(--ink); }
 .jump a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 
-.twins { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.twins { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .twins figcaption { grid-column: 1 / -1; }
+@media (min-width: 1100px) { .twins figcaption { columns: 2; column-gap: 56px; } }
 .twin { display: grid; }
-.twin-name { margin: 0; padding: 7px 12px 6px; font: 700 13px/1 var(--f-display); text-transform: none; background: var(--sunk); border-top: 6px solid var(--ink); }
+.twin-name { margin: 0; padding: 8px 14px 7px; font: 700 14px/1 var(--f-display); text-transform: none; background: var(--sunk); border-top: 6px solid var(--ink); }
 .twin[data-twin="ubuntu"] .twin-name { border-top-color: var(--red); }
-.twin-screen { margin: 0; min-height: 132px; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.twin-screen { margin: 0; min-height: 150px; font-size: 16px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .twin-screen .hit { background: var(--yellow); color: var(--ink); }
 @media (max-width: 560px) { .twins { grid-template-columns: 1fr; } }
 
-/* ---------------- Chữ một cột, ảnh ở lề phải ---------------- */
+/* ---------------- Chữ: hai cột báo trải hết bề ngang ----------------
+   Khối chữ có từ hai đoạn trở lên thì chảy thành hai cột như trang báo khổ lớn, khối một đoạn đứng một cột rộng 880px
+   cho khỏi bị cắt vụn; tiêu đề, khối code và hình chạy ngang qua
+   cả hai cột. Đoạn có ảnh đi kèm thì ảnh đứng cột thứ ba bên phải. */
 .part { padding: 6px 0 20px; scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); }
 .part h2, .part h3 { scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); }
+.part h2 { font-size: clamp(28px, 3vw, 42px); padding-top: 16px; border-top-width: 10px; }
 .prose { max-width: 76ch; }
 .prose-row { display: grid; gap: 0 56px; align-items: start; }
 @media (min-width: 1100px) {
-  .prose-row { grid-template-columns: minmax(0, 76ch) minmax(0, 1fr); }
+  .prose { max-width: none; }
+  .prose { max-width: 880px; }
+  .prose:has(> p + p) { max-width: none; columns: 2; column-gap: 56px; column-rule: var(--rule-s) solid var(--line); }
+  .prose-row > .prose { max-width: none; }
+  .prose > h2, .prose > h3, .prose > pre, .prose > figure, .prose > .callout, .prose > ul, .prose > ol { column-span: all; }
+  .prose > p { margin-top: 0; break-inside: avoid; }   /* mỗi đoạn trọn trong một cột */
+  .prose-row { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
   .prose-row > figure.aside { margin-top: 64px; }
 }
+.prose code { overflow-wrap: anywhere; }
 figure.photo.aside { display: block; margin: 24px 0; }
 figure.photo.aside > figcaption { border-top: 0; padding-top: 0; margin-top: 10px; }
 figure.photo.aside.small-photo img { max-width: min(100%, 380px); }
 .answer { padding: 16px 20px; background: var(--ink); color: var(--paper); }
 .answer code { background: #2b2925; color: var(--paper); }
 
-/* Tiêu đề bước lab: nhãn bước đứng trước tên bước */
-.step-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-top: 40px; padding-top: 14px; border-top: var(--rule-s) solid var(--ink); }
-.step-h span { font: 800 14px/1 var(--f-display); text-transform: lowercase; background: var(--yellow); padding: 6px 9px 5px; }
+/* Tiêu đề bước lab: số bước in to trong ô vàng, tên bước đứng cạnh */
+.step-h {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 44px; padding-top: 16px;
+  border-top: var(--rule-m) solid var(--ink); font-size: clamp(20px, 2vw, 26px);
+}
+.step-h span { font: 800 clamp(20px, 2vw, 26px)/1 var(--f-display); text-transform: lowercase; background: var(--yellow); padding: 10px 14px 8px; }
 
 /* ---------------- Dải terminal rộng hết trang ---------------- */
 pre.band {
@@ -132,3 +160,8 @@ pre.band .caret { display: inline-block; width: .6em; height: 1.1em; vertical-al
 /* Cột của lưới không được nở theo link dài */
 .check-grid > div, .owners-grid > div, .stop > *, .prose-row > * { min-width: 0; }
 .refs a { overflow-wrap: anywhere; }
+
+/* Ô do hình động tự đổi trạng thái mà đảo màu (nền sáng chữ tối sang nền tối chữ sáng) thì đổi tức thì: chuyển dần thì ở
+   giữa chừng nền và chữ cùng xám, chữ biến mất trong chốc lát. */
+.dual-pick button { transition: none; }
+.side-stack li { transition: border-color .25s; }

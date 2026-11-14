@@ -33,6 +33,14 @@
     }
   }
 
+  // ---------- Đầu trang: lệnh cài tự gõ một lần khi mở trang ----------
+  const big = document.querySelector('.big-typed');
+  if (big && !reduced) {
+    const text = big.textContent;
+    big.textContent = '';
+    (async () => { await wait(400); for (const ch of text) { big.textContent += ch; await wait(70); } })();
+  }
+
   // ---------- Hình 1: hai cửa sổ gõ cùng lệnh, lặp ----------
   const twins = document.querySelector('.twins');
   if (twins && !reduced) {

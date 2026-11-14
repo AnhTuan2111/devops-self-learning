@@ -30,3 +30,45 @@ ghi.
 ## Câu hỏi còn treo
 
 ## Phản ứng thật của mình
+
+## Output lab bằng công cụ Windows (14/11/2026)
+
+Lab đổi sang công cụ có sẵn trên Windows, vì bài chưa dạy WSL. Chạy trên Windows 11, Git Bash (curl 8.10.1) và PowerShell 7.6.
+
+```text
+$ nslookup -norecurse facebook.com 198.41.0.4
+...
+Name:    facebook.com
+Served by:
+- l.gtld-servers.net
+	  192.41.162.30
+	  2001:500:d937::30
+	  com
+...
+
+$ nslookup -norecurse facebook.com 192.5.6.30
+...
+Name:    facebook.com
+Served by:
+- a.ns.facebook.com
+	  129.134.30.12
+	  2a03:2880:f0fc:c:face:b00c:0:35
+	  facebook.com
+...
+
+PS> Resolve-DnsName facebook.com -Type A -Server a.ns.facebook.com -NoRecursion
+facebook.com   A   60   Answer   57.144.64.1
+PS> Resolve-DnsName facebook.com -Type A
+facebook.com   A   60   Answer   57.144.64.1
+# 20 giây sau
+facebook.com   A   40   Answer   57.144.64.1
+
+$ curl -s "https://stat.ripe.net/data/whois/data.json?resource=147.75.211.10"
+{"key":"inetnum","value":"147.75.208.0/20",...}
+{"key":"netname","value":"FB-NET-208-20",...}
+{"key":"country","value":"IL",...}
+```
+
+- Hỏi một server của `com` bằng `Resolve-DnsName` qua UDP thì máy mình báo `DNS server failure`; thêm `-TcpOnly` thì chạy.
+  Lab dùng `nslookup` cho hai bước hỏi root và `com` nên không vướng chỗ này.
+- Chưa chạy lại Lab 5 bằng Wireshark bản Windows: máy chưa cài Wireshark và Npcap.

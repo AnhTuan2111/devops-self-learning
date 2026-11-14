@@ -1,7 +1,7 @@
-/* Riêng Bài 00: mọi thứ thị giác xoay quanh một chồng bảy tầng.
-   Chữ, ảnh, khối chú thích, bảng vẫn lấy từ assets/style.css; tệp này chỉ thêm phần riêng của bài: tòa bảy tầng ở
-   đầu trang, thang máy dính để nhảy tầng, và bốn sơ đồ chạy lặp (hai tòa nhà, đường đi, máy đóng gói, ba máy).
-   Hành vi ở lesson.js. */
+/* Riêng Bài 00: trang dựng như một tòa nhà bảy tầng. Đầu trang là tấm poster bảy dải layer trải hết bề ngang, request like
+   rơi qua từng dải; thang máy là một hàng ngang dính dưới thanh đầu trang; mỗi phần của bài là một tầng, số layer in to ở lề
+   trái. Chữ, ảnh, khối chú thích, bảng vẫn lấy từ assets/style.css; tệp này thêm bố cục và bốn sơ đồ chạy lặp (hai tòa
+   nhà, đường đi, máy đóng gói, ba máy). Hành vi ở lesson.js. */
 
 /* Mỗi tầng một màu, xoay đỏ, vàng, lam, đen như vòng hình của repo */
 .c7, .c3 { --t: var(--red);    --t-on: #fff; }
@@ -12,108 +12,137 @@
 ::selection { background: var(--yellow); color: var(--ink); }
 .hl::selection { background: var(--blue); color: #fff; }
 
-/* ---------------- Đầu trang: chữ bên trái, tòa bảy tầng bên phải ---------------- */
-@media (min-width: 900px) {
-  .hero { grid-template-columns: minmax(0, 1fr) 320px; column-gap: 48px; align-items: center; }
-  .hero > * { grid-column: 1; }
-  .hero > .tower { grid-column: 2; grid-row: 1 / span 4; margin: 0; }
+/* ---------------- Khung trang: rộng hết màn laptop ---------------- */
+:root { --page-max: 1480px; --margin-col: 210px; }
+.wrap { max-width: var(--page-max); padding: 0 24px; }
+.topbar-inner { max-width: var(--page-max); padding-left: 24px; padding-right: 24px; }
+@media (max-width: 700px) { .wrap { padding: 0 16px; } .topbar-inner { padding-left: 16px; padding-right: 16px; } }
+
+/* ---------------- Đầu trang: một tấm poster ----------------
+   Tiêu đề chạy ngang trên cùng, lời dẫn đứng bên phải tiêu đề; bên dưới là bảy dải layer trải hết bề ngang, layer 7 trên
+   cùng, và request like rơi qua từng dải ở mép phải. */
+.hero { margin: 30px 0 0; padding: 0; border-bottom: 0; }
+.hero h1 { font-size: clamp(38px, 5vw, 72px); line-height: 1; letter-spacing: -.035em; margin: 14px 0 18px; }
+@media (min-width: 1100px) {
+  .hero { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); column-gap: 56px; align-items: end; }
+  .hero > .eyebrow { grid-column: 1 / -1; grid-row: 1; }
+  .hero > h1 { grid-column: 1; grid-row: 2; margin-bottom: 0; }
+  .hero > .lede { grid-column: 2; grid-row: 2; }
+  .hero > .meta { grid-column: 2; grid-row: 3; margin-top: 14px; }
+  .hero > .tower { grid-column: 1 / -1; grid-row: 4; }
 }
-@media (max-width: 899px) { .hero > .tower { grid-row: auto; margin: 26px 0 0; } }
+/* Màn hẹp: tòa đứng sau lời dẫn, không theo hàng đầu của .hero-mark chung */
+@media (max-width: 1099px) { .hero > .tower { grid-row: auto; } }
 .tower {
-  position: relative; width: 100%; max-width: 320px; height: auto; margin: 0 0 22px;
-  display: grid; gap: 4px; user-select: none;
+  position: relative; width: 100%; height: auto; margin: 30px 0 0; display: grid; gap: 0; user-select: none;
+  border-top: var(--rule-xl) solid var(--ink);
 }
 .tower .floor {
-  display: grid; grid-template-columns: 34px 1fr; align-items: center; height: 34px;
-  background: var(--surface); transition: background .25s, color .25s;
-  font: 600 13px/1 var(--f-display); text-transform: lowercase; color: var(--ink-2);
+  display: grid; grid-template-columns: 76px minmax(0, 1fr) minmax(0, 1.5fr); align-items: center; height: 54px;
+  background: var(--paper); border-bottom: 2px solid var(--ink);
+  font: 800 25px/1 var(--f-display); text-transform: lowercase; letter-spacing: -.01em; color: var(--ink);
   animation: rise .5s cubic-bezier(.2, .8, .2, 1) both;
 }
-.tower .floor b { display: grid; place-items: center; height: 100%; background: var(--t); color: var(--t-on); font-size: 15px; font-weight: 800; }
-.tower .floor span { padding-left: 12px; }
+.tower .floor b { display: grid; place-items: center; height: 100%; background: var(--t); color: var(--t-on); font-size: 30px; font-weight: 800; }
+.tower .floor span { padding-left: 22px; }
+.tower .floor em { font: 600 16px/1.3 var(--f-sans); font-style: normal; text-transform: none; letter-spacing: 0; color: var(--ink-3); padding-right: 150px; }
 .tower .floor.active { background: var(--t); color: var(--t-on); }
+.tower .floor.active em { color: inherit; }
 .tower .floor:nth-child(1) { animation-delay: .30s; } .tower .floor:nth-child(2) { animation-delay: .25s; }
 .tower .floor:nth-child(3) { animation-delay: .20s; } .tower .floor:nth-child(4) { animation-delay: .15s; }
 .tower .floor:nth-child(5) { animation-delay: .10s; } .tower .floor:nth-child(6) { animation-delay: .05s; }
-/* Gói tin: rơi qua từng tầng, qua tầng 4, 3, 2 thì bọc thêm một lớp màu ở bên trái */
+/* Dòng mô tả chỉ có chỗ khi màn đủ rộng; hẹp hơn thì dải chỉ còn số và tên layer */
+@media (max-width: 1099px) {
+  .tower .floor { grid-template-columns: 64px minmax(0, 1fr); }
+  .tower .floor em { display: none; }
+}
+@media (max-width: 760px) {
+  .tower .floor { grid-template-columns: 52px minmax(0, 1fr); height: 46px; font-size: 19px; }
+  .tower .floor b { font-size: 22px; }
+  .tower .floor span { padding-left: 14px; }
+}
+/* Request like: rơi qua từng dải, qua layer 4, 3, 2 thì bọc thêm một header màu ở bên trái */
 .packet {
-  position: absolute; right: 10px; top: 5px; height: 24px; display: flex;
+  position: absolute; right: 16px; top: 15px; height: 26px; display: flex;
   transition: top .32s cubic-bezier(.6, 0, .3, 1), opacity .3s; pointer-events: none;
 }
 .packet i { width: 0; transition: width .25s; }
 .packet .w2 { background: var(--yellow); } .packet .w3 { background: var(--red); } .packet .w4 { background: var(--ink); }
-.packet.has4 .w4, .packet.has3 .w3, .packet.has2 .w2 { width: 12px; }
+.packet.has4 .w4, .packet.has3 .w3, .packet.has2 .w2 { width: 14px; }
 .packet b {
-  display: grid; place-items: center; padding: 0 9px; background: var(--ink); color: var(--yellow);
-  font: 800 12px/1 var(--f-display); text-transform: lowercase;
+  display: grid; place-items: center; padding: 0 10px; background: var(--ink); color: var(--yellow);
+  font: 800 13px/1 var(--f-display); text-transform: lowercase; outline: 2px solid var(--surface);
 }
 .packet.gone { opacity: 0; }
 
-/* ---------------- Khung: thang máy bên trái, bài bên phải ---------------- */
+/* ---------------- Thang máy: một hàng ngang dính dưới thanh đầu trang ---------------- */
 .layout { display: block; }
-@media (min-width: 1000px) {
-  .layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: 44px; align-items: start; }
-}
-
 .elevator {
   position: sticky; top: var(--topbar-h, 0px); z-index: 30; background: var(--paper);
   display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
-  margin: 0 -16px 18px; padding: 8px 16px; border-bottom: var(--rule-m) solid var(--ink);
+  margin: 0 0 8px; padding: 10px 0; border-bottom: var(--rule-m) solid var(--ink);
 }
 .elevator::-webkit-scrollbar { display: none; }
 .elevator a { text-decoration: none; color: var(--ink); flex: none; }
 .el-extra {
-  display: grid; place-items: center; padding: 0 12px; min-height: 40px;
-  font: 700 13px/1 var(--f-display); text-transform: lowercase; background: var(--surface);
-  transition: background .2s, color .2s;
+  display: grid; place-items: center; padding: 0 14px; min-height: 40px;
+  font: 700 14px/1 var(--f-display); text-transform: lowercase; background: var(--surface);
 }
 .el-stack { display: flex; gap: 4px; flex: none; }
 .el-floor {
   display: grid; place-items: center; width: 40px; min-height: 40px;
-  font: 800 16px/1 var(--f-display); background: var(--surface); transition: background .2s, color .2s;
+  font: 800 16px/1 var(--f-display); background: var(--surface);
 }
 .el-floor span { display: none; }
 .el-floor.active, .el-floor.hint { background: var(--t); color: var(--t-on); }
 .el-extra.active { background: var(--ink); color: var(--paper); }
-
-@media (min-width: 1000px) {
-  .elevator {
-    top: calc(var(--topbar-h, 0px) + 16px); flex-direction: column; gap: 8px; overflow: visible;
-    margin: 0; padding: 0; border: 0; background: none;
-  }
-  .el-extra { place-items: center start; padding: 0 14px; min-height: 38px; font-size: 14px; }
-  .el-stack { flex-direction: column; gap: 3px; padding: 6px 0; border-top: var(--rule-m) solid var(--ink); border-bottom: var(--rule-m) solid var(--ink); }
-  .el-floor { width: 100%; grid-template-columns: 38px 1fr; place-items: center start; min-height: 36px; }
-  .el-floor b { display: grid; place-items: center; width: 38px; height: 36px; background: var(--t); color: var(--t-on); }
-  .el-floor span { display: block; padding-left: 12px; font: 600 13px/1 var(--f-display); text-transform: lowercase; }
+.el-extra:hover, .el-floor:hover { background: var(--yellow); color: var(--ink); }
+@media (min-width: 1200px) {
+  .el-stack { flex: 1 1 auto; }
+  .el-floor { flex: 1 1 0; width: auto; grid-template-columns: 40px auto; place-items: center start; }
+  .el-floor b { display: grid; place-items: center; width: 40px; height: 40px; background: var(--t); color: var(--t-on); }
+  .el-floor span { display: block; padding: 0 12px; font: 600 13px/1 var(--f-display); text-transform: lowercase; }
   .el-floor.active b, .el-floor.hint b { background: transparent; }
-  .el-floor:hover { background: var(--sunk); }
-  .el-floor.active:hover, .el-floor.hint:hover { background: var(--t); }
-  .el-extra:hover { background: var(--yellow); color: var(--ink); }
 }
 
-/* ---------------- Các phần của bài ---------------- */
+/* ---------------- Các phần của bài: mỗi phần là một tầng ----------------
+   Màn rộng chia ba cột: lề trái giữ số layer in to như số tầng sơn trên tường, cột chữ ở giữa, cột phải cho ảnh phụ;
+   hình, bảng, khối code chạy từ cột chữ sang hết mép phải. */
 .part {
-  background: var(--surface); border-top: var(--rule-xl) solid var(--ink);
-  padding: 6px 16px 26px; margin: 0 0 34px; scroll-margin-top: calc(var(--topbar-h, 0px) + 70px);
+  border-top: var(--rule-xl) solid var(--ink);
+  padding: 0 0 40px; margin: 34px 0 0; scroll-margin-top: calc(var(--topbar-h, 0px) + 70px);
 }
-@media (min-width: 700px) { .part { padding: 10px 40px 34px; } }
-.part-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 20px 0 6px; }
-.part-num { display: flex; gap: 3px; }
+.part-head { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 22px 0 18px; }
+.part-num { display: flex; gap: 4px; }
 .part-num i {
-  display: grid; place-items: center; width: 44px; height: 44px; font: 800 20px/1 var(--f-display); font-style: normal;
+  display: grid; place-items: center; width: 52px; height: 52px; font: 800 26px/1 var(--f-display); font-style: normal;
   background: var(--t); color: var(--t-on);
 }
-.part-title { font: 800 clamp(26px, 4vw, 36px)/1.05 var(--f-display); text-transform: lowercase; letter-spacing: -.02em; margin: 0; }
-.part-note { width: 100%; margin: 4px 0 0; font: 600 14px/1.3 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
+.part-title { font: 800 clamp(30px, 4.6vw, 60px)/1 var(--f-display); text-transform: lowercase; letter-spacing: -.03em; margin: 0; }
+.part-note { width: 100%; margin: 4px 0 0; font: 600 15px/1.3 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
 @media (min-width: 700px) { .part-note { width: auto; margin: 0 0 0 auto; } }
 
-/* Tiêu đề tầng: ô số màu đứng vào chỗ của con số trong câu, "Tầng [7] Application: ..." */
+/* Tiêu đề layer: ô số màu đứng vào chỗ của con số trong câu, "Layer [7] Application: ..." */
 .layer-badge {
   display: inline-grid; place-items: center; width: 1.25em; height: 1.25em; margin: 0 .1em; vertical-align: -.18em;
   background: var(--t); color: var(--t-on); font-weight: 800; line-height: 1;
 }
 .part h2 { scroll-margin-top: calc(var(--topbar-h, 0px) + 70px); }
+
+@media (min-width: 1100px) {
+  .part { display: grid; grid-template-columns: var(--margin-col) minmax(0, 74ch) minmax(0, 1fr); column-gap: 48px; align-content: start; }
+  .part > * { grid-column: 2; min-width: 0; }
+  .part > .part-head { grid-column: 1 / -1; }
+  .part > figure.fig, .part > .table-scroll, .part > pre, .part > .callout { grid-column: 2 / -1; }
+  .part > figure.photo.side { grid-column: 3; grid-row: span 4; float: none; width: auto; margin: 6px 0 22px; align-self: start; }
+  .part > figure.photo.side img { width: 100%; height: auto; }
+  /* Số layer bật ra lề trái, in to, câu tiêu đề vẫn đọc liền "Layer Physical: ..." */
+  .layer-h { position: relative; }
+  .layer-h .layer-badge {
+    position: absolute; left: calc(-1 * (var(--margin-col) + 48px)); top: -8px;
+    width: var(--margin-col); height: 150px; margin: 0; font-size: 116px; letter-spacing: -.04em;
+  }
+}
 
 /* Hiện dần khi cuộn tới (lesson.js gắn .reveal rồi .shown) */
 .reveal { opacity: 0; translate: 0 22px; transition: opacity .5s ease-out, translate .5s cubic-bezier(.2, .8, .2, 1); }
@@ -134,7 +163,7 @@
 .tower-label { margin: 0 0 6px; font: 700 13px/1.3 var(--f-display); text-transform: lowercase; color: var(--ink-2); }
 .tower-col .cell {
   display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; min-height: 46px;
-  background: var(--paper); transition: background .2s, color .2s; cursor: default;
+  background: var(--paper); cursor: default;
 }
 .tower-col .cell b { display: grid; place-items: center; align-self: stretch; background: var(--t); color: var(--t-on); font: 800 15px/1 var(--f-display); }
 .tower-col .cell span { padding: 6px 10px; font-size: 13.5px; line-height: 1.3; }
@@ -295,7 +324,7 @@ details.raw pre { margin-top: 10px; }
   .three-hosts { gap: 0 6px; }
   .host-cell { grid-template-columns: 24px minmax(0, 1fr); font-size: 11px; }
   .host-cell span { padding-left: 5px; }
-  .host-gap { font-size: 10.5px; }
+  .host-gap { font-size: 11px; }
 }
 
 /* ---------------- Bảng 1: rê lên một dòng thì thang máy sáng tầng tương ứng ---------------- */
@@ -310,3 +339,8 @@ details.raw pre { margin-top: 10px; }
   .reveal { opacity: 1; translate: none; }
   .tcp-header .th-field, .route li.hop, .encap-block { opacity: 1; translate: none; }
 }
+
+/* Ô do hình động tự đổi trạng thái mà đảo màu (nền sáng chữ tối sang nền tối chữ sáng) thì đổi tức thì: chuyển dần thì ở
+   giữa chừng nền và chữ cùng xám, chữ biến mất trong chốc lát. */
+.tower .floor, .host-cell { transition: none; }
+.encap-phase { transition: border-color .2s; }

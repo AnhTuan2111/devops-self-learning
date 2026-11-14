@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 01: TCP/IP, Internet chạy thế nào</title>
 <meta name="description" content="Internet chạy bằng bộ protocol TCP/IP: dữ liệu được cắt thành packet, router tra routing table để chuyển từng packet, các nhà mạng announce đường cho nhau bằng BGP, còn DNS là một hệ thống tên chia theo cấp. Cuối bài bắt packet thật bằng tshark.">
-<link rel="stylesheet" href="../../assets/style.css?v=4e53e8bb">
-<link rel="stylesheet" href="../../assets/terms.css?v=4e53e8bb">
-<link rel="stylesheet" href="lesson.css?v=4b1e5bec">
+<link rel="stylesheet" href="../../assets/style.css?v=8257e0ab">
+<link rel="stylesheet" href="../../assets/terms.css?v=8257e0ab">
+<link rel="stylesheet" href="lesson.css?v=6b45618c">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="01">
@@ -25,7 +25,7 @@
   <p class="lede">Một cú like không đi thành một khối mà thành hàng chục packet, và mỗi packet có thể đi một đường riêng. Vậy
   router dựa vào đâu để chọn hướng cho từng packet, và trước đó cái tên facebook.com được đổi ra địa chỉ ở đâu?</p>
   <div class="meta">
-    <span class="chip">Lab: Git Bash và WSL trên máy bạn</span>
+    <span class="chip">Lab: Git Bash, PowerShell, Wireshark trên máy bạn</span>
   </div>
   <figure class="hero-mark mesh" aria-label="Bốn packet của cùng một request đi bốn đường khác nhau qua một lưới router, tới nơi lộn thứ tự, một packet bị mất và được gửi lại, cuối cùng được ráp lại theo sequence number.">
     <svg class="mesh-svg" viewBox="0 0 360 230" aria-hidden="true"></svg>
@@ -59,8 +59,7 @@
 
 <h2 id="no-osi-on-the-wire">Không có protocol nào tên OSI</h2>
 
-<p>Bắt các packet đi qua NIC rồi đọc từng layer bên trong, việc mà phần Lab cuối bài sẽ làm, thì bạn không gặp giao
-thức nào tên OSI. Bạn gặp <button type="button" class="term" data-term="ethernet">Ethernet</button>, IP, TCP, UDP, HTTP và
+<p>Bắt các packet đi qua NIC rồi đọc từng layer bên trong, việc mà phần Lab cuối bài sẽ làm, thì bạn không gặp protocol nào tên OSI. Bạn gặp <button type="button" class="term" data-term="ethernet">Ethernet</button>, IP, TCP, UDP, HTTP và
 DNS. Trừ Ethernet là chuẩn của mạng có dây, các protocol ấy thuộc bộ <strong>TCP/IP</strong>, bộ protocol mà Internet
 đang chạy.</p>
 
@@ -214,7 +213,7 @@ hai dòng <code>127...</code> là <code>localhost</code>, còn dòng <code>10.88
 <code>0.0.0.0/0</code> khớp mọi địa chỉ và giao packet cho cục phát WiFi; dòng ấy gọi là <strong>default route</strong>, hay
 default route.</p>
 
-<h2 id="longest-prefix">Khớp dài nhất thắng</h2>
+<h2 id="longest-prefix">Longest prefix match thắng</h2>
 
 <p>Một địa chỉ có thể khớp nhiều dòng cùng lúc, ví dụ <code>127.0.0.1</code> khớp cả <code>0.0.0.0/0</code>,
 <code>127.0.0.0/8</code> lẫn <code>127.0.0.1/32</code>. Khi đó dòng có prefix dài nhất thắng, vì dòng ấy nói về đích cụ thể
@@ -261,8 +260,7 @@ Internet.</p>
 một ô tên là <strong>TTL</strong> (Time to Live). Máy gửi đặt sẵn một con số vào ô này, Linux là 64, Windows là 128, router
 nào chuyển packet đi cũng trừ con số ấy đi 1, và packet có TTL về 0 thì bị bỏ.</p>
 
-<p>Router bỏ packet thường gửi về cho máy gửi một lời báo bằng <strong>ICMP</strong> (Internet Control Message Protocol), giao
-thức báo lỗi ở layer 3. Lời báo vì TTL về 0 tên là Time Exceeded, và địa chỉ gửi của lời báo là địa chỉ của router đã bỏ
+<p>Router bỏ packet thường gửi về cho máy gửi một lời báo bằng <strong>ICMP</strong> (Internet Control Message Protocol), protocol báo lỗi ở layer 3. Lời báo vì TTL về 0 tên là Time Exceeded, và địa chỉ gửi của lời báo là địa chỉ của router đã bỏ
 packet.</p>
 
 <h2 id="tracert-explained">Lệnh tracert ở Bài 00 chạy bằng TTL</h2>
@@ -279,7 +277,7 @@ gửi ba lần, nên mỗi dòng của tracert có ba con số thời gian.</p>
     <span class="p-node r" data-hop="2">router 2</span>
     <span class="p-node r" data-hop="3">router 3</span>
     <span class="p-node r" data-hop="4">router 4</span>
-    <span class="p-node dst" data-hop="5">facebook.com</span>
+    <span class="p-node dst" data-hop="5">facebook.<wbr>com</span>
     <span class="probe-pkt" aria-hidden="true"><b>TTL</b><em>1</em></span>
   </div>
   <ol class="probe-log" aria-live="polite">
@@ -428,32 +426,21 @@ bằng BGP.</p>
 <section class="part" id="lab">
 <header class="part-head"><p class="part-title">lab</p><p class="part-note">Routing table, TTL, DNS, BGP và bắt packet</p></header>
 
-<p>Lab chạy trong Git Bash cho lệnh của Windows và trong WSL Ubuntu cho lệnh của Linux, và output là của máy mình ngày
-30/10/2026. Chưa có WSL thì bạn chạy <code>wsl --install</code> trong PowerShell mở bằng quyền quản trị, rồi khởi động lại
-máy. Trong WSL, cài dig, whois và tshark, bản dòng lệnh của
-<button type="button" class="term" data-term="wireshark">Wireshark</button>, bằng lệnh dưới; lệnh có
-<button type="button" class="term" data-term="sudo">sudo</button> nên sẽ hỏi mật khẩu bạn đặt lúc cài Ubuntu.</p>
-
-<pre><code># WSL Ubuntu: dig, whois và tshark
-sudo apt update
-sudo apt install -y dnsutils whois tshark</code></pre>
+<p>Lab chỉ dùng những thứ có sẵn hoặc cài được bằng bộ cài trên Windows: Git Bash cho <code>route</code>, <code>ping</code>,
+<code>nslookup</code> và <code>curl</code>, PowerShell cho một lệnh hỏi DNS, và
+<button type="button" class="term" data-term="wireshark">Wireshark</button> bản có giao diện cho bước bắt packet. Output là
+của máy mình, Windows 11, chạy ngày 14/11/2026 trừ khi khối output ghi ngày khác; chỗ có <code>...</code> là mình lược bớt.</p>
 
 <h2 id="lab-1">Lab 1: đọc routing table của máy bạn</h2>
 
-<pre><code># Git Bash trên Windows
-route print -4
+<p>Lệnh <code>route print</code> in routing table của Windows, còn <code>-4</code> bảo nó chỉ in phần IPv4 cho đỡ dài.</p>
 
-# WSL Ubuntu
-ip route</code></pre>
+<pre><code># Git Bash
+route print -4</code></pre>
 
-<p>Trên Windows, dòng <code>0.0.0.0</code> cho biết địa chỉ cục phát WiFi của bạn. Trong WSL, bảng ngắn hơn nhiều.</p>
-
-<pre><code>$ ip route
-default via 172.21.16.1 dev eth0 proto kernel
-172.21.16.0/20 dev eth0 proto kernel scope link src 172.21.21.136</code></pre>
-
-<p>Đường mặc định của WSL đẩy mọi thứ cho <code>172.21.16.1</code>, tức Windows, nên packet từ WSL ra Internet còn đi qua bảng
-route của Windows thêm một lần.</p>
+<p>Tìm khối <code>IPv4 Route Table</code>, rồi tìm dòng có Network Destination là <code>0.0.0.0</code> và Netmask là
+<code>0.0.0.0</code>. Đó là default route, và cột Gateway của dòng ấy là địa chỉ cục phát WiFi của bạn, giống dòng đầu của
+Hình 3. Máy bạn có thể nhiều dòng hơn hay ít dòng hơn Hình 3, tuỳ số NIC và mạng ảo đang bật.</p>
 
 <h2 id="lab-2">Lab 2: tự dò từng chặng bằng TTL</h2>
 
@@ -472,7 +459,7 @@ $ ping -n 1 -i 3 facebook.com
 Reply from (router nhà mạng, đã ẩn): TTL expired in transit.</code></pre>
 
 <p>Ba dòng này là ba dòng đầu của tracert, làm bằng tay. Bỏ option <code>-i</code> thì packet đi với TTL mặc định và tới được
-facebook.com. Dòng dưới mình chạy ngày 14/11/2026:</p>
+facebook.com:</p>
 
 <pre><code>$ ping -n 1 facebook.com
 Pinging facebook.com [57.144.64.1] with 32 bytes of data:
@@ -482,18 +469,83 @@ Reply from 57.144.64.1: bytes=32 time=24ms TTL=51</code></pre>
 
 <h2 id="lab-3">Lab 3: đi hỏi DNS từng cấp</h2>
 
-<pre><code># WSL Ubuntu
-dig +trace +nodnssec facebook.com @1.1.1.1
-dig +noall +answer facebook.com
-dig +noall +answer +norec facebook.com @c.ns.facebook.com</code></pre>
+<p>Hình 7 là resolver đi hỏi từng cấp. Bạn tự làm lại các bước ấy bằng <code>nslookup</code>, lệnh hỏi DNS có sẵn trong
+Windows. Viết địa chỉ một server DNS ở cuối lệnh thì <code>nslookup</code> hỏi thẳng server ấy chứ không hỏi resolver, còn
+option <code>-norecurse</code> dặn server đừng đi hỏi hộ, biết tới đâu thì trả lời tới đó. Hỏi root trước;
+<code>198.41.0.4</code> là địa chỉ của <code>a.root-servers.net</code>.</p>
 
-<p>Lệnh đầu cho ra Hình 7; trên máy mình phải thêm <code>@1.1.1.1</code>, vì resolver mặc định của WSL không trả lời câu hỏi
-xin danh sách server gốc. Hai lệnh sau dùng để so TTL: hỏi qua resolver thì TTL thường nhỏ hơn 60 vì câu trả lời đã nằm
-trong cache được một lúc, còn hỏi thẳng authoritative server thì lúc nào cũng được 60.</p>
+<pre><code>$ nslookup -norecurse facebook.com 198.41.0.4
+in-addr.arpa	nameserver = f.in-addr-servers.arpa
+...
+Server:  UnKnown
+Address:  198.41.0.4
+
+Name:    facebook.com
+Served by:
+- l.gtld-servers.net
+	  192.41.162.30
+	  2001:500:d937::30
+	  com
+- j.gtld-servers.net
+	  192.48.79.30
+	  2001:502:7094::30
+...</code></pre>
+
+<p>Mấy dòng trước <code>Server:</code> là <code>nslookup</code> đi hỏi tên của chính server ấy, bỏ qua được. Câu trả lời
+nằm dưới dòng <code>Name:</code>: root không biết facebook.com ở đâu, nên chỉ sang các server giữ <code>com</code>, như
+<code>l.gtld-servers.net</code>. Hỏi tiếp một server của <code>com</code>; <code>192.5.6.30</code> là
+<code>a.gtld-servers.net</code>.</p>
+
+<pre><code>$ nslookup -norecurse facebook.com 192.5.6.30
+...
+Name:    facebook.com
+Served by:
+- a.ns.facebook.com
+	  129.134.30.12
+	  2a03:2880:f0fc:c:face:b00c:0:35
+	  facebook.com
+- b.ns.facebook.com
+	  129.134.31.12
+	  2a03:2880:f0fd:c:face:b00c:0:35
+	  facebook.com
+...</code></pre>
+
+<p>Lần này <code>com</code> chỉ sang <code>a.ns.facebook.com</code>, authoritative server của facebook.com. Còn một bước
+nữa là hỏi chính server ấy, và để thấy TTL của câu trả lời thì dùng <code>Resolve-DnsName</code>, lệnh hỏi DNS của
+PowerShell, vì nó in TTL thành một cột riêng. Mở PowerShell bằng cách gõ PowerShell ở menu Start. Option
+<code>-Type A</code> chỉ xin địa chỉ IPv4, <code>-Server</code> chọn server để hỏi, <code>-NoRecursion</code> giống
+<code>-norecurse</code> của <code>nslookup</code>; bỏ <code>-Server</code> thì lệnh hỏi resolver như mọi chương trình trên
+máy.</p>
+
+<pre><code>PS&gt; Resolve-DnsName facebook.com -Type A -Server a.ns.facebook.com -NoRecursion
+
+Name                                           Type   TTL   Section    IPAddress
+----                                           ----   ---   -------    ---------
+facebook.com                                   A      60    Answer     57.144.64.1
+
+PS&gt; Resolve-DnsName facebook.com -Type A
+
+Name                                           Type   TTL   Section    IPAddress
+----                                           ----   ---   -------    ---------
+facebook.com                                   A      60    Answer     57.144.64.1
+
+# 20 giây sau, gõ lại lệnh trên
+PS&gt; Resolve-DnsName facebook.com -Type A
+
+Name                                           Type   TTL   Section    IPAddress
+----                                           ----   ---   -------    ---------
+facebook.com                                   A      40    Answer     57.144.64.1</code></pre>
+
+<p>Authoritative server lúc nào cũng trả TTL 60. Hỏi qua resolver thì lần đầu cũng 60, vì resolver vừa đi hỏi xong, còn 20
+giây sau chỉ còn 40, vì resolver lấy câu trả lời trong cache và TTL đã đếm lùi trong lúc nằm đó. Chạy lại tới khi TTL về gần 0
+thì lần sau nó nhảy lên 60, nghĩa là resolver đã bỏ câu trả lời cũ và đi hỏi lại.</p>
 
 <h2 id="lab-4">Lab 4: tra AS của một địa chỉ</h2>
 
-<pre><code># Git Bash hoặc WSL, cần mạng
+<p>RIPEstat, dịch vụ tra cứu của RIPE NCC, trả lời bằng JSON qua một URL, nên gọi bằng <code>curl</code> là đủ; option
+<code>-s</code> bảo curl không in thanh tiến độ.</p>
+
+<pre><code># Git Bash, cần mạng
 curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=57.144.64.1"</code></pre>
 
 <p>Khối JSON trả về khá dài, mình rút ra ba trường cần đọc.</p>
@@ -504,39 +556,47 @@ curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=57.144.64
 
 <p><code>announced</code> cho biết dải đang được announce trên BGP, còn <code>asns</code> là AS announce dải ấy. Thử với địa
 chỉ các chặng trong tracert ở Bài 00 thì bạn sẽ thấy từ chặng 10, packet đã vào mạng của Facebook. Địa chỉ nào ra
-<code>"announced": false</code> thì tra tiếp xem ai đăng ký dải chứa nó bằng whois.</p>
+<code>"announced": false</code> thì tra xem ai đăng ký dải chứa nó, cũng qua RIPEstat:</p>
 
-<pre><code># WSL Ubuntu
-whois 147.75.211.10</code></pre>
+<pre><code>$ curl -s "https://stat.ripe.net/data/whois/data.json?resource=147.75.211.10"
+...{"key":"inetnum","value":"147.75.208.0/20",...}
+{"key":"netname","value":"FB-NET-208-20",...}
+{"key":"country","value":"IL",...}...</code></pre>
+
+<p>Trường <code>netname</code> là tên người đăng ký đặt cho dải. Dải <code>147.75.208.0/20</code> mang tên
+<code>FB-NET-208-20</code>, tức vẫn là của Facebook, chỉ là lúc ấy không được announce trên BGP.</p>
 
 <h2 id="lab-5">Lab 5: bắt packet bằng Wireshark</h2>
 
-<p>Wireshark bắt các packet đi qua NIC rồi bóc từng layer cho bạn đọc. Ảnh 4 là bản có giao diện, còn lab dùng
-<code>tshark</code>, bản dòng lệnh, đã cài ở đầu lab.</p>
+<p>Wireshark bắt các packet đi qua NIC rồi bóc từng layer cho bạn đọc. Ảnh 4 là một packet hỏi DNS mở trong Wireshark.</p>
 
 <figure class="fig photo shot">
   <a class="img-src" href="https://commons.wikimedia.org/wiki/File:Wireshark_Network_Analyzer_Screen.png" data-credit="Ảnh: Laurachappell · Wikimedia Commons · CC BY-SA 4.0, đã cắt và vẽ thêm khung màu" aria-label="Nguồn ảnh: Laurachappell · Wikimedia Commons · CC BY-SA 4.0"><img src="img/wireshark-dns.webp" width="1149" height="200" loading="lazy" alt="Giao diện Wireshark: một dòng DNS packet hỏi www.google.com, bên dưới là các dòng Frame, Ethernet II, Internet Protocol Version 4, User Datagram Protocol, Domain Name System xếp chồng."></a>
   <figcaption><b>Ảnh 4</b> Một packet hỏi DNS mở bằng Wireshark, các layer xếp từ ngoài vào trong:
   <span class="kw"><i class="key k-red" aria-hidden="true"></i>MAC header</span> (Wireshark gọi là Ethernet II),
-  <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>header IPv4</span>,
+  <span class="kw"><i class="key k-yellow" aria-hidden="true"></i>IPv4 header</span>,
   <span class="kw"><i class="key k-blue" aria-hidden="true"></i>UDP header</span>, và cuối cùng là câu hỏi DNS.</figcaption>
 </figure>
 
-<p>Lệnh <code>tshark</code> ở dòng thứ hai chạy ở nền, nhờ dấu <code>&amp;</code> ở cuối dòng, để bắt mọi packet có port 80
-trong 10 giây và ghi vào tệp, trong lúc dòng thứ ba chạy curl. Dòng <code>sudo -v</code> chạy trước để sudo nhớ mật khẩu,
-vì lệnh chạy ở nền không hỏi mật khẩu được.</p>
+<ol class="lab-steps">
+  <li>Tải bộ cài Windows ở trang <a href="https://www.wireshark.org/download.html">wireshark.org/download.html</a> rồi cài,
+  giữ các lựa chọn mặc định. Bộ cài cài kèm Npcap, phần giúp Wireshark đọc được packet đi qua NIC trên Windows.</li>
+  <li>Mở Wireshark. Màn đầu liệt kê các NIC, mỗi NIC kèm một đường lượn nhỏ; NIC đang có mạng thì đường ấy nhấp nhô, thường
+  tên là Wi-Fi hay Ethernet.</li>
+  <li>Ở ô <em>using this filter</em> phía trên danh sách, gõ <code>tcp port 80</code>. Đây là capture filter: Wireshark chỉ
+  giữ packet đi tới hay đi từ port 80, nên danh sách không lẫn packet của các chương trình khác. Rồi bấm đúp vào NIC đang
+  nhấp nhô để bắt đầu bắt.</li>
+  <li>Sang Git Bash, chạy <code>curl -s -o /dev/null http://example.com/</code>. Option <code>-o /dev/null</code> bỏ phần thân
+  trang đi cho Git Bash khỏi in ra cả trang HTML.</li>
+  <li>Quay lại Wireshark, bấm nút hình vuông đỏ trên thanh công cụ để dừng. Danh sách còn khoảng 12 packet, giống Bảng 1.</li>
+  <li>Bấm vào packet có cột Info ghi <code>GET / HTTP/1.1</code>, thường là packet số 4. Khung giữa bóc packet ấy thành từng
+  layer như Ảnh 4, khung dưới in mọi byte của nó dạng
+  <button type="button" class="term" data-term="hex">hex</button>, như Hình 9.</li>
+</ol>
 
-<pre><code># WSL Ubuntu
-sudo -v
-sudo tshark -i eth0 -f "tcp port 80" -a duration:10 -w /tmp/http.pcapng &amp;
-sleep 2; curl -s -o /dev/null http://example.com/; wait
-
-sudo tshark -n -r /tmp/http.pcapng
-sudo tshark -n -r /tmp/http.pcapng -Y frame.number==4 -O eth,ip,tcp,http -x</code></pre>
-
-<p><code>tshark -n -r</code> đọc lại tệp vừa bắt và in 12 packet như Bảng 1. Lệnh cuối mở riêng packet 4, packet chở request GET,
-kèm toàn bộ byte dưới dạng <button type="button" class="term" data-term="hex">hex</button>, và Hình 9 dựng lại 141 byte
-ấy.</p>
+<p>Mình chưa chạy lại lab này bằng Wireshark bản Windows. Bảng 1 và Hình 9 là packet mình bắt ngày 30/10/2026 bằng
+<code>tshark</code>, bản dòng lệnh của Wireshark, trong WSL, nên địa chỉ IP, port và số byte trên máy bạn sẽ khác, còn thứ tự
+các layer và vị trí từng ô trong header thì giống.</p>
 
 <figure class="fig">
 <div class="dissect">
@@ -588,7 +648,7 @@ port 80 của server, còn 75 byte cuối là request HTTP, đọc thẳng đư�
   <li>Nói được AS là gì, BGP báo cho nhau điều gì, và đọc được AS path <code>6939 1299 32934</code></li>
   <li>Kể lại được vì sao ngày 4/10/2021 server DNS của Facebook vẫn chạy mà không ai tới được</li>
   <li>Kể được resolver đi qua những cấp nào để đổi facebook.com ra địa chỉ, và TTL trong câu trả lời DNS cho biết điều gì</li>
-  <li>Bắt được packet của một request bằng <code>tshark</code> và chỉ ra byte nào là TTL, byte nào là port</li>
+  <li>Bắt được packet của một request bằng Wireshark và chỉ ra byte nào là TTL, byte nào là port</li>
 </ul>
 
 <h2 id="sources">Nguồn đọc thêm</h2>
@@ -618,8 +678,12 @@ port 80 của server, còn 75 byte cuối là request HTTP, đọc thẳng đư�
   <a href="https://stat.ripe.net/docs/data_api">stat.ripe.net/docs/data_api</a></li>
   <li>Microsoft, trang hướng dẫn lệnh <code>tracert</code>.
   <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/tracert">learn.microsoft.com/…/windows-commands/tracert</a></li>
-  <li>Wireshark, trang hướng dẫn của <code>tshark</code> bản 4.6.
-  <a href="https://www.wireshark.org/docs/man-pages/tshark.html">wireshark.org/docs/man-pages/tshark.html</a></li>
+  <li>Wireshark User's Guide, chương Capturing Live Network Data: màn đầu, capture filter, nút dừng.
+  <a href="https://www.wireshark.org/docs/wsug_html_chunked/ChapterCapture.html">wireshark.org/docs/wsug_html_chunked/ChapterCapture.html</a></li>
+  <li>Microsoft, trang hướng dẫn lệnh <code>nslookup</code>.
+  <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup">learn.microsoft.com/…/windows-commands/nslookup</a></li>
+  <li>Microsoft, trang hướng dẫn lệnh <code>Resolve-DnsName</code> của PowerShell.
+  <a href="https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname">learn.microsoft.com/…/dnsclient/resolve-dnsname</a></li>
 </ol>
 
 </section>
@@ -641,8 +705,8 @@ port 80 của server, còn 75 byte cuối là request HTTP, đọc thẳng đư�
 
 </div>
 
-<script src="../../assets/app.js?v=4e53e8bb"></script>
-<script src="../../assets/terms.js?v=4e53e8bb"></script>
-<script src="lesson.js?v=3df6a710"></script>
+<script src="../../assets/app.js?v=8257e0ab"></script>
+<script src="../../assets/terms.js?v=8257e0ab"></script>
+<script src="lesson.js?v=7c22af15"></script>
 </body>
 </html>

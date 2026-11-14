@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bài 02: Người làm DevOps nắm chỗ nào trong các layer</title>
 <meta name="description" content="Từ lúc người dùng gõ domain, request đi qua DNS, firewall, Nginx, TLS handshake, tới app rồi database. Mỗi chỗ hỏng cho ra một lời báo khác nhau, nên biết chương trình nào viết ra lời báo là biết request dừng ở đâu, và hầu hết các chỗ ấy là việc của người làm DevOps.">
-<link rel="stylesheet" href="../../assets/style.css?v=4e53e8bb">
-<link rel="stylesheet" href="../../assets/terms.css?v=4e53e8bb">
-<link rel="stylesheet" href="lesson.css?v=82ceb2a5">
+<link rel="stylesheet" href="../../assets/style.css?v=8257e0ab">
+<link rel="stylesheet" href="../../assets/terms.css?v=8257e0ab">
+<link rel="stylesheet" href="lesson.css?v=7dc7a173">
 <link rel="icon" href="../../assets/favicon.svg">
 </head>
 <body data-lesson="02">
@@ -24,6 +24,8 @@
   <h1>Người làm DevOps nắm <span class="hl">chỗ nào trong các layer</span></h1>
   <p class="lede">App chạy ngon ở <code>localhost:8080</code>, đưa lên server thì người dùng báo không vào được. App của bạn ghi một dòng log mỗi khi nhận một request, vậy mà log không có dòng nào về request của họ. Request đã dừng ở đâu, và chỗ đó là việc của ai?</p>
 </header>
+
+<main id="content">
 
 <!-- Phần: đường đi -->
 <section class="path" id="path">
@@ -251,10 +253,12 @@ java.net.ConnectException: Connection refused (connect failed)</code></pre>
 
 <div class="wp-head">
   <h2 id="every-error-has-an-author">Mỗi lời báo lỗi có một chương trình viết ra</h2>
-  <p>Ở cả sáu chỗ trên đường đi, từ DNS tới database, lời báo lỗi nào người dùng thấy cũng do một chương trình viết ra: curl hay browser, Nginx, hoặc app.
-  Biết ai viết thì biết request đã đi tới đâu. Có status code như 502, 500 là request đã qua DNS, firewall, Nginx và TLS handshake, vì phải có chương
-  trình đọc được request mới viết ra status code. Không có status code mà chỉ có dòng lỗi của curl hay trang lỗi của browser thì chưa có chương trình nào đọc được request.</p>
-  <p>Trong Hình 3, bấm vào một chỗ để làm hỏng nó: request đi lại từ đầu, dừng ở chỗ hỏng đầu tiên, và ô "lời báo nhận được" hiện thứ người dùng thấy ở chỗ hỏng, kèm tên chương trình đã viết ra nó.</p>
+  <div class="wp-text">
+    <p>Ở cả sáu chỗ trên đường đi, từ DNS tới database, lời báo lỗi nào người dùng thấy cũng do một chương trình viết ra: curl hay browser, Nginx, hoặc app.
+    Biết ai viết thì biết request đã đi tới đâu. Có status code như 502, 500 là request đã qua DNS, firewall, Nginx và TLS handshake, vì phải có chương
+    trình đọc được request mới viết ra status code. Không có status code mà chỉ có dòng lỗi của curl hay trang lỗi của browser thì chưa có chương trình nào đọc được request.</p>
+    <p>Trong Hình 3, bấm vào một chỗ để làm hỏng nó: request đi lại từ đầu, dừng ở chỗ hỏng đầu tiên, và ô "lời báo nhận được" hiện thứ người dùng thấy ở chỗ hỏng, kèm tên chương trình đã viết ra nó.</p>
+  </div>
 </div>
 
 <figure class="fig">
@@ -339,12 +343,14 @@ path cần đọc database. Ở ô database, curl chỉ nhận được status c
 
 <div class="wp-head">
   <h2 id="breaks-by-itself">Chỗ tự hỏng khi không ai đụng vào</h2>
-  <p>Code chỉ đổi khi có người sửa, còn nhiều chỗ quanh app thì tự hỏng theo thời gian, nên người làm DevOps phải canh cả những ngày chẳng ai đụng vào server. Certificate TLS có hạn dùng, thường vài
-  tháng, nên app không đổi gì mà tới ngày certificate hết hạn thì người dùng thấy trang cảnh báo như Ảnh 4. Domain cũng có hạn dùng,
-  quên gia hạn lâu thì tên bị xoá, và DNS trả NXDOMAIN như Ảnh 1. App ghi log mỗi ngày một ít, để lâu thì đầy ổ đĩa của server,
-  database không ghi được nữa, và những request cần ghi dữ liệu bắt đầu nhận 500 dù không ai đưa bản mới nào lên.</p>
-  <p>Kéo thanh ngày ở Hình 4 hay bấm chạy để thời gian trôi trên một server không ai đụng vào, rồi bấm gia hạn, dọn log để xem
-  lời báo của người dùng đổi theo.</p>
+  <div class="wp-text">
+    <p>Code chỉ đổi khi có người sửa, còn nhiều chỗ quanh app thì tự hỏng theo thời gian, nên người làm DevOps phải canh cả những ngày chẳng ai đụng vào server. Certificate TLS có hạn dùng, thường vài
+    tháng, nên app không đổi gì mà tới ngày certificate hết hạn thì người dùng thấy trang cảnh báo như Ảnh 4. Domain cũng có hạn dùng,
+    quên gia hạn lâu thì tên bị xoá, và DNS trả NXDOMAIN như Ảnh 1. App ghi log mỗi ngày một ít, để lâu thì đầy ổ đĩa của server,
+    database không ghi được nữa, và những request cần ghi dữ liệu bắt đầu nhận 500 dù không ai đưa bản mới nào lên.</p>
+    <p>Kéo thanh ngày ở Hình 4 hay bấm chạy để thời gian trôi trên một server không ai đụng vào, rồi bấm gia hạn, dọn log để xem
+    lời báo của người dùng đổi theo.</p>
+  </div>
 </div>
 
 <figure class="fig clock">
@@ -381,8 +387,10 @@ báo khi domain hết hạn và khi certificate hết hạn lấy từ trang l�
 
 <div class="wp-head">
   <h2 id="lab-steps">Lab: tự gặp lại từng lời báo</h2>
-  <p>Lab này cho bạn tự gặp lại các lời báo vừa đọc, ngay trên máy bạn. Các lệnh chỉ in thông tin hay gửi request đi rồi in câu trả lời, không
-  đổi gì trên máy, nên chạy xong không phải dọn. Output trong các khối là của mình, chạy ngày 14/11/2026 trên Windows 11, Git Bash, curl 8.10.1, có lược bớt ở chỗ ghi <code>...</code>; số mili giây trên máy bạn sẽ khác. Từ bước 2 tới bước 7, đọc output rồi tìm dòng của nó trong Bảng 1, xong mở ô đáp án để đối chiếu; bước 8 thì đối chiếu thẳng với ô đáp án.</p>
+  <div class="wp-text">
+    <p>Lab này cho bạn tự gặp lại các lời báo vừa đọc, ngay trên máy bạn. Các lệnh chỉ in thông tin hay gửi request đi rồi in câu trả lời, không
+    đổi gì trên máy, nên chạy xong không phải dọn. Output trong các khối là của mình, chạy ngày 14/11/2026 trên Windows 11, Git Bash, curl 8.10.1, có lược bớt ở chỗ ghi <code>...</code>; số mili giây trên máy bạn sẽ khác. Từ bước 2 tới bước 7, đọc output rồi tìm dòng của nó trong Bảng 1, xong mở ô đáp án để đối chiếu; bước 8 thì đối chiếu thẳng với ô đáp án.</p>
+  </div>
 </div>
 
 <ol class="steps">
@@ -542,6 +550,8 @@ $ curl -sS -o /dev/null -w "%{http_code}\n" https://example.com/
 
 </section>
 
+</main>
+
 <nav class="prevnext">
   <a href="../01-tcp-ip/">
     <span class="dir">Bài trước</span>
@@ -555,8 +565,8 @@ $ curl -sS -o /dev/null -w "%{http_code}\n" https://example.com/
 
 </div>
 
-<script src="../../assets/app.js?v=4e53e8bb"></script>
-<script src="../../assets/terms.js?v=4e53e8bb"></script>
+<script src="../../assets/app.js?v=8257e0ab"></script>
+<script src="../../assets/terms.js?v=8257e0ab"></script>
 <script src="lesson.js?v=416b5a21"></script>
 </body>
 </html>

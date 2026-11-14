@@ -113,7 +113,7 @@
      "id": "08",
      "slug": "networking-on-one-host",
      "title": "Mạng trên một máy: listen, port, firewall",
-     "desc": "App đã chạy mà máy khác gọi không tới thì thường hỏng ở một trong ba chỗ trên máy chạy app. Có thể app chưa listen ở port mà máy khác đang gọi, có thể app chỉ listen trên địa chỉ 127.0.0.1 nên chỉ listen từ trong máy, hoặc firewall của máy chặn kết nối từ ngoài vào. Ba lệnh ss, ip và curl đủ để tìm ra chỗ hỏng. Ngoài ra, server chỉ có địa chỉ dạng 192.168.1.10 thì máy ngoài Internet cũng không gọi tới được, vì đó là địa chỉ chỉ dùng trong mạng riêng.",
+     "desc": "App đã chạy mà máy khác gọi không tới thì thường hỏng ở một trong ba chỗ trên máy chạy app. Có thể app chưa listen ở port mà máy khác đang gọi, có thể app chỉ listen trên địa chỉ 127.0.0.1 nên chỉ máy ấy tự gọi được, hoặc firewall của máy chặn kết nối từ ngoài vào. Ba lệnh ss, ip và curl đủ để tìm ra chỗ hỏng. Ngoài ra, server chỉ có địa chỉ dạng 192.168.1.10 thì máy ngoài Internet cũng không gọi tới được, vì đó là địa chỉ chỉ dùng trong mạng riêng. Lệnh tshark bắt packet ngay trên máy chạy app, cho thấy request có tới được port ấy không.",
      "lab": "local",
      "needs": [
       "IP",
@@ -125,7 +125,7 @@
      "id": "09",
      "slug": "slow-server",
      "title": "Server chậm: CPU, RAM, đĩa, mạng",
-     "desc": "Web chạy chậm mà app không báo lỗi thì phải tìm xem tài nguyên nào của máy đang bị dùng hết. Có bốn chỗ cần xem là CPU, RAM, ổ đĩa và mạng. Output của các lệnh top, free, df, iostat và ss cho biết chỗ nào đang nghẽn. Riêng RAM gần hết thì cả máy chậm hẳn, vì máy phải lấy ổ đĩa làm RAM tạm.",
+     "desc": "Web chạy chậm mà app không báo lỗi thì phải tìm xem tài nguyên nào của máy đang bị dùng hết. Có bốn chỗ cần xem là CPU, RAM, ổ đĩa và mạng. Output của các lệnh top, free, df, iostat và ss cho biết chỗ nào đang nghẽn. Riêng RAM gần hết thì cả máy chậm hẳn, vì máy phải lấy ổ đĩa làm RAM tạm. RAM hết hẳn thì kernel giết bớt process, và lệnh dmesg cho biết process nào đã bị giết.",
      "lab": "local",
      "needs": [
       "process",
@@ -138,7 +138,7 @@
      "id": "10",
      "slug": "layered-troubleshooting",
      "title": "Chẩn đoán theo layer",
-     "desc": "Mỗi thông báo lỗi do một chỗ cụ thể trên đường đi của request viết ra. Lỗi connection refused do kernel của máy đích trả về, lỗi 502 và 504 do reverse proxy đứng trước app trả về, còn lỗi 500 do app trả về. Đọc kỹ thông báo lỗi thì biết nên bắt đầu tìm từ chỗ nào.",
+     "desc": "Mỗi thông báo lỗi do một chỗ cụ thể trên đường đi của request viết ra. Lỗi connection refused do kernel của máy đích trả về, lỗi 502 và 504 do reverse proxy đứng trước app trả về, còn lỗi 500 do app trả về. Đọc kỹ thông báo lỗi thì biết nên bắt đầu tìm từ chỗ nào. Lệnh dig hỏi DNS từng cấp, từ root xuống tới server giữ domain, để biết tên có đổi được ra địa chỉ không.",
      "lab": "local",
      "needs": [
       "đường đi của request trên server",

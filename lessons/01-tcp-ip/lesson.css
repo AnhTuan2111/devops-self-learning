@@ -1,7 +1,8 @@
-/* Riêng Bài 01: mọi thứ thị giác xoay quanh một lưới đường, vì bài nói về gói tin tự tìm đường.
-   Chữ, ảnh, khối chú thích, bảng vẫn lấy từ assets/style.css; tệp này thêm phần riêng của bài: lưới router ở đầu trang,
-   tuyến đường điều hướng có gói tin đếm TTL, và các sơ đồ chạy được (gộp tầng, tra bảng route, tracert, BGP, DNS,
-   bóc byte). Hành vi ở lesson.js. */
+/* Riêng Bài 01: trang dựng như một tuyến tàu chạy qua lưới router. Đầu trang là bản đồ đêm: dải đen tràn bề ngang, lưới
+   router phóng to, bốn packet đi bốn đường. Tuyến tàu ngang dính dưới thanh đầu trang, packet đếm TTL lùi qua từng ga. Mỗi
+   phần của bài mở bằng một biển ga; chữ đi cột giữa, sơ đồ tràn hết bề ngang. Chữ, ảnh, khối chú thích, bảng vẫn lấy từ
+   assets/style.css; tệp này thêm bố cục và các sơ đồ chạy được (gộp layer, tra routing table, tracert, BGP, DNS, bóc
+   byte). Hành vi ở lesson.js. */
 
 /* Màu theo tầng OSI, giống Bài 00 để hai bài đọc liền mạch */
 .c7, .c3 { --t: var(--red);    --t-on: #fff; }
@@ -12,103 +13,128 @@
 ::selection { background: var(--blue); color: #fff; }
 .hl::selection { background: var(--red); color: #fff; }
 
-/* ---------------- Đầu trang: chữ bên trái, lưới router bên phải ---------------- */
-@media (min-width: 900px) {
-  .hero { grid-template-columns: minmax(0, 1fr) 380px; column-gap: 44px; align-items: center; }
+/* ---------------- Khung trang: rộng hết màn laptop ---------------- */
+:root { --page-max: 1480px; --night-line: #4a4740; --night-text: #d9d2c5; }
+.wrap { max-width: var(--page-max); padding: 0 24px; }
+.topbar-inner { max-width: var(--page-max); padding-left: 24px; padding-right: 24px; }
+@media (max-width: 700px) { .wrap { padding: 0 16px; } .topbar-inner { padding-left: 16px; padding-right: 16px; } }
+
+/* ---------------- Đầu trang: bản đồ đêm ----------------
+   Một dải đen tràn hết bề ngang màn hình. Lưới router phóng to chiếm phần lớn dải, chữ màu giấy đứng bên trái. */
+.hero {
+  margin: 0; padding: 44px 0 40px; border-bottom: 0; color: var(--paper); background: var(--ink);
+  box-shadow: 0 0 0 100vmax var(--ink); clip-path: inset(0 -100vmax);
+}
+.hero .eyebrow { color: var(--night-text); }
+.hero h1 { color: var(--paper); font-size: clamp(40px, 5.4vw, 80px); line-height: 1; letter-spacing: -.035em; margin: 14px 0 20px; }
+.hero h1 .hl { color: var(--ink); }
+.hero .lede { color: var(--night-text); }
+.hero .chip { background: #2b2925; color: var(--paper); border-color: #2b2925; }
+@media (min-width: 1000px) {
+  .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); column-gap: 56px; align-items: center; }
   .hero > * { grid-column: 1; }
   .hero > .mesh { grid-column: 2; grid-row: 1 / span 4; margin: 0; }
 }
-@media (max-width: 899px) { .hero > .mesh { grid-row: auto; margin: 26px 0 0; } }
-.mesh { width: 100%; max-width: 380px; height: auto; margin: 0; display: grid; gap: 8px; }
-.mesh-svg { display: block; width: 100%; height: auto; background: var(--surface); border-top: var(--rule-m) solid var(--ink); }
-.mesh-svg .link { stroke: var(--line); stroke-width: 3; }
-.mesh-svg .link.hot { stroke: var(--ink); }
-.mesh-svg .rt { fill: var(--surface); stroke: var(--ink); stroke-width: 3; transition: fill .2s; }
+@media (max-width: 999px) { .hero > .mesh { grid-row: auto; margin: 26px 0 0; } }
+.mesh { width: 100%; height: auto; margin: 0; display: grid; gap: 10px; }
+.mesh-svg { display: block; width: 100%; height: auto; background: none; }
+.mesh-svg .link { stroke: var(--night-line); stroke-width: 3; }
+.mesh-svg .link.hot { stroke: var(--paper); }
+.mesh-svg .rt { fill: var(--ink); stroke: var(--paper); stroke-width: 3; transition: fill .2s; }
 .mesh-svg .rt.busy { fill: var(--yellow); }
 .mesh-svg .rt.drop { fill: var(--red); }
-.mesh-svg .end { fill: var(--ink); }
-.mesh-svg .end-label { font: 700 11px/1 var(--f-display); fill: var(--paper); text-anchor: middle; text-transform: lowercase; }
-.mesh-svg .pk rect { stroke: var(--ink); stroke-width: 2; }
+.mesh-svg .end { fill: var(--paper); }
+.mesh-svg .end-label { font: 700 11px/1 var(--f-display); fill: var(--ink); text-anchor: middle; text-transform: lowercase; }
+.mesh-svg .pk rect { stroke: var(--paper); stroke-width: 2; }
 .mesh-svg .pk text { font: 800 11px/1 var(--f-display); text-anchor: middle; dominant-baseline: central; }
 .mesh-svg .pk.p1 rect { fill: var(--red); } .mesh-svg .pk.p1 text { fill: #fff; }
 .mesh-svg .pk.p2 rect { fill: var(--yellow); } .mesh-svg .pk.p2 text { fill: var(--ink); }
 .mesh-svg .pk.p3 rect { fill: var(--blue); } .mesh-svg .pk.p3 text { fill: #fff; }
-.mesh-svg .pk.p4 rect { fill: var(--ink); } .mesh-svg .pk.p4 text { fill: var(--paper); }
+.mesh-svg .pk.p4 rect { fill: var(--paper); } .mesh-svg .pk.p4 text { fill: var(--ink); }
 .mesh-svg .pk.lost { opacity: 0; transition: opacity .35s; }
 .mesh-svg .boom { fill: none; stroke: var(--red); stroke-width: 3; opacity: 0; }
 .mesh-svg .boom.on { animation: boom .7s ease-out; }
 @keyframes boom { from { opacity: 1; r: 8; } to { opacity: 0; r: 26; } }
-/* Khay ráp gói ở bên nhận: gói rơi vào theo thứ tự tới nơi, rồi xếp lại theo số */
+/* Khay ráp packet ở bên nhận: packet rơi vào theo thứ tự tới nơi, rồi xếp lại theo số */
 .mesh-tray { display: flex; align-items: center; gap: 10px; }
-.tray-label { font: 700 12px/1 var(--f-display); text-transform: lowercase; color: var(--ink-3); width: 50px; }
+.tray-label { font: 700 13px/1 var(--f-display); text-transform: lowercase; color: var(--night-text); width: 54px; }
 .tray-slots { display: flex; gap: 4px; flex: 1; }
 .tray-slots i {
-  flex: 1; display: grid; place-items: center; height: 30px; font: 800 14px/1 var(--f-display); font-style: normal;
-  border: 2px dashed var(--line); color: transparent; transition: background .25s, color .25s, border-color .25s, transform .4s;
+  flex: 1; display: grid; place-items: center; height: 32px; font: 800 14px/1 var(--f-display); font-style: normal;
+  border: 2px dashed var(--night-line); color: transparent; transition: border-color .25s, transform .4s;
 }
-.tray-slots i.in { border-style: solid; border-color: var(--ink); color: var(--ink); background: var(--surface); }
+.tray-slots i.in { border-style: solid; border-color: var(--paper); color: var(--paper); background: var(--ink); }
 .tray-slots i.k1 { background: var(--red); color: #fff; } .tray-slots i.k2 { background: var(--yellow); color: var(--ink); }
-.tray-slots i.k3 { background: var(--blue); color: #fff; } .tray-slots i.k4 { background: var(--ink); color: var(--paper); }
-.tray-slots.done i { border-color: var(--ink); }
+.tray-slots i.k3 { background: var(--blue); color: #fff; } .tray-slots i.k4 { background: var(--paper); color: var(--ink); }
+.tray-slots.done i { border-color: var(--paper); }
 .mesh-note { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0; }
-.mesh-status { font: 600 13px/1.35 var(--f-display); text-transform: lowercase; color: var(--ink-2); }
+.mesh-status { font: 600 14px/1.35 var(--f-display); text-transform: lowercase; color: var(--night-text); }
+.hero .diagram-btn { background: var(--ink); color: var(--paper); border-color: var(--paper); }
+.hero .diagram-btn:hover { background: var(--yellow); color: var(--ink); }
 
-/* ---------------- Khung: tuyến đường bên trái, bài bên phải ---------------- */
+/* ---------------- Tuyến tàu: một hàng ngang dính dưới thanh đầu trang ----------------
+   Mỗi phần của bài là một ga. Màn rộng: các ga dàn đều trên một đường ray, packet trượt dọc ray theo vị trí cuộn và đếm
+   TTL lùi. Màn hẹp: một hàng nút cuộn ngang. */
 .layout { display: block; }
-@media (min-width: 1000px) {
-  .layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: 40px; align-items: start; }
-}
-/* Màn hẹp: một hàng cuộn ngang dính dưới topbar */
 .line-nav {
   position: sticky; top: var(--topbar-h, 0px); z-index: 30; background: var(--paper);
   display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
-  margin: 0 -16px 18px; padding: 8px 16px; border-bottom: var(--rule-m) solid var(--ink);
+  margin: 0 0 8px; padding: 8px 0; border-bottom: var(--rule-m) solid var(--ink);
 }
 .line-nav::-webkit-scrollbar { display: none; }
 .line-nav a {
   flex: none; display: flex; align-items: center; gap: 8px; padding: 0 12px; min-height: 38px;
   font: 700 13px/1 var(--f-display); text-transform: lowercase; text-decoration: none; color: var(--ink);
-  background: var(--surface); transition: background .2s, color .2s;
+  background: var(--surface);
 }
-.line-nav a i { width: 12px; height: 12px; border: 3px solid var(--ink); background: var(--surface); flex: none; transition: background .2s, transform .2s; }
+.line-nav a i { width: 12px; height: 12px; border: 3px solid var(--ink); background: var(--surface); flex: none; transition: transform .2s; }
 .line-nav a.passed i { background: var(--ink); }
 .line-nav a.active { background: var(--ink); color: var(--paper); }
 .line-nav a.active i { background: var(--yellow); border-color: var(--yellow); }
 .line-track { display: none; }
-/* Màn rộng: một tuyến dọc, mỗi phần là một ga; gói tin trượt dọc tuyến theo vị trí cuộn và đếm TTL lùi */
 @media (min-width: 1000px) {
-  .line-nav {
-    top: calc(var(--topbar-h, 0px) + 16px); flex-direction: column; gap: 0; overflow: visible;
-    margin: 0; padding: 4px 0; border: 0; background: none; position: sticky;
+  .line-nav { justify-content: space-between; overflow: visible; padding: 12px 0 10px; gap: 0; }
+  .line-nav a {
+    position: relative; z-index: 1; flex: 1 1 0; flex-direction: column; gap: 8px; padding: 0; min-height: 0;
+    background: none; font-size: 14px;
   }
-  /* Ô TTL rộng khoảng 40px nằm giữa đường ray, nên chữ của ga phải đứng xa hơn mép phải của nó */
-  .line-nav a { position: relative; z-index: 1; background: none; padding: 0 0 0 58px; min-height: 46px; font-size: 14px; }
-  .line-nav a i { position: absolute; left: 20px; width: 16px; height: 16px; }
+  .line-nav a i { width: 18px; height: 18px; background: var(--paper); }
   .line-nav a:hover { background: none; color: var(--blue); }
   .line-nav a:hover i { transform: scale(1.2); }
   .line-nav a.active { background: none; color: var(--ink); }
   .line-nav a.active i { background: var(--red); border-color: var(--ink); }
-  .line-track { display: block; position: absolute; left: 26px; top: 27px; bottom: 27px; width: 4px; background: var(--line); }
-  .line-fill { position: absolute; left: 0; top: 0; width: 100%; height: 0; background: var(--ink); }
+  .line-track { display: block; position: absolute; height: 4px; background: var(--line); }
+  .line-fill { position: absolute; left: 0; top: 0; width: 0; height: 100%; background: var(--ink); }
   .line-dot {
-    position: absolute; left: 2px; top: 0; translate: -50% -50%; display: grid; grid-template-columns: auto auto;
-    background: var(--yellow); border: 2px solid var(--ink); font: 800 10px/1 var(--f-display); white-space: nowrap; z-index: 2;
+    position: absolute; left: 0; top: 2px; translate: -50% -50%; display: grid; grid-template-columns: auto auto;
+    background: var(--yellow); border: 2px solid var(--ink); font: 800 12px/1 var(--f-display); white-space: nowrap; z-index: 2;
   }
-  .line-dot b { padding: 4px 3px 3px 4px; } .line-dot em { font-style: normal; padding: 4px 4px 3px 2px; background: var(--ink); color: var(--yellow); min-width: 18px; text-align: center; }
+  .line-dot b { padding: 4px 3px 3px 5px; } .line-dot em { font-style: normal; padding: 4px 5px 3px 3px; background: var(--ink); color: var(--yellow); min-width: 20px; text-align: center; }
   .line-dot.dead { background: var(--red); }
 }
 
-/* ---------------- Các phần của bài (cùng khuôn với Bài 00 để hai bài nối nhau) ---------------- */
-.part {
-  background: var(--surface); border-top: var(--rule-xl) solid var(--ink);
-  padding: 6px 16px 26px; margin: 0 0 34px; scroll-margin-top: calc(var(--topbar-h, 0px) + 70px);
+/* ---------------- Các phần của bài ----------------
+   Mỗi phần mở bằng một biển ga đen chạy hết bề ngang. Chữ đi một cột ở giữa trang; hình, bảng, khối code tràn ra hết bề
+   ngang để sơ đồ có chỗ chạy. */
+.part { padding: 0 0 30px; margin: 30px 0 0; scroll-margin-top: calc(var(--topbar-h, 0px) + 90px); }
+.part-head {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 0 0 26px; padding: 16px 22px;
+  background: var(--ink); color: var(--paper);
 }
-@media (min-width: 700px) { .part { padding: 10px 40px 34px; } }
-.part-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 20px 0 6px; }
-.part-title { font: 800 clamp(26px, 4vw, 36px)/1.05 var(--f-display); text-transform: lowercase; letter-spacing: -.02em; margin: 0; }
-.part-note { width: 100%; margin: 4px 0 0; font: 600 14px/1.3 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
+.part-head::before {
+  content: ""; width: 22px; height: 22px; flex: none; background: var(--yellow); border: 5px solid var(--paper);
+  border-radius: 50%;
+}
+.part-title { font: 800 clamp(26px, 3.6vw, 44px)/1.05 var(--f-display); text-transform: lowercase; letter-spacing: -.02em; margin: 0; color: var(--paper); }
+.part-note { width: 100%; margin: 4px 0 0; font: 600 15px/1.3 var(--f-display); text-transform: lowercase; color: var(--night-text); }
 @media (min-width: 700px) { .part-note { width: auto; margin: 0 0 0 auto; } }
-.part h2 { scroll-margin-top: calc(var(--topbar-h, 0px) + 70px); }
+.part h2 { scroll-margin-top: calc(var(--topbar-h, 0px) + 90px); }
+@media (min-width: 1100px) {
+  /* Độ rộng cột chữ tính bằng px chứ không bằng ch, vì ch đổi theo cỡ chữ của từng phần tử (h2 to thì cột rộng ra) */
+  .part > * { max-width: 880px; margin-left: auto; margin-right: auto; }
+  .part > .part-head, .part > figure.fig, .part > .table-scroll { max-width: none; }
+  .part > figure.fig, .part > .table-scroll { margin-left: 0; margin-right: 0; }
+}
 
 .reveal { opacity: 0; translate: 0 22px; transition: opacity .5s ease-out, translate .5s cubic-bezier(.2, .8, .2, 1); }
 .reveal.shown { opacity: 1; translate: 0 0; }
@@ -159,7 +185,7 @@ details.raw pre { margin-top: 10px; }
   .m-cell { grid-template-columns: 24px 1fr; font-size: 11.5px; }
   .m-cell span { padding-left: 6px; }
   .t-block { padding: 0 8px; font-size: 13px; }
-  .t-block small { font-size: 10.5px; }
+  .t-block small { font-size: 11px; }
 }
 
 /* ---------------- Bảng 1: 12 gói của một lần curl ---------------- */
@@ -178,6 +204,7 @@ details.raw pre { margin-top: 10px; }
 }
 .ip-chip small { font: 600 11px/1 var(--f-display); text-transform: lowercase; color: var(--ink-3); margin-left: 4px; }
 .ip-chip:hover { background: var(--yellow); }
+.ip-chip:hover small { color: var(--ink); }
 .ip-chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .ip-chip[aria-pressed="true"] small { color: var(--yellow); }
 .lookup-bits { display: grid; gap: 4px; padding: 10px 12px; background: var(--paper); }
@@ -243,15 +270,15 @@ details.raw pre { margin-top: 10px; }
 .probe-log { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font: 500 14px/1.3 var(--f-mono); }
 .probe-log li {
   display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 5px 8px;
-  background: var(--paper); opacity: .25; transition: opacity .3s, background .3s;
+  color: var(--ink-3); box-shadow: inset 0 0 0 1px var(--line); transition: background .3s, color .3s;
 }
 .probe-log li span { font: 800 14px/1 var(--f-display); }
 .probe-log li code { background: none; padding: 0; }
 .probe-log li small { font: 600 12px/1.2 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
-.probe-log li.on { opacity: 1; }
+.probe-log li.on { background: var(--paper); color: var(--ink); box-shadow: none; }
 .probe-log li.on.last { background: var(--yellow); }
 @media (max-width: 560px) {
-  .p-node { font-size: 10px; min-height: 46px; padding: 2px; }
+  .p-node { font-size: 11px; min-height: 46px; padding: 2px; }
   .probe-path { gap: 4px; }
   .probe-log { font-size: 12.5px; }
 }
@@ -315,7 +342,7 @@ details.raw pre { margin-top: 10px; }
 @media (max-width: 640px) {
   .dw-stage { grid-template-columns: 1fr 1fr; padding: 10px; gap: 12px; }
   .dw-tree { grid-column: 1 / -1; }
-  .dw-msg { font-size: 10px; max-width: 150px; }
+  .dw-msg { font-size: 11px; max-width: 150px; }
 }
 
 /* ---------------- Hình 9: bóc 141 byte ---------------- */
@@ -344,7 +371,7 @@ details.raw pre { margin-top: 10px; }
 @media (max-width: 760px) {
   .dissect { grid-template-columns: 1fr; }
   .dx-layers { grid-template-columns: 1fr 1fr; }
-  .dx-hex { font-size: 10px; gap: 1px; } .dx-hex span { height: 21px; border-bottom-width: 3px; }
+  .dx-hex { font-size: 11px; gap: 1px; } .dx-hex span { height: 21px; border-bottom-width: 3px; }
 }
 
 /* ---------------- Chuyển động ---------------- */
@@ -354,3 +381,10 @@ details.raw pre { margin-top: 10px; }
   .merge .t-block { clip-path: none; }
   .dx-hex.pour span { opacity: 1; translate: none; }
 }
+
+/* Ô do hình động tự đổi trạng thái mà đảo màu (nền sáng chữ tối sang nền tối chữ sáng) thì đổi tức thì: chuyển dần thì ở
+   giữa chừng nền và chữ cùng xám, chữ biến mất trong chốc lát. */
+.p-node, .dw-node, .dx-layers li { transition: none; }
+.tray-slots i { transition: border-color .25s, transform .4s; }
+.lookup-rows li { transition: opacity .25s; }
+.dx-hex span { transition: opacity .3s, translate .3s; }

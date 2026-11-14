@@ -234,4 +234,18 @@
       }
     })();
   }
+
+  // ---------- Thanh RAM và ô core: chỗ nào hẹp hơn tên của nó thì ẩn tên, theo dõi cả lúc co giãn hay đổi chữ ----------
+  const fit = (seg) => {
+    const b = seg.querySelector('b');
+    if (b) seg.classList.toggle('tight', b.scrollWidth > seg.clientWidth);
+  };
+  const segRo = new ResizeObserver((entries) => entries.forEach((e) => fit(e.target)));
+  document.querySelectorAll('.seg').forEach((seg) => { fit(seg); segRo.observe(seg); });
+  // Ô core đổi chữ theo process đang chạy trên nó, nên kiểm tra lại mỗi khi chữ trong ô đổi
+  const fitCore = (i) => i.classList.toggle('tight', i.scrollWidth > i.clientWidth);
+  document.querySelectorAll('.core i').forEach((i) => {
+    fitCore(i);
+    new MutationObserver(() => fitCore(i)).observe(i, { childList: true, characterData: true, subtree: true });
+  });
 })();
