@@ -16,6 +16,7 @@ Chỗ ghi output thật, lỗi đã gặp, câu hỏi còn treo.
   ... anon-rss:306432kB`. Script in chữ tiếng Anh (`held 50 MB`); hai lần chạy trước (PID 17489 bằng `python3 -c`, PID 2616
   khi script còn in chữ tiếng Việt không dấu) cho cùng các con số.
 
+- 14/11/2026: Python 3.14.4 trong Ubuntu, PID 1 là systemd.
 ## Chỗ hiểu sai đã có từ buổi học cũ
 
 - 502 lúc cao điểm là vì RAM đầy nên app không đủ chỗ khởi động. Thật ra app đang chạy thì bị kernel giết, RAM của nó được thu

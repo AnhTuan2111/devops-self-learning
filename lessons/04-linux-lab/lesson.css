@@ -1,117 +1,117 @@
-/* Riêng Bài 04: mọi thứ thị giác xoay quanh một dòng lệnh đi xuyên qua các lớp của laptop khi bật WSL2. Đầu trang là
-   chồng sáu lớp, lệnh gõ ở bash đi xuống tới kernel Linux; Hình 2 là vòng lặp của shell khi bạn gõ một lệnh.
-   Chữ, ảnh, khối chú thích, bảng vẫn lấy từ assets/style.css. Hành vi ở lesson.js. */
+/* Riêng Bài 04: trang đọc như một buổi ngồi trước terminal. Chữ đi một cột hẹp bên trái, ảnh đứng ở lề phải cạnh đoạn nói về
+   nó, còn mỗi khối lệnh là một dải terminal rộng hết trang, tự gõ lệnh rồi in output khi cuộn tới. Đầu trang là hai cửa sổ Git
+   Bash và Ubuntu gõ cùng lệnh (Hình 1); Hình 2 cho bấm lệnh để xem lệnh xuống tới kernel nào; Hình 3 là vòng lặp của shell.
+   Chữ, ảnh, khối code lấy từ assets/style.css; hành vi ở lesson.js. */
 
 :root {
-  /* Màu riêng của bài, ngoài bảng màu chung ở assets/style.css */
-  --on-color: var(--surface);   /* chữ trên nền đỏ, lam */
-  --on-dark-dim: #bdbdbd;       /* chữ mờ trên nền đen của thanh điều hướng */
+  --on-color: var(--surface);
+  --page-max: 1440px;
+  --term-bg: #151515;
+  --term-fg: #f3eee4;
+  --term-dim: #8f887c;
 }
 
-::selection { background: var(--blue); color: var(--on-color); }
-.hl::selection { background: var(--yellow); color: var(--ink); }
+.wrap { max-width: var(--page-max); padding: 0 24px; }
+.topbar-inner { max-width: var(--page-max); padding-left: 24px; padding-right: 24px; }
+@media (max-width: 700px) { .wrap { padding: 0 16px; } .topbar-inner { padding-left: 16px; padding-right: 16px; } }
 
-/* ---------------- Đầu trang: chữ bên trái, chồng lớp bên phải ---------------- */
-@media (min-width: 900px) {
-  .hero { grid-template-columns: minmax(0, 1fr) 340px; column-gap: 44px; align-items: center; }
-  .hero > * { grid-column: 1; }
-  .hero > .stack { grid-column: 2; grid-row: 1 / span 4; margin: 0; }
-}
-@media (max-width: 899px) { .hero > .stack { grid-row: auto; margin: 26px 0 0; } }
-.stack { width: 100%; max-width: 340px; margin: 0; display: grid; gap: 8px; }
-.stack-layers { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
-.ly {
-  margin: 0; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; min-height: 40px; padding: 0 12px;
-  background: var(--surface); border-left: 8px solid var(--ly, var(--line)); transition: background .2s, color .2s;
-}
-.ly b { font: 800 14px/1.1 var(--f-display); }
-.ly span { font: 600 11.5px/1.2 var(--f-display); text-transform: lowercase; color: var(--ink-3); text-align: right; }
-.ly-bash { --ly: var(--yellow); }
-.ly-ubuntu { --ly: var(--red); }
-.ly-linux { --ly: var(--ink); }
-.ly-vm { --ly: var(--blue); }
-.ly-win { --ly: var(--line); }
-.ly-hw { --ly: var(--line); }
-.ly.lit { background: var(--ink); color: var(--paper); }
-.ly.lit span { color: var(--paper); }
-.ly.back { background: var(--yellow); color: var(--ink); }
-.ly.back span { color: var(--ink); }
-.stack-cmd { margin: 0; padding: 10px 12px; background: var(--ink); min-height: 40px; }
-.stack-cmd code { background: none; color: var(--paper); padding: 0; font-size: 13px; }
-.typed::after { content: ""; display: inline-block; width: 8px; height: 14px; margin-left: 2px; background: var(--yellow); vertical-align: -2px; }
-.stack-note { margin: 0; font: 600 13px/1.35 var(--f-display); text-transform: lowercase; color: var(--ink-2); }
+::selection { background: var(--yellow); color: var(--ink); }
+.hl::selection { background: var(--blue); color: var(--on-color); }
 
-/* ---------------- Khung: điều hướng bên trái, bài bên phải ---------------- */
-.layout { display: block; }
-@media (min-width: 1000px) {
-  .layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); column-gap: 40px; align-items: start; }
+/* ---------------- Đầu trang: chữ bên trái, hai cửa sổ bên phải ---------------- */
+.lab-head { display: grid; gap: 24px 56px; margin: 30px 0 0; padding: 0 0 30px; border-bottom: var(--rule-xl) solid var(--ink); }
+.lab-head h1 { font-size: clamp(38px, 4.4vw, 66px); margin: 12px 0 16px; }
+@media (min-width: 1100px) { .lab-head { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; } }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+.jump a {
+  font: 700 13.5px/1 var(--f-mono); text-transform: lowercase; text-decoration: none; color: var(--term-fg);
+  padding: 9px 12px 8px; background: var(--term-bg);
 }
-.cmd-nav {
-  position: sticky; top: var(--topbar-h, 0px); z-index: 30; background: var(--paper);
-  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
-  margin: 0 -16px 18px; padding: 8px 16px; border-bottom: var(--rule-m) solid var(--ink);
+.jump a::before { content: "$ "; color: var(--yellow); }
+.jump a:hover { background: var(--yellow); color: var(--ink); }
+.jump a:hover::before { color: var(--ink); }
+.jump a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+.twins { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.twins figcaption { grid-column: 1 / -1; }
+.twin { display: grid; }
+.twin-name { margin: 0; padding: 7px 12px 6px; font: 700 13px/1 var(--f-display); text-transform: none; background: var(--sunk); border-top: 6px solid var(--ink); }
+.twin[data-twin="ubuntu"] .twin-name { border-top-color: var(--red); }
+.twin-screen { margin: 0; min-height: 132px; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.twin-screen .hit { background: var(--yellow); color: var(--ink); }
+@media (max-width: 560px) { .twins { grid-template-columns: 1fr; } }
+
+/* ---------------- Chữ một cột, ảnh ở lề phải ---------------- */
+.part { padding: 6px 0 20px; scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); }
+.part h2, .part h3 { scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); }
+.prose { max-width: 76ch; }
+.prose-row { display: grid; gap: 0 56px; align-items: start; }
+@media (min-width: 1100px) {
+  .prose-row { grid-template-columns: minmax(0, 76ch) minmax(0, 1fr); }
+  .prose-row > figure.aside { margin-top: 64px; }
 }
-.cmd-nav::-webkit-scrollbar { display: none; }
-.cmd-nav a {
-  flex: none; display: flex; align-items: center; gap: 8px; padding: 0 12px; min-height: 38px;
-  font: 600 13px/1 var(--f-mono); text-decoration: none; color: var(--ink); background: var(--surface);
+figure.photo.aside { display: block; margin: 24px 0; }
+figure.photo.aside > figcaption { border-top: 0; padding-top: 0; margin-top: 10px; }
+figure.photo.aside.small-photo img { max-width: min(100%, 380px); }
+.answer { padding: 16px 20px; background: var(--ink); color: var(--paper); }
+.answer code { background: #2b2925; color: var(--paper); }
+
+/* Tiêu đề bước lab: nhãn bước đứng trước tên bước */
+.step-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-top: 40px; padding-top: 14px; border-top: var(--rule-s) solid var(--ink); }
+.step-h span { font: 800 14px/1 var(--f-display); text-transform: lowercase; background: var(--yellow); padding: 6px 9px 5px; }
+
+/* ---------------- Dải terminal rộng hết trang ---------------- */
+pre.band {
+  margin: 18px 0 26px; padding: 18px 24px; font-size: 14.5px; line-height: 1.65;
+  white-space: pre-wrap; overflow-wrap: anywhere; border-left: 10px solid var(--yellow);
+}
+pre.band .cmd { color: var(--term-fg); }
+pre.band .out { color: #cfc8bb; }
+pre.band .caret { display: inline-block; width: .6em; height: 1.1em; vertical-align: -.2em; background: var(--yellow); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ---------------- Hình 2: cùng một lệnh, hai kernel ---------------- */
+.dual { margin: 18px 0 30px; padding: 18px; background: var(--surface); border-top: var(--rule-m) solid var(--ink); display: grid; gap: 14px; }
+.dual-pick { display: flex; flex-wrap: wrap; gap: 8px; }
+.dual-pick button {
+  appearance: none; cursor: pointer; padding: 9px 14px; background: var(--paper); border: var(--rule-s) solid var(--ink);
   transition: background .2s, color .2s;
 }
-.cmd-nav a span { color: var(--ink-3); }
-.cmd-nav a.active { background: var(--ink); color: var(--paper); }
-.cmd-nav a.active span { color: var(--yellow); }
-.cmd-nav a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
-/* Màn rộng: danh sách phần như một màn hình terminal, phần đang đọc là dòng có con trỏ */
-@media (min-width: 1000px) {
-  .cmd-nav {
-    top: calc(var(--topbar-h, 0px) + 16px); flex-direction: column; gap: 0; overflow: visible;
-    margin: 0; padding: 10px 0; border: 0; background: var(--ink);
-  }
-  .cmd-nav a { background: none; color: var(--on-dark-dim); min-height: 36px; padding: 0 14px; }
-  .cmd-nav a:hover { color: var(--paper); }
-  .cmd-nav a.active { background: none; color: var(--paper); }
-  .cmd-nav a.active::after { content: ""; width: 8px; height: 15px; background: var(--yellow); }
+.dual-pick button code { background: none; padding: 0; font-size: 14px; color: inherit; }
+.dual-pick button:hover { background: var(--yellow); }
+.dual-pick button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.dual-pick button:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.dual-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.side { display: grid; gap: 8px; align-content: start; }
+.side-screen { margin: 0; min-height: 108px; white-space: pre; overflow-x: auto; font-size: 12.5px; }
+.side-stack { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.side-stack li {
+  margin: 0; padding: 9px 12px; display: grid; gap: 2px; background: var(--paper); border-left: 6px solid var(--line);
+  transition: background .25s, color .25s, border-color .25s;
 }
+.side-stack b { font: 800 14.5px/1.2 var(--f-display); }
+.side-stack span { font: 500 12.5px/1.35 var(--f-sans); color: var(--ink-3); }
+.side[data-side="win"] .side-stack li[data-ly="kernel"] { border-left-color: var(--blue); }
+.side[data-side="linux"] .side-stack li[data-ly="kernel"] { border-left-color: var(--red); }
+.side-stack li.pass { background: var(--sunk); }
+.side-stack li.hit { background: var(--ink); color: var(--paper); }
+.side-stack li.hit span { color: #cfc8bb; }
+.dual-note { margin: 0; min-height: 1.6em; font: 600 15px/1.5 var(--f-display); }
+@media (max-width: 760px) { .dual-cols { grid-template-columns: 1fr; } }
 
-/* ---------------- Các phần của bài (cùng khuôn với các bài trước) ---------------- */
-.part {
-  background: var(--surface); border-top: var(--rule-xl) solid var(--ink);
-  padding: 6px 16px 26px; margin: 0 0 34px; scroll-margin-top: calc(var(--topbar-h, 0px) + 70px);
-}
-@media (min-width: 700px) { .part { padding: 10px 40px 34px; } }
-.part-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 20px 0 6px; }
-.part-title { font: 800 clamp(26px, 4vw, 36px)/1.05 var(--f-display); text-transform: lowercase; letter-spacing: -.02em; margin: 0; }
-.part-note { width: 100%; margin: 4px 0 0; font: 600 14px/1.3 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
-@media (min-width: 700px) { .part-note { width: auto; margin: 0 0 0 auto; } }
-.part h2 { scroll-margin-top: calc(var(--topbar-h, 0px) + 70px); }
-
-.reveal { opacity: 0; translate: 0 22px; transition: opacity .5s ease-out, translate .5s cubic-bezier(.2, .8, .2, 1); }
-.reveal.shown { opacity: 1; translate: 0 0; }
-
-.diagram-btn {
-  appearance: none; border: var(--rule-s) solid var(--ink); background: var(--surface); color: var(--ink);
-  font: 700 13px/1 var(--f-display); text-transform: lowercase; padding: 9px 12px 8px; cursor: pointer;
-  transition: background .15s, color .15s;
-}
-.diagram-btn:hover { background: var(--yellow); }
-.diagram-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
-.diagram-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-
-/* ---------------- Hình 2: vòng lặp của shell ---------------- */
+/* ---------------- Hình 3: vòng lặp của shell ---------------- */
 .loop { display: grid; gap: 12px; }
 .loop-line { margin: 0; padding: 12px 14px; background: var(--ink); }
 .loop-line code { background: none; color: var(--paper); padding: 0; font-size: 14px; }
 .loop-steps {
-  list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;
+  list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px;
   counter-reset: step;
 }
 .loop-steps li {
   counter-increment: step; position: relative; display: grid; align-content: start; gap: 4px; margin: 0;
   padding: 30px 12px 12px; background: var(--paper); border-top: 6px solid var(--line); transition: background .25s, border-color .25s, color .25s;
 }
-.loop-steps li::before {
-  content: counter(step); position: absolute; left: 12px; top: 8px; font: 800 14px/1 var(--f-display); color: var(--ink-3);
-}
+.loop-steps li::before { content: counter(step); position: absolute; left: 12px; top: 8px; font: 800 14px/1 var(--f-display); color: var(--ink-3); }
 .loop-steps li b { font: 800 14px/1.2 var(--f-display); text-transform: lowercase; }
 .loop-steps li span { font-size: 13.5px; line-height: 1.4; color: var(--ink-2); }
 .loop-steps li code { font-size: 12px; }
@@ -119,11 +119,16 @@
 .loop-steps li.now { background: var(--yellow); border-top-color: var(--ink); }
 .loop-steps li.now::before { color: var(--ink); }
 .loop-steps li.done { color: var(--ink-3); }
-.loop-btns { display: flex; justify-content: flex-end; }
+@media (max-width: 1100px) { .loop-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 700px) { .loop-steps { grid-template-columns: 1fr; } }
 
-/* ---------------- Chuyển động ---------------- */
+.check-grid { display: grid; gap: 0 56px; }
+@media (min-width: 1100px) { .check-grid { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .reveal { opacity: 1; translate: none; }
 }
+
+/* Cột của lưới không được nở theo link dài */
+.check-grid > div, .owners-grid > div, .stop > *, .prose-row > * { min-width: 0; }
+.refs a { overflow-wrap: anywhere; }

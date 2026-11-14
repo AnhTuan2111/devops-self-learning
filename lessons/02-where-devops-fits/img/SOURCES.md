@@ -5,8 +5,8 @@
 
 | Ảnh | Tệp | Nguồn | Tác giả | Giấy phép | Đã chỉnh |
 |---|---|---|---|---|---|
-| Ảnh 1 | `reverse-proxy.webp` | [File:Reverse proxy h2g2bob.svg](https://commons.wikimedia.org/wiki/File:Reverse_proxy_h2g2bob.svg) | H2g2bob | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | bản PNG do Commons dựng từ SVG, thu về 1600px, chuyển hai tông |
-| Ảnh 2 | `browser-nxdomain.webp` | tự chụp | mình | không cần | trang lỗi của Microsoft Edge khi gọi một tên miền không tồn tại, chụp bằng Playwright 03/10/2026, khung 1000px, mật độ 2x |
+| Ảnh 1 | `browser-nxdomain.webp` | tự chụp | mình | không cần | trang lỗi của Microsoft Edge khi gọi một tên miền không tồn tại, chụp bằng Playwright 03/10/2026, khung 1000px, mật độ 2x |
+| Ảnh 2 | `reverse-proxy.webp` | [File:Reverse proxy h2g2bob.svg](https://commons.wikimedia.org/wiki/File:Reverse_proxy_h2g2bob.svg) | H2g2bob | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | bản PNG do Commons dựng từ SVG, thu về 1600px, chuyển hai tông |
 | Ảnh 3 | `browser-refused.webp` | tự chụp | mình | không cần | trang lỗi của Edge khi gọi `http://127.0.0.1:9999/`, chụp như trên 03/10/2026 |
 | Ảnh 4 | `expired-cert.webp` | tự chụp | mình | không cần | trang cảnh báo của Edge khi mở `https://expired.badssl.com/` (chứng chỉ hết hạn 12/04/2015), chụp 04/10/2026 |
 | Ảnh 5 | `nginx-502.webp`, `nginx-504.webp` | tự chụp | mình | không cần | trang lỗi của Nginx 1.30.5 chạy thật trên Windows, khung 340px, mật độ 2x, 30/09/2026 |

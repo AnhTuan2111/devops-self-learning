@@ -13,6 +13,7 @@ Chỗ ghi output thật, lỗi đã gặp, câu hỏi còn treo. Tên user và t
 - `which java`: `/usr/bin/java`; `which ls`: `/usr/bin/ls`; `type cd`: `cd is a shell builtin`.
 - Gõ `lsx` trong bash tương tác: Ubuntu gợi ý 14 lệnh gần giống tên.
 
+- 14/11/2026, so Git Bash với Ubuntu: `which ls` cả hai ra `/usr/bin/ls`; `free -h` trong Git Bash ra `bash: free: command not found`, trong Ubuntu tổng 10Gi.
 ## Phản ứng thật từ buổi học cũ (05/10/2026)
 
 - Về Git Bash: "lệnh đó đã được biên dịch sang windows để chạy trên máy windows nhưng mà nó cũng chỉ là hàng đè tem thôi chứ
