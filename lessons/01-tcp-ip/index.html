@@ -455,7 +455,7 @@ default via 172.21.16.1 dev eth0 proto kernel
 <p>Đường mặc định của WSL đẩy mọi thứ cho <code>172.21.16.1</code>, tức Windows, nên gói từ WSL ra Internet còn đi qua bảng
 route của Windows thêm một lần.</p>
 
-<h2 id="lab-2">Lab 2: tự gây lỗi, cho gói tin chết sớm</h2>
+<h2 id="lab-2">Lab 2: tự dò từng chặng bằng TTL</h2>
 
 <p>Lệnh <code>ping</code> của Windows có cờ <code>-i</code> để đặt TTL, còn <code>-n 1</code> bảo ping chỉ gửi một gói. Đặt TTL
 nhỏ hơn số chặng thì gói chết giữa đường, và bạn nhận về lời báo Time Exceeded, Windows in thành
@@ -471,10 +471,14 @@ Reply from (router nhà mạng, đã ẩn): TTL expired in transit.
 $ ping -n 1 -i 3 facebook.com
 Reply from (router nhà mạng, đã ẩn): TTL expired in transit.</code></pre>
 
-<p>Ba dòng này là ba dòng đầu của tracert, làm bằng tay. Bỏ cờ <code>-i</code> thì gói tới được facebook.com; bước này mình
-chưa ghi lại output.</p>
+<p>Ba dòng này là ba dòng đầu của tracert, làm bằng tay. Bỏ cờ <code>-i</code> thì gói đi với TTL mặc định và tới được
+facebook.com. Dòng dưới mình chạy ngày 14/11/2026:</p>
 
-<pre><code>$ ping -n 1 facebook.com</code></pre>
+<pre><code>$ ping -n 1 facebook.com
+Pinging facebook.com [57.144.64.1] with 32 bytes of data:
+Reply from 57.144.64.1: bytes=32 time=24ms TTL=51</code></pre>
+
+<p>Lần này người trả lời là chính <code>57.144.64.1</code>, địa chỉ của facebook.com, chứ không còn là một router giữa đường.</p>
 
 <h2 id="lab-3">Lab 3: đi hỏi DNS từng cấp</h2>
 

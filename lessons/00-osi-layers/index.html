@@ -386,7 +386,7 @@ các lệnh ở cột cuối bạn sẽ chạy ở phần Lab.</p>
 <header class="part-head"><p class="part-title">lab</p><p class="part-note">xem từng tầng trên máy bạn</p></header>
 
 <p>Các lệnh dưới chạy trong Git Bash, cửa sổ dòng lệnh đi kèm khi cài Git for Windows. Output là của máy mình ngày
-30/10/2026, riêng bước đầu của Lab 5 chạy ngày 13/11/2026; máy bạn sẽ ra địa chỉ khác nhưng cách đọc vẫn vậy.</p>
+30/10/2026; máy bạn sẽ ra địa chỉ khác nhưng cách đọc vẫn vậy.</p>
 
 <pre><code># Lab 1: tầng 2, địa chỉ MAC của các card mạng
 getmac
@@ -398,10 +398,7 @@ tracert -d facebook.com
 nslookup facebook.com
 
 # Lab 4: tầng 4 và tầng 7 trong một lần gọi
-curl -v -o /dev/null https://www.facebook.com/
-
-# Lab 5: tự gây lỗi
-nslookup this-name-does-not-exist-12345.com</code></pre>
+curl -v -o /dev/null https://www.facebook.com/</code></pre>
 
 <h2 id="lab-1">Lab 1: tầng 2, địa chỉ MAC</h2>
 
@@ -514,26 +511,6 @@ tự kể, <code>&gt;</code> là dữ liệu gửi đi, <code>&lt;</code> là d�
 Dòng <code>Connected ... port 443</code> là TCP ở tầng 4 mở xong kết nối. Sau đó <code>GET</code> đi ra và
 <code>200 OK</code> trở về ở tầng 7. Bước bắt tay TLS không hiện ra, vì bản curl của Git for Windows dùng thư viện schannel
 của Windows để mã hoá, mà schannel gần như không báo lại gì; mấy dòng <code>schannel</code> bạn bỏ qua được.</p>
-
-<h2 id="lab-5">Lab 5: tự gây lỗi</h2>
-
-<p>Bước đầu, hỏi DNS một cái tên chưa ai đăng ký.</p>
-
-<pre><code>$ nslookup this-name-does-not-exist-12345.com
-*** (tên router, đã ẩn) can't find this-name-does-not-exist-12345.com: Non-existent domain</code></pre>
-
-<p>Server DNS vẫn trả lời được, tức mạng vẫn chạy, chỉ có cái tên là không tồn tại, nên đây là lỗi ở tầng 7.</p>
-
-<p>Bước thứ hai, tắt WiFi rồi chạy lại Lab 4. Nếu curl vẫn ra địa chỉ thì chạy <code>ipconfig //flushdns</code> để xoá bộ nhớ
-tạm DNS của Windows (Git Bash cần hai dấu gạch chéo). Mình chưa chạy bước này, nên output dưới là output mình đoán sẽ
-ra.</p>
-
-<pre><code>$ curl -v -o /dev/null https://www.facebook.com/
-* Could not resolve host: www.facebook.com
-curl: (6) Could not resolve host: www.facebook.com</code></pre>
-
-<p>Hỏng ở tầng 1 và 2 mà thông báo lại nói về DNS, vì việc đầu tiên curl làm là hỏi DNS. Muốn phân biệt tên không tồn tại
-với máy mất mạng thì chạy Lab 3. Xong thì bật WiFi lại.</p>
 
 </section>
 
