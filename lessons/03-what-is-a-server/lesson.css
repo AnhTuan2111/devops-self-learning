@@ -1,0 +1,191 @@
+/* Riêng Bài 03: màn hình chia đôi. Cột trái là cái máy (Hình 1), dính trên màn hình và đổi cảnh theo đoạn đang đọc ở cột
+   phải: bốn món phần cứng, tệp jar thành process, sổ port, system call, chia CPU, chia RAM, OOM killer. Cột phải là chữ. Ở màn
+   hẹp, cái máy đứng trên đầu bài và tự chạy qua các cảnh. Chữ, ảnh, bảng, khối code lấy từ assets/style.css; hành vi ở
+   lesson.js. */
+
+:root {
+  --on-color: var(--surface);   /* chữ trên nền đỏ, lam */
+  --kernel-ram: #3a3a3a;        /* phần RAM của kernel */
+  --page-max: 1480px;
+}
+
+.wrap { max-width: var(--page-max); padding: 0 24px; }
+.topbar-inner { max-width: var(--page-max); padding-left: 24px; padding-right: 24px; }
+@media (max-width: 700px) { .wrap { padding: 0 16px; } .topbar-inner { padding-left: 16px; padding-right: 16px; } }
+
+::selection { background: var(--yellow); color: var(--ink); }
+.hl::selection { background: var(--blue); color: var(--on-color); }
+
+/* ---------------- Chia đôi màn hình ---------------- */
+.split { display: grid; gap: 0 52px; padding-top: 26px; }
+@media (min-width: 1100px) {
+  .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); align-items: start; }
+  .server-head { grid-column: 2; grid-row: 1; }
+  .reading { grid-column: 2; grid-row: 2; }
+  .machine {
+    grid-column: 1; grid-row: 1 / span 2;
+    position: sticky; top: calc(var(--topbar-h, 0px) + 18px);
+    max-height: calc(100vh - var(--topbar-h, 0px) - 36px); overflow: hidden;
+  }
+}
+.reading { min-width: 0; }
+.reading > *, .server-head > * { max-width: 74ch; }
+.reading figure.photo.wide, .reading .photo-row { max-width: none; }
+
+/* ---------------- Đầu bài ---------------- */
+.server-head { padding: 4px 0 6px; }
+.server-head h1 { font-size: clamp(36px, 4vw, 58px); margin: 12px 0 16px; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+.jump a {
+  font: 700 13.5px/1 var(--f-display); text-transform: lowercase; text-decoration: none; color: var(--ink);
+  padding: 9px 12px 8px; background: var(--surface); border: var(--rule-s) solid var(--ink);
+}
+.jump a:hover { background: var(--yellow); color: var(--ink); }
+.jump a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+.part { padding: 0 0 18px; scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); }
+.part h2 { scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); }
+.part > h2:first-child { border-top-width: var(--rule-xl); }
+.answer { padding: 16px 20px; background: var(--ink); color: var(--paper); }
+.answer code { background: #2b2925; color: var(--paper); }
+
+/* ---------------- Hình 1: cái máy ---------------- */
+.machine { margin: 0 0 26px; background: var(--surface); border-top: var(--rule-xl) solid var(--ink); padding: 14px 16px 12px; display: grid; gap: 10px; }
+.mc-layer { position: relative; display: grid; gap: 8px; padding: 10px 12px; transition: opacity .3s; }
+.mc-name { margin: 0; font: 800 13px/1 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
+.mc-procs { background: var(--paper); }
+.mc-kernel { background: var(--ink); color: var(--paper); }
+.mc-kernel .mc-name { color: var(--yellow); }
+.mc-hw { background: var(--paper); }
+
+.proc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; min-height: 46px; }
+.proc {
+  margin: 0; display: grid; gap: 1px; padding: 6px 10px; min-width: 84px; border: var(--rule-s) solid var(--ink);
+  background: var(--p, var(--surface)); color: var(--p-on, var(--ink)); opacity: .14; transition: opacity .3s, transform .3s;
+}
+.proc b { font: 800 14px/1.1 var(--f-display); }
+.proc span { font: 500 11.5px/1.2 var(--f-mono); }
+.proc.on { opacity: 1; }
+.proc.dead { opacity: .4; background: var(--surface); color: var(--ink-3); text-decoration: line-through; }
+.proc.hot { outline: 3px solid var(--ink); outline-offset: 2px; }
+[data-p="java"] { --p: var(--red); --p-on: var(--on-color); }
+[data-p="nginx"] { --p: var(--blue); --p-on: var(--on-color); }
+[data-p="postgres"] { --p: var(--yellow); --p-on: var(--ink); }
+[data-p="bash"] { --p: var(--surface); --p-on: var(--ink); }
+[data-p="backup"] { --p: var(--sunk); --p-on: var(--ink); }
+[data-p="kernel"] { --p: var(--kernel-ram); --p-on: var(--paper); }
+
+/* Mũi tên system call: một ô nhỏ chạy từ hàng process xuống kernel */
+.mc-call { position: absolute; right: 14px; bottom: -22px; z-index: 3; margin: 0; height: 40px; width: 150px; opacity: 0; transition: opacity .3s; }
+.mc-call::before { content: ""; position: absolute; left: 10px; top: 0; bottom: 0; border-left: 3px solid var(--red); }
+.mc-call::after {
+  content: ""; position: absolute; left: 5px; top: 0; width: 13px; height: 13px; background: var(--red);
+  animation: call-down 1.1s linear infinite;
+}
+@keyframes call-down { from { transform: translateY(0); } to { transform: translateY(28px); } }
+.call-text { position: absolute; left: 22px; top: 10px; font: 700 12px/1.2 var(--f-mono); color: var(--red); background: var(--surface); padding: 1px 4px; }
+.machine[data-scene="kernel"] .mc-call { opacity: 1; }
+
+.kernel-jobs { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.kernel-jobs span { font: 700 12.5px/1 var(--f-display); text-transform: lowercase; padding: 6px 8px; border: 1px solid #5a5650; color: #bdb6aa; transition: background .3s, color .3s; }
+.kernel-jobs span.on { background: var(--yellow); color: var(--ink); border-color: var(--yellow); }
+
+.hw-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.hw { margin: 0; padding: 10px; background: var(--surface); border: var(--rule-s) solid var(--line); display: grid; gap: 6px; align-content: start; transition: border-color .3s; }
+.hw.on { border-color: var(--ink); border-width: 3px; }
+.hw-name { margin: 0; font: 800 14px/1 var(--f-display); }
+.ram-total { font: 500 11.5px/1 var(--f-mono); color: var(--ink-3); }
+.hw p { margin: 0; }
+
+.cores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+.core { display: grid; place-items: center; height: 38px; border: var(--rule-s) solid var(--ink); background: var(--paper); overflow: hidden; }
+.core i { font: 700 11.5px/1 var(--f-display); font-style: normal; text-transform: lowercase; display: grid; place-items: center; width: 100%; height: 100%; background: var(--p, transparent); color: var(--p-on, var(--ink)); }
+.core i.swap { animation: swap .35s ease-out; }
+@keyframes swap { from { opacity: .2; transform: scaleY(.6); } to { opacity: 1; transform: none; } }
+.queue { display: flex; align-items: center; gap: 6px; min-height: 22px; }
+.q-label { font: 600 11px/1 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
+.q-items span { font: 700 11px/1 var(--f-display); text-transform: lowercase; padding: 4px 6px; background: var(--p); color: var(--p-on); border: 1px solid var(--ink); }
+
+.ram-bar { display: flex; height: 34px; border: var(--rule-s) solid var(--ink); background: var(--surface); overflow: hidden; transition: border-color .3s; }
+.ram-bar.big { height: 46px; }
+.seg {
+  flex: 0 0 0%; display: flex; align-items: center; justify-content: center; overflow: hidden; white-space: nowrap;
+  background: var(--p); color: var(--p-on); font: 700 11.5px/1 var(--f-display); text-transform: lowercase; transition: flex-basis .45s ease-out, background .3s;
+}
+.seg b { overflow: hidden; padding: 0 3px; }
+.seg.marked { background: var(--ink); color: var(--yellow); }
+.ram-bar.full { border-color: var(--red); }
+.ram-note { font: 600 12px/1.3 var(--f-mono); color: var(--ink-2); min-height: 1.3em; }
+
+.files { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.file { margin: 0; display: flex; justify-content: space-between; gap: 8px; padding: 4px 6px; background: var(--paper); transition: background .3s; }
+.file code { background: none; padding: 0; font-size: 12px; }
+.file span { font: 600 11.5px/1.4 var(--f-display); color: var(--ink-3); }
+.file.on { background: var(--yellow); }
+.machine table.ports { margin: 0; font-size: 12.5px; width: 100%; min-width: 0; table-layout: fixed; }
+.ports th, .ports td { padding: 3px 6px; }
+.ports tr { transition: opacity .3s, background .3s; }
+.ports tr.off { opacity: .15; }
+.ports tr.on td { background: var(--yellow); }
+
+.mc-say { margin: 0; min-height: 3.2em; padding: 10px 12px; background: var(--ink); color: var(--yellow); font: 600 14px/1.5 var(--f-display); }
+.mc-say:empty { display: none; }
+.machine.fig { margin: 0 0 26px; }
+.machine figcaption { margin-top: 2px; }
+
+/* Cảnh nào chỉ nói về một lớp thì làm mờ lớp khác */
+.machine[data-scene="box"] .mc-procs, .machine[data-scene="box"] .mc-kernel { opacity: .25; }
+.machine[data-scene="oom"] .mc-hw .hw:not([data-hw="ram"]) { opacity: .35; }
+
+/* Không có JS: cái máy hiện RAM chia cho bốn process */
+.machine .seg[data-p="kernel"] { flex-basis: 15%; }
+.machine .seg[data-p="nginx"] { flex-basis: 5%; }
+.machine .seg[data-p="postgres"] { flex-basis: 22.5%; }
+.machine .seg[data-p="java"] { flex-basis: 30%; }
+
+/* ---------------- Hình 2: một đêm hết RAM ---------------- */
+.ram { display: grid; gap: 10px; }
+.ram-scale { display: flex; justify-content: space-between; font: 600 12px/1 var(--f-display); text-transform: lowercase; color: var(--ink-3); }
+.ram-log { margin: 4px 0 0; padding-left: 1.4em; display: grid; gap: 4px; }
+.ram-log li { color: var(--ink-3); transition: color .2s; }
+.ram-log li.now { color: var(--ink); font-weight: 600; }
+/* Không có JS: thanh RAM hiện lúc script sao lưu vừa chạy */
+.ram .seg[data-p="kernel"] { flex-basis: 15%; }
+.ram .seg[data-p="nginx"] { flex-basis: 5%; }
+.ram .seg[data-p="postgres"] { flex-basis: 22.5%; }
+.ram .seg[data-p="java"] { flex-basis: 42.5%; }
+.ram .seg[data-p="backup"] { flex-basis: 7.5%; }
+
+/* ---------------- Lab ---------------- */
+.steps { list-style: none; margin: 10px 0 0; padding: 0; counter-reset: step; }
+.steps > li { counter-increment: step; margin: 0; padding: 14px 0 6px; border-top: var(--rule-s) solid var(--ink); scroll-margin-top: calc(var(--topbar-h, 0px) + 10px); }
+.steps h3 { display: flex; align-items: baseline; gap: 12px; margin: 0 0 8px; }
+.steps h3::before {
+  content: counter(step); flex: none; display: inline-grid; place-items: center; width: 34px; height: 34px;
+  background: var(--ink); color: var(--yellow); font: 800 17px/1 var(--f-display);
+}
+.steps pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* ---------------- Màn hẹp: cái máy đứng trên đầu bài, gọn lại ---------------- */
+@media (max-width: 1099px) {
+  .split { padding-top: 16px; }
+  .server-head { margin-bottom: 20px; }
+}
+@media (max-width: 560px) {
+  .hw-grid { grid-template-columns: 1fr; }
+  .proc { min-width: 0; padding: 5px 7px; }
+  .seg { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+.split > *, .reading { min-width: 0; }
+.refs a { overflow-wrap: anywhere; }
+
+/* Sổ port nằm ở lớp kernel (nền đen), card mạng chỉ còn một dòng chữ */
+.mc-kernel table.ports th { background: #2b2925; color: var(--yellow); }
+.mc-kernel table.ports td { color: var(--paper); border-bottom-color: #3a3731; }
+.mc-kernel .ports tr.on td { background: var(--yellow); color: var(--ink); }
+.nic-note { font: 600 12.5px/1.4 var(--f-display); color: var(--ink-2); }

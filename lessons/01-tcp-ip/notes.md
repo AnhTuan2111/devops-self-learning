@@ -25,7 +25,7 @@ ghi.
 
 - Bắt gói của `curl https://example.com/` với bộ lọc `tcp port 443` để thấy phần TLS không đọc được: trang bài ghi là bước
   thử thêm, chưa có output thật.
-- `ping -n 1 facebook.com` không đặt TTL ở bước sửa lỗi Lab 2: chưa chạy lại riêng.
+- `ping -n 1 facebook.com` không đặt TTL (Lab 2, chạy 14/11/2026): `Reply from 57.144.64.1: bytes=32 time=24ms TTL=51`.
 
 ## Câu hỏi còn treo
 

@@ -34,6 +34,8 @@
     'yaml': { label: 'YAML', tip: 'Định dạng tệp cấu hình viết bằng thụt lề, Kubernetes, GitLab CI, Docker Compose đều dùng.' },
     'jvm': { label: 'JVM', tip: 'Máy ảo Java, chương trình chạy file .class và .jar; app Spring Boot chạy bên trong nó.' },
     'root': { label: 'root', tip: 'User có mọi quyền trên một máy Linux, làm gì cũng được, kể cả xoá hỏng cả máy.' },
+    'linux': { label: 'Linux', tip: 'Hệ điều hành miễn phí, mã nguồn mở, mà phần lớn server chạy. Phần lõi của nó, kernel Linux, do Linus Torvalds viết từ năm 1991.' },
+    'ubuntu': { label: 'Ubuntu', tip: 'Một bản Linux phổ biến: kernel Linux gói cùng bộ chương trình và cách cài phần mềm riêng (lệnh apt).' },
     'wsl': { label: 'WSL', tip: 'Windows Subsystem for Linux, tính năng của Windows cho chạy một máy Linux (thường là Ubuntu) ngay bên trong Windows, có cửa sổ dòng lệnh riêng.' },
     'sudo': { label: 'sudo', tip: 'Chữ đặt trước một lệnh trên Linux để chạy lệnh đó bằng quyền quản trị, như khi cài phần mềm hay bắt gói tin; máy sẽ hỏi mật khẩu của bạn.' },
   };
